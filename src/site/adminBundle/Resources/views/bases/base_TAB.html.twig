@@ -1,0 +1,37 @@
+{% extends 'siteadminBundle:bases:base_simple.html.twig' %}
+
+{% block stylesheets %}
+{{ parent() }}
+{% stylesheets filter='cssrewrite, lessphp, ?yui_css'
+'bundles/siteadmin/framework_inspinia/css/plugins/dataTables/dataTables.bootstrap.css'
+'bundles/siteadmin/framework_inspinia/css/plugins/dataTables/dataTables.responsive.css'
+'bundles/siteadmin/framework_inspinia/css/plugins/dataTables/dataTables.tableTools.min.css'
+%}
+<link rel="stylesheet" href="{{ asset_url }}" type="text/css" />
+{% endstylesheets %}
+{% endblock stylesheets %}
+
+{% block bodyattr %}{{ parent() }}{% endblock bodyattr %}
+
+{% block body %}
+{{ parent() }}
+{% endblock body %}
+
+{% block hiddendata %}{{ parent() }}{% endblock hiddendata %}
+
+{% block javascripts %}
+{{ parent() }}
+{% javascripts filter='?yui_js'
+'bundles/siteadmin/framework_inspinia/js/plugins/dataTables/jquery.dataTables.js'
+'bundles/siteadmin/framework_inspinia/js/plugins/dataTables/dataTables.bootstrap.js'
+'bundles/siteadmin/framework_inspinia/js/plugins/dataTables/dataTables.responsive.js'
+'bundles/siteadmin/framework_inspinia/js/plugins/dataTables/dataTables.tableTools.min.js'
+'bundles/siteadmin/init/init-datatables.js'
+%}
+<script type="text/javascript" src="{{ asset_url }}"></script>
+{% endjavascripts %}
+{% endblock javascripts %}
+
+{% block themeConfig %}
+{{ parent() }}
+{% endblock themeConfig %}

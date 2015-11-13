@@ -1,0 +1,64 @@
+{% macro menu_Admin(menu) %}
+{% import _self as self %}
+{% for item in menu|default(menu_Admin) %}
+	{{ self.item_menu(item) }}
+{% endfor %}
+{% endmacro %}
+
+{% macro item_menu(level1) %}
+{% if (level1.environment|default('prod') == app.environment or app.environment in ['dev', 'test']) and (is_granted(level1.role|default(menu_Admin_default_role))) %}
+{% import _self as self %}
+{% set down = '' %}
+{% set active = '' %}
+{% if level1.path is iterable %}
+	{% if level1.path.path == '#' %}
+	{% set level1path = '#' %}
+	{% else %}
+	{% set level1path = path(level1.path.path, level1.path.params|default({})) %}
+	{% endif %}
+{% else %}
+	{% if level1.path == '#' %}
+	{% set level1path = '#' %}
+	{% else %}
+	{% set level1path = path(level1.path, level1.params|default({})) %}
+	{% endif %}
+{% endif %}
+{% if level1.level2|default(null) is iterable %}
+	{% set down = '<span class="fa arrow"></span>' %}
+	{% set level1path = '#' %}
+	{% for item in level1.level2 %}
+		{% if item.path is iterable %}
+		{% if path(item.path.path, item.path.params|default({})) == app.request.baseUrl ~ app.request.pathInfo %}{% set active = ' class="active"' %}{% endif %}
+		{% else %}
+		{% if path(item.path, item.params|default({})) == app.request.baseUrl ~ app.request.pathInfo %}{% set active = ' class="active"' %}{% endif %}
+		{% endif %}
+	{% endfor %}
+{% endif %}
+{% if level1path == app.request.baseUrl ~ app.request.pathInfo %}{% set active = ' class="active"' %}{% endif %}
+<li{{ active|raw }}>
+	<a href="{{ level1path }}"><i class="fa {{ level1.icon|default(default_icon)|raw }}"></i> <span class="nav-label">{{ level1.nom|default('menu…')|trans|capitalize }}</span>{{ down|raw }}</a>
+	{% if level1.level2|default('') is iterable %}
+	<ul class="nav nav-second-level">
+		{% for itemL2 in level1.level2 %}
+		{{ self.level2(itemL2) }}
+		{% endfor %}
+	</ul>
+	{% endif %}
+</li>
+{% endif %}
+{% endmacro %}
+
+
+{% macro level2(item) %}
+	{% if is_granted(item.role|default(menu_Admin_default_role)) %}
+	{% set active = '' %}
+	{% if item.path is iterable %}
+	{% set path = path(item.path.path, item.path.params|default({})) %}
+	{% else %}
+	{% set path = path(item.path, item.params|default({})) %}
+	{% endif %}
+	{% if path == app.request.baseUrl ~ app.request.pathInfo %}{% set active = ' class="active"' %}{% endif %}
+	<li{{ active|raw }}><a href="{{ path }}">{{ item.nom|default('item')|trans|capitalize }}</a></li>
+	{% endif %}
+{% endmacro %}
+

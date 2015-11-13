@@ -1,0 +1,25 @@
+decimal: ','
+processing: Processing…
+search: 'Search&nbsp; '
+lengthMenu: 'Show _MENU_ elements'
+info: 'Show elements _START_ to _END_ on _TOTAL_ elements'
+infoEmpty: 'Show element 0 to 0 on 0 elements'
+infoFiltered: '(filtered from _MAX_ total elements)'
+infoPostFix: ''
+loadingRecords: Loading...
+zeroRecords: 'No element found'
+emptyTable: 'No data in this list'
+paginate:
+    first: Fist
+    previous: Previoux
+    next: Next
+    last: Last
+aria:
+    sortAscending: ': activate to sort ascending'
+    sortDescending: ': activate to sort descending'
+paginate_first: null
+paginate_previous: null
+paginate_next: null
+paginate_last: null
+aria_sortAscending: null
+aria_sortDescending: null

@@ -1,0 +1,368 @@
+{% use "sitegraphicsBundle:Form:form_div_layout.html.twig" %}
+
+{# Widgets #}
+
+{% block form_widget_simple -%}
+    {% if type is not defined or 'file' != type %}
+        {%- set attr = attr|merge({class: (attr.class|default('') ~ ' form-control input-sm')|trim}) -%}
+    {% endif %}
+    {{- parent() -}}
+{%- endblock form_widget_simple %}
+
+{% block textarea_widget -%}
+    {% set attr = attr|merge({class: (attr.class|default('') ~ ' form-control input-sm')|trim}) %}
+    {{- parent() -}}
+{%- endblock textarea_widget %}
+
+{% block button_widget -%}
+    {% set attr = attr|merge({class: (attr.class|default('btn-default') ~ ' btn btn-sm')|trim}) %}
+    {{- parent() -}}
+{%- endblock %}
+
+{% block money_widget -%}
+    <div class="input-group mask">
+        {% set prepend = '{{' == money_pattern[0:2] %}
+        {% set attr = attr|merge({'class': "mask-money"}) %}
+        {% if not prepend %}
+            <span class="input-group-addon">{{ money_pattern|replace({ '{{ widget }}':''}) }}</span>
+        {% endif %}
+        {{- block('form_widget_simple') -}}
+        {% if prepend %}
+            <span class="input-group-addon">{{ money_pattern|replace({ '{{ widget }}':''}) }}</span>
+        {% endif %}
+    </div>
+{%- endblock money_widget %}
+
+{% block percent_widget -%}
+    <div class="input-group">
+        {{- block('form_widget_simple') -}}
+        <span class="input-group-addon">%</span>
+    </div>
+{%- endblock percent_widget %}
+
+{% block datetime_widget -%}
+    {% if widget == 'single_text' %}
+        {{- block('form_widget_simple') -}}
+    {% else -%}
+        {% set attr = attr|merge({class: (attr.class|default('') ~ ' form-inline')|trim}) -%}
+        <div {{ block('widget_container_attributes') }}>
+            {{- form_errors(form.date) -}}
+            {{- form_errors(form.time) -}}
+            {{- form_widget(form.date, { datetime: true } ) -}}
+            {{- form_widget(form.time, { datetime: true } ) -}}
+        </div>
+    {%- endif %}
+{%- endblock datetime_widget %}
+
+{% block date_widget -%}
+    {% if widget == 'single_text' %}
+        {{- block('form_widget_simple') -}}
+    {% else -%}
+        {% set attr = attr|merge({class: (attr.class|default('') ~ ' form-inline')|trim}) -%}
+        {% if datetime is not defined or not datetime -%}
+            <div {{ block('widget_container_attributes') -}}>
+        {%- endif %}
+            {{- date_pattern|replace({
+                '{{ year }}': form_widget(form.year),
+                '{{ month }}': form_widget(form.month),
+                '{{ day }}': form_widget(form.day),
+            })|raw -}}
+        {% if datetime is not defined or not datetime -%}
+            </div>
+        {%- endif -%}
+    {% endif %}
+{%- endblock date_widget %}
+
+{% block time_widget -%}
+    {% if widget == 'single_text' %}
+        {{- block('form_widget_simple') -}}
+    {% else -%}
+        {% set attr = attr|merge({class: (attr.class|default('') ~ ' form-inline')|trim}) -%}
+        {% if datetime is not defined or false == datetime -%}
+            <div {{ block('widget_container_attributes') -}}>
+        {%- endif -%}
+        {{- form_widget(form.hour) }}:{{ form_widget(form.minute) }}{% if with_seconds %}:{{ form_widget(form.second) }}{% endif %}
+        {% if datetime is not defined or false == datetime -%}
+            </div>
+        {%- endif -%}
+    {% endif %}
+{%- endblock time_widget %}
+
+{% block choice_widget_collapsed -%}
+    {% set attr = attr|merge({class: (attr.class|default('') ~ ' form-control input-sm')|trim}) %}
+    {{- parent() -}}
+{%- endblock %}
+
+{% block choice_widget_expanded -%}
+    {% if '-inline' in label_attr.class|default('') -%}
+        <div class="control-group">
+            {%- for child in form %}
+                {{- form_widget(child, {
+                    parent_label_class: label_attr.class|default(''),
+                }) -}}
+            {% endfor -%}
+        </div>
+    {%- else -%}
+        <div {{ block('widget_container_attributes') }}>
+            {%- for child in form %}
+                {{- form_widget(child, {
+                    parent_label_class: label_attr.class|default(''),
+                }) -}}
+            {% endfor -%}
+        </div>
+    {%- endif %}
+{%- endblock choice_widget_expanded %}
+
+{% block checkbox_widget -%}
+    {% set parent_label_class = parent_label_class|default('') -%}
+    {% if 'checkbox-inline' in parent_label_class %}
+        {{- form_label(form, null, { widget: parent() }) -}}
+    {% else -%}
+        <div class="checkbox">
+            {{- form_label(form, null, { widget: parent() }) -}}
+        </div>
+    {%- endif %}
+{%- endblock checkbox_widget %}
+
+{% block radio_widget -%}
+    {%- set parent_label_class = parent_label_class|default('') -%}
+    {% if 'radio-inline' in parent_label_class %}
+        {{- form_label(form, null, { widget: parent() }) -}}
+    {% else -%}
+        <div class="radio">
+            {{- form_label(form, null, { widget: parent() }) -}}
+        </div>
+    {%- endif %}
+{%- endblock radio_widget %}
+
+{# Labels #}
+
+{% block form_label -%}
+    {%- set label_attr = label_attr|merge({class: (label_attr.class|default('') ~ ' control-label')|trim}) -%}
+    {{- parent() -}}
+{%- endblock form_label %}
+
+{% block choice_label -%}
+    {# remove the checkbox-inline and radio-inline class, it's only useful for embed labels #}
+    {%- set label_attr = label_attr|merge({class: label_attr.class|default('')|replace({'checkbox-inline': '', 'radio-inline': ''})|trim}) -%}
+    {{- block('form_label') -}}
+{% endblock %}
+
+{% block checkbox_label -%}
+    {{- block('checkbox_radio_label') -}}
+{%- endblock checkbox_label %}
+
+{% block radio_label -%}
+    {{- block('checkbox_radio_label') -}}
+{%- endblock radio_label %}
+
+{% block checkbox_radio_label %}
+    {# Do no display the label if widget is not defined in order to prevent double label rendering #}
+    {% if widget is defined %}
+        {% if required %}
+            {% set label_attr = label_attr|merge({class: (label_attr.class|default('') ~ ' required')|trim}) %}
+        {% endif %}
+        {% if parent_label_class is defined %}
+            {% set label_attr = label_attr|merge({class: (label_attr.class|default('') ~ ' ' ~ parent_label_class)|trim}) %}
+        {% endif %}
+        {% if label is not sameas(false) and label is empty %}
+            {% set label = name|humanize %}
+        {% endif %}
+        <label{% for attrname, attrvalue in label_attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}>
+            {{- widget|raw -}}
+            {{- label is not sameas(false) ? label|trans({}, translation_domain) -}}
+        </label>
+    {% endif %}
+{% endblock checkbox_radio_label %}
+
+{# Rows #}
+
+{% block form_row -%}
+    <div class="form-group{% if (not compound or force_error|default(false)) and not valid %} has-error{% endif %}">
+        {{- form_label(form) -}}
+        {{- form_widget(form) -}}
+        {{- form_errors(form) -}}
+    </div>
+{%- endblock form_row %}
+
+{% block button_row -%}
+    <div class="form-group">
+        {{- form_widget(form) -}}
+    </div>
+{%- endblock button_row %}
+
+{% block choice_row -%}
+    {% set force_error = true %}
+    {{- block('form_row') }}
+{%- endblock choice_row %}
+
+{% block date_row -%}
+    {% set force_error = true %}
+    {{- block('form_row') }}
+{%- endblock date_row %}
+
+{% block time_row -%}
+    {% set force_error = true %}
+    {{- block('form_row') }}
+{%- endblock time_row %}
+
+{% block datetime_row -%}
+    {% set force_error = true %}
+    {{- block('form_row') }}
+{%- endblock datetime_row %}
+
+{% block checkbox_row -%}
+    <div class="form-group{% if not valid %} has-error{% endif %}">
+        {{- form_widget(form) -}}
+        {{- form_errors(form) -}}
+    </div>
+{%- endblock checkbox_row %}
+
+{% block radio_row -%}
+    <div class="form-group{% if not valid %} has-error{% endif %}">
+        {{- form_widget(form) -}}
+        {{- form_errors(form) -}}
+    </div>
+{%- endblock radio_row %}
+
+{# Errors #}
+
+{% block form_errors -%}
+    {% if errors|length > 0 -%}
+    {% if form.parent %}<span class="help-block">{% else %}<div class="alert alert-danger">{% endif %}
+    <ul class="list-unstyled">
+        {%- for error in errors -%}
+            <li><span class="glyphicon glyphicon-exclamation-sign"></span>{{ error.message }}</li>
+        {%- endfor -%}
+    </ul>
+    {% if form.parent %}</span>{% else %}</div>{% endif %}
+    {%- endif %}
+{%- endblock form_errors %}
+
+{# customs AEW #}
+
+{% block insDatepicker_widget %}
+    <div class="input-group date">
+        <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+        {{- block('form_widget_simple') -}}
+    </div>
+{% endblock %}
+
+{% block insColorpicker_widget %}
+    <div class="input-group colorpickers" {{ block('widget_container_attributes') }}>
+        <div class="input-group-addon"><i></i></div>
+        <input type="text" value="{{ value|raw }}" {{ block('widget_attributes') }} class="form-control" />
+    </div>
+{% endblock insColorpicker_widget %}
+
+{% block insRichtext_widget %}
+    {% set attr = attr|merge({class: (attr.class|default('') ~ ' richtexts')|trim}) -%}
+    {{- block('textarea_widget') -}}
+{% endblock insRichtext_widget %}
+
+{% block insTelephone_widget %}
+    <div class="input-group mask">
+        <span class="input-group-addon"><i class="fa fa-phone"></i></span>
+        {% set attr = attr|merge({'class': "mask-tel"}) %}
+        {{- block('form_widget_simple') -}}
+    </div>
+{% endblock insTelephone_widget %}
+
+{% block email_widget %}
+    <div class="input-group">
+        <span class="input-group-addon"><i class="fa fa-at"></i></span>
+        {{- parent() -}}
+    </div>
+{% endblock email_widget %}
+
+{% block url_widget %}
+    <div class="input-group">
+        <span class="input-group-addon"><i class="fa fa-globe"></i></span>
+        {{- parent() -}}
+    </div>
+{% endblock url_widget %}
+
+{% block insCpostal_widget %}
+    <div class="input-group mask">
+        <span class="input-group-addon"><i class="fa fa-th"></i></span>
+        {% set attr = attr|merge({'class': "mask-cp"}) %}
+        {{- block('form_widget_simple') -}}
+    </div>
+{% endblock insCpostal_widget %}
+
+{% block insDept_widget %}
+    <div class="input-group mask">
+        <span class="input-group-addon"><i class="fa fa-th"></i></span>
+        {% set attr = attr|merge({'class': "mask-dept"}) %}
+        {{- block('form_widget_simple') -}}
+    </div>
+{% endblock insDept_widget %}
+
+{% block insSiret_widget %}
+    <div class="input-group mask">
+        <span class="input-group-addon"><i class="fa fa-slack"></i></span>
+        {% set attr = attr|merge({'class': "mask-siret"}) %}
+        {{- block('form_widget_simple') -}}
+    </div>
+{% endblock insSiret_widget %}
+
+{% block insSiren_widget %}
+    <div class="input-group mask">
+        <span class="input-group-addon"><i class="fa fa-slack"></i></span>
+        {% set attr = attr|merge({'class': "mask-siren"}) %}
+        {{- block('form_widget_simple') -}}
+    </div>
+{% endblock insSiren_widget %}
+
+{% block insRadio_widget %}
+    {% set label_attr = label_attr|merge({'class': "radio-inline iradio"}) %}
+    {{- block('choice_widget') -}}
+{% endblock insRadio_widget %}
+
+{% block insCheck_widget %}
+    {% set label_attr = label_attr|merge({'class': "checkbox-circle"}) %}
+    {{- block('checkbox_widget') -}}
+{% endblock insCheck_widget %}
+
+{% block insImageCropper_widget %}
+    {% set attr = attr|merge({'class': "hide"}) %}
+    <div class="btn-group">
+        <label title="Upload image file" for="{{ id }}" class="btn btn-primary">
+            <input type="{{ type }}" accept="image/*" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value|raw }}" {% endif %}/>
+            Nouvelle image
+        </label>
+        <label title="Donload image" id="download" class="btn btn-primary">Importer</label>
+    </div>
+{% endblock insImageCropper_widget %}
+
+
+{% block multiCollection_widget %}
+    <span id="multi-form_{{ name }}" class="multi-form" data-table-prototype="{{ '<table class=\'table table-hover table-bordered table-condensed table-responsive xsmall m-b-xs\' style=\'background-color:#ffffff;\'><thead><tr></tr></thead><tbody></tbody></table>'|e }}">
+        <button class="btn btn-primary btn-outline btn-sm btn-block add_multiform_link" data-target="#multi-form_{{ name }}"><i class="fa fa-plus"></i> Ajouter</button>
+        {{- block('form_widget_list') -}}
+    </span>
+{% endblock multiCollection_widget %}
+
+{%- block form_widget_list -%}
+    {%- set attr = attr|merge({'class': "multi-form-ul list-unstyled" }) -%}
+    {%- set attr = attr|merge({'style': "margin-top: 6px;" }) -%}
+    {% if prototype is defined %}
+        {%- set attr = attr|merge({'data-prototype': form_widget(prototype) }) -%}
+    {% endif %}
+    {%- if form.parent is empty -%}
+        {{ form_errors(form) }}
+    {%- endif -%}
+    <ul {{ block('widget_container_attributes') }}>
+    {% for key,child in form %}
+        <li>
+        {{- form_widget(child) -}}
+        {{- form_errors(child) -}}
+        </li>
+    {% endfor %}
+    </ul>
+    {{- form_rest(form) -}}
+{%- endblock form_widget_list -%}
+
+{%- block bs_button_widget -%}
+    <button type="{{ type|default('button') }}" {{ block('button_attributes') }}>{{ label|trans({}, translation_domain)|raw }}</button>
+{%- endblock bs_button_widget -%}

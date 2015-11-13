@@ -1,0 +1,311 @@
+{% extends 'siteadminBundle::page_admin_generic.html.twig' %}
+{% set cssjsloads = 'TAB' %}
+{% set DEVMODE = (app.environment in ['DEV', 'TEST']) or (is_granted('ROLE_SUPER_ADMIN')) %}
+
+{% block page_heading %}
+<div class="row wrapper border-bottom white-bg page-heading">
+	<div class="col-lg-12 m-t-xs">
+		<h2 class="row">
+			<div class="col-md-8">{{ htitle }}</div>
+			<div class="col-md-4">
+				{% if user.id == app.user.id %}
+				<a href="{{ path('fos_user_deleting', {id: app.security.token.user.id}) }}" type="button" class="btn btn-xs btn-danger btn-outline pull-right need-confirmation" title="Supprimer votre compte" data-message="Ceci est votre compte ! Souhaitez-vous vraiment supprimer votre compte ?"><i class="fa fa-times icon-wait-on-click"></i> Supprimer</a>
+				{% elseif app.user.haveRight(user) %}
+				<a href="{{ path('labo_user_delete', {username: user.username}) }}" type="button" class="btn btn-xs btn-danger btn-outline pull-right need-confirmation" title="Supprimer {{ user.username }}" data-message="Souhaitez-vous vraiment supprimer ce compte ?"><i class="fa fa-times icon-wait-on-click"></i> Supprimer</a>
+				{% endif %}
+				<a href="{{ path('labo_user_edit', {username: user.username}) }}" style="margin-right: 4px;" type="button" class="btn btn-xs btn-warning pull-right"><i class="fa fa-pencil icon-wait-on-click"></i> Modifier</a>
+			</div>
+		</h2>
+		<ol class="breadcrumb">
+			<li><a href="{{ path('acme_grouplabo_inspinia_homepage') }}"><strong>Administration</strong></a></li>
+			<li><a href="{{ path('labo_users', {type: 'all'}) }}"><strong>Utilisateurs</strong></a></li>
+			<li>{{ user.username }} {% if user.id == app.user.id %} <em>(moi-même)</em>{% endif %}</li>
+		</ol>
+	</div>
+</div>
+{% endblock page_heading %}
+
+{% block content %}
+{%  if app.user.haveRight(user) %}
+<div class="row m-b-lg m-t-lg">
+	<div class="col-md-8">
+
+		<div class="profile-image">
+			<!-- <img src="img/a4.jpg" class="img-circle circle-border m-b-md" alt="profile"> -->
+			<i class="fa fa-user fa-5x m-b-md text-{{ userColor(user) }}" alt="profile"></i>
+		</div>
+		<div class="profile-info">
+			<div class="">
+				<div>
+					<h2 class="no-margins">
+						{{ user.nom|default(user.username) }} {{ user.prenom }}
+					</h2>
+					<h4>
+						{% for role in user.roles %}
+						<div class="label label-{{ roleColors[role] }}">{{ roleNames[role] }}</div> 
+						{% endfor %}
+					</h4>
+					<!-- <small> -->
+						<!-- There are many variations of passages of Lorem Ipsum available, but the majority -->
+						<!-- have suffered alteration in some form Ipsum available. -->
+					<!-- </small> -->
+				</div>
+			</div>
+		</div>
+	</div>
+	<br class="visible-xs">
+	<div class="col-md-4">
+		<table class="table small m-b-xs">
+			<tbody>
+			<tr>
+				<td title="{{ user.lastLogin|date(formatDateHeure) }}">
+					<strong>Login</strong> 
+					{% if user.lastLogin is not null %}
+					{{ dateFR(user.lastLogin, true) }} {{ user.lastLogin|date('H\\hi') }}
+					{% else %}
+					jamais
+					{% endif %}
+				</td>
+				<td>
+					<strong>Panier</strong> {% if articlesPanier > 0 %}{{ articlesPanier }}{% else %}(vide){% endif %}
+				</td>
+
+			</tr>
+			<tr>
+				<td>
+					<strong>Achats</strong> {{ factures|length }}
+				</td>
+				<td title="{{ cumulHT|number_format(2, ',', '') }} € HT">
+					<strong>Total</strong> {{ cumulTTC|number_format(2, ',', '') }}&nbsp;€TTC
+				</td>
+			</tr>
+			</tbody>
+		</table>
+	</div>
+
+	<div class="clearfix"></div>
+
+	<div class="col-md-6 col-lg-4">
+		<div class="ibox float-e-margins">
+			<div class="ibox-content">
+				<h2>Coordonnées <small>{{ user.username }}</small></h2>
+				<hr>
+				<table class="table table-striped table-bordered table-hover">
+					<thead>
+						<tr>
+							<th>Libellé</th>
+							<th>valeurs</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td><strong>Adresse</strong></td>
+							<td>{{ user.adresse }}<br>{{ user.cp }} {{ user.ville }}</td>
+						</tr>
+						<tr>
+							<td><strong>Tél.</strong></td>
+							<td>{{ user.tel }}</td>
+						</tr>
+						<tr>
+							<td><strong>Email</strong></td>
+							<td><a href="mailto:{{ user.email }}">{{ user.email }}</a></td>
+						</tr>
+						<tr>
+							<td><strong>Notes</strong></td>
+							<td>{{ user.annotation }}</td>
+						</tr>
+						<tr>
+							<td><strong>Magasin référent</strong></td>
+							<td>
+								{% if user.magasin is not null %}
+								<a href="{{ path('labo_ins_entite', {entite: 'magasin', id: user.magasin.id, action: 'show'}) }}">{{ user.magasin.nommagasin|default(user.magasin.raisonsociale|default('<em>?</em>'))|raw }}</a> - {{ user.magasin.cp }}
+								{% else %}
+								<em>(Aucun)</em>
+								{% endif %}
+							</td>
+						</tr>
+						<tr>
+							<td><strong>Livraison</strong></td>
+							<td>
+								{% if user.livraison == "depot" %}
+								<i class="fa fa-building"></i>&nbsp;
+								{% else %}
+								<i class="fa fa-truck"></i>&nbsp;
+								{% endif %}
+								{{ user.livraisonTxt }}
+							</td>
+						</tr>
+						<tr>
+							<td><strong>IP</strong></td>
+							<td>{{ user.adressIp }}</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+
+	<div class="col-md-6 col-lg-4">
+		<div class="ibox float-e-margins">
+			<div class="ibox-content">
+				<h2>Panier <small>{{ user.username }}</small> <div class="label label-info">{{ articlesPanier }}</div></h2>
+				<p class="adminhelp"><small>Contenu actuel du panier de <strong>{{ user.username }}</strong>.</small></p>
+				<hr>
+				{% if user.paniers|length > 0 %}
+				<p><strong>{{ user.paniers|length }}</strong> article{{ plur(user.paniers) }} différent{{ plur(user.paniers) }}</p>
+				<table class="table table-striped table-bordered table-hover">
+					<tbody>
+						<tr>
+							<!-- <td><strong>Contenu</strong></td> -->
+							<td>
+								<table class="table small m-b-xs">
+									<tbody>
+										<tr>
+											<td><strong>Article</strong></td>
+											<td><strong>Q.</strong></td>
+											<td><strong>Prix<sup>TTC</sup></strong></td>
+											<td><strong>Total<sup>TTC</sup></strong></td>
+										</tr>
+										{% set totalpanierTTC = 0 %}
+										{% set totalpanierHT = 0 %}
+										{% for panier in user.paniers %}
+										{% set totalpanierTTC = totalpanierTTC + (panier.article.prix * panier.quantite) %}
+										{% set totalpanierHT = totalpanierHT + (panier.article.prixHT * panier.quantite) %}
+										<tr>
+											<td><a href="{{ path('labo_ins_entite', {entite: 'article', id: panier.article.id, action: 'show'}) }}" title="{{ dateFR(panier.dateCreation) }} {{ panier.dateCreation|date('H:i:s') }}">{{ panier.article.nom }}</a></td>
+											<td>x&nbsp;{{ panier.quantite }}</td>
+											<td>{{ panier.article.prix|number_format(2, ',', '') }}&nbsp;€</td>
+											<td>{{ (panier.quantite * panier.article.prix)|number_format(2, ',', '') }}&nbsp;€</td>
+										</tr>
+										{% endfor %}
+										<tr style="border-top: 2px solid #bbb;">
+											<td colspan="3"><strong>Total TTC</strong></td>
+											<td><strong>{{ totalpanierTTC|number_format(2, ',', '') }}&nbsp;€</strong></td>
+										</tr>
+										<tr>
+											<td colspan="3"><em>Total HT</em></td>
+											<td><em>{{ totalpanierHT|number_format(2, ',', '') }}&nbsp;€</em></td>
+										</tr>
+									</tbody>
+								</table>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+				{% else %}
+				<p>Panier vide</p>
+				{% endif %}
+			</div>
+		</div>
+	</div>
+
+	<div class="clearfix hidden-lg"></div>
+
+	<div class="col-md-6 col-lg-4">
+		<div class="ibox float-e-margins">
+			<div class="ibox-content">
+				<h2>Factures / Achats <small>{{ user.username }}</small> <div class="label label-info">{{ factures|length }}</div></h2>
+				<p class="adminhelp"><small>Liste des factures d'achats de <strong>{{ user.username }}</strong>.</small></p>
+				<hr>
+				{% if factures|length > 0 %}
+				<table class="table table-striped table-bordered table-hover">
+					<tbody>
+						{% for facture in factures %}
+						<tr>
+							<td colspan="2"><a href="{{ path('labo_vente_show', {id: facture.id}) }}"><strong>{{ facture.reference }}</strong></a></td>
+						</tr>
+						<tr>
+							<td colspan="2">
+								<table class="table small m-b-xs">
+									<tbody>
+										<tr>
+											<td class="text-center"><strong>Nb.Art.</strong></td>
+											<td><strong>Total<sup>TTC</sup></strong></td>
+											<td><strong>Statut</strong></td>
+										</tr>
+										<tr>
+											<td class="text-center">{{ facture.nbArticles }}</td>
+											<td>{{ facture.prixtotal|number_format(2, ',', '') }}&nbsp;€</td>
+											<td>
+												{% if facture.stade == 100 %}{% set color = 'danger' %}
+												{% elseif facture.stade == 3 %}{% set color = 'warning' %}
+												{% elseif facture.stade < 2 %}{% set color = 'info' %}
+												{% else %}{% set color = 'success' %}
+												{% endif %}
+												<p class="text-{{ color }}">{{ facture.stadeTxt }}</p>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</td>
+						</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+				{% else %}
+				<p>Aucun achat</p>
+				{% endif %}
+			</div>
+		</div>
+	</div>
+
+	<div class="clearfix visible-lg"></div>
+
+	<div class="col-md-6 col-lg-4">
+		<div class="ibox float-e-margins">
+			<div class="ibox-content">
+				<h2>Matériel <small>{{ user.username }}</small></h2>
+				<p class="adminhelp"><small>Matériel de coûture <strong>{{ user.username }}</strong>.</small></p>
+				<hr>
+				<table class="table table-striped table-bordered table-hover">
+					<thead>
+						<tr>
+							<th>Libellé</th>
+							<th>valeurs</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td><strong>Type de machine</strong></td>
+							<td>{{ user.mactype }}</td>
+						</tr>
+						<tr>
+							<td><strong>Marque</strong></td>
+							<td>{{ user.macmarque }}</td>
+						</tr>
+						<tr>
+							<td><strong>Marque</strong></td>
+							<td>{{ user.marque.nom }}</td>
+						</tr>
+						<tr>
+							<td><strong>N° série</strong></td>
+							<td>{{ user.macnoserie }}</td>
+						</tr>
+						<tr>
+							<td><strong>Date d'achat</strong></td>
+							<td>{% if user.macdateachat is not null %}{{ dateFR(user.macdateachat) }}{% endif %}</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+
+	<div class="clearfix hidden-lg"></div>
+
+</div>
+
+{% else %}
+
+<div class="row">
+	<div class="col-md-12">
+		<div class="ibox float-e-margins">
+			<div class="ibox-content">
+				<h3><i class="fa fa-ban"></i> Vous n'avez les droits requis pour accéder au profil de cet utilisateur.</h3>
+			</div>
+		</div>
+	</div>
+</div>
+{% endif %}
+
+{% endblock content %}

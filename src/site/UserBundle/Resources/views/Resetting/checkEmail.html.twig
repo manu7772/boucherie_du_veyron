@@ -1,0 +1,13 @@
+{% extends "FOSUserBundle::layout.html.twig" %}
+{% trans_default_domain 'siteUserBundle' %}
+
+{% block soustitre %}<div class="page-breadcrumb">Demande de réinitialisation de votre mot de passe</div>{% endblock soustitre %}
+
+{% block fos_user_content %}
+<h6>
+	<i class="fa fa-check left"></i> 
+	{{ 'resetting.check_email'|trans({'%email%': email}) }}
+</h6>
+<br>
+<p><a href="{{ path('sitesite_homepage') }}" class="btn btn-md btn-black">Retour en page d'accueil</a></p>
+{% endblock fos_user_content %}

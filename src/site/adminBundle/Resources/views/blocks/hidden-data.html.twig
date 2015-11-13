@@ -1,0 +1,37 @@
+<span id="hiddendata" style="display:none;">
+	<!-- flash messages -->
+	<span id="environnementMode" style="display:none;">{{ app.getEnvironment()|raw }}</span>
+	<span id="typeMessages" style="display:none;">["success","info","warning","error"]</span>
+	<span id="defaultsMessages" style="display:none;">{"text":"Texte","type":"success","title":"Titre","showMethod":"slideDown","hideMethod":"fadeOut","showEasing":"swing","hideEasing":"swing","showDuration":400,"hideDuration":1000,"positionClass":"toast-top-right","closeButton":false,"progressBar":true,"debug":false,"timeOut":6000,"extendedTimeOut":1000,"closeHtml":"&lt;button type=&#039;button&#039;&gt;&amp;times;&lt;\/button&gt;","newestOnTop":false}</span>
+	{% for flashMessage in app.session.flashbag.get('flashMessages') %}
+	{% for msg in flashMessage %}
+	<span class="flashMessage" style="display:none;">{{ msg|json_encode()|raw }}</span>
+	{% endfor %}
+	{% endfor %}
+	<span id="formatDate" style="display:none;">{{ formatDate }}</span>
+	<span id="formFormatDate" style="display:none;">{{ formFormatDate }}</span>
+	<span id="formatDateHeure" style="display:none;">{{ formatDateHeure }}</span>
+	<span id="datatables">{{ datatables_hidden()|raw }}</span>
+</span>
+
+<span id="modales-type" style="display:none;">
+
+	<div class="modal inmodal fade" id="modale_model" tabindex="-1" role="dialog" aria-hidden="true">
+		<div class="modal-dialog modal-sm">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Fermer</span></button>
+					<h4 id="modal-title" class="modal-title"><i class="fa fa-exclamation-triangle"></i> Titre</h4>
+				</div>
+				<div class="modal-body">
+					<p id="modal-message">Message…</p>
+				</div>
+				<div class="modal-footer">
+					<button id="modal-cancel" type="button" class="btn btn-white cancel-all-icon-wait-on-click" data-dismiss="modal"><i class="fa fa-times"></i> Non</button>
+					<a href="#" id="modal-href" type="button" class="btn btn-danger"><i class="fa fa-check icon-wait-on-click"></i> Oui</a>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</span>

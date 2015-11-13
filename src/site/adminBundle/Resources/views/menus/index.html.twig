@@ -1,0 +1,97 @@
+{% extends 'siteadminBundle::page_admin_generic.html.twig' %}
+{% set cssjsloads = 'TAB' %}
+{% set DEVMODE = (app.environment in ['DEV', 'TEST']) or (is_granted('ROLE_SUPER_ADMIN')) %}
+
+{% block page_heading %}
+<div class="row wrapper border-bottom white-bg page-heading">
+	<div class="col-lg-12 m-t-xs">
+		<div class="row">
+			<div class="col-md-9">
+				{% if name|default('all') != 'all' %}
+				<h2>{{ 'menu.name'|trans|capitalize }} {{ name }}</h2>
+				<ol class="breadcrumb">
+					<li><a href="{{ path('siteadmin_homepage') }}"><strong>{{ 'administration'|trans|capitalize }}</strong></a></li>
+					<li><a href="{{ path('siteadmin_menus', {name: 'all'}) }}"><strong>{{ 'menu.name_s'|trans|capitalize }}</strong></a></li>
+					<li>{{ name }}</li>
+				</ol>
+				{% else %}
+				<h2>{{ 'menu.name_s'|trans|capitalize }}</h2>
+				<ol class="breadcrumb">
+					<li><a href="{{ path('siteadmin_homepage') }}"><strong>{{ 'administration'|trans|capitalize }}</strong></a></li>
+					<li>{{ 'menu.name_s'|trans|capitalize }}</li>
+				</ol>
+				{% endif %}
+			</div>
+			<div class="col-md-3 m-t-lg">
+				<div class="dropdown">
+					<button class="btn btn-xs btn-warning dropdown-toggle pull-right" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+						<i class="fa fa-plus"></i> {{ 'menu.create_btn'|trans|capitalize }}
+						<span class="caret"></span>
+					</button>
+					<ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+						{% for bundle in bundles %}
+						<li><a href="{{ path('siteadmin_menus_action', {name: null, bundle: bundle, action: 'create'}) }}">{{ bundle }}</a></li>
+						{% endfor %}
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock page_heading %}
+
+{% block content %}
+<div class="row">
+	<div class="col-lg-12">
+		{% if menus|default([])|length > 0 %}
+		<div class="ibox float-e-margins">
+			<div class="ibox-title">
+				<h5>{{ 'menu.name_s'|trans|capitalize }}</h5>
+				<div class="ibox-tools">
+					<a class="collapse-link">
+						<i class="fa fa-chevron-up"></i>
+					</a>
+					<a class="dropdown-toggle" data-toggle="dropdown" href="#">
+						<i class="fa fa-wrench"></i>
+					</a>
+				</div>
+			</div>
+			<div class="ibox-content">
+				<div class="table-responsive">
+					<table class="table table-striped">
+						<thead>
+							<tr>
+								<th>{{ 'table.col.bundle'|trans }}</th>
+								<th>{{ 'table.col.nom'|trans }}</th>
+								<th>{{ 'actions.name'|trans }}</th>
+							</tr>
+						</thead>
+						<tbody>
+							{% for keybundle,bundle in menus %}
+							{% for name,menu in bundle if is_granted(menu.roles.view) %}
+							<tr>
+								<td>{{ keybundle }}</td>
+								<td>{{ name }}</td>
+								<td>
+									{% if is_granted(menu.roles.edit) %}
+									<a href="{{ path('siteadmin_menus_action', {name: name, bundle: keybundle, action: 'edit'}) }}" type="button" class="btn btn-xs btn-white"><i class="fa fa-pencil icon-wait-on-click"></i></a>
+									{% endif %}
+									{% if is_granted(menu.roles.delete) %}
+									<a href="{{ path('siteadmin_menus_action', {name: name, bundle: keybundle, action: 'delete'}) }}" type="button" class="btn btn-xs btn-white need-confirmation"><i class="fa fa-times icon-wait-on-click"></i></a>
+									{% endif %}
+								</td>
+							</tr>
+							{% endfor %}
+							{% endfor %}
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+		{% else %}
+		<h3><i class="fa fa-ban"></i> {{ 'menu.not_found'|trans|capitalize }}</h3>
+		{% endif %}
+	</div>
+</div>
+{% endblock content %}
+

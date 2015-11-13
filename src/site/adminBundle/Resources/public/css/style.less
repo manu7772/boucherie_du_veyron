@@ -1,0 +1,141 @@
+@import "../framework_inspinia/css/variables.less";
+
+*:focus { outline: none; }
+
+.ellipsis {
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	overflow: hidden;
+}
+
+/* INSPINIA+ */
+.page-heading {
+	padding-bottom: 12px;
+}
+h1, .h1, h2, .h2, h3, .h3 {
+	margin-top: 8px;
+    margin-bottom: 8px;
+}
+.wrapper-content {
+    padding: 20px 10px 60px;
+}
+
+/* tables */
+td .label {
+	padding: 1px 5px;
+}
+table .progress {
+	background-color: #D6D6D6;
+	border-radius: 4px;
+}
+table .progress-mini,
+table .progress-mini .progress-bar {
+	height: 8px;
+}
+
+/* FOOTABLES */
+.footable-row-detail-inner {
+	width: 100%;
+}
+
+/* SQBlocks */
+.sqblock-wrapper,
+.sqblock-wrapper * {
+	display: none;
+}
+
+.radio label,
+.checkbox label,
+.radio-inline,
+.checkbox-inline {
+	padding-left: 2px;
+}
+.icheckbox_square-green,
+.iradio_square-green {
+	margin-right: 8px;
+}
+
+/* dropdown menu */
+.dropdown-menu>li>a {
+	line-height: 16px;
+}
+.dropdown-menu>li>a:hover,
+.dropdown-menu>li>a:focus {
+	background-color: @navy;
+	color: @gray;
+}
+.dropdown-menu .divider {
+	margin: 4px;
+}
+
+/* Formulaire */
+.form-group {
+	margin-bottom: 4px;
+}
+
+.input-group {
+	width: 100%;
+}
+.input-group-addon,
+.form-control {
+	border-radius: 4px;
+}
+.input-group-addon {
+	background-color: #f5f5f5;
+	border: 1px solid #E5E6E7;
+	border-radius: 1px;
+	font-size: 14px;
+	font-weight: 400;
+	line-height: 1;
+	padding: 6px 12px;
+	text-align: center;
+	width: 40px;
+}
+
+/* richText / summernote */
+.note-editor {
+	border: 1px solid @dark-gray;
+	border-radius: 4px;
+	padding: 0px;
+	background-color: #FFFFFF;
+	height: 180px;
+	height: auto !important; 
+	min-height: 180px; 
+}
+.note-editor .note-toolbar > .btn-group {
+	margin-top: 2px;
+	margin-right: 0px;
+	margin-left: 0px;
+}
+.note-editor .note-toolbar {
+	padding-bottom: 3px;
+	padding-left: 4px;
+	padding-top: 0px;
+	margin: 0;
+	background-color: #ccc;
+	border-bottom: 1px solid #E7EAEC;
+}
+.note-editor .note-editable {
+	padding: 10px;
+	overflow: auto;
+	outline: 0;
+}
+.note-editor .note-dialog .note-help-dialog .modal-close {
+	color: #428bca;
+}
+.note-editor .note-dialog .note-help-dialog .note-shortcut th {
+	font-size: 13px;
+	color: #23c6c8;
+	text-align: left;
+	line-height: 15px;
+}
+.note-editor .note-dialog .note-help-dialog .note-shortcut td:first-child {
+	min-width: 110px;
+	padding-right: 14px;
+	font-family: helvetica;
+	color: #428bca;
+	text-align: right;
+}
+
+
+

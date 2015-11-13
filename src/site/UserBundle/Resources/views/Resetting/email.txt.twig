@@ -1,0 +1,10 @@
+{% extends 'siteUserBundle:mail:base_div_mail.html.twig' %}
+{% trans_default_domain 'siteUserBundle' %}
+
+{% block subject %}
+	{{ 'resetting.email.subject'|trans }}
+{% endblock subject %}
+
+{% block body_html_in %}
+	{{ 'resetting.email.message'|trans({'%username%': user.username, '%confirmationUrl%': confirmationUrl}) }}
+{% endblock body_html_in %}

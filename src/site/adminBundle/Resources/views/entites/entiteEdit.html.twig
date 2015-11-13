@@ -1,0 +1,51 @@
+{% extends 'siteadminBundle::page_admin_generic.html.twig' %}
+{% set cssjsloads = 'simple' %}
+{% set DEVMODE = (app.environment in ['dev', 'test']) or (is_granted('ROLE_SUPER_ADMIN')) %}
+
+{% block page_heading %}
+<div class="row wrapper border-bottom white-bg page-heading">
+	<div class="col-lg-12 m-t-xs">
+		<h2 class="row">
+			<div class="col-md-8">{{ (entite_name ~ '.name')|trans|capitalize }} {{ entite.nom|default('#' ~ entite.id) }}</div>
+			<div class="col-md-4">
+				<a href="{{ path('siteadmin_entite', {entite: entite_name, id: entite.id, action: 'delete'}) }}" type="button" class="btn btn-xs btn-danger btn-outline pull-right need-confirmation" data-message="{{ 'actions.suppQuestion'|trans({'%name%': entite.nom|default('#' ~ entite.id)})|capitalize }}"><i class="fa fa-times icon-wait-on-click"></i> {{ 'actions.supprimer'|trans|capitalize }}</a>
+				{#
+				<a href="{{ path('siteadmin_entite', {entite: entite_name, id: entite.id, action: 'edit'}) }}" style="margin-right: 4px;" type="button" class="btn btn-xs btn-warning pull-right"><i class="fa fa-pencil icon-wait-on-click"></i> {{ 'actions.modifier'|trans|capitalize }}</a>
+				#}
+				<a href="{{ path('siteadmin_entite', {entite: entite_name, id: entite.id, action: 'show'}) }}" style="margin-right: 4px;" type="button" class="btn btn-xs btn-white pull-right"><i class="fa fa-eye icon-wait-on-click"></i> {{ 'actions.voir'|trans|capitalize }}</a>
+				<a href="{{ path('siteadmin_entite', {entite: entite_name}) }}" style="margin-right: 4px;" type="button" class="btn btn-xs btn-white pull-right"><i class="fa fa-bars icon-wait-on-click"></i> {{ (entite_name ~ '.backlist_btn')|trans|capitalize }}</a>
+			</div>
+		</h2>
+		<ol class="breadcrumb">
+			<li><a href="{{ path('siteadmin_homepage') }}"><strong>{{ 'administration'|trans|capitalize }}</strong></a></li>
+			<li><a href="{{ path('siteadmin_entite', {entite: entite_name}) }}"><strong>{{ (entite_name ~ '.name_s')|trans|capitalize }}</strong></a></li>
+			<li><a href="{{ path('siteadmin_entite', {entite: entite_name, id: entite.id, action: 'show'}) }}"><strong>{{ entite.nom|default('#' ~ entite.id) }}</strong></a></li>
+			<li>{{ 'actions.modification'|trans|capitalize }}</li>
+		</ol>
+	</div>
+</div>
+{% endblock page_heading %}
+
+{% block content %}
+
+	{% set prior = ["nom"] %}
+	{% set lasts = ["submit"] %}
+    {{ form_start(edit_form) }}
+    {{ form_errors(edit_form) }}
+
+    {% for item in prior if edit_form[item] is defined %}
+        {{ form_row(edit_form[item]) }}
+    {% endfor %}
+
+    {% for key,child in edit_form.children if ((key not in prior) and (key not in lasts)) %}
+        {{ form_row(child) }}
+    {% endfor %}
+    
+    {% for item in lasts if edit_form[item] is defined %}
+        {{ form_row(edit_form[item]) }}
+    {% endfor %}
+
+    {{ form_rest(edit_form) }}
+    {{ form_end(edit_form) }}
+
+{% endblock content %}

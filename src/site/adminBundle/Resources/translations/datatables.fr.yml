@@ -1,0 +1,25 @@
+decimal: ','
+processing: 'Traitement en cours...'
+search: 'Rechercher&nbsp;'
+lengthMenu: 'Afficher _MENU_ éléments'
+info: 'Affichage de l''élement _START_ à _END_ sur _TOTAL_ éléments'
+infoEmpty: 'Affichage de l''élément 0 à 0 sur 0 éléments'
+infoFiltered: '(filtré de _MAX_ éléments au total)'
+infoPostFix: ''
+loadingRecords: 'Chargement en cours...'
+zeroRecords: 'Aucun élément à afficher'
+emptyTable: 'Aucun élément'
+paginate:
+    first: Premier
+    previous: Précédent
+    next: Suivant
+    last: Dernier
+aria:
+    sortAscending: ': activer pour trier la colonne par ordre croissant'
+    sortDescending: ': activer pour trier la colonne par ordre décroissant'
+paginate_first: null
+paginate_previous: null
+paginate_next: null
+paginate_last: null
+aria_sortAscending: null
+aria_sortDescending: null

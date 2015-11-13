@@ -1,0 +1,3 @@
+sitegraphics_homepage:
+    path:     /hello/{name}
+    defaults: { _controller: sitegraphicsBundle:Default:index }

@@ -1,0 +1,40 @@
+<!DOCTYPE html> <!-- HTML 5 -->
+<html lang="fr">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="author" content="">
+        <meta name="description" content='{% block metatitles %}{% endblock metatitles %}'>
+        <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
+        <title>{% block title %}{{ 'site'|trans }}{% endblock title %}</title>
+        {% stylesheets filter='cssrewrite, lessphp, ?yui_css'
+        'bundles/sitegraphics/bdv/css/bootstrap.min.css'
+        'bundles/sitegraphics/bdv/css/font-awesome.min.css'
+        'bundles/sitegraphics/bdv/css/animate.css'
+        'bundles/sitegraphics/bdv/css/main.css'
+        'bundles/sitegraphics/bdv/css/responsive.css'
+         %}
+        <link rel="stylesheet" href="{{ asset_url }}" type="text/css" />
+        {% endstylesheets %}
+        <!--[if lt IE 9]>
+        <script src="js/html5shiv.js"></script>
+        <script src="js/respond.min.js"></script>
+        <![endif]-->
+    </head>
+    <body>
+        {{ include('sitesiteBundle:blocks:googleAnalyticScript.html.twig') }}
+        {% block body %}
+        <!-- CONTENU DE LA PAGE -->
+        {% endblock body %}
+
+        {% javascripts filter='?yui_js'
+        'bundles/sitegraphics/bdv/js/jquery.js'
+        'bundles/sitegraphics/bdv/js/bootstrap.min.js'
+        'bundles/sitegraphics/bdv/js/jquery.scrollUp.min.js'
+        'bundles/sitegraphics/bdv/js/main.js'
+        'bundles/sitegraphics/bdv/js/specifics.js'
+         %}
+        <script type="text/javascript" src="{{ asset_url }}"></script>
+        {% endjavascripts %}
+    </body>
+</html>

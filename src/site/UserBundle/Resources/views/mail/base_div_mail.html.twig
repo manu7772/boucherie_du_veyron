@@ -1,0 +1,24 @@
+{% autoescape false %}
+{% block subject %}
+Subject
+{% endblock subject %}
+{% endautoescape %}
+
+{% block body_text %}
+{% endblock body_text %}
+
+{% block body_html %}
+<div bgcolor="#FFFFFF" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+	<a href="{{ url('sitesite_homepage') }}">
+		<img src="{{ asset('bundles/sitesite/images/entete_mail_imago.png', absolute=true) }}" width="520" height="74" alt="" >
+	</a>
+	{% autoescape false %}
+	{% block body_html_in %}
+	Text…
+	{% endblock body_html_in %}
+	{% endautoescape %}
+	<br />
+	<p>-------------------------------</p>
+	<p>Ceci est un envoi automatique, merci de ne pas répondre à ce mail.<br />
+</div>
+{% endblock body_html %}

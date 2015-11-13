@@ -1,0 +1,45 @@
+{% extends 'siteadminBundle::page_admin_generic.html.twig' %}
+{% set cssjsloads = 'simple' %}
+{% set DEVMODE = (app.environment in ['dev', 'test']) or (is_granted('ROLE_SUPER_ADMIN')) %}
+
+{% block page_heading %}
+<div class="row wrapper border-bottom white-bg page-heading">
+	<div class="col-lg-12 m-t-xs">
+		<h2 class="row">
+			<div class="col-md-8">{{ (entite_name ~ '.name')|trans|capitalize }}</div>
+			<div class="col-md-4">
+				<a href="{{ path('siteadmin_entite', {entite: entite_name}) }}" style="margin-right: 4px;" type="button" class="btn btn-xs btn-white pull-right"><i class="fa fa-bars icon-wait-on-click"></i> {{ (entite_name ~ '.backlist_btn')|trans|capitalize }}</a>
+			</div>
+		</h2>
+		<ol class="breadcrumb">
+			<li><a href="{{ path('siteadmin_homepage') }}"><strong>{{ 'administration'|trans|capitalize }}</strong></a></li>
+			<li><a href="{{ path('siteadmin_entite', {entite: entite_name}) }}"><strong>{{ (entite_name ~ '.name_s')|trans|capitalize }}</strong></a></li>
+			<li>{{ 'actions.creation'|trans|capitalize }}</li>
+		</ol>
+	</div>
+</div>
+{% endblock page_heading %}
+
+{% block content %}
+
+	{% set prior = ["nom"] %}
+	{% set lasts = ["submit"] %}
+    {{ form_start(create_form) }}
+    {{ form_errors(create_form) }}
+
+    {% for item in prior if create_form[item] is defined %}
+        {{ form_row(create_form[item]) }}
+    {% endfor %}
+
+    {% for key,child in create_form.children if ((key not in prior) and (key not in lasts)) %}
+        {{ form_row(child) }}
+    {% endfor %}
+    
+    {% for item in lasts if create_form[item] is defined %}
+        {{ form_row(create_form[item]) }}
+    {% endfor %}
+
+    {{ form_rest(create_form) }}
+    {{ form_end(create_form) }}
+
+{% endblock content %}

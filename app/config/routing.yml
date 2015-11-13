@@ -1,0 +1,67 @@
+main_home:
+    pattern: /{_locale}
+    defaults: { _controller: sitesiteBundle:Default:index, _locale: %locale% }
+    requirements:
+        _locale: %default_locales%
+
+site_site:
+    resource: "@sitesiteBundle/Resources/config/routing.yml"
+    prefix:   /{_locale}/
+    requirements:
+        _locale: %default_locales%
+
+site_translate:
+    resource: "@sitetranslateBundle/Resources/config/routing.yml"
+    prefix:   /{_locale}/translate
+    requirements:
+        _locale: %default_locales%
+
+site_edition:
+    resource: "@siteeditionBundle/Resources/config/routing.yml"
+    prefix:   /{_locale}/edition
+    requirements:
+        _locale: %default_locales%
+
+site_user:
+    resource: "@siteUserBundle/Resources/config/routing.yml"
+    prefix:   /{_locale}/user
+    requirements:
+        _locale: %default_locales%
+
+site_admin:
+    resource: "@siteadminBundle/Resources/config/routing.yml"
+    prefix:   /{_locale}/admin
+    requirements:
+        _locale: %default_locales%
+
+
+# USER ROUTING
+fos_user_security:
+    resource: "@FOSUserBundle/Resources/config/routing/security.xml"
+    prefix: /{_locale}
+    requirements:
+        _locale: %default_locales%
+
+fos_user_profile:
+    resource: "@FOSUserBundle/Resources/config/routing/profile.xml"
+    prefix: /{_locale}/profile
+    requirements:
+        _locale: %default_locales%
+
+fos_user_register:
+    resource: "@FOSUserBundle/Resources/config/routing/registration.xml"
+    prefix: /{_locale}/register
+    requirements:
+        _locale: %default_locales%
+
+fos_user_resetting:
+    resource: "@FOSUserBundle/Resources/config/routing/resetting.xml"
+    prefix: /{_locale}/resetting
+    requirements:
+        _locale: %default_locales%
+
+fos_user_change_password:
+    resource: "@FOSUserBundle/Resources/config/routing/change_password.xml"
+    prefix: /{_locale}/profile
+    requirements:
+        _locale: %default_locales%

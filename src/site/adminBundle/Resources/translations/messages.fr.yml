@@ -1,0 +1,185 @@
+date_format:
+    date: Y-m-d
+    time: 'H:i:s'
+    datetime: 'Y-m-d H:i:s'
+entity:
+    notblank:
+        nom: Vous devez préciser le nom
+pageweb:
+    name_s: pages web
+    name: page web
+    not_found: 'aucune page web trouvée'
+    x_found: '{0} aucune page web trouvée|{1} 1 page web trouvée|[2,+Inf] %count% pages web trouvées'
+    create: 'créer une nouvelle page web'
+    create_btn: 'nouvelle page web'
+    backlist: 'retour à la liste des pages web'
+    backlist_btn: 'retour liste'
+    dontexist: 'cette page web n''existe pas'
+    moredetails: 'plus de détails sur %name%'
+media:
+    name_s: médias
+    name: média
+    not_found: 'aucun média trouvée'
+    x_found: '{0} aucun média trouvé|{1} 1 média trouvé|[2,+Inf] %count% médias trouvés'
+    create: 'créer un nouveau média'
+    create_btn: 'nouveau média'
+    backlist: 'retour à la liste des médias'
+    backlist_btn: 'retour liste'
+    dontexist: 'ce média n''existe pas'
+    moredetails: 'plus de détails sur %name%'
+fileFormat:
+    name_s: 'types de fichier'
+    name: 'type de fichier'
+    liste_icones: 'liste des icones'
+    not_found: 'aucun type de fichier trouvé'
+    x_found: '{0} aucun type trouvé|{1} 1 type trouvé|[2,+Inf] %count% types trouvés'
+    create: 'créer un nouveau type'
+    create_btn: 'nouveau type'
+    backlist: 'retour à la liste des types'
+    backlist_btn: 'retour liste'
+    dontexist: 'ce type n''existe pas'
+    suppression: 'le format de fichier %name% a été supprimé'
+    moredetails: 'plus de détails sur %name%'
+User:
+    name_s: utilisateurs
+    name: utilisateur
+    not_found: 'aucun utilisateur trouvé'
+    x_found: '{0} aucun utilisateur trouvé|{1} 1 utilisateur trouvé|[2,+Inf] %count% utilisateurs trouvés'
+    create: 'créer un nouvel utilisateur'
+    create_btn: 'nouvel utilisateur'
+    backlist: 'retour à la liste des utilisateurs'
+    backlist_btn: 'retour liste'
+    dontexist: 'cet utilisateur n''existe pas'
+    moredetails: 'plus de détails sur %name%'
+tag:
+    name_s: tags
+    name: tag
+    not_found: 'aucun tag trouvé'
+    x_found: '{0} aucun tag trouvé|{1} 1 tag trouvé|[2,+Inf] %count% tags trouvés'
+    create: 'créer un nouveau tag'
+    create_btn: 'nouveau tag'
+    created: '{0} Aucun tag créé|{1} %count% tag a été créé : %list%|[2,+Inf] %count% tags ont été créés : %list%'
+    new: '{0,1} nouveau tag|[2,+Inf] %count% nouveaux tags'
+    backlist: 'retour à la liste des tags'
+    backlist_btn: 'retour liste'
+    dontexist: 'ce tag n''existe pas'
+    existe: 'ce tag existe déjà'
+    suppression: 'le tag %name% a été supprimé'
+    moredetails: 'plus de détails sur %name%'
+    index:
+        addSpeech: 'Pour ajouter plusieurs tags en une fois, séparez-les par des virgules'
+all:
+    name_s: tous
+    name: tous
+    not_found: 'aucun élément trouvé'
+    x_found: '{0} aucun élément trouvé|{1} 1 élément trouvé|[2,+Inf] %count% éléments trouvés'
+    create: 'créer un nouvel élément'
+    create_btn: 'nouveau éléments'
+    backlist: 'retour à la liste des éléments'
+    backlist_btn: 'retour liste'
+    dontexist: 'ce élément n''existe pas'
+    suppression: 'l''élément %name% a été supprimé'
+    moredetails: 'plus de détails sur %name%'
+actions:
+    name: actions
+    voir: voir
+    modification: modification
+    modifier: modifier
+    creation: création
+    ajouter: ajouter
+    suppression: suppression
+    supprimer: supprimer
+    suppQuestion: Souhaitez-vous vraiment supprimer %name% ?
+    vue: 'vue en détails'
+table:
+    col:
+        id: id
+        nom: nom
+        slug: slug
+        title: titre
+        titreh1: titre H1
+        modele: modèle
+        metatitle: meta title
+        metadescription: mots clés
+        attribut: attribut
+        valeur: valeur
+        creation: création
+        maj: 'mise à jour'
+        icone: icône
+        typemime: 'type mime'
+        parent_folder: 'dossier parent'
+        child_folders: 'contenu dossiers'
+        child_files: 'contenu fichiers'
+        visuel: visuel
+        version: version
+        versions_list: 'liste des versions'
+        tag: tag
+        default: défaut
+        email: courriel
+        originalnom: nom fichier
+        bundle: bundle
+msg:
+    supp: 'souhaitez-vous supprimer cet élément ?'
+    suppression: suppression
+form:
+    enregistrer: Enregistrer
+    select: Sélectionner…
+    nom: Nom
+    typemime: 'Type mime'
+    icone: Icône
+    actif: Actif
+    groupes: Groupes
+    fa_groupes: '<i class="fa fa-users"></i> Groupes'
+    fichiers: Fichiers
+    fa_fichiers: '<i class="fa fa-files-o"></i> Fichiers'
+    parent_folder: 'Dossier parent'
+    fa_parent_folder: '<i class="fa fa-folder"></i> Dossier parent'
+    child_folders: 'Dossiers enfants'
+    fa_child_folders: '<i class="fa fa-folder-open"></i> Dossiers enfants'
+    current_version: 'Version courante'
+    fa_current_version: '<i class="fa fa-files"></i> Version courante'
+    tags: Tags
+    tags_create: 'Créez ici des tags en les séparant par des virgules…'
+    fa_tags: '<i class="fa fa-tags"></i> Tags'
+    fa_tags_list: '<i class="fa fa-tags"></i> Liste de tags'
+    creation: Création
+    update: 'Mise à jour'
+    telechargement: Téléchargement
+    code: texte de page
+    background: image de fond
+erreurs:
+    supp_simple: 'erreur de suppression'
+    suppression: 'erreur lors de la suppression de %name%'
+recherche:
+    name: recherche
+administration: administration
+savoirplus: 'en savoir plus'
+copyright: copyright
+non: non
+oui: oui
+close: fermer
+open: ouvrir
+erreur: erreur
+reset_all: 'effacer tout'
+parametres: paramètres
+reglages: configuration
+informations: informations
+information: information
+options: options
+télécharger: télécharger
+homepage: sommaire
+arborescence: 'arborescence'
+parents: parents
+parent: parent
+enfants: enfants
+enfant: enfant
+card: carte
+document_s: documents
+document: document
+dossier_racine: 'dossier racine'
+dossiers_parents: 'dossiers parents'
+dossier_parent: 'dossier parent'
+dossiers_enfants: 'dossiers enfants'
+dossier_enfant: 'dossier enfant'
+accueil: accueil
+racine: racine

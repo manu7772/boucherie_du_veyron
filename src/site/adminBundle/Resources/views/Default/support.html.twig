@@ -1,0 +1,57 @@
+{% extends 'siteadminBundle::page_admin_generic.html.twig' %}
+{% set cssjsloads = 'simple' %}
+{% set DEVMODE = (app.environment in ['dev', 'test']) or (is_granted('ROLE_SUPER_ADMIN')) %}
+
+{% block page_heading %}
+<div class="row wrapper border-bottom white-bg page-heading">
+	<div class="col-lg-12 m-t-xs">
+		<ol class="breadcrumb">
+			<li><a href="{{ path('siteadmin_homepage') }}"><strong>Administration</strong></a></li>
+			<li>Support</li>
+		</ol>
+	</div>
+</div>
+{% endblock page_heading %}
+
+{% block content %}
+<div class="row">
+	<div class="col-md-12">
+		<div class="ibox-content m-b-sm border-bottom">
+			<div class="text-center p-lg">
+				<h2>Support d'application Labo</h2>
+				<span><strong>Webmaster : {{ webmaster.nom }} {{ webmaster.prenom }}</strong><br>Tél. : {{ webmaster.tel }} | Courriel : <a href="mailto:{{ webmaster.email }}">{{ webmaster.email }}</a></span>
+			</div>
+		</div>
+		<div class="faq-item">
+			<div class="row">
+				<div class="col-md-9">
+					<a data-toggle="collapse" href="#faq1" class="faq-question">Comment activer/désactiver l'aide de l'application ?</a>
+					<small>Ajouté par <strong>Sadmin</strong> <i class="fa fa-clock-o"></i> lun 19 octobre 2015</small>
+				</div>
+				<div class="col-md-3 text-right">
+					<span class="small font-bold">Emmanuel Dujardin</span>
+					<div class="tag-list">
+						<span class="tag-item">Admin</span>
+						<span class="tag-item">Helper</span>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-lg-12">
+					<div id="faq1" class="panel-collapse collapse ">
+						<div class="faq-answer row">
+							<div class="col-sm-3">
+								<img class="img-responsive img-rounded" src="{{ asset('bundles/siteadmin/images/support/aide_001.png') }}">
+							</div>
+							<div class="col-sm-9">
+								<p>L'aide est visible sur la barre supérieure et dans votre menu d'administration, ou dans le menu en haut de la barre latérale gauche. Cliquez pour activer ou désactiver l'aide en ligne.</p>
+								<p>Cette action est enregistrée dans vos paramètres utilisateur.</p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock content %}

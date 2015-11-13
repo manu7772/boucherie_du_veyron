@@ -1,0 +1,35 @@
+{% extends 'sitesiteBundle:bases:base_simple.html.twig' %}
+{% trans_default_domain 'siteUserBundle' %}
+
+{% block sections %}
+
+        <!-- Intro Section -->
+        <section class="inner-intro inner-intro-small bg-img8 light-color overlay-dark">
+            <div class="container">
+                <div class="row title">
+                    <h2 class="h2">{{ 'name'|trans|capitalize }}</h2>
+                    {% block soustitre %}
+                    {% endblock soustitre %}
+                </div>
+            </div>
+        </section>
+        <div class="pb-30 clearfix"></div>
+        <!-- End Intro Section -->
+
+        {% if form is defined %}{% form_theme form 'siteUserBundle:Form:formuser-override.html.twig' %}{% endif %}
+        <!-- Login Section -->
+        <section class="pb-sm-30">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
+                        <div class="border-box">
+                        {% block fos_user_content %}
+                        {% endblock fos_user_content %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- End Login Section -->
+
+{% endblock sections %}

@@ -1,0 +1,55 @@
+traduction:
+    name: translation
+    langues: languages
+    langue_s: '{0,1} language|[2,+Inf[languages'
+    autres: 'other translations'
+    auto_translate: 'auto translation'
+    reprendre: 'get %langue%'
+    twigcode: 'twig code'
+    test: tests
+    traduction: translation
+    texte: text
+    request: 'enter a text to be translated ...'
+    traduire: translate
+    original: 'original text'
+    traduit: 'translated text'
+    languename:
+        fr: french
+        en: english
+        en-US: 'US english'
+        es: spanish
+        it: italian
+        de: german
+    fichier:
+        conforme: 'file is correct'
+        erreur: 'file is not correct'
+        absent: 'missing file'
+    domaine:
+        nom: domain
+        valide: 'valid domain'
+        incomplet: 'incomplete domain'
+        erreur: 'domain with errors'
+    menu:
+        edite: modify
+        update: update
+        mergeall: 'update with all'
+        merge: standardize
+        merge_lang: 'standardize with %language%'
+    placeholder:
+        texte: text
+    file_not_found: 'missing file'
+    file_found: 'file found'
+    button:
+        back: 'back to list'
+    help:
+        helper: 'enter text to display in the translation'
+        plural1: pluralization
+        plural2: 'explicit interval pluralization'
+        plural3: 'pluralization OpenClassroom'
+    merge:
+        done: 'standardization performed'
+        with: 'standardization from: %language%'
+    modif:
+        done: 'change done'
+    voir_site: 'website in %langue%'
+    helper: helper

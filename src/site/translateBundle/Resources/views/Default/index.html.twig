@@ -1,0 +1,86 @@
+{% extends 'sitetranslateBundle::base_translate.html.twig' %}
+{% set cssjsloads = 'simple' %}
+{% set DEVMODE = (app.environment in ['dev', 'test']) or (is_granted('ROLE_SUPER_ADMIN')) %}
+
+
+{% block page_heading %}
+<div class="row border-bottom white-bg dashboard-header">
+	<div class="col-sm-12">
+		<h2><i class="fa fa-tag"></i> {{ 'traduction.traduction'|trans|capitalize }}</h2>
+		<div class="hr-line-dashed m-t-sm m-b-sm"></div>
+		<div class="row">
+			<div class="col-sm-12">
+				<p><strong>{{ langues.list|length }}</strong> {{ 'traduction.langue_s'|transchoice(langues.list|length) }}</p>
+				{% for lang in langues.list %}
+				{% set btncolor = "btn-primary" %}
+				{% set btnviz = "" %}
+				{% if lang == langues.default %}{% set btnviz = " dim" %}{% endif %}
+				{# {% if lang == app.request.locale %}{% set btncolor = "btn-warning" %}{% endif %} #}
+				<a class="btn btn-xs {{ btncolor }}{{ btnviz }} btn-disabled">{{ ('traduction.languename.' ~ lang)|trans|capitalize }}</a>
+				{% endfor %}
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock page_heading %}
+
+{% block content %}
+<div class="row">
+	{% for bundle,bundles in transfiles %}
+	<div class="col-md-6">
+		<div class="ibox float-e-margins">
+			<div class="ibox-title">
+				<h5><trong>{{ bundle }}</strong></h5>
+			</div>
+			<div class="ibox-content">
+				<div class="feed-activity-list">
+					{% for domain,domains in bundles %}
+					<div class="feed-element">
+						<div>
+							<small><a href="{{ path('merge_traduction', {language: 'all', bundle: bundle, domain: domain}) }}" class="btn btn-xs btn-white pull-right">{{ 'traduction.menu.mergeall'|trans|capitalize }}</a></small>
+							<h3><small class="text-muted">{{ 'traduction.domaine.nom'|trans|capitalize }}</small> <strong>{{ domain }}</strong></h3>
+							<div class="row">
+							<!-- list of langues -->
+								{% set valid = 1 %}
+								{% for language,lang in domains %}
+									{% if language in langues.bundles[bundle]|default(langues.list) %}
+										{% set disabled = '' %}
+									{% else %}
+										{% set disabled = ' disabled' %}
+									{% endif %}
+									{% if lang.statut == 1 %}
+									<div class="col-xs-6 col-sm-4 col-md-3">
+										<a href="{{ path('edit_traduction', {bundle: bundle, domain: domain, language: language}) }}" type="button" class="btn btn-xs btn-primary btn-block ellipsis{{ disabled }}" title="{{ 'traduction.fichier.conforme'|trans|capitalize }}">{{ ('traduction.languename.' ~ language)|trans|capitalize }}</a>
+									</div>
+									{% elseif lang.statut == 0 %}
+									{% if valid != -1 %}{% set valid = 0 %}{% endif %}
+									<div class="col-xs-6 col-sm-4 col-md-3">
+										<a href="{{ path('merge_traduction', {language: 'all', bundle: bundle, domain: domain, current: language}) }}" type="button" class="btn btn-xs btn-warning btn-block ellipsis{{ disabled }}" title="{{ 'traduction.fichier.absent'|trans|capitalize }}">{{ ('traduction.languename.' ~ language)|trans|capitalize }}</a>
+									</div>
+									{% else %}
+									{% set valid = -1 %}
+									<div class="col-xs-6 col-sm-4 col-md-3">
+										<a href="{{ path('merge_traduction', {language: 'all', bundle: bundle, domain: domain, current: language}) }}" type="button" class="btn btn-xs btn-danger btn-block ellipsis{{ disabled }}" title="{{ 'traduction.fichier.erreur'|trans|capitalize }} : {{ lang.statut|raw }}">{{ ('traduction.languename.' ~ language)|trans|capitalize }}</a>
+									</div>
+									{% endif %}
+								{% endfor %}
+							</div>
+							<small>
+								{% if valid == 1 %}
+								<span class="text-info">{{ 'traduction.domaine.valide'|trans|capitalize }}</span>
+								{% elseif valid == 0 %}
+								<span class="text-warning">{{ 'traduction.domaine.incomplet'|trans|capitalize }}</span>
+								{% elseif valid == -1 %}
+								<span class="text-danger">{{ 'traduction.domaine.erreur'|trans|capitalize }}</span>
+								{% endif %}
+							</small>
+						</div>
+					</div>
+					{% endfor %}
+				</div>
+			</div>
+		</div>
+	</div>
+	{% endfor %}
+</div>
+{% endblock content %}

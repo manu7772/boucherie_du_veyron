@@ -1,0 +1,16 @@
+sitetranslate_homepage:
+    path:     /
+    defaults: { _controller: sitetranslateBundle:Default:showtrad }
+
+merge_traduction:
+    path: /merge-with-{language}/{bundle}/{domain}/{current}
+    defaults: { _controller: sitetranslateBundle:Default:mergetrad, current: null }
+
+edit_traduction:
+    path: /edit/{bundle}/{domain}/{language}
+    defaults: { _controller: sitetranslateBundle:Default:editrad }
+
+change_traduction:
+    path: /change
+    defaults: { _controller: sitetranslateBundle:Default:change }
+

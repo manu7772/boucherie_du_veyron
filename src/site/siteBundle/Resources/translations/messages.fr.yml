@@ -1,0 +1,24 @@
+site: 'Boucherie du Veyron'
+bundles:
+    admin:
+        name: administration
+    translate:
+        name: traduction
+    User:
+        name: utilisateurs
+menu:
+    name: menu
+    name_s : menus
+    not_found: aucun menu trouvé
+    create_btn: nouveau menu
+    accueil: accueil
+    realisations: réalisations
+    videos: vidéos
+    login: connexion
+    contact: contact
+search:
+    name: rechercher…
+footer:
+    realisation: 'réalisé par %name%'
+    generation: 'réalisé avec'
+    rights: 'tous droits réservés'

@@ -1,0 +1,8 @@
+sitesite_homepage:
+    path:       /
+    defaults:   { _controller: sitesiteBundle:Default:index }
+
+site_pageweb:
+    path:       /page/{pageweb}/{params}
+    defaults:   { _controller: sitesiteBundle:Default:pageweb, params: null }
+

@@ -1,0 +1,10 @@
+{% extends 'siteadminBundle::page_admin_generic.html.twig' %}
+{% set cssjsloads = 'TAB' %}
+{% set DEVMODE = (app.environment in ['DEV', 'TEST']) or (is_granted('ROLE_SUPER_ADMIN')) %}
+
+{% block page_heading %}
+{% endblock page_heading %}
+
+{% block content %}
+Hello {{ name }}!
+{% endblock content %}

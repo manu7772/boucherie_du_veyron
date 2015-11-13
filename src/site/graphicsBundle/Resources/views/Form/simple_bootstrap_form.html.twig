@@ -1,0 +1,6 @@
+{% use "sitegraphicsBundle:Form:form_div_layout.html.twig" %}
+
+{% block button_widget -%}
+    {% set attr = attr|merge({class: (attr.class|default('btn-default') ~ ' btn btn-sm')|trim}) %}
+    {{- parent() -}}
+{%- endblock %}

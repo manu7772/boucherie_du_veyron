@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>{% block title %}ADMINISTRATION WEBSITE{% endblock title %}</title>
+		{% block stylesheets %}
+		{% stylesheets filter='cssrewrite, lessphp, ?yui_css'
+		'bundles/siteadmin/framework_inspinia/css/bootstrap.css'
+		'bundles/siteadmin/framework_inspinia/font-awesome/css/font-awesome.css'
+		'bundles/siteadmin/framework_inspinia/css/animate.css'
+
+		'bundles/siteadmin/framework_inspinia/css/plugins/toastr/toastr.min.css'
+		'bundles/siteadmin/framework_inspinia/css/plugins/colorpicker/bootstrap-colorpicker.min.css'
+		'bundles/siteadmin/framework_inspinia/css/plugins/chosen/chosen.css'
+		'bundles/siteadmin/framework_inspinia/css/plugins/summernote/summernote.css'
+		'bundles/siteadmin/framework_inspinia/css/plugins/summernote/summernote-bs3.css'
+		'bundles/siteadmin/framework_inspinia/css/plugins/datapicker/datepicker3.css'
+		'bundles/siteadmin/framework_inspinia/css/plugins/jasny/jasny-bootstrap.min.css'
+		'bundles/siteadmin/framework_inspinia/css/plugins/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css'
+		'bundles/siteadmin/framework_inspinia/css/plugins/cropper/cropper.min.css'
+
+		'bundles/siteadmin/framework_inspinia/css/style.less'
+		'bundles/siteadmin/css/style.less'
+		%}
+		<link rel="stylesheet" href="{{ asset_url }}" type="text/css" />
+		{% endstylesheets %}
+		{% endblock stylesheets %}
+		<link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
+	</head>
+	<body{% block bodyattr %} class="{{ page.skin|default('skin-0')}}"{% endblock bodyattr %}>
+		<span class="sqblock-wrapper" style="display:none;">
+			{% block SQBlock %}
+			{% endblock SQBlock %}
+		</span>
+		<div id="wrapper">
+		{% block body %}
+		{% endblock body %}
+		<br>
+		<br>
+		</div>
+		{% block hiddendata %}
+			{{ include('siteadminBundle:blocks:hidden-data.html.twig') }}
+		{% endblock hiddendata %}
+		{% block javascripts %}
+		{% javascripts filter='?yui_js'
+		'bundles/siteadmin/framework_inspinia/js/jquery-2.1.1.js'
+		'bundles/siteadmin/framework_inspinia/js/plugins/metisMenu/jquery.metisMenu.js'
+		'bundles/siteadmin/framework_inspinia/js/plugins/slimscroll/jquery.slimscroll.js'
+		'bundles/siteadmin/framework_inspinia/js/inspinia.js'
+		'bundles/siteadmin/framework_inspinia/js/plugins/pace/pace.min.js'
+		'bundles/siteadmin/framework_inspinia/js/plugins/jquery-ui/jquery-ui.js'
+		'bundles/siteadmin/init/init-tooltips-compatibility.js'
+		
+		'bundles/siteadmin/framework_inspinia/js/bootstrap.js'
+		'bundles/siteadmin/framework_inspinia/js/plugins/toastr/toastr.min.js'
+		'bundles/siteadmin/framework_inspinia/js/plugins/colorpicker/bootstrap-colorpicker.min.js'
+		'bundles/siteadmin/framework_inspinia/js/plugins/chosen/chosen.jquery.js'
+		'bundles/siteadmin/framework_inspinia/js/plugins/summernote/summernote.js'
+		'bundles/siteadmin/framework_inspinia/js/plugins/datapicker/bootstrap-datepicker.js'
+		'bundles/siteadmin/framework_inspinia/js/plugins/jasny/jasny-bootstrap.min.js'
+		'bundles/siteadmin/framework_inspinia/js/plugins/cropper/cropper.min.js'
+		'bundles/siteadmin/framework_inspinia/js/plugins/nestable/jquery.nestable.js'
+
+		'bundles/siteadmin/js/jquery.mask.min.js'
+		'bundles/siteadmin/js/inspinia-form_widgets.js'
+		'bundles/siteadmin/js/inspinia-help.js'
+		'bundles/siteadmin/js/inspinia-data-messages.js'
+		'bundles/sitetranslate/js/inspinia-languages.js'
+		'bundles/siteadmin/js/inspinia-modales.js'
+		'bundles/siteadmin/js/inspinia-effects.js'
+		'bundles/siteadmin/js/inspinia-icon-wait.js'
+		'bundles/siteadmin/js/aew-sub-query-blocks.js'
+		%}
+		<script type="text/javascript" src="{{ asset_url }}"></script>
+		{% endjavascripts %}
+		{% endblock javascripts %}
+		<script type="text/javascript">
+		jQuery(document).ready(function($) {
+			{% block end_javascripts %}
+			{% endblock end_javascripts %}
+		});
+		</script>
+	</body>
+</html>
+
+{# --> compatibilité jquery et color-picker/summernote
+		'bundles/siteadmin/framework_inspinia/css/plugins/iCheck/custom.css'
+
+		'bundles/siteadmin/framework_inspinia/js/plugins/iCheck/icheck.min.js'
+
+#}

@@ -1,0 +1,132 @@
+{% extends 'sitesiteBundle:bases:base_simple.html.twig' %}
+
+{%- block title -%}
+    {%- if pageweb.title|trim|length > 0 -%}
+    {{- pageweb.title|raw -}}
+    {%- else -%}
+    {{- parent() -}}
+    {%- endif -%}
+{%- endblock -%}
+{%- block description -%}
+    {%- if pageweb.metadescription|trim|length > 0 -%}
+    {{- pageweb.metadescription|raw -}}
+    {%- else -%}
+    {{- parent() -}}
+    {%- endif -%}
+{%- endblock description -%}
+{%- block keywords -%}
+    {%- if pageweb.metatitle|trim|length > 0 -%}
+    {{- pageweb.metatitle|raw -}}
+    {%- else -%}
+    {{- parent() -}}
+    {%- endif -%}
+{%- endblock keywords -%}
+
+{% block sections %}
+
+        <!-- Intro Section -->
+        <section class="inner-intro inner-intro-xsmall bg-img8 light-color overlay-dark parallax parallax-background2">
+            <div class="container">
+                <div class="row title">
+                    <h2 class="h2">{{ pageweb.titreh1|raw }}</h2>
+                </div>
+            </div>
+        </section>
+        <div class="pb-30 clearfix"></div>
+        <!-- End Intro Section -->
+
+        <!-- Contact Section -->
+        <section class="pb-sm-30">
+            <div class="container">
+                {% if pageweb.code|trim|length > 0 %}
+                <div class="row">
+                    <div class="col-md-8 col-md-offset-2 text-center">{{ pageweb.code|raw }}</div>
+                </div>
+                <div class="spacer-30"></div>
+                {% endif %}
+                <div class="row">
+                    <div class="col-md-5 contact">
+                        <div class="contact-box-left mb-45">
+                            <div class="contact-icon-left"><i class="ion ion-ios-location"></i></div>
+                            <h6>Atelier imago guitare</h6>
+                            <p>
+                                20 allée des vignes
+                                <br />
+                                01340 Jayat
+                                <br>
+                                <small>(village situé 22km au nord de Bourg en Bresse et 30km à l'est de Macon dans l'Ain)</small>
+                            </p>
+                            <a href="mailto:contact@imagoguitare.com"><i class="fa fa-envelope-o left"></i>contact@imagoguitare.com</a><br />
+                            <a><i class="fa fa-phone left"></i>06 35 26 24 98</a>
+                        </div>
+                        <div class="contact-box-left mb-45">
+                            <div class="contact-icon-left"><i class="ion ion-ios-clock"></i></div>
+                            <h6>Horaires</h6>
+                            <p>
+                                <span>Du lundi au vendredi</span>
+                                <br>
+                                <span>14h / 19h</span>
+                                <br />
+                                <span>Le samedi sur RDV</span>
+                            </p>
+                        </div>
+                        <div class="contact-box-left mb-45">
+
+                            <h6>Réseaux sociaux</h6>
+                            <ul class="list-none social">
+                                <!-- <li><a href="https://www.twitter.com/" target="_blank"><i class="fa fa-twitter"></i></a></li> -->
+                                <!-- <li><a href="https://instagram.com/" target="_blank"><i class="fa fa-instagram"></i></a></li> -->
+                                <li><a href="https://www.facebook.com/rikett.rico" target="_blank"><i class="fa fa-facebook"></i></a></li>
+                                <!-- <li><a href="https://vimeo.com/" target="_blank"><i class="fa fa-vimeo-square"></i></a></li> -->
+                                <!-- <li><a href="https://www.behance.net/" target="_blank"><i class="fa fa-behance"></i></a></li> -->
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-md-offset-1">
+                        <!-- Contact FORM -->
+                        <form class="contact-form" id="contact" role="form">
+
+                            <!-- IF MAIL SENT SUCCESSFULLY -->
+                            <h6 class="successContent">
+                                <i class="fa fa-check left" style="color: #5cb45d;"></i>Votre message a été envoyé. Merci.
+                            </h6>
+                            <!-- END IF MAIL SENT SUCCESSFULLY -->
+
+                            <!-- MAIL SENDING UNSUCCESSFULL -->
+                            <h6 class="errorContent">
+                                <i class="fa fa-exclamation-circle left" style="color: #e1534f;"></i>Le formulaire n'est pas conforme, veuillez compléter, s.v.p.!
+                            </h6>
+                            <!-- END MAIL SENDING UNSUCCESSFULL -->
+
+                            <div class="form-field-wrapper">
+                                <input class="input-sm form-full" id="form-name" type="text" name="form-name" placeholder="Nom" required>
+                            </div>
+
+                            <div class="form-field-wrapper">
+                                <input class="input-sm form-full" id="form-email" type="email" name="form-email" placeholder="Courriel" required>
+                            </div>
+
+                            <div class="form-field-wrapper">
+                                <input class="input-sm form-full" id="form-subject" type="text" name="form-subject" placeholder="Objet">
+                            </div>
+
+                            <div class="form-field-wrapper">
+                                <textarea class="form-full" id="form-message" rows="7" name="form-message" placeholder="Votre message…" required></textarea>
+                            </div>
+
+                            <button class="btn btn-md btn-black form-full" type="submit" id="form-submit" name="submit">Envoyer</button>
+                        </form>
+                        <!-- END Contact FORM -->
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- Contact Section -->
+
+        <!-- Map Section -->
+        <section class="map map-border map-radius-4">
+            <div id="map"></div>
+        </section>
+        <!-- Map Section -->
+
+{% endblock sections %}

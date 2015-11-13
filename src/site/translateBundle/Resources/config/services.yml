@@ -1,0 +1,9 @@
+services:
+#    sitetranslate.example:
+#        class: site\translateBundle\Example
+#        arguments: [@service_id, "plain_value", %parameter%]
+
+    # fonctionnalités de traduction
+    aetools.translate:
+        class: site\translateBundle\services\aeTranslate
+        arguments: [@service_container]

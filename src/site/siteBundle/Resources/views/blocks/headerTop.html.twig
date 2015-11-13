@@ -1,0 +1,35 @@
+<div class="header_top"><!--header_top-->
+	<div class="container">
+		<div class="row">
+			<div class="col-sm-8">
+				<div class="contactinfo">
+					<ul class="nav nav-pills">
+						{% for tel in version.telephones|default({'tel': '04 74 37 77 09'}) %}
+						<li><a href="#"><i class="fa fa-phone" title=""></i> {{ tel }}</a></li>
+						{% endfor %}
+						{% if version.emails|default({})|length > 0 %}
+						<li><a href="mailto:boucherie-du-veyron.fr"><i class="fa fa-envelope"></i> boucherie-du-veyron.fr</a></li>
+						{% endif %}
+					</ul>
+				</div>
+			</div>
+			{% if version.reseausocials|default({})|length > 0 %}
+			<div class="col-sm-4">
+				<div class="social-icons pull-right">
+					<ul class="nav navbar-nav">
+						{% for reseau in version.reseausocials %}
+						{% if reseau.typeReseau.nom is defined %}
+						<li>
+							<a href="{{ reseau.url }}" target="_blank">
+								<i class="fa fa-{{ reseau.typeReseau.nom }}"></i>
+							</a>
+						</li>
+						{% endif %}
+						{% endfor %}
+					</ul>
+				</div>
+			</div>
+			{% endif %}
+		</div>
+	</div>
+</div><!--/header_top-->

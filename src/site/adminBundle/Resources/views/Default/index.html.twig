@@ -1,0 +1,21 @@
+{% extends 'siteadminBundle::page_admin_generic.html.twig' %}
+{% set cssjsloads = 'simple' %}
+{% set DEVMODE = (app.environment in ['dev', 'test']) or (is_granted('ROLE_SUPER_ADMIN')) %}
+
+{% block page_heading %}
+<div class="row wrapper border-bottom white-bg page-heading">
+	<div class="col-lg-12 m-t-xs">
+		<ol class="breadcrumb">
+			<li>{{ 'administration'|trans|capitalize }}</li>
+		</ol>
+	</div>
+</div>
+{% endblock page_heading %}
+
+{% block content %}
+<div class="row">
+	<div class="col-md-12">
+		<h1>{{ 'administration'|trans|capitalize }}</h1>
+	</div>
+</div>
+{% endblock content %}

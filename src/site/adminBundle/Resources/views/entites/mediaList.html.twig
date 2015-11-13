@@ -1,0 +1,71 @@
+{% extends 'siteadminBundle:entites:entiteList.html.twig' %}
+
+{% block page_heading %}
+	{{ parent() }}
+{% endblock page_heading %}
+
+{% block content %}
+<div class="row">
+	<div class="col-md-12">
+		<div class="ibox float-e-margins">
+			<div class="ibox-content">
+				{% if entites|length > 0 %}
+				<table class="table table-striped table-bordered table-hover dataTables dataTable dtr-inline" id="DataTables_Table_0" role="grid" aria-describedby="DataTables_Table_0_info">
+					<thead>
+						<tr>
+							{% if DEVMODE %}<th class="text-center">{{ 'table.col.id'|trans|capitalize }}</th>{% endif %}
+							<th>{{ 'table.col.nom'|trans|capitalize }}</th>
+							<th>Actions</th>
+							<th>{{ 'table.col.originalnom'|trans|capitalize }}</th>
+						</tr>
+					</thead>
+					<tbody>
+						{% for entite in entites %}
+						<tr>
+							{% if DEVMODE %}<td class="text-center">{{ entite.id }}</td>{% endif %}
+							<td>
+								{% if type.type_values|default(null) != null %}
+								<a href="{{ path('siteadmin_entite_type', {entite: entite_name, type_related: type.type_related, type_field: type.type_field, type_values: type.type_values|join(type_value_joiner)|url_encode, id: entite.id, action: 'show'}) }}" title="{{ (entite_name ~ '.moredetails')|trans({'%name%': entite.nom})|capitalize }}"><strong>{{ entite.nom }}</strong></a>
+								{% else %}
+								<a href="{{ path('siteadmin_entite', {entite: entite_name, id: entite.id, action: 'show'}) }}" title="{{ (entite_name ~ '.moredetails')|trans({'%name%': entite.nom})|capitalize }}"><strong>{{ entite.nom }}</strong></a>
+								{% endif %}
+								{% if entite.statut is defined %}
+								{% if entite.statut.id > 1 %}<br><small><i>({{ entite.statut.nom }})</i></small>{% endif %}
+								{% endif %}
+							</td>
+							<td>
+								<div class="btn-group">
+									{% if type.type_values|default(null) != null %}
+									<a href="{{ path('siteadmin_entite_type', {entite: entite_name, type_related: type.type_related, type_field: type.type_field, type_values: type.type_values|join(type_value_joiner)|url_encode, id: entite.id, action: 'show'}) }}" type="button" class="btn btn-white btn-xs" title="{{ (entite_name ~ '.moredetails')|trans({'%name%': entite.nom})|capitalize }}"><i class="fa fa-eye"></i></a>
+									<a href="{{ path('siteadmin_entite_type', {entite: entite_name, type_related: type.type_related, type_field: type.type_field, type_values: type.type_values|join(type_value_joiner)|url_encode, id: entite.id, action: 'edit'}) }}" type="button" class="btn btn-white btn-xs" title="{{ 'actions.modifier'|trans|capitalize }}"><i class="fa fa-pencil"></i></a>
+									<a href="{{ path('siteadmin_entite_type', {entite: entite_name, type_related: type.type_related, type_field: type.type_field, type_values: type.type_values|join(type_value_joiner)|url_encode, id: entite.id, action: 'delete'}) }}" type="button" class="btn btn-white btn-xs" title="{{ 'actions.supprimer'|trans|capitalize }}"><i class="fa fa-times"></i></a>
+									{% else %}
+									<a href="{{ path('siteadmin_entite', {entite: entite_name, id: entite.id, action: 'show'}) }}" type="button" class="btn btn-white btn-xs" title="{{ (entite_name ~ '.moredetails')|trans({'%name%': entite.nom})|capitalize }}"><i class="fa fa-eye"></i></a>
+									<a href="{{ path('siteadmin_entite', {entite: entite_name, id: entite.id, action: 'edit'}) }}" type="button" class="btn btn-white btn-xs" title="{{ 'actions.modifier'|trans|capitalize }}"><i class="fa fa-pencil"></i></a>
+									<a href="{{ path('siteadmin_entite', {entite: entite_name, id: entite.id, action: 'delete'}) }}" type="button" class="btn btn-white btn-xs" title="{{ 'actions.supprimer'|trans|capitalize }}"><i class="fa fa-times"></i></a>
+									{% endif %}
+								</div>
+								{% if DEVMODE %}
+								<hr class="m-b-sm m-t-xs">
+								<div class="btn-group">
+									{% if type.type_values|default(null) != null %}
+									<a href="{{ path('siteadmin_entite_type', {entite: entite_name, type_related: type.type_related, type_field: type.type_field, type_values: type.type_values|join(type_value_joiner)|url_encode, id: entite.id, action: 'check'}) }}" type="button" class="btn btn-danger btn-xs" title="Checker article {{ entite.nom }}"><i class="fa fa-check"></i></a>
+									{% else %}
+									<a href="{{ path('siteadmin_entite', {entite: entite_name, id: entite.id, action: 'check'}) }}" type="button" class="btn btn-danger btn-xs" title="Checker article {{ entite.nom }}"><i class="fa fa-check"></i></a>
+									{% endif %}
+								</div>
+								{% endif %}
+							</td>
+							<td>{{ entite.originalnom }}</td>
+						</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+				{% else %}
+				<h3><i class="fa fa-ban"></i> {{ (entite_name ~ '.not_found')|trans|capitalize }}</h3>
+				{% endif %}
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock content %}

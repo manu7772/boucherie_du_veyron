@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+entités liées :
+nom    -> nomDuChampLocal* + [_nomDeLEntitéLiée] + __nomDuChampDeLentiteLiée (ex. : statut__nom) (* avec 's' !!!)
+toutes entités :
+valeur -> si plusieurs valeurs possibles, séparer les valeurs par un pipe "|"
+       -> commencer par un "+" pour ajouter aussi les valeurs par défaut, sinon elles ne seront pas ajoutées
+
+       (ex. : typeImage__nom="+Universel|Ambiance") -> revient à écrire typeImage_typeImage__nom
+       (ex. : imagePpale_image__nom="Curvy 2|Curvy 3")
+
+fichiers externes : "import@" + nomDuDossier + "::" + nom du fichier (ex. texte="import@txt::intro.txt")
+  -> utiliser "importConcat@" pour concaténer les fichiers textes et n'obtenir qu'une seule valeur d'après tous les fichiers
+noms de fichiers multiples : séparer par "|" (ex. texte="import@txt::intro.txt|intro2.txt|xml::intro3.txt")
+  -> préciser à chaque fois le dossier / s'il n'est pas précisé, le nom du dossier précédent est repris.
+
+ -->
+<categories>
+	<categorie statut__cible="Actif-v1" nom="pageweb" cible="pageweb-v1" descriptif="Textes pour pages du site" version__cible="v1" />
+	<categorie statut__cible="Actif-v1" nom="commentaire" cible="commentaire-v1" descriptif="Commentaires" version__cible="v1" />
+	<categorie statut__cible="Actif-v1" nom="annotation" cible="annotation-v1" descriptif="annotation" version__cible="v1" />
+	<categorie statut__cible="Actif-v1" nom="message" cible="message-v1" descriptif="message" version__cible="v1" />
+	<categorie statut__cible="Actif-v1" nom="legalite" cible="legalite-v1" descriptif="textes légaux" version__cible="v1" />
+
+	<categorie statut__cible="Actif-v2" nom="pageweb" cible="pageweb-v2" descriptif="Textes pour pages du site" version__cible="v2" />
+	<categorie statut__cible="Actif-v2" nom="commentaire" cible="commentaire-v2" descriptif="Commentaires" version__cible="v2" />
+	<categorie statut__cible="Actif-v2" nom="annotation" cible="annotation-v2" descriptif="annotation" version__cible="v2" />
+	<categorie statut__cible="Actif-v2" nom="message" cible="message-v2" descriptif="message" version__cible="v2" />
+	<categorie statut__cible="Actif-v2" nom="legalite" cible="legalite-v2" descriptif="textes légaux" version__cible="v2" />
+</categories>

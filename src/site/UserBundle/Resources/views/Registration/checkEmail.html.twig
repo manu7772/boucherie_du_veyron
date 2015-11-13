@@ -1,0 +1,9 @@
+{% extends "FOSUserBundle::layout.html.twig" %}
+{% trans_default_domain 'siteUserBundle' %}
+
+{% block soustitre %}<div class="page-breadcrumb">{{ 'registration.flash.user_created'|trans|capitalize }}</div>{% endblock soustitre %}
+
+{% block fos_user_content %}
+	<h3>Confirmation de votre compte</h3>
+	<p>{{ 'registration.check_email'|trans({'%email%': user.email}) }}</p>
+{% endblock fos_user_content %}

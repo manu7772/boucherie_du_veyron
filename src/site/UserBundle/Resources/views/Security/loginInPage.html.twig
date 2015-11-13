@@ -1,0 +1,19 @@
+{% trans_default_domain 'siteUserBundle' %}
+
+{% if error %}
+<div class="alert alert-danger col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3">{{ error|trans|capitalize }}</div>
+{% endif %}
+
+<h5 class="white"><a href="{{ path('fos_user_security_login') }}">{{ 'layout.login'|trans|capitalize }}</a></h5>
+
+<form action="{{ path('fos_user_security_check') }}" method="post" class="clearfix">
+	<div class="sign-in">
+		<input type="hidden" name="_csrf_token" value="{{ csrf_token }}" />
+	    <input class="input-sm form-full" type="text" aria-required="true" required="required" id="username" name="_username" placeholder="{{ 'security.login.username'|trans }}" value="" />
+	    <input class="input-sm form-full" type="password" aria-required="true" required="required" id="password" name="_password" placeholder="{{ 'security.login.password'|trans }}" value="" />
+	
+	    <input type="submit" id="_submit" name="_submit" value="{{ 'security.login.submit'|trans }}" class="btn btn-md btn-color-b form-full" />
+	    <a href="{{ path('fos_user_registration_register') }}">{{ 'profile.action.create'|trans|capitalize }}</a>
+	    <a href="{{ url('fos_user_resetting_request') }}">{{ 'security.login.forgotten'|trans|capitalize }}<a>
+	</div>
+</form>

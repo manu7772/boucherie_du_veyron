@@ -1,0 +1,93 @@
+twig:
+    globals:
+        formatDate:      "dd-MM-yyyy"
+        formatDateHeure: "d-m-Y H:i:s"
+        fileFormats:
+            pdf:        pdf
+            jpg:        image
+            jpeg:       image
+            gif:        image
+            png:        image
+            default:    text
+        default_icon: 'fa-caret-right'
+        menu_Admin_default_role: %restrict_admin%
+        menu_Admin:
+            item0:
+                nom: 'accueil'
+                path: %homepage%
+                icon: 'fa-home'
+            item1:
+                role: 'ROLE_TRANSLATOR'
+                nom: 'traduction.name'
+                path: 'sitetranslate_homepage'
+                icon: 'fa-flag'
+            item2:
+                role: 'ROLE_EDITOR'
+                nom: 'pageweb.name_s'
+                path: 'siteadmin_homepage'
+                icon: 'fa-desktop'
+                level2: 
+                    item0:
+                        role: 'ROLE_EDITOR'
+                        nom: 'pageweb.name_s'
+                        path: 
+                            path: 'siteadmin_entite'
+                            params:
+                                entite: pageweb
+                    item1:
+                        role: %restrict_admin%
+                        nom: 'menu.name_s'
+                        path: 
+                            path: 'siteadmin_menus'
+                            params:
+                                name: all
+            item3:
+                role: 'ROLE_EDITOR'
+                nom: 'media.name_s'
+                path: 
+                    path: 'siteadmin_entite'
+                    params:
+                        entite: media
+                icon: 'fa-film'
+            item4:
+                role: %restrict_admin%
+                nom: 'User.name_s'
+                path: 'siteadmin_homepage'
+                icon: 'fa-users'
+            item5:
+                role: %restrict_admin%
+                nom: 'parametres'
+                path: 'siteadmin_homepage'
+                icon: 'fa-gear'
+                level2: 
+                    item0:
+                        nom: 'tag.name_s'
+                        path: 
+                            path: 'siteadmin_entite'
+                            params:
+                                entite: tag
+                    item1:
+                        nom: 'fileFormat.name_s'
+                        path: 
+                            path: 'siteadmin_entite'
+                            params:
+                                entite: fileFormat
+            item6:
+                role: 'ROLE_SUPER_ADMIN'
+                nom: 'Super Admin'
+                path: 'siteadmin_homepage'
+                icon: 'fa-gear'
+                level2: 
+                    item1:
+                        nom: 'User.name_s'
+                        path: 'siteadmin_homepage'
+                    item2:
+                        nom: 'parametres'
+                        path: 'siteadmin_homepage'
+                    item3:
+                        nom: 'Réglages'
+                        path: 'siteadmin_homepage'
+            item7:
+                nom: 'help'
+                path: siteadmin_support
+                icon: 'fa-support'

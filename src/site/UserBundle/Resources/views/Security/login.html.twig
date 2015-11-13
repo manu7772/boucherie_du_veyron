@@ -1,0 +1,40 @@
+{% extends "FOSUserBundle::layout.html.twig" %}
+{% trans_default_domain 'siteUserBundle' %}
+
+{% block soustitre %}<div class="page-breadcrumb">{{ 'layout.login'|trans|capitalize }}</div>{% endblock soustitre %}
+
+{% block fos_user_content %}
+
+{% if error %}
+<div class="alert alert-danger">
+	{# error|trans|capitalize #}Erreur de connexion…
+</div>
+{% endif %}
+
+<form action="{{ path('fos_user_security_check') }}" method="post" class="clearfix">
+	<input type="hidden" name="_csrf_token" value="{{ csrf_token }}" />
+
+	<!-- <div class="panel-heading">Informations de connexion</div> -->
+    <div class="form-field-wrapper">
+		<label for="username">{{ 'security.login.username'|trans|capitalize }}</label>
+		<input type="text" id="username" name="_username" value="{{ last_username }}" required="required" class="input-sm form-full" />
+	</div>
+    <div class="form-field-wrapper">
+		<label for="password">{{ 'security.login.password'|trans|capitalize }}</label>
+		<input type="password" id="password" name="_password" required="required" class="input-sm form-full" />
+	</div>
+    <div class="form-field-wrapper">
+		<label for="remember_me">{{ 'security.login.remember_me'|trans|capitalize }} :</label>
+		<input type="checkbox" id="remember_me" name="_remember_me" value="on" class='ion ion-android-checkbox-outline' />&nbsp;&nbsp;&nbsp;<a href="{{ url('fos_user_resetting_request') }}" class="little italic">{{ 'security.login.forgotten'|trans|capitalize }}<a>
+	</div>
+    <div class="form-field-wrapper">
+		<input type="submit" id="_submit" name="_submit" value="{{ 'security.login.submit'|trans|capitalize }}" class="btn btn-md btn-black form-full" />
+	</div>
+</form>
+
+<div class="clearfix"></div>
+<hr>
+<br>
+<a href="{{ path('fos_user_registration_register') }}"><div class="btn btn-md btn-color-line">{{ 'profile.action.create'|trans|capitalize }}</div></a>
+
+{% endblock fos_user_content %}

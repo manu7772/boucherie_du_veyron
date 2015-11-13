@@ -1,0 +1,55 @@
+traduction:
+    name: traduction
+    langues: langues
+    langue_s: 'langue|[2,+Inf[langues'
+    autres: 'autres traductions'
+    auto_translate: 'traduction automatique'
+    reprendre: 'récupérer %langue%'
+    twigcode: 'code twig'
+    test: tests
+    traduction: traduction
+    texte: texte
+    request: 'entrez un texte à traduire…'
+    traduire: traduire
+    original: 'texte original'
+    traduit: 'texte traduit'
+    languename:
+        fr: français
+        en: anglais
+        en-US: 'anglais US'
+        es: espagnol
+        it: italien
+        de: allemand
+    fichier:
+        conforme: 'fichier conforme'
+        erreur: 'fichier non conforme'
+        absent: 'fichier absent'
+    domaine:
+        nom: domaine
+        valide: 'domaine valide'
+        incomplet: 'domaine incomplet'
+        erreur: 'domaine contenant des erreurs'
+    menu:
+        edite: modifier
+        update: 'mettre à jour'
+        mergeall: 'uniformiser avec tous'
+        merge: uniformiser
+        merge_lang: 'uniformiser avec %language%'
+    placeholder:
+        texte: texte
+    file_not_found: 'fichier absent'
+    file_found: 'fichier trouvé'
+    button:
+        back: 'retour à la liste'
+    help:
+        helper: 'saisissez un texte afin d''en afficher la traduction'
+        plural1: pluralisation
+        plural2: 'intervalle explicite de pluralisation'
+        plural3: 'pluralisation OpenClassroom'
+    merge:
+        done: 'uniformisation effectuée'
+        with: 'uniformisation depuis : %language%'
+    modif:
+        done: 'modification effectuée'
+    voir_site: 'voir le site en %langue%'
+    helper: 'aide'

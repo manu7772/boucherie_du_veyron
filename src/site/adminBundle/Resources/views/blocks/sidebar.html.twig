@@ -1,0 +1,35 @@
+{% import 'siteadminBundle:blocks:menumacro.html.twig' as menumacro %}
+
+<nav class="navbar-default navbar-static-side" role="navigation">
+	<div class="sidebar-collapse">
+		<ul class="nav" id="side-menu">
+			<li class="nav-header">
+				<div class="dropdown profile-element">
+					<span>
+						<img alt="image" class="img-rounded" src="{{ asset('bundles/siteadmin/images/BDV_logo_admin.png') }}" />
+					</span>
+					{% if app.user is not null %}
+					<a data-toggle="dropdown" class="dropdown-toggle" href="#">
+						<span class="clear">
+							<span class="block m-t-xs"> <strong class="font-bold">{{ 'site'|trans }}</strong></span> 
+							<span class="text-muted text-xs block">{{ app.user.username|default('anon.') }} <b class="caret"></b></span> 
+						</span>
+					</a>
+					<ul class="dropdown-menu animated fadeInRight m-t-xs">
+						<li><a href="{{ path('fos_user_profile_show') }}"><i class="fa fa-user"></i> {{ 'profile.name'|trans({}, 'siteUserBundle')|capitalize }}</a></li>
+						<li><a href="{{ path('fos_user_security_logout') }}"><i class="fa fa-sign-out"></i> {{ 'layout.logout'|trans({}, 'siteUserBundle')|capitalize }}</a></li>
+					</ul>
+					{% endif %}
+				</div>
+				<div class="logo-element">
+					<i class="fa fa-desktop visible-lg"></i>
+					<i class="fa fa-laptop visible-md"></i>
+					<i class="fa fa-tablet visible-sm"></i>
+					<i class="fa fa-mobile-phone visible-xs"></i>
+				</div>
+			</li>
+			{{ menumacro.menu_Admin() }}
+		</ul>
+	</div>
+</nav>
+

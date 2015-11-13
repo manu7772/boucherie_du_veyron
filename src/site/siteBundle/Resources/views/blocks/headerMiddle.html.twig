@@ -1,0 +1,58 @@
+<div class="header-middle"><!--header-middle-->
+	<div class="container">
+		<div class="row">
+			<div class="col-xs-4 col-sm-3 col-md-3 content-logo">
+				<div class="logo pull-left">
+					<a href="{{ path('sitesite_homepage') }}"><img src="{{ asset('bundles/sitesite/images/home/logo.jpg') }}" alt="logo" /></a>
+				</div>
+			</div>
+			<div class="col-xs-8 col-sm-9 col-md-9 padding-right">
+				<div class="header-title-shop">
+
+					<div class="row">
+						<div class="col-xs-7 col-sm-7 col-md-8">
+							<div class="pull-left">
+								<h1>Boucherie Charcuterie Traiteur</h1>
+							</div>
+						</div>
+						<div class="col-xs-5 col-sm-5 col-md-4">
+							<div class="shop-menu pull-right">
+								<ul class="nav navbar-nav">
+									{% if is_granted("ROLE_TRANSLATOR") %}
+									<li><a href="{{ path('siteadmin_homepage') }}">Admin</a></li>
+									{% endif %}
+									{% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
+									<li><a href="#"><i class="fa fa-shopping-cart fa-flip-horizontal"></i> Panier</a></li>
+									<li><a href="{{ path('fos_user_security_logout') }}"><i class="fa fa-user"></i> {{ app.user.username }}</a></li>
+									{% else %}
+									<li><a href="{{ path('fos_user_security_login') }}"><i class="fa fa-user"></i> Connexion</a></li>
+									{% endif %}
+								</ul>
+							</div>
+						</div>
+					</div>
+
+					<div class="menu-interne col-sm-12">
+						<div class="navbar-header"><!--interne-menu-->
+							<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+								<span class="sr-only">Toggle navigation</span>
+								<span class="icon-bar"></span>
+								<span class="icon-bar"></span>
+								<span class="icon-bar"></span>
+							</button>
+						</div>
+						<div class="mainmenu pull-left">
+							<ul class="nav navbar-nav collapse navbar-collapse">
+								<li><a href="{{ path('sitesite_homepage') }}" class="active">Accueil</a></li>
+								<li><a href="{{ path('sitesite_homepage') }}">Comment commander</a></li>
+								<li><a href="{{ path('sitesite_homepage') }}">Notre métier</a></li>
+								<li><a href="{{ path('sitesite_homepage') }}">Contact</a></li>
+							</ul>
+						</div>
+					</div><!--/interne-menu-->
+				</div>
+
+			</div>
+		</div>
+	</div>
+</div><!--/header-middle-->

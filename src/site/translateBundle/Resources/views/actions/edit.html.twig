@@ -1,0 +1,189 @@
+{% extends 'sitetranslateBundle::base_translate.html.twig' %}
+{% set cssjsloads = 'simple' %}
+{% set DEVMODE = (app.environment in ['dev', 'test']) or (is_granted('ROLE_SUPER_ADMIN')) %}
+{% set NEEDAUTOTRAD = app.request.locale != language %}
+
+{% block page_heading %}
+<div class="row border-bottom white-bg dashboard-header">
+	<div class="col-sm-12">
+		<h2><i class="fa fa-flag"></i> {{ 'traduction.traduction'|trans|capitalize }}  <small>{{ bundle }}/{{ domain }}/<strong>{{ ('traduction.languename.' ~ language)|trans|capitalize }}</strong></small></h2>
+		<div class="hr-line-dashed m-t-sm m-b-sm"></div>
+		<div class="row">
+			<div class="col-sm-4">
+				<p><strong>{{ (langues.bundles[bundle]|default(langues.list))|length }}</strong> {{ 'traduction.langue_s'|transchoice(langues.list|length) }}</p>
+				{% for lang in langues.list if lang in langues.bundles[bundle]|default(langues.list) %}
+				{% set btncolor = "btn-primary" %}
+				{% set btnotln = "" %}
+				{% if check[lang] != true %}{% set btnotln = " btn-outline" %}{% endif %}
+				{% if lang == language %}{% set btncolor = "btn-warning" %}{% endif %}
+				<a href="{{ path('edit_traduction', {bundle: bundle, domain: domain, language: lang}) }}" class="btn btn-xs {{ btncolor }}{{ btnotln }}" title="{{ ('traduction.languename.' ~ lang)|trans|capitalize }}">{{ lang }}</a>
+				{% endfor %}
+			</div>
+			<div class="hr-line-dashed visible-xs m-t-sm m-b-sm"></div>
+			<div class="col-sm-4">
+				<p>{{ 'options'|trans|capitalize }}</p>
+				<a href="{{ path('sitetranslate_homepage') }}" class="btn btn-xs btn-primary btn-block"><i class="fa fa-chevron-left"></i> {{ 'traduction.button.back'|trans|capitalize }}</a>
+				<a href="{{ path('merge_traduction', {language: 'all', bundle: bundle, domain: domain, current: language}) }}" class="btn btn-xs btn-primary btn-block"><i class="fa fa-cog"></i> {{ 'traduction.menu.mergeall'|trans|capitalize }}</a>
+			</div>
+			<div class="hr-line-dashed visible-xs m-t-sm m-b-sm"></div>
+			<div class="col-sm-4">
+				<p>{{ 'information'|trans|capitalize }}</p>
+				<a target='_blank' href="http://symfony.com/doc/current/components/translation/usage.html#pluralization" class="btn btn-xs btn-primary btn-outline btn-block"><i class="fa fa-globe"></i> {{ 'traduction.help.plural1'|trans|capitalize }}</a>
+				<a target='_blank' href="http://symfony.com/doc/current/components/translation/usage.html#explicit-interval-pluralization" class="btn btn-xs btn-primary btn-outline btn-block"><i class="fa fa-globe"></i> {{ 'traduction.help.plural2'|trans|capitalize }}</a>
+				<a target='_blank' href="https://openclassrooms.com/courses/developpez-votre-site-web-avec-le-framework-symfony2/traduire-son-site#/id/r-2089387" class="btn btn-xs btn-primary btn-outline btn-block"><i class="fa fa-globe"></i> {{ 'traduction.help.plural3'|trans|capitalize }}</a>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock page_heading %}
+
+{% block content %}
+{% block autotranslate %}
+{% if NEEDAUTOTRAD %}
+<div class="row m-b-sm">
+	<div class="col-xs-12">
+		<div class="ibox-content" style="padding-top:10px;padding-bottom:10px;">
+			<div class="col-sm-4">
+				<h5 class="ellipsis m-b-xs"><i class="fa fa-cog fa-spin"></i> {{ 'traduction.auto_translate'|trans|capitalize }}</h5>
+			</div>
+			<div class="col-sm-4">
+				<div class="btn-group btn-block">
+					<button data-toggle="dropdown" class="btn btn-white btn-xs btn-block dropdown-toggle"><span id="autotrad-lang" data-auto-lang="{{ app.request.locale }}" data-trad-to="{{ language }}">{{ ('traduction.languename.' ~ app.request.locale)|trans|capitalize }}</span> <small><i class="fa fa-chevron-right"></i></small> {{ ('traduction.languename.' ~ language)|trans|capitalize }} <span class="caret"></span></button>
+					<ul class="dropdown-menu">
+						<!-- <li><a data-auto-lang="auto">Auto</a></li> -->
+						<!-- <li class="divider"></li> -->
+						{% for lang,other in otherfiles if lang != language %}
+						<li><a class="autotrad" data-auto-choice="{{ lang }}">{{ ('traduction.languename.' ~ lang)|trans|capitalize }}</a></li>
+						{% endfor %}
+					</ul>
+				</div>
+			</div>
+			<div class="col-sm-4">
+				<p class="m-b-none pull-right"><small><a href="http://mymemory.translated.net/" target='_blank' class='text-muted'><i class='fa fa-globe'></i> Mymemory Translated</a></small></p>
+			</div>
+			<div class="clearfix"></div>
+		</div>
+	</div>
+</div>
+{% endif %}
+{% endblock autotranslate %}
+<div class="row">
+	<div class="col-xs-12">
+		{% if check[language] == true %}
+		<div class="ibox float-e-margins">
+			<div class="ibox-title">
+				<h5><i class="fa fa-flag"></i> {{ bundle }}/{{ domain }}/<strong>{{ ('traduction.languename.' ~ language)|trans|capitalize }}</strong></h5>
+				<div class="ibox-tools">
+					<a class="dropdown-toggle" data-toggle="dropdown" href="#" aria-expanded="false">
+						<i class="fa fa-wrench"></i>
+					</a>
+					<ul class="dropdown-menu dropdown-user">
+						<li><a class="trad_all_action" data-action="delete_all" data-href="#form_{{ bundle }}_{{ domain }}_{{ language }}">{{ 'reset_all'|trans|capitalize }}</a></li>
+						<li class="divider"></li>
+						<li><div class="text-center link-block"><strong>Ajouter…</strong></div></li>
+						{% for lang,other in otherfiles if ((lang != language) and (lang in langues.bundles[bundle]|default(langues.list))) %}
+						<li><a class="trad_all_action" data-action="add" data-langue="{{ lang }}" data-href="#form_{{ bundle }}_{{ domain }}_{{ language }}">{{ ('traduction.languename.' ~ lang)|trans|capitalize }}</a></li>
+						{% endfor %}
+						<li class="divider"></li>
+						<li><div class="text-center link-block"><strong>Remplacer…</strong></div></li>
+						{% for lang,other in otherfiles if ((lang != language) and (lang in langues.bundles[bundle]|default(langues.list))) %}
+						<li><a class="trad_all_action" data-action="replace" data-langue="{{ lang }}" data-href="#form_{{ bundle }}_{{ domain }}_{{ language }}">{{ ('traduction.languename.' ~ lang)|trans|capitalize }}</a></li>
+						{% endfor %}
+					</ul>
+				</div>
+			</div>
+			<form id="form_{{ bundle }}_{{ domain }}_{{ language }}" action="{{ path('change_traduction') }}" method="post" class="form-horizontal">
+				<input type='hidden' name='bundle' value='{{ bundle }}'>
+				<input type='hidden' name='domain' value='{{ domain }}'>
+				<input type='hidden' name='language' value='{{ language }}'>
+				{% for field,newvalue in filedata %}
+				<div class="ibox-content" style="padding-top:10px;padding-bottom:1px;">
+					<div class="form-group m-b-xs">
+						<label class="col-sm-2 control-label text-right ellipsis">{{ correctTransField(field)|raw }}</label>
+						<div class="col-sm-10">
+							<div class="input-group m-b-none">
+								<div class="input-group-btn">
+									<button tabindex="-1" class="btn btn-white collapsed" type="button" data-toggle="collapse" href="#collapse{{ loop.index0 }}" aria-expanded="false"><i class="fa fa-info-circle"></i></button>
+									{% if NEEDAUTOTRAD %}
+									<button tabindex="-1" class="btn btn-white collapsed autotrad-launch" type="button" data-form-href="#{{ motif_form|raw }}{{ field|raw }}"><i class="fa fa-cog"></i></button>
+									{% endif %}
+									<button data-toggle="dropdown" class="btn btn-white dropdown-toggle" type="button"><span class="caret"></span></button>
+									<ul class="dropdown-menu">
+										{% for lang,other in otherfiles if ((other[field] is defined) and (lang != language) and (lang in langues.bundles[bundle]|default(langues.list))) %}
+										{% set tradlangue = ('traduction.languename.' ~ lang)|trans %}
+										<li><a class="trad_form_action mark_{{ lang }}" data-form-href="#{{ motif_form|raw }}{{ field|raw }}" data-data="{{ other[field] }}">{{ 'traduction.reprendre'|trans({'%langue%': tradlangue})|capitalize }}</a></li>
+										{% endfor %}
+									</ul>
+								</div>
+								<input class="form-control" type="text" id="{{ motif_form|raw }}{{ field|raw }}" name="{{ motif_form|raw }}{{ field|raw }}" placeholder="{{ 'traduction.placeholder.texte'|trans|capitalize }}" value="{{ newvalue }}">
+								<div class="input-group-btn">
+									<button class="btn btn-md btn-primary" type="submit"><i class="fa fa-refresh"></i></button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div id="collapse{{ loop.index0 }}" class="ibox-content ibox-heading collapse" aria-expanded="false" style="padding-top:0px;padding-bottom:1px;background-color:#E6E6E6;">
+					<h3><i class="fa fa-info-circle"></i> <strong>{{ correctTransField(field)|raw }}</strong> <small>{{ 'informations'|trans }}</small></h3>
+					<div class="hr-line-dashed m-t-sm m-b-sm"></div>
+					<div class="row">
+						{% set space = 12 %}
+						{% if is_granted('ROLE_SUPER_ADMIN') %}{% set space = 6 %}{% endif %}
+						<div class="col-md-{{ space }}">
+							<h5>{{ 'traduction.autres'|trans|capitalize }}</h5>
+							{% for lang,other in otherfiles if ((other[field] is defined) and (lang != language) and (lang in langues.bundles[bundle]|default(langues.list))) %}
+							<p><div class='label'><a class="trad_form_action mark_{{ lang }}" data-form-href="#{{ motif_form|raw }}{{ field|raw }}" data-data="{{ other[field] }}"><i class="fa fa-refresh"></i></a> {{ ('traduction.languename.' ~ lang)|trans|capitalize }}</div> {{ other[field] }}</p>
+							{% endfor %}
+						</div>
+						{% if is_granted('ROLE_SUPER_ADMIN') %}
+						<div class="hr-line-dashed visible-xs visible-sm m-t-sm m-b-sm"></div>
+						<div class="col-md-{{ 12 - space }}">
+							<h5>{{ 'traduction.twigcode'|trans|capitalize }}</h5>
+							{% set trans = 'trans' %}
+							{% set domainTmp = '' %}
+							{% if newvalue matches('#(%count%)#') %}
+								{% set trans = 'transchoice' %}
+								{% if domain != 'messages' %}
+									{% set domainTmp = "(value), '" ~ domain ~ "')" %}
+								{% else %}
+									{% set domainTmp = "(value)" %}
+								{% endif %}
+							{% else %}
+								{% if domain != 'messages' %}
+									{% set domainTmp = "({}, '" ~ domain ~ "')" %}
+								{% endif %}
+							{% endif %}
+							<code>{% verbatim %}{{{% endverbatim %} '{{ correctTransField(field)|raw }}'|{{ trans }}{{ domainTmp|raw }} {% verbatim %}}}{% endverbatim %}</code>
+							<br>
+							<code>{% verbatim %}{{{% endverbatim %} '{{ correctTransField(field)|raw }}'|{{ trans }}{{ domainTmp|raw }}|capitalize {% verbatim %}}}{% endverbatim %}</code>
+						</div>
+						{% endif %}
+					</div>
+					<br>
+					<div class="clearfix"></div>
+				</div>
+				{% endfor %}
+			</form>
+			<div class="clearfix"></div>
+		</div>
+		{% else %}
+		<div class="well" style="background-color:#E6E6E6E;">
+			{% if check[language] == false %}
+			{{ 'traduction.file_not_found'|trans|capitalize }}
+			{% else %}
+			{{ check[language]|trans|capitalize }}
+			{% endif %}
+			{% if is_granted('ROLE_SUPER_ADMIN') %}
+			<p><small>{{ fullpath }}/{{ domain }}.{{ language }}.yml</small></p>
+			{% endif %}
+			<div class="hr-line-dashed m-t-sm m-b-sm"></div>
+			<a href="{{ path('traduction.menu.merge_lang', {'%language%': 'all', bundle: bundle, domain: domain, current: language}) }}" class="btn btn-xs btn-info"><i class="fa fa-cog"></i> {{ 'traduction.menu.mergeall'|trans|capitalize }}</a>
+			{% for lang,statut in check if ((statut == true) and (lang in langues.bundles[bundle]|default(langues.list))) %}
+			{% set langue = ('traduction.languename.' ~ lang)|trans %}
+			<a href="{{ path('traduction.menu.merge_lang', {'%language%': lang, bundle: bundle, domain: domain, current: language}) }}" class="btn btn-xs btn-primary">{{ 'traduction.menu.merge_lang'|trans({language: langue})|capitalize }}</a>
+			{% endfor %}
+		</div>
+		{% endif %}
+	</div>
+</div>
+{% endblock content %}

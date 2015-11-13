@@ -1,0 +1,55 @@
+{% extends 'siteadminBundle::page_admin_generic.html.twig' %}
+{% set cssjsloads = 'TAB' %}
+{% set DEVMODE = (app.environment in ['DEV', 'TEST']) or (is_granted('ROLE_SUPER_ADMIN')) %}
+{% import 'siteadminBundle:blocks:sortable_nested_menu.html.twig' as nestmenu %}
+
+{% block page_heading %}
+<div class="row wrapper border-bottom white-bg page-heading">
+	<div class="col-lg-12 m-t-xs">
+		<div class="row">
+			<div class="col-md-9">
+				<h2>{{ 'menu.name'|trans|capitalize }} <strong> {{ bundle }}@{{ name|default('') }}</strong></h2>
+				<ol class="breadcrumb">
+					<li><a href="{{ path('siteadmin_homepage') }}"><strong>{{ 'administration'|trans|capitalize }}</strong></a></li>
+					<li><a href="{{ path('siteadmin_menus', {name: 'all'}) }}"><strong>{{ 'menu.name_s'|trans|capitalize }}</strong></a></li>
+					<li>{{ bundle }}@{{ name|default('') }}</li>
+				</ol>
+			</div>
+			<div class="col-md-3 m-t-lg">
+				<div class="dropdown">
+					<button class="btn btn-xs btn-warning dropdown-toggle pull-right" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+						<i class="fa fa-plus"></i> {{ 'menu.create_btn'|trans|capitalize }}
+						<span class="caret"></span>
+					</button>
+					<ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+						{% for bundle in bundles %}
+						<li><a href="{{ path('siteadmin_menus_action', {name: null, bundle: bundle, action: 'create'}) }}">{{ bundle }}</a></li>
+						{% endfor %}
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock page_heading %}
+
+{% block content %}
+<div class="wrapper wrapper-content animated fadeInRight">
+	<div class="row">
+		<div class="col-md-8 col-md-offset-2">
+			<div class="ibox ">
+				<div class="ibox-title">
+					<h5>{{ 'menu.name'|trans|capitalize }} <strong>{{ bundle }}@{{ name|default('') }}</strong> {{ nestmenu.options(bundle, name) }}</h5>
+				</div>
+				<div class="ibox-content">
+					{{ nestmenu.menu(menu, bundle, name) }}
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock content %}
+
+{% block end_javascripts %}
+	{{ nestmenu.js(bundle, name) }}
+{% endblock end_javascripts %}
