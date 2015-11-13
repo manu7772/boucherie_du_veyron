@@ -6,57 +6,59 @@ roles:
 menu:
     langues:
         icon: fa-flag
-        path: '#'
+        path:
+            route: '#'
         items:
             français:
                 name: traduction.languename.fr
                 path:
-                    path: sitesite_homepage
+                    route: sitesite_homepage
                     params:
                         _locale: fr
             gb1:
                 name: traduction.languename.en
                 path:
-                    path: sitesite_homepage
+                    route: sitesite_homepage
                     params:
                         _locale: en
                 items:
                     fr1:
                         name: traduction.languename.fr
                         path:
-                            path: sitesite_homepage
+                            route: sitesite_homepage
                             params:
                                 _locale: fr
                     anglais:
                         name: traduction.languename.en
                         path:
-                            path: sitesite_homepage
+                            route: sitesite_homepage
                             params:
                                 _locale: en
     accueil:
         name: Accueil
         path:
-            path: sitesite_homepage
+            route: sitesite_homepage
     réalisations:
         name: Réalisations
         path:
-            path: site_pageweb
+            route: site_pageweb
             params:
                 pageweb: realisations
     vidéos:
         name: Vidéos
         path:
-            path: site_pageweb
+            route: site_pageweb
             params:
                 pageweb: videos
     contact:
         name: Contact
         path:
-            path: site_pageweb
+            route: site_pageweb
             params:
                 pageweb: contact
     logout:
         role: IS_AUTHENTICATED_REMEMBERED
         name: layout.logout
         trans_domain: siteUserBundle
-        path: fos_user_security_logout
+        path:
+            route: fos_user_security_logout

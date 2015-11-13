@@ -4,9 +4,10 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta name="author" content="">
-        <meta name="description" content='{% block metatitles %}{% endblock metatitles %}'>
+        <meta name="description" content="{% block description %}{{ description|default('IMAGO GUITARE')|raw }}{% endblock description %}" />
+        <meta name="keywords" content="{% block keywords %}{{ metatitle|default('IMAGO GUITARE')|raw }}{% endblock keywords %}" />
+        <title>{% block title %}{{ title|default('IMAGO GUITARE')|raw }}{% endblock %}</title>
         <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
-        <title>{% block title %}{{ 'site'|trans }}{% endblock title %}</title>
         {% stylesheets filter='cssrewrite, lessphp, ?yui_css'
         'bundles/sitegraphics/bdv/css/bootstrap.min.css'
         'bundles/sitegraphics/bdv/css/font-awesome.min.css'

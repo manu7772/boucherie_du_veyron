@@ -1,7 +1,26 @@
 {% extends 'sitesiteBundle::base_pages.html.twig' %}
 
-{% block metatitles %}{{ parent() }}{% endblock metatitles %}
-{% block title %}{{ parent() }}{% endblock title %}
+{%- block title -%}
+    {%- if pageweb.title|trim|length > 0 -%}
+    {{- pageweb.title|raw -}}
+    {%- else -%}
+    {{- parent() -}}
+    {%- endif -%}
+{%- endblock -%}
+{%- block description -%}
+    {%- if pageweb.metadescription|trim|length > 0 -%}
+    {{- pageweb.metadescription|raw -}}
+    {%- else -%}
+    {{- parent() -}}
+    {%- endif -%}
+{%- endblock description -%}
+{%- block keywords -%}
+    {%- if pageweb.metatitle|trim|length > 0 -%}
+    {{- pageweb.metatitle|raw -}}
+    {%- else -%}
+    {{- parent() -}}
+    {%- endif -%}
+{%- endblock keywords -%}
 
 {% block mainContainer %}
     {{ include('sitesiteBundle:blocks:top-intro.html.twig') }}

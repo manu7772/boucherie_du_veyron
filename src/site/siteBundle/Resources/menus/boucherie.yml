@@ -13,18 +13,24 @@ menu:
     comment:
         name: menu.comment
         path:
-            path: site_pageweb
+            route: site_pageweb
             params:
                 pageweb: commander
     metier:
         name: menu.metier
         path:
-            path: site_pageweb
+            route: site_pageweb
             params:
                 pageweb: metier
+    fetes:
+        name: menu.fetes
+        path:
+            route: site_pageweb
+            params:
+                pageweb: fetes2015
     contact:
         name: menu.contact
         path:
-            path: site_pageweb
+            route: site_pageweb
             params:
                 pageweb: contact

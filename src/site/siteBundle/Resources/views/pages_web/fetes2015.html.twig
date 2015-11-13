@@ -23,9 +23,9 @@
 {%- endblock keywords -%}
 
 {% block mainContainer %}
-    {{ include('sitesiteBundle:blocks:top-intro.html.twig') }}
-    <h2>{{ pageweb.titreh1|raw }}</h1>
+    <h1>{{ pageweb.titreh1|raw }}</h1>
     <br>
-    <p style="color:blue;">{{ pageweb.code|raw }}</p>
+    <p>{{ pageweb.code|raw }}</p>
     <br>
+    {{ include('sitesiteBundle:blocks:mini-liste-info.html.twig') }}    
 {% endblock mainContainer %}
