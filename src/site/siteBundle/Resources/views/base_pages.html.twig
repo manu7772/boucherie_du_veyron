@@ -6,7 +6,7 @@
             {{ include("sitesiteBundle:blocks:headerTop.html.twig") }}
         {% endblock headerTop %}        
         {% block headerMiddle %}
-            {{ include("sitesiteBundle:blocks:headerMiddle.html.twig") }}
+        {{ render(controller('sitesiteBundle:Default:headerMiddle')) }}
         {% endblock headerMiddle %} 
     </header><!--/header-->
     {% endblock header %}

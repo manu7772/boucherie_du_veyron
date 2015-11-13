@@ -36,5 +36,12 @@
          %}
         <script type="text/javascript" src="{{ asset_url }}"></script>
         {% endjavascripts %}
+        <script type="text/javascript">
+        jQuery(document).ready(function($) {
+            {% block end_javascripts %}
+            {% endblock end_javascripts %}
+        });
+        </script>
+
     </body>
 </html>

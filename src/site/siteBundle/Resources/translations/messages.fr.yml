@@ -16,6 +16,8 @@ menu:
     videos: vidéos
     login: connexion
     contact: contact
+    comment: comment commander
+    metier: notre métier
 search:
     name: rechercher…
 footer:

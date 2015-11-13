@@ -2,8 +2,8 @@
 	<div class="container">
 		<div class="row">
 			{% set addr = version.adresses.first|default(null) %}
-			<p class="pull-left">{{ 'root.copyright'|trans({}, 'Site')|capitalize }} © {{ annee() }} - {{ 'site'|trans }}{% if addr is iterable %} - {{ addr.adresse }} - {{ addr.cp }} {{ addr.ville }}{% endif %}</p>
-			<p class="pull-right">{{ 'root.creation'|trans({}, 'Site')|capitalize }} Aequation-Webdesign.fr </p>
+			<p class="pull-left">{{ 'footer.rights'|trans|capitalize }} © {{ annee() }} - {{ 'site'|trans }}{% if addr is iterable %} - {{ addr.adresse }} - {{ addr.cp }} {{ addr.ville }}{% endif %}</p>
+			<p class="pull-right">{{ 'footer.realisation'|trans({'%name%': 'Aequation-Webdesign.fr'})|capitalize }} </p>
 		</div>
 	</div>
 </div>

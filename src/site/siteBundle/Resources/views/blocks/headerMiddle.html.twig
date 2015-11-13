@@ -19,7 +19,7 @@
 							<div class="shop-menu pull-right">
 								<ul class="nav navbar-nav">
 									{% if is_granted("ROLE_TRANSLATOR") %}
-									<li><a href="{{ path('siteadmin_homepage') }}">Admin</a></li>
+									<li><a href="{{ path('siteadmin_homepage') }}"><i class="fa fa-cog"></i></a></li>
 									{% endif %}
 									{% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
 									<li><a href="#"><i class="fa fa-shopping-cart fa-flip-horizontal"></i> Panier</a></li>
@@ -42,12 +42,23 @@
 							</button>
 						</div>
 						<div class="mainmenu pull-left">
+							{% if is_granted(menu.menu.roles.view|default(null)) or (menu.menu.roles.view|default(null) == null) %}
 							<ul class="nav navbar-nav collapse navbar-collapse">
-								<li><a href="{{ path('sitesite_homepage') }}" class="active">Accueil</a></li>
-								<li><a href="{{ path('sitesite_homepage') }}">Comment commander</a></li>
-								<li><a href="{{ path('sitesite_homepage') }}">Notre métier</a></li>
-								<li><a href="{{ path('sitesite_homepage') }}">Contact</a></li>
+								{% for item in menu.menu.menu if (is_granted(item.role|default(null)) or item.role|default(null) == null) %}
+								{% set icon = '' %}
+								{% if item.icon is defined %}{% set icon = '<i class="fa ' ~ item.icon ~ '"></i>' %}{% endif %}
+								{% set path = '#' %}
+								{% if item.path.route|default('#') != '#' %}
+									{% set path = path(item.path.route, item.path.params|default([])) %}
+								{% endif %}
+								{% set name = '' %}
+								{% if item.name|default('') != '' %}{% set name = ' ' ~ item.name|trans({}, item.trans_domain|default(null))|capitalize %}{% endif %}
+								<li><a href="{{ path|raw }}"{% if item.title|default(null) != null %} title="{{ item.title|trans({}, item.trans_domain|default(null))|capitalize }}"{% endif %}>{{ icon|raw }}{{ name }}</a></li>
+								{% endfor %}
 							</ul>
+							{% else %}
+							<p>Menu non autorisé.</p>
+							{% endif %}
 						</div>
 					</div><!--/interne-menu-->
 				</div>

@@ -9,10 +9,20 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 class DefaultController extends Controller {
 
 	public function indexAction() {
-		$data['title'] = 'Imago GUITARE - Site web';
-		$data['description'] = 'Luthier contemporain, Guitare, Basse, Ukulélé';
-		$data['keywords'] = 'Luthier contemporain, Guitare, Basse, Ukulélé';
-		return $this->render('sitesiteBundle:Default:index.html.twig', $data);
+		$this->em = $this->getDoctrine()->getManager();
+		$this->repo = $this->em->getRepository('site\adminBundle\Entity\pageweb');
+		$data['pageweb'] = $this->repo->findOneByHomepage(1);
+		// chargement de la pageweb
+		if(is_object($data['pageweb'])) {
+			$page = 'sitesiteBundle:pages_web:'.$data['pageweb']->getModele().'.html.twig';
+			return $this->render($page, $data);
+		} else {
+			// si aucune page web… chargement de la page par défaut…
+			$data['title'] = 'La Boucherie du Veyron';
+			$data['description'] = 'La Boucherie du Veyron';
+			$data['keywords'] = 'La Boucherie du Veyron';
+			return $this->render('sitesiteBundle:Default:index.html.twig', $data);
+		}
 	}
 
 	public function pagewebAction($pageweb, $params = null) {
@@ -27,14 +37,14 @@ class DefaultController extends Controller {
 		return $this->render($page, $data);
 	}
 
-	public function topmenuAction() {
+	public function headerMiddleAction() {
 		$data['menu'] = $this->get('aeMenus')->getMenu('site-menu');
 		// récupération route/params requête MASTER
 		$stack = $this->get('request_stack');
 		$masterRequest = $stack->getMasterRequest();
 		$data['infoRoute']['_route'] = $masterRequest->get('_route');
 		$data['infoRoute']['_route_params'] = $masterRequest->get('_route_params');
-		return $this->render('sitesiteBundle:blocks:topmenu.html.twig', $data);
+		return $this->render('sitesiteBundle:blocks:headerMiddle.html.twig', $data);
 	}
 
 	public function sidemenuAction() {

@@ -1,0 +1,30 @@
+name: boucherie
+roles:
+    view: null
+    edit: ROLE_ADMIN
+    delete: ROLE_SUPER_ADMIN
+menu:
+    accueil:
+        name: menu.accueil
+        path:
+            route: site_pageweb
+            params:
+                pageweb: homepage
+    comment:
+        name: menu.comment
+        path:
+            path: site_pageweb
+            params:
+                pageweb: commander
+    metier:
+        name: menu.metier
+        path:
+            path: site_pageweb
+            params:
+                pageweb: metier
+    contact:
+        name: menu.contact
+        path:
+            path: site_pageweb
+            params:
+                pageweb: contact

@@ -47,6 +47,16 @@ class pageweb {
 	protected $nom;
 
     /**
+     * @var boolean
+     * @ORM\Column(name="enabled", type="boolean", nullable=false, unique=false)
+     */
+	/**
+	 * @var boolean
+	 * @ORM\Column(name="homepage", type="boolean", nullable=false, unique=false)
+	 */
+	protected $homepage;
+
+    /**
      * @ORM\OneToOne(targetEntity="media", mappedBy="pagewebBackground", cascade={"all"})
 	 * @ORM\JoinColumn(nullable=true, unique=true, name="bpagewebBackground_id", referencedColumnName="id", onDelete="SET NULL")
      */
@@ -115,6 +125,7 @@ class pageweb {
 
 
 	public function __construct() {
+		$this->homepage = false;
 		$this->dateCreation = new DateTime();
 		$this->dateMaj = null;
 		$this->background = null;
@@ -149,6 +160,26 @@ class pageweb {
 	public function getNom()
 	{
 		return $this->nom;
+	}
+
+	/**
+	 * Set homepage
+	 *
+	 * @param boolean $homepage
+	 * @return version
+	 */
+	public function setHomepage($homepage) {
+		is_bool($homepage) ? $this->homepage = $homepage : $this->homepage = false;
+		return $this;
+	}
+
+	/**
+	 * Get homepage
+	 *
+	 * @return boolean 
+	 */
+	public function getHomepage() {
+		return $this->homepage;
 	}
 
 	/**

@@ -1,153 +1,238 @@
-{#
-{% import 'laboBundle:macros:admin_links.html.twig' as labolinks %}
-<section id="section-color">
-	<div id="category-nav-tab">
-		<div class="container">
-			<div class="category-tab">
-				<!--category-tab-->
-				<ul class="nav nav-tabs">
-					<li class="active" data-target="#recommended-item-carousel" data-slide-to="0">
-						<a href="#">Promotions</a>
-					</li>
-					<li data-target="#recommended-item-carousel" data-slide-to="1">
-						<a href="#">Pour vos fêtes</a>
-					</li>
-					<li data-target="#recommended-item-carousel" data-slide-to="2">
-						<a href="#">Idées recettes</a>
-					</li>
-					{{ labolinks.adminLink('labo_entity_action', {entityName: 'article'}, '', 'li') }}
-				</ul>
+	<section id="section-color">
+	
+		<div id="category-nav-tab">
+		
+			<div class="container">
+								
+				<div class="category-tab"><!--category-tab-->                           
+					<ul class="nav nav-tabs">
+						<li class="active" data-target="#recommended-item-carousel" data-slide-to="0">
+							<a href="#">Promotions</a>
+						</li>
+						<li data-target="#recommended-item-carousel" data-slide-to="1">
+							<a href="#">Pour vos fêtes</a>
+						</li>
+						<li data-target="#recommended-item-carousel" data-slide-to="2">
+							<a href="#">Idées recettes</a>
+						</li>
+					</ul>
+				</div><!--/category-tab--> 
+				
 			</div>
-			<!--/category-tab-->
+		
 		</div>
-	</div>
-	<div class="container section-tabs">
-		<!--large container-->
-		<div class="row">
-			<div class="col-sm-12">
-				<div id="recommended-item-carousel" class="carousel slide" data-ride="carousel">
-					<div class="carousel-inner">
-						<div class="item active">
-							<!--div images for tab 1-->
-							{% for article in articles %}
-							<!-- DEBUT : 1 article -->
-							<div class="col-sm-6 col-md-3">
-								<!--div image 1 tab 1-->
-								<div class="product-image-wrapper">
-									<div class="single-products">
-										<div class="productinfo">
-											<img src="{{ asset('images/original/' ~ article.imagePpale.fichierNom ) }}" alt="" />
-											<div class="product-bottom">
-												<div class="btn-group order-group for-product" role="group">
-													<h2>{{ prix(article)|raw }}</h2>
-													<button type="button" class="btn btn-default btn-commander"><i class="fa fa-shopping-cart fa-flip-horizontal"></i></button>
-													<input class="command_quantity" type="text" name="quantity" value="150g" autocomplete="off" size="10">
-													<span class="btn-quantity">
-														<a class="btn quantity-top" href="#"><i class="fa fa-angle-up"></i></a>
-														<a class="btn quantity-bottom" href="#"><i class="fa fa-angle-down"></i></a>
-													</span>
+		
+				<div class="container section-tabs"><!--large container-->
+					<div class="row">	
+						<div class="col-sm-12">
+							
+							<div id="recommended-item-carousel" class="carousel slide" data-ride="carousel">
+								<div class="carousel-inner">
+								
+									<div class="item active"><!--div images for tab 1-->
+										<div class="col-sm-6 col-md-3"><!--div image 1 tab 1-->
+											<div class="product-image-wrapper">
+												<div class="single-products">
+													<div class="productinfo">
+														<img src="{{ asset('bundles/sitesite/images/tabs-recommend/recommend1.jpg') }}" alt="" />
+														<div class="product-bottom">
+															<div class="btn-group order-group for-product" role="group">
+																<h2>24<small>,50<sup>€</sup><span>/Kg</span></small></h2>
+																<button type="button" class="btn btn-default btn-commander"><i class="fa fa-shopping-cart fa-flip-horizontal"></i></button>
+																<input class="command_quantity" type="text" name="quantity" value="150g" autocomplete="off" size="10">
+																<span class="btn-quantity">
+																	<a class="btn quantity-top" href="#"><i class="fa fa-angle-up"></i></a>
+																	<a class="btn quantity-bottom" href="#"><i class="fa fa-angle-down"></i></a>
+																</span>
+															</div>                                                    
+														</div>
+													</div>
+													<p class="tab-name-product">Haut de sous-noix</p>
+													<p class="tab-info-category">veau</p>
 												</div>
 											</div>
 										</div>
-										<p class="tab-name-product">{{ article.nom }}{{ labolinks.adminLink('labo_entity_action', {entityName: 'article', id: article.id, action: 'show'}, '') }}</p>
-										<p class="tab-info-category">veau</p>
-										{% if article.cuissons|length > 0 %}
-										<img src="{{ asset('images/original/' ~ article.cuissons.0.image.fichierNom ) }}" class="info-triangle" alt="">
-										{% endif %}
-									</div>
-								</div>
-							</div>
-							<!-- FIN : 1 article -->
-							{% endfor %}
-						</div>
-						<!--/div images tab 1-->
-						<div class="item">
-							<!--images for tab 2-->
-							<!--div images for tab 1-->
-							{% for article in articles %}
-							<!-- DEBUT : 1 article -->
-							<div class="col-sm-6 col-md-3">
-								<!--div image 1 tab 1-->
-								<div class="product-image-wrapper">
-									<div class="single-products">
-										<div class="productinfo">
-											<img src="{{ asset('images/original/' ~ article.imagePpale.fichierNom ) }}" alt="" />
-											<div class="product-bottom">
-												<div class="btn-group order-group for-product" role="group">
-													<h2>{{ prix(article)|raw }}</h2>
-													<button type="button" class="btn btn-default btn-commander"><i class="fa fa-shopping-cart fa-flip-horizontal"></i></button>
-													<input class="command_quantity" type="text" name="quantity" value="150g" autocomplete="off" size="10">
-													<span class="btn-quantity">
-														<a class="btn quantity-top" href="#"><i class="fa fa-angle-up"></i></a>
-														<a class="btn quantity-bottom" href="#"><i class="fa fa-angle-down"></i></a>
-													</span>
+										<div class="col-sm-6 col-md-3"><!--div image 2 tab 1-->
+											<div class="product-image-wrapper">
+												<div class="single-products">
+													<div class="productinfo">
+														<img src="{{ asset('bundles/sitesite/images/tabs-recommend/recommend2.jpg') }}" alt="" />
+														<div class="product-bottom">
+															<div class="btn-group order-group for-product" role="group">
+																<h2>25<small>,50<sup>€</sup><span>/Kg</span></small></h2>
+																<button type="button" class="btn btn-default btn-commander"><i class="fa fa-shopping-cart fa-flip-horizontal"></i></button>
+																<input class="command_quantity" type="text" name="quantity" value="1 (150g)" autocomplete="off" size="10">
+																<span class="btn-quantity">
+																	<a class="btn quantity-top" href="#"><i class="fa fa-angle-up"></i></a>
+																	<a class="btn quantity-bottom" href="#"><i class="fa fa-angle-down"></i></a>
+																</span>
+															</div>                                                    
+														</div>
+													</div>
+													<p class="tab-name-product">Côtes premières</p>
+													<p class="tab-info-category">veau</p>
+													<img src="{{ asset('bundles/sitesite/images/tabs-recommend/poeler.png') }}" class="info-triangle" alt="">
 												</div>
 											</div>
 										</div>
-										<p class="tab-name-product">{{ article.nom }}</p>
-										<p class="tab-info-category">veau</p>
-										{% if article.cuissons|length > 0 %}
-										<img src="{{ asset('images/original/' ~ article.cuissons.0.image.fichierNom ) }}" class="info-triangle" alt="">
-										{% endif %}
-									</div>
-								</div>
-							</div>
-							<!-- FIN : 1 article -->
-							{% endfor %}
-							<!--/div image 3 tab 2-->
-						</div>
-						<!--/div images for tab 2-->
-						<div class="item">
-							<!--div images for tab 3-->
-							<!--div images for tab 1-->
-							{% for article in articles %}
-							<!-- DEBUT : 1 article -->
-							<div class="col-sm-6 col-md-3">
-								<!--div image 1 tab 1-->
-								<div class="product-image-wrapper">
-									<div class="single-products">
-										<div class="productinfo">
-											<img src="{{ asset('images/original/' ~ article.imagePpale.fichierNom ) }}" alt="" />
-											<div class="product-bottom">
-												<div class="btn-group order-group for-product" role="group">
-													<h2>{{ prix(article)|raw }}</h2>
-													<button type="button" class="btn btn-default btn-commander"><i class="fa fa-shopping-cart fa-flip-horizontal"></i></button>
-													<input class="command_quantity" type="text" name="quantity" value="150g" autocomplete="off" size="10">
-													<span class="btn-quantity">
-														<a class="btn quantity-top" href="#"><i class="fa fa-angle-up"></i></a>
-														<a class="btn quantity-bottom" href="#"><i class="fa fa-angle-down"></i></a>
-													</span>
+										<div class="col-sm-6 col-md-3"><!--div image 3 tab 1-->
+											<div class="product-image-wrapper">
+												<div class="single-products">
+													<div class="productinfo">
+														<img src="{{ asset('bundles/sitesite/images/tabs-recommend/recommend3.jpg') }}" alt="" />
+														<div class="product-bottom">
+															<div class="btn-group order-group for-product" role="group">
+																<h2>29<small>,00<sup>€</sup><span>/Kg</span></small></h2>
+																<button type="button" class="btn btn-default btn-commander"><i class="fa fa-shopping-cart fa-flip-horizontal"></i></button>
+																<input class="command_quantity" type="text" name="quantity" value="150g" autocomplete="off" size="10">
+																<span class="btn-quantity">
+																	<a class="btn quantity-top" href="#"><i class="fa fa-angle-up"></i></a>
+																	<a class="btn quantity-bottom" href="#"><i class="fa fa-angle-down"></i></a>
+																</span>
+															</div>                                                    
+														</div>
+													</div>
+													<p class="tab-name-product">Rognons de veau</p>
+													<p class="tab-info-category">veau</p>
 												</div>
 											</div>
 										</div>
-										<p class="tab-name-product">{{ article.nom }}</p>
-										<p class="tab-info-category">veau</p>
-										{% if article.cuissons|length > 0 %}
-										<img src="{{ asset('images/original/' ~ article.cuissons.0.image.fichierNom ) }}" class="info-triangle" alt="">
-										{% endif %}
-									</div>
+										<div class="col-sm-6 col-md-3"><!--div image 4 tab 1-->
+											<div class="product-image-wrapper">
+												<div class="single-products">
+													<div class="productinfo">
+														<img src="{{ asset('bundles/sitesite/images/tabs-recommend/recommend4.jpg') }}" alt="" />
+														<div class="product-bottom">
+															<div class="btn-group order-group for-product" role="group">
+																<h2>9<small>,50<sup>€</sup><span>/Kg</span></small></h2>
+																<button type="button" class="btn btn-default btn-commander"><i class="fa fa-shopping-cart fa-flip-horizontal"></i></button>
+																<input class="command_quantity" type="text" name="quantity" value="150g" autocomplete="off" size="10">
+																<span class="btn-quantity">
+																	<a class="btn quantity-top" href="#"><i class="fa fa-angle-up"></i></a>
+																	<a class="btn quantity-bottom" href="#"><i class="fa fa-angle-down"></i></a>
+																</span>
+															</div>                                                    
+														</div>
+													</div>
+													<p class="tab-name-product">Poitrine avec os</p>
+													<p class="tab-info-category">agneau</p>
+													<img src="{{ asset('bundles/sitesite/images/tabs-recommend/bouillir.png') }}" class="info-triangle" alt="">
+												</div>
+											</div>
+										</div>
+									</div><!--/div images tab 1-->
+									
+									<div class="item"><!--images for tab 2-->
+										<div class="col-sm-6 col-md-3"><!--div image 1 tab 2-->
+											<div class="product-image-wrapper">
+												<div class="single-products">
+													<div class="productinfo">
+														<img src="{{ asset('bundles/sitesite/images/tabs-recommend/recommend2.jpg') }}" alt="" />
+														<div class="product-bottom">
+															<div class="btn-group order-group for-product" role="group">
+																<h2>25<small>,50<sup>€</sup><span>/Kg</span></small></h2>
+																<button type="button" class="btn btn-default btn-commander"><i class="fa fa-shopping-cart fa-flip-horizontal"></i></button>
+																<input class="command_quantity" type="text" name="quantity" value="1 (150g)" autocomplete="off" size="10">
+																<span class="btn-quantity">
+																	<a class="btn quantity-top" href="#"><i class="fa fa-angle-up"></i></a>
+																	<a class="btn quantity-bottom" href="#"><i class="fa fa-angle-down"></i></a>
+																</span>
+															</div>                                                    
+														</div>
+													</div>
+													<p class="tab-name-product">Côtes premières</p>
+													<p class="tab-info-category">veau</p>
+													<img src="{{ asset('bundles/sitesite/images/tabs-recommend/poeler.png') }}" class="info-triangle" alt="">
+												</div>
+											</div>
+										</div>
+										<div class="col-sm-6 col-md-3"><!--div image 2 tab 2-->
+											<div class="product-image-wrapper">
+												<div class="single-products">
+													<div class="productinfo">
+														<img src="{{ asset('bundles/sitesite/images/tabs-recommend/recommend2.jpg') }}" alt="" />
+														<div class="product-bottom">
+															<div class="btn-group order-group for-product" role="group">
+																<h2>25<small>,50<sup>€</sup><span>/Kg</span></small></h2>
+																<button type="button" class="btn btn-default btn-commander"><i class="fa fa-shopping-cart fa-flip-horizontal"></i></button>
+																<input class="command_quantity" type="text" name="quantity" value="1 (150g)" autocomplete="off" size="10">
+																<span class="btn-quantity">
+																	<a class="btn quantity-top" href="#"><i class="fa fa-angle-up"></i></a>
+																	<a class="btn quantity-bottom" href="#"><i class="fa fa-angle-down"></i></a>
+																</span>
+															</div>                                                    
+														</div>
+													</div>
+													<p class="tab-name-product">Côtes premières</p>
+													<p class="tab-info-category">veau</p>
+													<img src="{{ asset('bundles/sitesite/images/tabs-recommend/poeler.png') }}" class="info-triangle" alt="">
+												</div>
+											</div>
+										</div>
+										<div class="col-sm-6 col-md-3"><!--div image 3 tab 2-->
+											<div class="product-image-wrapper">
+												<div class="single-products">
+													<div class="productinfo">
+														<img src="{{ asset('bundles/sitesite/images/tabs-recommend/recommend2.jpg') }}" alt="" />
+														<div class="product-bottom">
+															<div class="btn-group order-group for-product" role="group">
+																<h2>25<small>,50<sup>€</sup><span>/Kg</span></small></h2>
+																<button type="button" class="btn btn-default btn-commander"><i class="fa fa-shopping-cart fa-flip-horizontal"></i></button>
+																<input class="command_quantity" type="text" name="quantity" value="1 (150g)" autocomplete="off" size="10">
+																<span class="btn-quantity">
+																	<a class="btn quantity-top" href="#"><i class="fa fa-angle-up"></i></a>
+																	<a class="btn quantity-bottom" href="#"><i class="fa fa-angle-down"></i></a>
+																</span>
+															</div>                                                    
+														</div>
+													</div>
+													<p class="tab-name-product">Côtes premières</p>
+													<p class="tab-info-category">veau</p>
+												</div>
+											</div>
+										</div><!--/div image 3 tab 2-->
+										
+									</div><!--/div images for tab 2-->
+									
+									<div class="item"><!--div images for tab 3-->
+									 <div class="col-sm-6 col-md-3"><!--div image 1 tab 3-->
+											<div class="product-image-wrapper">
+												<div class="single-products">
+													<div class="productinfo">
+														<img src="{{ asset('bundles/sitesite/images/tabs-recommend/recommend2.jpg') }}" alt="" />
+														<div class="product-bottom">
+															<div class="btn-group order-group for-product" role="group">
+																<h2>25<small>,50<sup>€</sup><span>/Kg</span></small></h2>
+																<button type="button" class="btn btn-default btn-commander"><i class="fa fa-shopping-cart fa-flip-horizontal"></i></button>
+																<input class="command_quantity" type="text" name="quantity" value="1 (150g)" autocomplete="off" size="10">
+																<span class="btn-quantity">
+																	<a class="btn quantity-top" href="#"><i class="fa fa-angle-up"></i></a>
+																	<a class="btn quantity-bottom" href="#"><i class="fa fa-angle-down"></i></a>
+																</span>
+															</div>                                                    
+														</div>
+													</div>
+													<p class="tab-name-product">Côtes premières</p>
+													<p class="tab-info-category">veau</p>
+												</div>
+											</div>
+										</div><!--/div image 1 tab 3-->
+										 
+									</div><!--/div images for tab 3-->
+									
 								</div>
+								
+								 <a class="left recommended-item-control" href="#recommended-item-carousel" data-slide="prev">
+									<i class="fa fa-angle-left"></i>
+								  </a>
+								  <a class="right recommended-item-control" href="#recommended-item-carousel" data-slide="next">
+									<i class="fa fa-angle-right"></i>
+								  </a>			
 							</div>
-							<!-- FIN : 1 article -->
-							{% endfor %}
-							<!--/div image 1 tab 3-->
-						</div>
-						<!--/div images for tab 3-->
-					</div>
-<!-- 					<a class="left recommended-item-control" href="#recommended-item-carousel" data-slide="prev">
-						<i class="fa fa-angle-left"></i>
-					</a>
-					<a class="right recommended-item-control" href="#recommended-item-carousel" data-slide="next">
-						<i class="fa fa-angle-right"></i>
-					</a> -->
-				</div>
-			</div>
-			<!--/category-tab-->
-		</div>
-		<!--/cols-sm-12-->
-	</div>
-	<!--/row-->
-	<!--/container-->
-</section>
-#}
+						</div><!--/category-tab-->
+					
+						</div><!--/cols-sm-12-->
+					</div><!--/row-->
+				<!--/container-->
+	</section>
 

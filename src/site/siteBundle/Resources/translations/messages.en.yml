@@ -8,14 +8,16 @@ bundles:
         name: users
 menu:
     name: menu
-    name_s : menus
-    not_found: no menu found
-    create_btn: new menu
+    name_s: menus
+    not_found: 'no menu found'
+    create_btn: 'new menu'
     accueil: home
     realisations: realisations
     videos: videos
     login: login
     contact: contact
+    comment: 'how to buy'
+    metier: 'our work'
 search:
     name: search…
 footer:

@@ -10,7 +10,7 @@ parameters:
     menus:
         site-menu:
             bundle: sitesite
-            name: imago
+            name: boucherie
         admin-sidemenu:
             bundle: siteadmin
             name: sidemenu
