@@ -19,6 +19,12 @@ siteadmin_entite:
 siteadmin_form_action:
     path:     /form-action/{classname}
     defaults: { _controller: siteadminBundle:entite:entitePostFormPage }
+    requirements:
+
+siteadmin_pageweb_set_default:
+    path:     /pageweb/set-as-default/{id}/{redir}
+    defaults: { _controller: siteadminBundle:entite:pageweb_as_default, redir: 'siteadmin_homepage' }
+
 
 # MENUS
 siteadmin_menus:

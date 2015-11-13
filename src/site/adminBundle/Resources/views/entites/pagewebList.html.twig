@@ -46,6 +46,9 @@
 									<a href="{{ path('siteadmin_entite', {entite: entite_name, id: entite.id, action: 'edit'}) }}" type="button" class="btn btn-white btn-xs" title="{{ 'actions.modifier'|trans|capitalize }}"><i class="fa fa-pencil"></i></a>
 									<a href="{{ path('siteadmin_entite', {entite: entite_name, id: entite.id, action: 'delete'}) }}" type="button" class="btn btn-white btn-xs" title="{{ 'actions.supprimer'|trans|capitalize }}"><i class="fa fa-times"></i></a>
 									{% endif %}
+									{% set defcol = 'white' %}
+									{% if entite.homepage %}{% set defcol = 'primary' %}{% endif %}
+									<a href="{{ path('siteadmin_pageweb_set_default', {id: entite.id, redir: path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params'))|url_encode()}) }}" type="button" class="btn btn-{{ defcol }} btn-xs" title="{{ 'pageweb.bydefault'|trans|capitalize }}"><i class="fa fa-check"></i></a>
 								</div>
 								{% if DEVMODE %}
 								<hr class="m-b-sm m-t-xs">

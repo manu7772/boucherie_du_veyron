@@ -138,7 +138,6 @@ class entiteController extends Controller {
 		$data = json_decode(urldecode($req["hiddenData"]), true);
 		// echo('<pre>');
 		// var_dump($req);
-		
 		// EntityManager
 		$this->em = $this->getDoctrine()->getManager();
 		$this->repo = $this->em->getRepository($classname);
@@ -183,16 +182,8 @@ class entiteController extends Controller {
 						'text'		=> 'Les modification de cet élément ont bien été enregistrées.',
 					));
 				}
-				// echo('DATA : onSuccess *********************************');
-				// unset($data['entite']);
-				// var_dump($data);
-				// die('</pre>');
 				if(isset($data['onSuccess'])) return $this->redirect($data['onSuccess']);
 			} else {
-				// echo('DATA : onError *********************************');
-				// unset($data['entite']);
-				// var_dump($data);
-				// die('</pre>');
 				// formulaire invalide -> url echec
 				$message = $this->get('flash_messages')->send(array(
 					'title'		=> 'Erreurs de saisie',
@@ -374,5 +365,31 @@ class entiteController extends Controller {
 		}
 		// return $data;
 	}
+
+	public function pageweb_as_defaultAction($id, $redir) {
+		$this->em = $this->getDoctrine()->getManager();
+		$this->repo = $this->em->getRepository('site\adminBundle\Entity\pageweb');
+		// entité à mettre en page web par défaut
+		$page = $this->repo->find($id);
+		if(!is_object($page)) {
+			$message = $this->get('flash_messages')->send(array(
+				'title'		=> 'Page web introuvable',
+				'type'		=> flashMessage::MESSAGES_ERROR,
+				'text'		=> 'Cette page <strong>#"'.$id.'"</strong> n\'a pu être touvée',
+			));
+		} else {
+			$page->setHomepage(true);
+			$this->em->persist($page);
+			// on passe les autres pages en false s'il en existe
+			$pages = $this->repo->findByHomepage(true);
+			if(count($pages) > 0) foreach ($pages as $onepage) {
+				$onepage->setHomepage(false);
+			}
+			$this->em->flush();
+		}
+		return $this->redirect(urldecode($redir));
+	}
+
+
 
 }
