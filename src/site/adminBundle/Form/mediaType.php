@@ -98,7 +98,6 @@ class mediaType extends AbstractType {
             'data' => urlencode(json_encode($data, true)),
             'mapped' => false,
         ));
-        // }
         return $builder;
     }
 	/**

@@ -36,6 +36,12 @@ site_admin:
 
 
 # USER ROUTING
+fos_user_admin:
+    resource: "@FOSUserBundle/Resources/config/routing/admin.xml"
+    prefix: /{_locale}
+    requirements:
+        _locale: %default_locales%
+
 fos_user_security:
     resource: "@FOSUserBundle/Resources/config/routing/security.xml"
     prefix: /{_locale}

@@ -21,10 +21,12 @@ class pagewebType extends AbstractType {
     private $controller;
     private $securityContext;
     private $parametres;
+    private $pageweb;
     
     public function __construct(Controller $controller, $parametres = null) {
         $this->controller = $controller;
         $this->securityContext = $controller->get('security.context');
+        $this->pageweb = $controller->get('aetools.pageweb');
         if($parametres === null) $parametres = array();
         $this->parametres = $parametres;
     }
@@ -54,17 +56,18 @@ class pagewebType extends AbstractType {
 				'label' => 'table.col.titreh1',
 				'required' => true,
 				))
-			->add('metatitle', 'text', array(
-				'label' => 'table.col.metatitle',
-				'required' => false,
-				))
+			// ->add('keywords', 'text', array(
+			// 	'label' => 'table.col.keywords',
+			// 	'required' => false,
+			// 	))
 			->add('metadescription', 'text', array(
 				'label' => 'table.col.metadescription',
 				'required' => false,
 				))
-			->add('modele', 'text', array(
+			->add('modele', 'choice', array(
 				'label' => 'table.col.modele',
 				'required' => true,
+				'choice_list' => $this->pageweb->getPagewebChoices(),
 				))
 			->add('background', new mediaType($this->controller), array(
 				'label' => 'form.background',

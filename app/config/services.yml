@@ -13,6 +13,11 @@ services:
         class: %ae_services%aetools
         arguments: [@service_container]
 
+    # fonctionnalités de pages web
+    aetools.pageweb:
+        class: %ae_services%pageweb
+        arguments: [@service_container]
+
     # Fonctions textes utiles et pratiques pour utilisation dans TWIG
     aetools.textutilities:
         class: %ae_services%twigTools

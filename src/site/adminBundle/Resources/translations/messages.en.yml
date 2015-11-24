@@ -99,8 +99,8 @@ table:
         title: title
         titreh1: title H1
         modele: model
-        metatitle: meta title
-        metadescription: key words
+        keywords: key words
+        metadescription: description
         attribut: attribute
         valeur: value
         creation: created
@@ -123,7 +123,9 @@ msg:
     suppression: deleting
 form:
     select: Select…
-    nom: Name
+    nom: Last name
+    prenom: First name
+    telephone: Telephon
     typemime: 'File type'
     icone: Icon
     actif: Active

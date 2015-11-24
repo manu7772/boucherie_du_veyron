@@ -6,8 +6,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
-use site\adminBundle\Entity\pageweb;
-
 use site\adminBundle\services\flashMessage;
 
 use \Exception;
@@ -19,7 +17,7 @@ class entiteController extends Controller {
 	const TYPE_VALUE_JOINER 	= '___';
 
 
-	protected function getEntiteData($entite, $type_related = nul, $type_field = nul, $type_values = nul, $action = null, $id = null) {
+	protected function getEntiteData($entite, $type_related = null, $type_field = null, $type_values = null, $action = null, $id = null) {
 		if($action == null) $action = self::DEFAULT_ACTION;
 		if(is_object($entite)) $entite = get_class($entite);
 		$data = array();
@@ -75,16 +73,15 @@ class entiteController extends Controller {
 		$this->repo = $this->em->getRepository($data['classname']);
 		// actions selon entité…
 		switch ($data['entite_name']) {
-			case 'une entité quelconque à traiter de manière particulière…':
-				break;
+			// case 'une entité quelconque à traiter de manière particulière…':
+			// 	break;
 
 			default:
 				// page générique entités
-				switch ($action) {
+				switch ($data['action']) {
 					case 'create' :
-						$entCname = $data['classname'];
-						$data['entite'] = new $entCname();
-						$data[$action.'_form'] = $this->getEntityFormView($data);
+						$data['entite'] = $this->getNewEntity($data['classname']);
+						$data[$data['action'].'_form'] = $this->getEntityFormView($data);
 						break;
 					case 'show' :
 						$data['entite'] = $this->repo->find($id);
@@ -93,7 +90,7 @@ class entiteController extends Controller {
 					case 'edit' :
 						$data['entite'] = $this->repo->find($id);
 						if(!is_object($data['entite'])) throw new Exception($data['entite_name'].'.not_found', 1);
-						$data[$action.'_form'] = $this->getEntityFormView($data);
+						$data[$data['action'].'_form'] = $this->getEntityFormView($data);
 						break;
 					case 'check' :
 						// DEFAULT_ACTION
@@ -103,6 +100,62 @@ class entiteController extends Controller {
 							$data['entites'] = $this->repo->findAll();
 						}
 						break;
+					case 'delete' :
+						$data['entite'] = $this->repo->find($id);
+						if(!is_object($data['entite'])) {
+							$message = $this->get('flash_messages')->send(array(
+								'title'		=> 'Message introuvable',
+								'type'		=> flashMessage::MESSAGES_ERROR,
+								'text'		=> 'Le message est introuvable et ne peut être supprimé.',
+							));
+							$data['action'] = null;
+							$data['id'] = null;
+						} else {
+							if(method_exists($data['entite'], 'setStatut')) {
+								// si un champ statut existe
+								$inactif = $this->em->getRepository('site\adminBundle\Entity\statut')->findInactif();
+								$data['entite']->setStatut($inactif);
+							} else {
+								// sinon on la supprime
+								$this->em->remove($data['entite']);
+							}
+							$this->em->flush();
+							$message = $this->get('flash_messages')->send(array(
+								'title'		=> 'Message supprimé',
+								'type'		=> flashMessage::MESSAGES_WARNING,
+								'text'		=> 'Le message a été supprimé.',
+							));
+							$data['action'] = null;
+							$data['id'] = null;
+						}
+						return $this->redirect($this->generateEntityUrl($data));
+						break;
+					case 'active' :
+						$data['entite'] = $this->repo->find($id);
+						if(!is_object($data['entite'])) {
+							$message = $this->get('flash_messages')->send(array(
+								'title'		=> 'Message introuvable',
+								'type'		=> flashMessage::MESSAGES_ERROR,
+								'text'		=> 'Le message est introuvable et ne peut être supprimé.',
+							));
+							$data['action'] = null;
+							$data['id'] = null;
+						} else {
+							if(method_exists($data['entite'], 'setStatut')) {
+								// si un champ statut existe
+								$actif = $this->em->getRepository('site\adminBundle\Entity\statut')->findActif();
+								$data['entite']->setStatut($actif);
+							}
+							$this->em->flush();
+							$message = $this->get('flash_messages')->send(array(
+								'title'		=> 'Message activé',
+								'type'		=> flashMessage::MESSAGES_SUCCESS,
+								'text'		=> 'Le message a été activé.',
+							));
+							$data['action'] = 'show';
+						}
+						return $this->redirect($this->generateEntityUrl($data));
+						break;
 					default:
 						// DEFAULT_ACTION
 						$data['entites'] = $this->repo->findAll();
@@ -111,11 +164,26 @@ class entiteController extends Controller {
 				break;
 		}
 		
-		$template = 'siteadminBundle:entites:'.$entite.ucfirst($action).'.html.twig';
+		$template = 'siteadminBundle:entites:'.$entite.ucfirst($data['action']).'.html.twig';
 		if(!$this->get('templating')->exists($template)) {
-			$template = 'siteadminBundle:entites:'.'entite'.ucfirst($action).'.html.twig';
+			$template = 'siteadminBundle:entites:'.'entite'.ucfirst($data['action']).'.html.twig';
 		}
 		return $this->render($template, $data);
+	}
+
+	/**
+	 * Renvoie une URL selon les paramètres de $data
+	 * @param array $data
+	 * @return string
+	 */
+	protected function generateEntityUrl($data) {
+		if($data['type']['type_related'] != null) {
+			// avec type
+			return $this->generateUrl('siteadmin_entite_type', array('entite' => $data['entite_name'], 'type_related' => $data['type_related'], 'type_field' => $data['type_field'], 'type_values' => $this->typeValuesToString($data['type_values']), 'action' => $data['action'], 'id' => $data['id']));
+		} else {
+			// sans type
+			return $this->generateUrl('siteadmin_entite', array('entite' => $data['entite_name'], 'action' => $data['action'], 'id' => $data['id']));
+		}
 	}
 
 	/**
@@ -145,7 +213,7 @@ class entiteController extends Controller {
 		if($data['action'] == "create") {
 			// create
 			$imsg = '';
-			$data['entite'] = new $classname();
+			$data['entite'] = $this->getNewEntity($classname);
 		} else {
 			// edit / delete
 			$imsg = ' (id:'.$data['id'].')';
@@ -155,52 +223,70 @@ class entiteController extends Controller {
 			// entité invalide
 			$message = $this->get('flash_messages')->send(array(
 				'title'		=> 'Entité introuvable',
-				'type'		=> flashMessage::MESSAGES_SUCCESS,
+				'type'		=> flashMessage::MESSAGES_ERROR,
 				'text'		=> 'L\'entité "'.$data['entite_name'].'"'.$imsg.' n\'a pas été trouvée.',
 			));
 		} else {
-			$form = $this->getEntityForm($data);
-			$form->bind($request);
-			if($form->isValid()) {
-				// formulaire valide -> enregistrement -> renvoi à l'url de success
-				$this->checkEntityBeforePersist($data);
-				$this->em->persist($data['entite']);
-				$this->em->flush();
-				if($data['action'] == "create") {
-					$data['id'] = $data['entite']->getId();
-					unset($data['onSuccess']);
-					$this->addContextActionsToData($data);
-					$message = $this->get('flash_messages')->send(array(
-						'title'		=> 'Saisie enregistrée',
-						'type'		=> flashMessage::MESSAGES_SUCCESS,
-						'text'		=> 'Le nouvel élément a bien été enregistré.',
-					));
-				} else {
-					$message = $this->get('flash_messages')->send(array(
-						'title'		=> 'Saisie enregistrée',
-						'type'		=> flashMessage::MESSAGES_SUCCESS,
-						'text'		=> 'Les modification de cet élément ont bien été enregistrées.',
-					));
-				}
-				if(isset($data['onSuccess'])) return $this->redirect($data['onSuccess']);
-			} else {
-				// formulaire invalide -> url echec
-				$message = $this->get('flash_messages')->send(array(
-					'title'		=> 'Erreurs de saisie',
-					'type'		=> flashMessage::MESSAGES_ERROR,
-					'text'		=> 'La saisie de vos données contient des erreurs. Veuillez les corriger, svp.',
-				));
-				if(isset($data['onError'])) {
-					if(is_string($data['onError'])) return $this->redirect($data['onError']);
-				}
-				// retour au formulaire…
-				$template = 'siteadminBundle:entites:'.$data['entite_name'].ucfirst($data['action']).'.html.twig';
-				if(!$this->get('templating')->exists($template)) {
-					$template = 'siteadminBundle:entites:'.'entite'.ucfirst($data['action']).'.html.twig';
-				}
-				$data[$data['action'].'_form'] = $form->createView();
-				return $this->render($template, $data);
+			switch ($data['action']) {
+				case 'delete':
+					if(method_exists($data['entite'], 'setStatut')) {
+						// si un champ statut existe
+						$inactif = $this->em->getRepository('site\adminBundle\Entity\statut')->findInactif();
+						$data['entite']->setStatut($inactif);
+					} else {
+						// sinon on la supprime
+						$this->em->remove($data['entite']);
+					}
+					$this->em->flush();
+					if(isset($data['onSuccess'])) return $this->redirect($data['onSuccess']);
+					break;
+				
+				default:
+					$form = $this->getEntityForm($data);
+					$form->bind($request);
+					if($form->isValid()) {
+						// formulaire valide -> enregistrement -> renvoi à l'url de success
+						$this->checkEntityBeforePersist($data);
+						$this->em->persist($data['entite']);
+						$this->em->flush();
+						if($data['action'] == "create") {
+							$data['id'] = $data['entite']->getId();
+							unset($data['onSuccess']);
+							$this->addContextActionsToData($data);
+							$message = $this->get('flash_messages')->send(array(
+								'title'		=> 'Saisie enregistrée',
+								'type'		=> flashMessage::MESSAGES_SUCCESS,
+								'text'		=> 'Le nouvel élément a bien été enregistré.',
+							));
+						} else {
+							$message = $this->get('flash_messages')->send(array(
+								'title'		=> 'Saisie enregistrée',
+								'type'		=> flashMessage::MESSAGES_SUCCESS,
+								'text'		=> 'Les modification de cet élément ont bien été enregistrées.',
+							));
+						}
+						if(isset($data['onSuccess'])) return $this->redirect($data['onSuccess']);
+					} else {
+						// formulaire invalide -> url echec
+						$message = $this->get('flash_messages')->send(array(
+							'title'		=> 'Erreurs de saisie',
+							'type'		=> flashMessage::MESSAGES_ERROR,
+							'text'		=> 'La saisie de vos données contient des erreurs. Veuillez les corriger, svp.',
+						));
+						if(isset($data['onError'])) {
+							if(is_string($data['onError'])) return $this->redirect($data['onError']);
+						}
+						// retour au formulaire…
+						$template = 'siteadminBundle:entites:'.$data['entite_name'].ucfirst($data['action']).'.html.twig';
+						if(!$this->get('templating')->exists($template)) {
+							$template = 'siteadminBundle:entites:'.'entite'.ucfirst($data['action']).'.html.twig';
+						}
+						$data[$data['action'].'_form'] = $form->createView();
+						return $this->render($template, $data);
+					}
+					break;
 			}
+
 		}
 		return $this->redirect($this->generateUrl('siteadmin_entite', $data['entite_name']));
 	}
@@ -364,6 +450,17 @@ class entiteController extends Controller {
 				break;
 		}
 		// return $data;
+	}
+
+	protected function getNewEntity($classname) {
+		$newEntity = new $classname();
+		$this->em = $this->getDoctrine()->getManager();
+		if(method_exists($newEntity, 'setStatut')) {
+			// si un champ statut existe
+			$inactif = $this->em->getRepository('site\adminBundle\Entity\statut')->defaultVal();
+			$newEntity->setStatut($inactif);
+		}
+		return $newEntity;
 	}
 
 	public function pageweb_as_defaultAction($id, $redir) {

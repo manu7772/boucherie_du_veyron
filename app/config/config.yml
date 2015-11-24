@@ -58,6 +58,12 @@ parameters:
             extendedTimeOut: 1000
             closeHtml: '<button type="button">&times;</button>'
             newestOnTop: false
+    marketplace:
+        active: false
+        paiement: false
+        devise:
+            name: euro
+            symb: €
 
 framework:
     #esi:             ~
@@ -95,6 +101,7 @@ twig:
         formFormatDate:  %formFormatDate%
         default_locales: %default_locales%
         list_locales: %list_locales%
+        marketplace: marketplace
     form:
         resources:
             # - 'sitegraphicsBundle:Form:form_div_layout.html.twig'
@@ -111,6 +118,8 @@ assetic:
     bundles:
         - sitesiteBundle
         - siteadminBundle
+        - siteUserBundle
+        - FOSUserBundle
     #java: /usr/bin/java
     filters:
         cssrewrite: ~

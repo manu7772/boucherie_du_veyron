@@ -18,10 +18,11 @@ class aeMenus {
 	const ARRAY_GLUE = '___';
 	const SOURCE_FILES = 'src/';
 	const FOLD_RESOURCES = 'Resources';
+	const FOLD_PUBLIC = 'public';
 	const FOLD_MENU = 'menus';
 	const BUNDLE_EXTENSION = 'Bundle';
 	const GO_TO_ROOT = '/../../../../';
-	const MAX_YAML_LEVEL = 10;
+	const MAX_YAML_LEVEL = 32;
 
 	protected $container; 			// container
 	protected $aetools; 			// aetools
@@ -47,7 +48,7 @@ class aeMenus {
 		$this->bundles_list = array();
 		$this->files_list = array();
 		// récupération des dossiers "menus", enfants DIRECTS des dossiers "Resources", uniquement dans "src"
-		$fold_resources = $this->aetools->exploreDir(self::SOURCE_FILES, self::FOLD_RESOURCES, "dossiers");
+		$fold_resources = $this->aetools->exploreDir(self::SOURCE_FILES, self::FOLD_PUBLIC, "dossiers");
 		$this->fold_menu = array();
 		foreach ($fold_resources as $fR) {
 			$res = $this->aetools->exploreDir($fR['sitepath'].$fR['nom'], self::FOLD_MENU, "dossiers", false); // false --> enfants directs
@@ -133,7 +134,7 @@ class aeMenus {
 	 */
 	public function getInfoMenu($bundle, $name) {
 		if(isset($this->files_list[$bundle][$name])) {
-			$this->files_list[$bundle][$name]['menu'] = $this->parse_yaml_fromFile($this->files_list[$bundle][$name]['full']);
+			$this->files_list[$bundle][$name] = $this->parse_yaml_fromFile($this->files_list[$bundle][$name]['full']);
 			return $this->files_list[$bundle][$name];
 		}
 		return false;
@@ -256,7 +257,7 @@ class aeMenus {
 	 * @return array
 	 */
 	public function getBundle($path) {
-		return strtolower(str_replace(array(self::FOLD_RESOURCES, self::FOLD_MENU, self::SOURCE_FILES, self::BUNDLE_EXTENSION, '/'), '', $path));
+		return strtolower(str_replace(array(self::FOLD_RESOURCES, self::FOLD_PUBLIC, self::FOLD_MENU, self::SOURCE_FILES, self::BUNDLE_EXTENSION, '/'), '', $path));
 	}
 
 	/**
@@ -268,7 +269,6 @@ class aeMenus {
 		return isset($this->bundles_list[$bundle]) ? $this->bundles_list[$bundle] : false;
 	}
 
-
 	/**
 	 * Change l'ordre des éléments dans un menu et enregistre
 	 * @param string $bundle
@@ -277,6 +277,7 @@ class aeMenus {
 	 * @return string
 	 */
 	public function changeOrderInFile($bundle, $name, $data) {
+		if(!is_array($data)) return false;
 		$menu = $this->parse_yaml_fromFile($this->files_list[$bundle][$name]['full']);
 		$menu['menu'] = $this->reorder($this->getFlatItemsOfMenu($menu['menu']), $data);
 		$result = $this->dump_yaml_toFile($this->files_list[$bundle][$name]['full'], $menu, false);

@@ -31,20 +31,20 @@ class menusController extends Controller {
 			case 'create':
 				# code...
 				break;
-			
+
 			case 'edit':
 				$data['menu'] = $aeMenus->getInfoMenu($bundle, $name);
 				# code...
 				break;
-			
+
 			case 'delete':
 				# code...
 				break;
-			
+
 			case 'copy':
 				# code...
 				break;
-			
+
 			default:
 				// view
 				$data['menu'] = $aeMenus->getInfoMenu($bundle, $name);
@@ -63,7 +63,7 @@ class menusController extends Controller {
 		$request = $this->getRequest();
 		$tree = $request->request->get('tree');
 		$data = $aeMenus->changeOrderInFile($bundle, $name, $tree);
-		return new JsonResponse(true);
+		return new JsonResponse($data);
 	}
 
 

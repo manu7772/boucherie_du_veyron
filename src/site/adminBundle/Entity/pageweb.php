@@ -82,9 +82,9 @@ class pageweb {
 
 	/**
 	 * @var string
-	 * @ORM\Column(name="metatitle", type="text", nullable=true, unique=false)
+	 * @ORM\Column(name="keywords", type="text", nullable=true, unique=false)
 	 */
-	protected $metatitle;
+	protected $keywords;
 
 	/**
 	 * @var string
@@ -137,8 +137,7 @@ class pageweb {
 	 * Get id
 	 * @return integer 
 	 */
-	public function getId()
-	{
+	public function getId() {
 		return $this->id;
 	}
 
@@ -147,8 +146,7 @@ class pageweb {
 	 * @param string $nom
 	 * @return pageweb
 	 */
-	public function setNom($nom)
-	{
+	public function setNom($nom) {
 		$this->nom = $nom;
 		return $this;
 	}
@@ -157,8 +155,7 @@ class pageweb {
 	 * Get nom
 	 * @return string 
 	 */
-	public function getNom()
-	{
+	public function getNom() {
 		return $this->nom;
 	}
 
@@ -187,8 +184,7 @@ class pageweb {
 	 * @param media $background
 	 * @return pageweb
 	 */
-	public function setBackground(media $background = null)
-	{
+	public function setBackground(media $background = null) {
 		$this->background = $background;
 		return $this;
 	}
@@ -197,8 +193,7 @@ class pageweb {
 	 * Get background
 	 * @return media 
 	 */
-	public function getBackground()
-	{
+	public function getBackground() {
 		return $this->background;
 	}
 
@@ -207,8 +202,7 @@ class pageweb {
 	 * @param string $code
 	 * @return pageweb
 	 */
-	public function setCode($code = null)
-	{
+	public function setCode($code = null) {
 		$this->code = $code;
 		if(trim($this->code) == '') $this->code = null;
 		return $this;
@@ -218,8 +212,7 @@ class pageweb {
 	 * Get code
 	 * @return string 
 	 */
-	public function getCode()
-	{
+	public function getCode() {
 		return $this->code;
 	}
 
@@ -228,8 +221,7 @@ class pageweb {
 	 * @param string $title
 	 * @return pageweb
 	 */
-	public function setTitle($title = null)
-	{
+	public function setTitle($title = null) {
 		$this->title = $title;
 		return $this;
 	}
@@ -238,8 +230,7 @@ class pageweb {
 	 * Get title
 	 * @return string 
 	 */
-	public function getTitle()
-	{
+	public function getTitle() {
 		return $this->title;
 	}
 
@@ -248,8 +239,7 @@ class pageweb {
 	 * @param string $titreh1
 	 * @return pageweb
 	 */
-	public function setTitreh1($titreh1 = null)
-	{
+	public function setTitreh1($titreh1 = null) {
 		$this->titreh1 = $titreh1;
 		return $this;
 	}
@@ -258,29 +248,34 @@ class pageweb {
 	 * Get titreh1
 	 * @return string 
 	 */
-	public function getTitreh1()
-	{
+	public function getTitreh1() {
 		return $this->titreh1;
 	}
 
 	/**
-	 * Set metatitle
-	 * @param string $metatitle
+	 * Set keywords
+	 * @ORM\PrePersist
+	 * @ORM\PreUpdate
+	 * @param string $keywords
 	 * @return pageweb
 	 */
-	public function setMetatitle($metatitle = null)
-	{
-		$this->metatitle = $metatitle;
+	public function setKeywords($keywords = null) {
+		$tagslist = array();
+		foreach ($this->getTags() as $tag) {
+			$tagslist[] = $tag->getNom();
+		}
+		if(count($tagslist) > 0) $keywords = implode(', ', $tagslist);
+			else $keywords = null;
+		$this->keywords = $keywords;
 		return $this;
 	}
 
 	/**
-	 * Get metatitle
+	 * Get keywords
 	 * @return string 
 	 */
-	public function getMetatitle()
-	{
-		return $this->metatitle;
+	public function getKeywords() {
+		return $this->keywords;
 	}
 
 	/**
@@ -288,8 +283,7 @@ class pageweb {
 	 * @param string $metadescription
 	 * @return pageweb
 	 */
-	public function setMetadescription($metadescription = null)
-	{
+	public function setMetadescription($metadescription = null) {
 		$this->metadescription = $metadescription;
 		return $this;
 	}
@@ -298,8 +292,7 @@ class pageweb {
 	 * Get metadescription
 	 * @return string 
 	 */
-	public function getMetadescription()
-	{
+	public function getMetadescription() {
 		return $this->metadescription;
 	}
 
@@ -308,8 +301,7 @@ class pageweb {
 	 * @param string $modele
 	 * @return pageweb
 	 */
-	public function setModele($modele = null)
-	{
+	public function setModele($modele = null) {
 		$this->modele = $modele;
 		return $this;
 	}
@@ -318,9 +310,26 @@ class pageweb {
 	 * Get modele
 	 * @return string 
 	 */
-	public function getModele()
-	{
+	public function getModele() {
 		return $this->modele;
+	}
+
+	/**
+	 * Get modelename
+	 * @return string 
+	 */
+	public function getModelename() {
+		$path = explode("/", $this->modele);		
+		return preg_replace("#\.html\.twig$#", '', end($path));
+	}
+
+	/**
+	 * Get template
+	 * @return string 
+	 */
+	public function getTemplate() {
+		$path = preg_split('#(src/|Resources/|views/|/)#', $this->modele);
+		return implode(array_slice($path, 0, -2)).':'.$path[count($path)-2].':'.$path[count($path)-1];
 	}
 
 	/**

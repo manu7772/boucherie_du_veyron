@@ -1,31 +1,27 @@
 {% extends 'sitesiteBundle::base_pages.html.twig' %}
-
-{%- block title -%}
-    {%- if pageweb.title|trim|length > 0 -%}
-    {{- pageweb.title|raw -}}
-    {%- else -%}
-    {{- parent() -}}
-    {%- endif -%}
-{%- endblock -%}
-{%- block description -%}
-    {%- if pageweb.metadescription|trim|length > 0 -%}
-    {{- pageweb.metadescription|raw -}}
-    {%- else -%}
-    {{- parent() -}}
-    {%- endif -%}
-{%- endblock description -%}
-{%- block keywords -%}
-    {%- if pageweb.metatitle|trim|length > 0 -%}
-    {{- pageweb.metatitle|raw -}}
-    {%- else -%}
-    {{- parent() -}}
-    {%- endif -%}
-{%- endblock keywords -%}
+{% set cssjsloads = 'simple' %}
 
 {% block mainContainer %}
-    <h1>{{ pageweb.titreh1|raw }}</h1>
-    <br>
-    <p>{{ pageweb.code|raw }}</p>
-    <br>
-    {{ include('sitesiteBundle:blocks:mini-liste-info.html.twig') }}    
+<section>
+	<div class="container">
+		<div class="row">
+
+			{{ render(controller('sitesiteBundle:Default:mainmenu')) }}
+
+			<div class="col-sm-9 col-md-9 padding-left-resp">
+				<div class="content-page-right">
+					<h1 class="title">{{ pageweb.titreh1|raw }}</h1>
+					<div class="single-section">
+						<img src="images/metier/presentation.jpg" alt="">                
+						<p>{{ pageweb.code|raw }}</p>
+					</div>
+				</div>
+			</div>
+
+		</div>
+	</div>
+</section>
+
+{{ include('sitesiteBundle:blocks:mini-liste-info.html.twig') }}    
+
 {% endblock mainContainer %}

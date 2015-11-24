@@ -7,14 +7,14 @@
 	<div class="col-lg-12 m-t-xs">
 		<h2>{{ htitle|capitalize }}</h2>
 		<ol class="breadcrumb">
-			<li><a href="{{ path('acme_grouplabo_inspinia_homepage') }}"><strong>Administration</strong></a></li>
-			<li><a href="{{ path('labo_users', {type: 'all'}) }}"><strong>Utilisateurs</strong></a></li>
+			<li><a href="{{ path('siteadmin_homepage') }}"><strong>Administration</strong></a></li>
+			<li><a href="{{ path('siteUser_users', {type: 'all'}) }}"><strong>Utilisateurs</strong></a></li>
 			<li>{{ roleName(type)|raw|capitalize }}</li>
 		</ol>
 		{% if DEVMODE %}
 		<hr class="m-b-sm m-t-xs">
 		<div class='btn-group'>
-			<a href="{{ path('labo_users', {type: type, action: 'check'}) }}" type="button" class="btn btn-danger btn-xs"><i class="fa fa-check icon-wait-on-click" data-icon-wait="{{ spinIcon|default('fa-cogs') }}"></i> Check tous utilisateurs</a>
+			<a href="{{ path('siteUser_users', {type: type, action: 'check'}) }}" type="button" class="btn btn-danger btn-xs"><i class="fa fa-check icon-wait-on-click" data-icon-wait="{{ spinIcon|default('fa-cogs') }}"></i> Check tous utilisateurs</a>
 		</div>
 		{% endif %}
 	</div>
@@ -72,18 +72,19 @@
 							</td>
 							<td>
 								<div class="btn-group">
-									<a href="{{ path('labo_user_info', {username: user.username}) }}" type="button" class="btn btn-white btn-xs" title="Voir {{ user.username }}"><i class="fa fa-eye icon-wait-on-click"></i></a>
-									<a href="{{ path('labo_user_edit', {username: user.username}) }}" type="button" class="btn btn-white btn-xs" title="Modifier {{ user.username }}"><i class="fa fa-pencil icon-wait-on-click"></i></a>
+									<a href="{{ path('siteUser_info', {username: user.username}) }}" type="button" class="btn btn-white btn-xs" title="Voir {{ user.username }}"><i class="fa fa-eye icon-wait-on-click"></i></a>
 									{% if user.id == app.user.id %}
+									<a href="{{ path('fos_user_profile_edit', {id: app.security.token.user.id}) }}" type="button" class="btn btn-white btn-xs" title="Modifier {{ user.username }}"><i class="fa fa-pencil icon-wait-on-click"></i></a>
 									<a href="{{ path('fos_user_deleting', {id: app.security.token.user.id}) }}" type="button" class="btn btn-white btn-xs need-confirmation" title="Supprimer votre compte ?" data-message="ATTENTION, vous êtes sur le point de supprimer votre compte ! Souhaitez-vous vraiment faire cette opération ?"><i class="fa fa-times icon-wait-on-click"></i></a>
 									{% elseif app.user.haveRight(user) %}
-									<a href="{{ path('labo_user_delete', {username: user.username}) }}" type="button" class="btn btn-white btn-xs need-confirmation" title="Supprimer {{ user.username }}" data-message="Souhaitez-vous vraiment supprimer ce compte ?"><i class="fa fa-times icon-wait-on-click"></i></a>
+									<a href="{{ path('siteUser_edit', {username: user.username}) }}" type="button" class="btn btn-white btn-xs" title="Modifier {{ user.username }}"><i class="fa fa-pencil icon-wait-on-click"></i></a>
+									<a href="{{ path('siteUser_delete', {username: user.username}) }}" type="button" class="btn btn-white btn-xs need-confirmation" title="Supprimer {{ user.username }}" data-message="Souhaitez-vous vraiment supprimer ce compte ?"><i class="fa fa-times icon-wait-on-click"></i></a>
 									{% endif %}
 								</div>
 								{% if DEVMODE %}
 								<hr class="m-b-sm m-t-xs">
 								<div class="btn-group">
-									<a href="{{ path('labo_users', {type: 'all', action: 'check', params: {username: user.username}|json_encode }) }}" type="button" class="btn btn-danger btn-xs" title="Checker utilisateur {{ user.username }}"><i class="fa fa-check icon-wait-on-click" data-icon-wait="{{ spinIcon|default('fa-cogs') }}"></i></a>
+									<a href="{{ path('siteUser_users', {type: 'all', action: 'check', params: {username: user.username}|json_encode }) }}" type="button" class="btn btn-danger btn-xs" title="Checker utilisateur {{ user.username }}"><i class="fa fa-check icon-wait-on-click" data-icon-wait="{{ spinIcon|default('fa-cogs') }}"></i></a>
 									{% if delete_form[user.id] is defined %}
 									{% form_theme delete_form[entite.id] ':Form:simple_bootstrap_form.html.twig' %}
 									{{ form_start(delete_form[entite.id]) }}
@@ -117,7 +118,7 @@
 	{% if modeUserList|default(0) == 1 %}
 	<div class="col-lg-3">
 		<div class="contact-box center-version">
-			<a href="{{ path('labo_user_info', {username: user.username}) }}">
+			<a href="{{ path('siteUser_info', {username: user.username}) }}">
 				<!-- <img alt="image" class="img-circle" src="img/a2.jpg"> -->
 				<i class="fa fa-user fa-5x text-{{ classtype|default('muted')|raw }}"></i>
 				<h3 class="m-b-xs"><strong>{{ user.prenom }} {{ user.nom|default(user.username) }}</strong></h3>
@@ -131,12 +132,12 @@
 			</a>
 			<div class="contact-box-footer">
 				<div class="m-t-xs btn-group">
-					<a href="{{ path('labo_user_info', {username: user.username}) }}" class="btn btn-xs btn-white"><i class="fa fa-eye icon-wait-on-click"></i> Voir</a>
-					<a href="{{ path('labo_user_edit', {username: user.username}) }}" class="btn btn-xs btn-white"><i class="fa fa-pencil icon-wait-on-click"></i> Modifier</a>
+					<a href="{{ path('siteUser_info', {username: user.username}) }}" class="btn btn-xs btn-white"><i class="fa fa-eye icon-wait-on-click"></i> Voir</a>
+					<a href="{{ path('siteUser_edit', {username: user.username}) }}" class="btn btn-xs btn-white"><i class="fa fa-pencil icon-wait-on-click"></i> Modifier</a>
 					{% if user.id == app.user.id %}
 					<a href="{{ path('fos_user_deleting', {id: app.security.token.user.id}) }}" type="button" class="btn btn-white btn-xs need-confirmation" title="Supprimer votre compte ?" data-message="ATTENTION, vous êtes sur le point de supprimer votre compte ! Souhaitez-vous vraiment faire cette opération ?"><i class="fa fa-times icon-wait-on-click"></i></a>
 					{% elseif app.user.haveRight(user) %}
-					<a href="{{ path('labo_user_delete', {username: user.username}) }}" class="btn btn-xs btn-white need-confirmation" title="Supprimer {{ user.username }}" data-message="Souhaitez-vous vraiment supprimer ce compte ?"><i class="fa fa-times icon-wait-on-click"></i> Supprimer</a>
+					<a href="{{ path('siteUser_delete', {username: user.username}) }}" class="btn btn-xs btn-white need-confirmation" title="Supprimer {{ user.username }}" data-message="Souhaitez-vous vraiment supprimer ce compte ?"><i class="fa fa-times icon-wait-on-click"></i> Supprimer</a>
 					{% endif %}
 				</div>
 			</div>
@@ -155,25 +156,25 @@
 				<h3>{{ user.prenom }} <strong>{{ user.nom|default(user.username) }}</strong></h3>
 				<!-- <p><i class="fa fa-map-marker"></i> Riviera State 32/106</p> -->
 				<address>
-					<strong>{{ user.adresse }}</strong><br>
-					{{ user.cp }}<br>
-					{{ user.ville }}<br>
-					<abbr title="Téléphone">Tél. </abbr> {{ user.tel }}
+					<strong>{{ user.adresse|default('-') }}</strong><br>
+					{{ user.cp|default('-') }}<br>
+					{{ user.ville|default('-') }}<br>
+					<abbr title="Téléphone">Tél. </abbr> {{ user.tel|default('-') }}
 				</address>
 			</div>
 			<div class="clearfix"></div>
 			<div class="row">
 				<div class="col-xs-4">
-					<a href="{{ path('labo_user_info', {username: user.username}) }}" type="button" class="btn btn-white btn-xs btn-block"><i class="fa fa-eye icon-wait-on-click"></i></a>
+					<a href="{{ path('siteUser_info', {username: user.username}) }}" type="button" class="btn btn-white btn-xs btn-block"><i class="fa fa-eye icon-wait-on-click"></i></a>
 				</div>
 				<div class="col-xs-4">
-					<a href="{{ path('labo_user_edit', {username: user.username}) }}" type="button" class="btn btn-white btn-xs btn-block"><i class="fa fa-pencil icon-wait-on-click"></i></a>
+					<a href="{{ path('siteUser_edit', {username: user.username}) }}" type="button" class="btn btn-white btn-xs btn-block"><i class="fa fa-pencil icon-wait-on-click"></i></a>
 				</div>
 				<div class="col-xs-4">
 					{% if user.id == app.user.id %}
-					<a href="{{ path('fos_user_deleting', {id: app.security.token.user.id}) }}" type="button" class="btn btn-white btn-xs need-confirmation" title="Supprimer votre compte ?" data-message="ATTENTION, vous êtes sur le point de supprimer votre compte ! Souhaitez-vous vraiment faire cette opération ?"><i class="fa fa-times icon-wait-on-click"></i></a>
+					<a href="{{ path('fos_user_deleting', {id: app.security.token.user.id}) }}" type="button" class="btn btn-white btn-xs btn-block need-confirmation" title="Supprimer votre compte ?" data-message="ATTENTION, vous êtes sur le point de supprimer votre compte ! Souhaitez-vous vraiment faire cette opération ?"><i class="fa fa-times icon-wait-on-click"></i></a>
 					{% elseif app.user.haveRight(user) %}
-					<a href="{{ path('labo_user_delete', {username: user.username}) }}" type="button" class="btn btn-white btn-xs btn-block need-confirmation" title="Supprimer {{ user.username }}" data-message="Souhaitez-vous vraiment supprimer ce compte ?"><i class="fa fa-times icon-wait-on-click"></i></a>
+					<a href="{{ path('siteUser_delete', {username: user.username}) }}" type="button" class="btn btn-white btn-xs btn-block need-confirmation" title="Supprimer {{ user.username }}" data-message="Souhaitez-vous vraiment supprimer ce compte ?"><i class="fa fa-times icon-wait-on-click"></i></a>
 					{% endif %}
 				</div>
 			</div>

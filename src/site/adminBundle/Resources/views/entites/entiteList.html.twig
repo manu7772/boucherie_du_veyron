@@ -19,7 +19,9 @@
 				</ol>
 			</div>
 			<div class="col-md-3 m-t-lg">
-				<a href="{{ path('siteadmin_entite', {entite: entite_name, action: 'create'}) }}" style="margin-right: 4px;" type="button" class="btn btn-xs btn-warning pull-right"><i class="fa fa-pencil icon-wait-on-click"></i> {{ (entite_name ~ '.create_btn')|trans|capitalize }}</a>
+				{% block buttons %}
+				<a href="{{ path('siteadmin_entite', {entite: entite_name, action: 'create'}) }}" type="button" class="btn btn-xs btn-warning pull-right"><i class="fa fa-plus icon-wait-on-click"></i> {{ (entite_name ~ '.create_btn')|trans|capitalize }}</a>
+				{% endblock buttons %}
 			</div>
 		</div>
 	</div>
@@ -46,8 +48,8 @@
 						</tr>
 					</thead>
 					<tbody>
-						{% for entite in entites %}
-						<tr>
+						{% for entite in entites if(entite.statut.nom|default('Actif') == 'Actif' or DEVMODE) %}
+						<tr{% if entite.statut.nom|default('Actif') != 'Actif' %} class="danger"{% endif %}>
 							<td class="text-center">
 								{% if type.type_values|default(null) != null %}
 								<a href="{{ path('siteadmin_entite_type', {entite: entite_name, type_related: type.type_related, type_field: type.type_field, type_values: type.type_values|join(type_value_joiner)|url_encode, id: entite.id, action: 'show'}) }}" title="{{ (entite_name ~ '.moredetails')|trans({'%name%': entite.nom|default('#' ~ entite.id)})|capitalize }}"><strong>{{ entite.id }}</strong></a>
@@ -73,10 +75,16 @@
 									<a href="{{ path('siteadmin_entite_type', {entite: entite_name, type_related: type.type_related, type_field: type.type_field, type_values: type.type_values|join(type_value_joiner)|url_encode, id: entite.id, action: 'show'}) }}" type="button" class="btn btn-white btn-xs" title="{{ (entite_name ~ '.moredetails')|trans({'%name%': entite.nom|default('#' ~ entite.id)})|capitalize }}"><i class="fa fa-eye"></i></a>
 									<a href="{{ path('siteadmin_entite_type', {entite: entite_name, type_related: type.type_related, type_field: type.type_field, type_values: type.type_values|join(type_value_joiner)|url_encode, id: entite.id, action: 'edit'}) }}" type="button" class="btn btn-white btn-xs" title="{{ 'actions.modifier'|trans|capitalize }}"><i class="fa fa-pencil"></i></a>
 									<a href="{{ path('siteadmin_entite_type', {entite: entite_name, type_related: type.type_related, type_field: type.type_field, type_values: type.type_values|join(type_value_joiner)|url_encode, id: entite.id, action: 'delete'}) }}" type="button" class="btn btn-white btn-xs" title="{{ 'actions.supprimer'|trans|capitalize }}"><i class="fa fa-times"></i></a>
+									{% if(entite.statut.nom|default('Actif') != 'Actif') %}
+									<a href="{{ path('siteadmin_entite_type', {entite: entite_name, type_related: type.type_related, type_field: type.type_field, type_values: type.type_values|join(type_value_joiner)|url_encode, id: entite.id, action: 'active'}) }}" type="button" class="btn btn-danger btn-xs" title="{{ 'actions.activer'|trans|capitalize }}"><i class="fa fa-star"></i></a>
+									{% endif %}
 									{% else %}
 									<a href="{{ path('siteadmin_entite', {entite: entite_name, id: entite.id, action: 'show'}) }}" type="button" class="btn btn-white btn-xs" title="{{ (entite_name ~ '.moredetails')|trans({'%name%': entite.nom|default('#' ~ entite.id)})|capitalize }}"><i class="fa fa-eye"></i></a>
 									<a href="{{ path('siteadmin_entite', {entite: entite_name, id: entite.id, action: 'edit'}) }}" type="button" class="btn btn-white btn-xs" title="{{ 'actions.modifier'|trans|capitalize }}"><i class="fa fa-pencil"></i></a>
 									<a href="{{ path('siteadmin_entite', {entite: entite_name, id: entite.id, action: 'delete'}) }}" type="button" class="btn btn-white btn-xs" title="{{ 'actions.supprimer'|trans|capitalize }}"><i class="fa fa-times"></i></a>
+									{% if(entite.statut.nom|default('Actif') != 'Actif') %}
+									<a href="{{ path('siteadmin_entite', {entite: entite_name, id: entite.id, action: 'active'}) }}" type="button" class="btn btn-danger btn-xs" title="{{ 'actions.activer'|trans|capitalize }}"><i class="fa fa-star"></i></a>
+									{% endif %}
 									{% endif %}
 								</div>
 								{% if DEVMODE %}

@@ -2,11 +2,11 @@
 {% set idnest = bundle ~ name %}
 {% import _self as self %}
 <div class="dd" id="{{ idnest }}">
-	{{ self.menuL1(menu.menu.menu) }}
+	{{ self.menuL1(menu.menu) }}
 </div>
-{% if (app.environment in ['DEV', 'TEST']) or (is_granted('ROLE_SUPER_ADMIN')) %}
+{% if (app.environment|upper in ['DEV', 'TEST']) or (is_granted('ROLE_SUPER_ADMIN')) %}
 <div class="m-t-md"><h5>Output data (DEV)</h5></div>
-<textarea id="{{ idnest }}-output" class="form-control"></textarea>
+<div id="{{ idnest }}-output" class="form-control" style='height:64px;overflow:auto;color:green;'></div>
 {% endif %}
 {% endmacro %}
 
@@ -46,7 +46,7 @@
 		var fordata = $(this).nestable('serialize');
 		var outputdata = window.JSON.stringify(fordata);
 		if($('#{{ idnest }}-output').length) {
-			$('#{{ idnest }}-output').val(outputdata);
+			$('#{{ idnest }}-output').text(outputdata).css('color', 'orange');
 		}
 		// envoi ajax
 		var url = "{{ path('siteadmin_ajax_modify', {bundle: bundle, name: name}) }}";
@@ -55,10 +55,18 @@
 			method: "POST",
 			data: {tree: fordata},
 		}).done(function(data) {
+			{% if (app.environment|upper in ['DEV', 'TEST']) or (is_granted('ROLE_SUPER_ADMIN')) %}
 			// alert(data);
-		}).fail(function() {
-			{% if (app.environment in ['DEV', 'TEST']) or (is_granted('ROLE_SUPER_ADMIN')) %}
-			alert('Error…');
+			if($('#{{ idnest }}-output').length) {
+				$('#{{ idnest }}-output').text(window.JSON.stringify(data)).css('color', 'green');
+			}
+			{% endif %}
+		}).fail(function( jqXHR, textStatus ) {
+			{% if (app.environment|upper in ['DEV', 'TEST']) or (is_granted('ROLE_SUPER_ADMIN')) %}
+			// alert( "Request failed: " + textStatus );
+			if($('#{{ idnest }}-output').length) {
+				$('#{{ idnest }}-output').text("Request failed: " + textStatus).css('color', 'red');
+			}
 			{% endif %}
 		});
 	});

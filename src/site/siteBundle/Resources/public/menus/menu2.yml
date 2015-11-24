@@ -4,6 +4,10 @@ roles:
     edit: ROLE_ADMIN
     delete: ROLE_SUPER_ADMIN
 menu:
+    accueil:
+        name: Accueil
+        path:
+            route: sitesite_homepage
     langues:
         icon: fa-flag
         path:
@@ -34,10 +38,6 @@ menu:
                             route: sitesite_homepage
                             params:
                                 _locale: en
-    accueil:
-        name: Accueil
-        path:
-            route: sitesite_homepage
     réalisations:
         name: Réalisations
         path:

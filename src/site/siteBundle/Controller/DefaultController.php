@@ -6,6 +6,12 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
+use site\adminBundle\Entity\message;
+use site\adminBundle\Form\contactmessageType;
+use \DateTime;
+
+use site\adminBundle\Entity\pageweb;
+
 class DefaultController extends Controller {
 
 	public function indexAction() {
@@ -14,8 +20,7 @@ class DefaultController extends Controller {
 		$data['pageweb'] = $this->repo->findOneByHomepage(1);
 		// chargement de la pageweb
 		if(is_object($data['pageweb'])) {
-			$page = 'sitesiteBundle:pages_web:'.$data['pageweb']->getModele().'.html.twig';
-			return $this->render($page, $data);
+			return $this->render($data['pageweb']->getTemplate(), $data);
 		} else {
 			// si aucune page web… chargement de la page par défaut…
 			$data['title'] = 'La Boucherie du Veyron';
@@ -26,15 +31,69 @@ class DefaultController extends Controller {
 	}
 
 	public function pagewebAction($pageweb, $params = null) {
-		if($params == null) $params = array();
-		$data = $params;
-		// find $pageweb
 		$this->em = $this->getDoctrine()->getManager();
+		// if($params == null) $params = array();
+		$data = $this->get('tools_json')->JSonExtract($params);
+		$data['pageweb'] = $pageweb;
+		$this->pagewebactions($data);
+		// find $pageweb
 		$this->repo = $this->em->getRepository('site\adminBundle\Entity\pageweb');
 		$data['pageweb'] = $this->repo->findOneBySlug($pageweb);
 		// chargement de la pageweb
-		$page = 'sitesiteBundle:pages_web:'.$data['pageweb']->getModele().'.html.twig';
-		return $this->render($page, $data);
+		return $this->render($data['pageweb']->getTemplate(), $data);
+	}
+
+	protected function pagewebactions(&$data) {
+		switch ($data['pageweb']) {
+			case 'contact':
+				// page contact
+				$message = $this->getNewEntity('site\adminBundle\Entity\message');
+				$form = $this->createForm(new contactmessageType($this, []), $message);
+				// $this->repo = $this->em->getRepository('site\adminBundle\Entity\message');
+				$request = $this->getRequest();
+				if($request->getMethod() == 'POST') {
+					// formulaire reçu
+					$form->bind($request);
+					if($form->isValid()) {
+						// get IP & DateTime
+						$message->setIp($request->getClientIp());
+						$message->setCreation(new DateTime());
+						// enregistrement
+						$this->em->persist($message);
+						$this->em->flush();
+						$data['message_success'] = "message.success";
+						// nouveau formulaire
+						$new_message = new message();
+						$new_message->setNom($message->getNom());
+						$new_message->setPrenom($message->getPrenom());
+						$new_message->setPrenom($message->getPrenom());
+						$new_message->setTelephone($message->getTelephone());
+						$new_message->setEmail($message->getEmail());
+						// $new_message->setObjet($message->getObjet());
+						$form = $this->createForm(new contactmessageType($this, []), $new_message);
+					} else {
+						$data['message_error'] = "message.error";
+					}
+				}
+				$data['message_form'] = $form->createView();
+				break;
+			
+			default:
+				# code...
+				break;
+		}
+		return $data;
+	}
+
+	protected function getNewEntity($classname) {
+		$newEntity = new $classname();
+		$this->em = $this->getDoctrine()->getManager();
+		if(method_exists($newEntity, 'setStatut')) {
+			// si un champ statut existe
+			$inactif = $this->em->getRepository('site\adminBundle\Entity\statut')->defaultVal();
+			$newEntity->setStatut($inactif);
+		}
+		return $newEntity;
 	}
 
 	public function headerMiddleAction() {
@@ -56,6 +115,16 @@ class DefaultController extends Controller {
 		} else {
 			return new Response(null);
 		}
+	}
+
+	public function mainmenuAction() {
+		$data = array();
+		return $this->render('sitesiteBundle:blocks:mainmenu.html.twig', $data);
+	}
+
+	public function diaporamaAction($slug = 'intro') {
+		$data = array();
+		return $this->render('sitesiteBundle:blocks:diaporama.html.twig', $data);
 	}
 
 }

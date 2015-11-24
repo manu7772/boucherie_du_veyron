@@ -1,3 +1,4 @@
+admin: 'Boucherie du Veyron'
 date_format:
     date: Y-m-d
     time: 'H:i:s'
@@ -16,10 +17,22 @@ pageweb:
     backlist_btn: 'retour liste'
     dontexist: 'cette page web n''existe pas'
     moredetails: 'plus de détails sur %name%'
+    bydefault: 'définir comme page d''accueil par défaut'
+message:
+    name_s: messages
+    name: message
+    not_found: 'aucun message trouvé'
+    x_found: '{0} aucun message trouvé|{1} 1 message trouvé|[2,+Inf] %count% messages trouvés'
+    create: 'créer un nouveau message'
+    create_btn: 'nouveau message'
+    backlist: 'retour à la liste des messages'
+    backlist_btn: 'retour liste'
+    dontexist: 'ce message n''existe pas'
+    moredetails: 'plus de détails sur %name%'
 media:
     name_s: médias
     name: média
-    not_found: 'aucun média trouvée'
+    not_found: 'aucun média trouvé'
     x_found: '{0} aucun média trouvé|{1} 1 média trouvé|[2,+Inf] %count% médias trouvés'
     create: 'créer un nouveau média'
     create_btn: 'nouveau média'
@@ -91,6 +104,8 @@ actions:
     supprimer: supprimer
     suppQuestion: Souhaitez-vous vraiment supprimer %name% ?
     vue: 'vue en détails'
+    repondre: répondre par mail
+    activer: mode actif
 table:
     col:
         id: id
@@ -99,8 +114,8 @@ table:
         title: titre
         titreh1: titre H1
         modele: modèle
-        metatitle: meta title
-        metadescription: mots clés
+        keywords: mots clés
+        metadescription: description
         attribut: attribut
         valeur: valeur
         creation: création
@@ -118,6 +133,8 @@ table:
         email: courriel
         originalnom: nom fichier
         bundle: bundle
+        objet: objet
+        message: message
 msg:
     supp: 'souhaitez-vous supprimer cet élément ?'
     suppression: suppression
@@ -125,19 +142,10 @@ form:
     enregistrer: Enregistrer
     select: Sélectionner…
     nom: Nom
-    typemime: 'Type mime'
+    prenom: Prénom
+    telephone: Téléphone
     icone: Icône
     actif: Actif
-    groupes: Groupes
-    fa_groupes: '<i class="fa fa-users"></i> Groupes'
-    fichiers: Fichiers
-    fa_fichiers: '<i class="fa fa-files-o"></i> Fichiers'
-    parent_folder: 'Dossier parent'
-    fa_parent_folder: '<i class="fa fa-folder"></i> Dossier parent'
-    child_folders: 'Dossiers enfants'
-    fa_child_folders: '<i class="fa fa-folder-open"></i> Dossiers enfants'
-    current_version: 'Version courante'
-    fa_current_version: '<i class="fa fa-files"></i> Version courante'
     tags: Tags
     tags_create: 'Créez ici des tags en les séparant par des virgules…'
     fa_tags: '<i class="fa fa-tags"></i> Tags'
@@ -145,8 +153,12 @@ form:
     creation: Création
     update: 'Mise à jour'
     telechargement: Téléchargement
-    code: texte de page
-    background: image de fond
+    code: Texte de page
+    background: Image de fond
+    email: Courriel
+    message: Votre message…
+    envoyer: Envoyer
+    objet: Objet de votre message
 erreurs:
     supp_simple: 'erreur de suppression'
     suppression: 'erreur lors de la suppression de %name%'

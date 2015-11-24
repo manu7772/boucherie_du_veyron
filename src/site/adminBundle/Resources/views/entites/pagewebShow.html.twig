@@ -1,0 +1,80 @@
+{% extends 'siteadminBundle:entites:entiteShow.html.twig' %}
+
+{% block page_heading %}
+	{{ parent() }}
+{% endblock page_heading %}
+
+{% block content %}
+<div class="row">
+
+	<div class="col-md-8">
+		<div class="ibox float-e-margins">
+			<div class="ibox-content">
+				<h2 class="row">
+					<div class="col-md-8">{{ entite.nom|default('#' ~ entite.id) }}</div>
+					<div class="col-md-4">
+						<a href="{{ path('siteadmin_entite', {entite: entite_name, id: entite.id, action: 'delete'}) }}" type="button" class="btn btn-xs btn-danger btn-outline pull-right need-confirmation" title="{{ 'actions.suppression'|trans|capitalize }}" data-message="{{ 'actions.suppQuestion'|trans({'%name%': entite.nom|default('#' ~ entite.id)})|capitalize }}"><i class="fa fa-times icon-wait-on-click"></i> {{ 'actions.supprimer'|trans|capitalize }}</a>
+						<a href="{{ path('siteadmin_entite', {entite: entite_name, id: entite.id, action: 'edit'}) }}" type="button" class="btn btn-xs btn-warning pull-right"><i class="fa fa-pencil icon-wait-on-click"></i> {{ 'actions.modifier'|trans|capitalize }}</a>
+					</div>
+				</h2>
+				<hr>
+				<table class="table table-striped table-bordered table-hover dataTables dataTable dtr-inline" id="DataTables_Table_0" role="grid" aria-describedby="DataTables_Table_0_info">
+					<thead>
+						<tr>
+							<th>Libellé</th>
+							<th>valeurs</th>
+						</tr>
+					</thead>
+					<tbody>
+						{% if entite.nom is defined %}
+						<tr>
+							<td><strong>{{ 'table.col.nom'|trans|capitalize }}</strong></td>
+							<td>{{ entite.nom }}</td>
+						</tr>
+						{% endif %}
+						<tr>
+							<td><strong>{{ 'table.col.title'|trans }}</strong></td>
+							<td>{{ entite.title }}</td>
+						</tr>
+						<tr>
+							<td><strong>{{ 'table.col.titreh1'|trans }}</strong></td>
+							<td>{{ entite.titreh1 }}</td>
+						</tr>
+						<tr>
+							<td><strong>{{ 'table.col.modele'|trans }}</strong></td>
+							<td>{{ entite.modelename }}</td>
+						</tr>
+						<tr>
+							<td><strong>{{ 'table.col.metadescription'|trans }}</strong></td>
+							<td>{{ entite.metadescription }}</td>
+						</tr>
+						<tr>
+							<td><strong>{{ 'table.col.keywords'|trans }}</strong></td>
+							<td>{{ entite.keywords }}</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+
+	{#
+	<div class="col-md-4">
+		<div class="ibox float-e-margins">
+			<div class="ibox-title">
+				<h3>Logotype</h3>
+			</div>
+			<div class="ibox-content text-center" style='min-height: 180px;'>
+				{% if entite.logoImage.fichierNom is defined %}
+				<img src="{{ asset('images/logo/' ~ entite.logoImage.fichierNom) }}" class="img-rounded img-responsive center-block">
+				{% else %}
+				<i class="fa fa-times fa-3x text-muted"></i>
+				{% endif %}
+			</div>
+		</div>
+	</div>
+	#}
+
+
+</div>
+{% endblock content %}

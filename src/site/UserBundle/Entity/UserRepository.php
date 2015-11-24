@@ -18,4 +18,55 @@ class UserRepository extends EntityRepository {
 
 	const ELEMENT = 'element';
 
+	/** 
+	 * Renvoie la(les) valeur(s) par défaut --> ATTENTION : dans un array()
+	 * @param $defaults = liste des éléments par défaut
+	 */
+	public function defaultVal($defaults = null) {
+		if($defaults === null) $defaults = array("sadmin");
+		$qb = $this->createQueryBuilder(self::ELEMENT);
+		$qb->where($qb->expr()->in(self::ELEMENT.'.username', $defaults));
+		return $qb->getQuery()->getResult();
+	}
+
+	/**
+	 * getEditors
+	 * Récupère les utilisateurs habilités à accéder à l'interface d'admin (à partir de EDITOR)
+	 */
+	public function getEditors() {
+		$this->qb = $this->getEditorsAndMore();
+		return $this->qb->getQuery()->getResult();
+	}
+
+	public function findByRole($role) {
+		$qb = $this->createQueryBuilder(self::ELEMENT);
+		if($role == "ROLE_USER") {
+			$qb->where(self::ELEMENT.'.roles NOT LIKE :role1')
+			->andWhere(self::ELEMENT.'.roles NOT LIKE :role2')
+			->andWhere(self::ELEMENT.'.roles NOT LIKE :role3')
+			->setParameter('role1', '%ROLE_EDITOR%')
+			->setParameter('role2', '%ROLE_ADMIN%')
+			->setParameter('role3', '%ROLE_SUPER_ADMIN%');
+		} else {
+			$qb->where(self::ELEMENT.'.roles LIKE :roles')
+			->setParameter('roles', '%'.$role.'%');
+		}
+		return $qb->getQuery()->getResult();
+	}
+
+	/**
+	 * getEditorsAndMore
+	 * Récupère les utilisateurs habilités à accéder à l'interface d'admin (à partir de EDITOR)
+	 */
+	public function getEditorsAndMore() {
+		$this->qb = $this->createQueryBuilder(self::ELEMENT);
+		$this->qb->where(self::ELEMENT.'.roles LIKE :roleE')
+			->setParameter('roleE', "%".serialize('ROLE_EDITOR')."%");
+		$this->qb->orWhere(self::ELEMENT.'.roles LIKE :roleA')
+			->setParameter('roleA', "%".serialize('ROLE_ADMIN')."%");
+		$this->qb->orWhere(self::ELEMENT.'.roles LIKE :roleS')
+			->setParameter('roleS', "%".serialize('ROLE_SUPER_ADMIN')."%");
+		return $this->qb;
+	}
+
 }

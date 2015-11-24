@@ -1,5 +1,9 @@
 twig:
     globals:
+        keywords:
+            title: site.title
+            description: site.description
+            keywords: site.keywords
         formatDate:      "dd-MM-yyyy"
         formatDateHeure: "d-m-Y H:i:s"
         fileFormats:
@@ -52,9 +56,17 @@ twig:
             item4:
                 role: %restrict_admin%
                 nom: 'User.name_s'
-                path: 'siteadmin_homepage'
+                path: 'site_user_homepage'
                 icon: 'fa-users'
             item5:
+                role: ROLE_EDITOR
+                nom: message.name_s
+                icon: fa-paper-plane
+                path:
+                    path: siteadmin_entite
+                    params:
+                        entite: message
+            item6:
                 role: %restrict_admin%
                 nom: 'parametres'
                 path: 'siteadmin_homepage'
@@ -72,22 +84,22 @@ twig:
                             path: 'siteadmin_entite'
                             params:
                                 entite: fileFormat
-            item6:
-                role: 'ROLE_SUPER_ADMIN'
-                nom: 'Super Admin'
-                path: 'siteadmin_homepage'
-                icon: 'fa-gear'
-                level2: 
-                    item1:
-                        nom: 'User.name_s'
-                        path: 'siteadmin_homepage'
-                    item2:
-                        nom: 'parametres'
-                        path: 'siteadmin_homepage'
-                    item3:
-                        nom: 'Réglages'
-                        path: 'siteadmin_homepage'
             item7:
                 nom: 'help'
                 path: siteadmin_support
                 icon: 'fa-support'
+            # item8:
+            #     role: 'ROLE_SUPER_ADMIN'
+            #     nom: 'Super Admin'
+            #     path: 'siteadmin_homepage'
+            #     icon: 'fa-gear'
+            #     level2: 
+            #         item1:
+            #             nom: 'User.name_s'
+            #             path: 'siteadmin_homepage'
+            #         item2:
+            #             nom: 'parametres'
+            #             path: 'siteadmin_homepage'
+            #         item3:
+            #             nom: 'Réglages'
+            #             path: 'siteadmin_homepage'

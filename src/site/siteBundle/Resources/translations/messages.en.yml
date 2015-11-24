@@ -1,4 +1,7 @@
-site: 'Boucherie du Veyron'
+site:
+    title: 'Butcher in Veyron'
+    description: 'Butcher, deli, caterer in Poncin, Cerdon'
+    keywords: 'butcher, deli, caterer, cerdon, poncin, ain, rhône-alpes'
 bundles:
     admin:
         name: administration
@@ -25,3 +28,6 @@ footer:
     realisation: 'Concepted by %name%'
     generation: 'generated with'
     rights: 'all rights reserved'
+message:
+    success: 'Your message have been sent. Thanks.'
+    error: 'Your message have not been saved. Thanks for fullfill correctly your request.'

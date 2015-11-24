@@ -1,4 +1,5 @@
-{% extends 'sitesiteBundle:bases:base_simple.html.twig' %}
+{% extends 'sitesiteBundle:bases:base_' ~ cssjsloads|default('simple')|lower ~ '.html.twig' %}
+
 {% block body %}
     {% block header %}
     <header id="header"><!--header-->

@@ -56,15 +56,39 @@ class User extends BaseUser {
 	private $adminhelp;
 
 	/**
+	 * @ORM\Column(name="admintheme", type="string", length=32, unique=false, nullable=true)
+	 */
+	protected $admintheme;
+
+	/**
 	 * @ORM\Column(name="langue", type="string", length=32, unique=false, nullable=true)
 	 */
 	protected $langue;
 
+	/**
+	 * @ORM\Column(name="sleepdata", type="text", unique=false, nullable=true)
+	 */
+	protected $sleepdata;
+
+	protected $adminskins;
+	private $validRoles;
 
 	public function __construct() {
 		parent::__construct();
 		$this->adminhelp = true;
+		$this->sleepdata = null;
+		$this->admintheme = $this->getDefaultAdminskin();
 		$this->langue = 'default_locale';
+		$this->validRoles = array(1 => 'ROLE_USER', 2 => 'ROLE_TRANSLATOR', 3 => 'ROLE_EDITOR', 4 => 'ROLE_ADMIN', 5 => static::ROLE_SUPER_ADMIN);
+	}
+
+	public function getAdminskins() {
+		return array("skin-0" => "skin-0", "skin-1" => "skin-1", "skin-2" => "skin-2", "skin-3" => "skin-3");
+	}
+
+	public function getDefaultAdminskin() {
+		$skins = $this->getAdminskins();
+		return reset($skins);
 	}
 
 	/**
@@ -138,6 +162,28 @@ class User extends BaseUser {
 	}
 
 	/**
+	 * Set admintheme
+	 * @param boolean $admintheme
+	 * @return User
+	 */
+	public function setAdmintheme($admintheme) {
+		$skins = $this->getAdminskins();
+		if(in_array($admintheme, $skins)) $this->admintheme = $admintheme;
+			else $this->admintheme = $this->getDefaultAdminskin();
+		return $this;
+	}
+
+	/**
+	 * Get admintheme
+	 * @return boolean 
+	 */
+	public function getAdmintheme() {
+		$skins = $this->getAdminskins();
+		if(in_array($this->admintheme, $skins)) return $this->admintheme;
+			else return $this->getDefaultAdminskin();
+	}
+
+	/**
 	 * get langue
 	 * @return string
 	 */
@@ -152,6 +198,74 @@ class User extends BaseUser {
 	 */
 	public function setLangue($langue = null) {
 		if($langue !== null) $this->langue = $langue;
+		return $this;
+	}
+
+	/**
+	 * Renvoie le nom du plus haut role d'un user (ou de l'user de cette entité)
+	 * @param User $user = null
+	 * @return string
+	 */
+	public function getBestRole(User $user = null) {
+		if($user === null) $user = $this;
+		$user_roles = $user->getRoles();
+		$best_role = null;
+		$this->validRoles = array(1 => 'ROLE_USER', 2 => 'ROLE_TRANSLATOR', 3 => 'ROLE_EDITOR', 4 => 'ROLE_ADMIN', 5 => static::ROLE_SUPER_ADMIN);
+		foreach($this->validRoles as $value => $roleToTest) {
+			if(in_array($roleToTest, $user_roles)) $best_role = $roleToTest;
+		}
+		if($best_role === null) $best_role = reset($this->validRoles);
+		return $best_role;
+	}
+
+	/**
+	 * Renvoie la valeur du plus haut role d'un user (ou de l'user de cette entité)
+	 * @param User $user = null
+	 * @return integer
+	 */
+	public function getBestRoleValue(User $user = null) {
+		$nom_role = $this->getBestRole($user);
+		$results = array_keys($this->validRoles, $nom_role);
+		if(count($results) > 0) return reset($results);
+		return 0;
+	}
+
+	/**
+	 * Renvoie true si l'utilisateur a des droits au moins identiques sur l'User passé en paramètre
+	 * @param User $user
+	 * @return boolean
+	 */
+	public function haveRight(User $user) {
+		return $this->getBestRoleValue() >= $user->getBestRoleValue() ? true : false;
+	}
+
+
+
+	protected function setSleepdata() {
+		$this->sleepdata = $this->serialize();
+	}
+
+	protected function getSleepdata() {
+		return $this->sleepdata;
+	}
+
+	public function restoreSleepdata() {
+		if($this->sleepdata != null) $this->unserialize($this->getSleepdata());
+		else return false;
+	}
+
+	public function setEnabled($boolean) {
+		$temp = (Boolean) $boolean;
+		if($temp != $this->enabled) {
+			$this->enabled = $temp;
+			if($temp == false) {
+				// désactivation du compte
+				$this->setSleepdata();
+			} else {
+				// réactivation du compte
+				$this->restoreSleepdata();
+			}
+		}
 		return $this;
 	}
 

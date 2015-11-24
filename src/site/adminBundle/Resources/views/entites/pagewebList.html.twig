@@ -19,6 +19,7 @@
 							<th>{{ 'table.col.title'|trans|capitalize }}</th>
 							<th>{{ 'table.col.titreh1'|trans|capitalize }}</th>
 							<th>{{ 'table.col.modele'|trans|capitalize }}</th>
+							<th>{{ 'table.col.keywords'|trans|capitalize }}</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -63,7 +64,8 @@
 							</td>
 							<td>{{ entite.title }}</td>
 							<td>{{ entite.titreh1 }}</td>
-							<td>{{ entite.modele }}</td>
+							<td>{{ entite.modelename }}</td>
+							<td>{{ entite.keywords }}</td>
 						</tr>
 						{% endfor %}
 					</tbody>

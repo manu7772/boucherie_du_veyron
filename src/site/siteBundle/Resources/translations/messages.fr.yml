@@ -1,4 +1,7 @@
-site: 'Boucherie du Veyron'
+site:
+    title: 'Boucherie du Veyron'
+    description: 'Boucher, charcutier, traiteur sur Poncin, Cerdon et département de l''Ain'
+    keywords: 'boucher, charcutier, traiteur, cerdon, poncin, ain, rhône-alpes'
 bundles:
     admin:
         name: administration
@@ -25,3 +28,6 @@ footer:
     realisation: 'réalisé par %name%'
     generation: 'réalisé avec'
     rights: 'tous droits réservés'
+message:
+    success: 'Votre message a été envoyé. Merci.'
+    error: 'Votre message n''a pu être enregistré. Merci de le compléter avant d''envoyer.'
