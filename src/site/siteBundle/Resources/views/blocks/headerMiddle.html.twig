@@ -18,14 +18,25 @@
 						<div class="col-xs-5 col-sm-5 col-md-4">
 							<div class="shop-menu pull-right">
 								<ul class="nav navbar-nav">
-									{% if is_granted("ROLE_TRANSLATOR") %}
-									<li><a href="{{ path('siteadmin_homepage') }}"><i class="fa fa-cog"></i></a></li>
+									{% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
+									<li><a href="#"><i class="fa fa-shopping-cart"></i> Panier</a></li>
 									{% endif %}
 									{% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
-									<li><a href="#"><i class="fa fa-shopping-cart fa-flip-horizontal"></i> Panier</a></li>
-									<li><a href="{{ path('fos_user_security_logout') }}"><i class="fa fa-user"></i> {{ app.user.username }}</a></li>
+									<li class="dropdown">
+										<a href="#" class="dropdown-toggle" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+											<i class="fa fa-user"></i> {{ phraseCut(app.user.username, 10) }} 
+											<!-- <span class="caret"></span> -->
+										</a>
+										<ul class="dropdown-menu dropdown-menu-right animated fadeInLeft" aria-labelledby="dropdownMenu1">
+											<li><a href="{{ path('fos_user_profile_show') }}">{{ 'profile.name'|trans({}, 'siteUserBundle')|capitalize }}</a></li>
+											<li><a href="{{ path('fos_user_security_logout') }}">{{ 'layout.logout'|trans({}, 'siteUserBundle')|capitalize }}</a></li>
+										</ul>
+									</li>
 									{% else %}
 									<li><a href="{{ path('fos_user_security_login') }}"><i class="fa fa-user"></i> Connexion</a></li>
+									{% endif %}
+									{% if is_granted("ROLE_TRANSLATOR") %}
+									<li><a href="{{ path('siteadmin_homepage') }}"><i class="fa fa-cog"></i></a></li>
 									{% endif %}
 								</ul>
 							</div>

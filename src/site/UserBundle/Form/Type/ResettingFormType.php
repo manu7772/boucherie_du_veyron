@@ -34,11 +34,13 @@ class ResettingFormType extends AbstractType
             'options' => array('translation_domain' => 'siteUserBundle'),
             'first_options' => array(
                 'label' => 'form.new_password',
-                'attr'  => array('class' => 'input-sm form-full'),
+                'label_attr' => array('class' => 'text-muted'),
+                'attr'  => array('class' => 'input-sm form-control'),
                 ),
             'second_options' => array(
                 'label' => 'form.new_password_confirmation',
-                'attr'  => array('class' => 'input-sm form-full'),
+                'label_attr' => array('class' => 'text-muted'),
+                'attr'  => array('class' => 'input-sm form-control'),
                 ),
             'invalid_message' => 'fos_user.password.mismatch',
         ));

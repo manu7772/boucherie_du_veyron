@@ -28,7 +28,7 @@
 		{% endblock stylesheets %}
 		<link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
 	</head>
-	<body{% block bodyattr %} class="{{ page.skin|default('skin-0')}}"{% endblock bodyattr %}>
+	<body{% block bodyattr %} class="{{ app.user.admintheme|default('skin-0')}}"{% endblock bodyattr %}>
 		<span class="sqblock-wrapper" style="display:none;">
 			{% block SQBlock %}
 			{% endblock SQBlock %}

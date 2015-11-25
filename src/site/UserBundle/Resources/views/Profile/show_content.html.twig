@@ -1,34 +1,43 @@
 {% trans_default_domain 'siteUserBundle' %}
 
-<div class="panel panel-default">
-	<div class="panel-body">
-		<div class="row">
-			<p class="formRight col-md-4 bold">{{ 'profile.show.username'|trans }}</p>
-			<p class="formLeft col-md-8">{{ user.username }}</p>
+	<section id="section-gray">
+	
+		<div id="contact-page" class="container-fluid"><!--container-->
+			<div class="row">
+				<div class="col-sm-6 col-sm-offset-3">
+					<h4 class="title">Connexion</h4>
+					<div class="row">
+						<div class="col-sm-4 text-muted text-right hidden-xs">{{ 'profile.show.username'|trans }}</div>
+						<div class="col-sm-4 text-muted teleft visible-xs">{{ 'profile.show.username'|trans }}</div>
+						<div class="col-sm-8"><strong>{{ user.username }}</strong></div>
+					</div>
+					<div class="row">
+						<div class="col-sm-4 text-muted text-right hidden-xs">{{ 'profile.show.email'|trans }}</div>
+						<div class="col-sm-4 text-muted teleft visible-xs">{{ 'profile.show.email'|trans }}</div>
+						<div class="col-sm-8"><strong>{{ user.email }}</strong></div>
+					</div>
+					<hr class="dotted">
+					<h5 class="title">{{ 'info.autres'|trans|capitalize }}</h5>
+					<div class="row">
+						<div class="col-sm-4 text-muted text-right hidden-xs">{{ 'fields.nom'|trans|capitalize }}</div>
+						<div class="col-sm-4 text-muted text-left visible-xs">{{ 'fields.nom'|trans|capitalize }}</div>
+						<div class="col-sm-8"><strong>{{ user.nom }}</strong></div>
+					</div>
+					<div class="row">
+						<div class="col-sm-4 text-muted text-right hidden-xs">{{ 'fields.prenom'|trans|capitalize }}</div>
+						<div class="col-sm-4 text-muted text-left visible-xs">{{ 'fields.prenom'|trans|capitalize }}</div>
+						<div class="col-sm-8"><strong>{{ user.prenom }}</strong></div>
+					</div>
+					<hr class="dotted">
+					<div class="row">
+						<div class="col-sm-6">
+							<a href="{{ path('fos_user_profile_edit') }}" type="button" class="btn btn-sm btn-primary btn-block">{{ 'profile.action.modify'|trans|capitalize }}</a>
+						</div>
+						<div class="col-sm-6">
+							<a href="{{ path('fos_user_change_password') }}" type="button" class="btn btn-sm btn-primary btn-block">{{ 'change_password.submit'|trans|capitalize }}</a>
+						</div>
+					</div>
+				</div>
+			</div>
 		</div>
-		<div class="row">
-			<p class="formRight col-md-4 bold">{{ 'profile.show.email'|trans }}</p>
-			<p class="formLeft col-md-8">{{ user.email }}</p>
-		</div>
-	</div>
-</div>
-<div class="panel panel-default">
-	<div class="panel-heading">{{ 'info.autres'|trans|capitalize }}</div>
-	<div class="panel-body">
-		<div class="row">
-			<p class="formRight col-md-4 bold">{{ 'fields.nom'|trans|capitalize }}</p>
-			<p class="formLeft col-md-8">{{ user.nom }}</p>
-		</div>
-		<div class="row">
-			<p class="formRight col-md-4 bold">{{ 'fields.prenom'|trans|capitalize }}</p>
-			<p class="formLeft col-md-8">{{ user.prenom }}</p>
-		</div>
-	</div>
-</div>
-<br>
-<a href="{{ path('fos_user_profile_edit') }}" type="button" class="btn btn-xs btn-color-b btn-block">
-	{{ 'profile.action.modify'|trans|capitalize }}
-</a>
-<a href="{{ path('fos_user_change_password') }}" type="button" class="btn btn-xs btn-black btn-block">
-	{{ 'change_password.submit'|trans|capitalize }}
-</a>
+	</section>

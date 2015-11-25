@@ -31,14 +31,18 @@ fields:
     email: courriel
     nom: nom
     prenom: prénom
+    help: aide admin
+    theme: thème admin
+    lang: langue
 
 # Profile
 profile:
     name: Informations compte utilisateur
     action:
-        modify: modifier
-        view: Voir profil
+        modify: modifier votre profil
+        view: voir profil
         create: créer un compte
+        confirmed: confirmation de création de compte
     show:
         username: Nom d'utilisateur
         email: Adresse e-mail

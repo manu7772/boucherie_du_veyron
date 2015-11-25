@@ -1,17 +1,19 @@
 {% extends "siteUserBundle::layout.html.twig" %}
 {% trans_default_domain 'siteUserBundle' %}
 
-{% block titre %}{{ 'layout.login'|trans|capitalize }}{% endblock titre %}
+{% block titre %}<i class="fa fa-user"></i> {{ 'layout.login'|trans|capitalize }}{% endblock titre %}
 
 {% block fos_user_content %}
 
 	<section id="section-gray">
 	
-		<div id="contact-page"  class="container"><!--container-->
+		<div id="contact-page" class="container-fluid"><!--container-->
 			<div class="row">
 				<div class="col-sm-6 col-sm-offset-3">
 					{% if error %}
-					<div class="status alert alert-danger">{{ error.message|trans|capitalize }}</div>
+					<div class="form-group col-md-12">
+						<div class="status alert alert-danger">{{ error.message|trans|capitalize }}</div>
+					</div>
 					{% endif %}
 					<form action="{{ path('fos_user_security_check') }}" method="post" class="clearfix">
 						<input type="hidden" name="_csrf_token" value="{{ csrf_token }}" />
@@ -22,24 +24,21 @@
 							<input type="password" id="password" name="_password" value="{{ last_username }}" required="required" class="form-control input-sm" placeholder="{{ 'security.login.password'|trans|capitalize }}">
 						</div>
 						<div class="form-group col-md-12">
-							<p>
-								<label for="remember_me">{{ 'security.login.remember_me'|trans|capitalize }} :</label>
-								<input type="checkbox" id="remember_me" name="_remember_me" value="on" class='ion ion-android-checkbox-outline' />&nbsp;&nbsp;&nbsp;<a href="{{ url('fos_user_resetting_request') }}" class="little italic">{{ 'security.login.forgotten'|trans|capitalize }}<a>
-							</p>
+							<label for="remember_me" class="text-muted">{{ 'security.login.remember_me'|trans|capitalize }} </label>
+							<input type="checkbox" id="remember_me" name="_remember_me" value="on" class='ion ion-android-checkbox-outline' />&nbsp;&nbsp;&nbsp;<a href="{{ url('fos_user_resetting_request') }}" class="little italic">{{ 'security.login.forgotten'|trans|capitalize }}<a>
 						</div>
 						<div class="form-group col-md-12">
-							<button type="submit" id="_submit" name="_submit" class="btn btn-primary btn-lg btn-block">{{ 'security.login.submit'|trans|capitalize }}</button>
+							<input type="submit" id="_submit" name="_submit" class="btn btn-primary btn-md btn-block" value="{{ 'security.login.submit'|trans|capitalize }}">
 						</div>
-						<div class="form-group col-md-12">
-							<a href="{{ path('fos_user_registration_register') }}"><div class="btn btn-xs pull-right btn-color-line">{{ 'profile.action.create'|trans|capitalize }}</div></a>
-						</div>
-						</form>
+					</form>
+					<div class="col-md-12">
+						<hr class="dotted fine">
+						<a href="{{ path('fos_user_registration_register') }}" class="btn btn-sm pull-right btn-primary">{{ 'profile.action.create'|trans|capitalize }}</a>
+					</div>
 				</div>
 			</div>
 		</div>
 
 	</section>
 
-	<br>
-	<br>
 {% endblock fos_user_content %}

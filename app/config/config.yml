@@ -206,8 +206,8 @@ fos_user:
     use_flash_notifications:  true
     use_username_form_type:   true
     from_email:
-        address:              no-reply@imagoguitare.com
-        sender_name:          imago_guitare
+        address:              no-reply@boucherie-du-veyron.fr
+        sender_name:          boucherie-du-veyron.fr
 
 # Stof\DoctrineExtensionBundle configuration
 stof_doctrine_extensions:

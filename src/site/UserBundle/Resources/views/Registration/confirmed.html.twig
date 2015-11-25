@@ -1,8 +1,20 @@
 {% extends "siteUserBundle::layout.html.twig" %}
 {% trans_default_domain 'siteUserBundle' %}
 
+{% block titre %}<i class="fa fa-user"></i> {{ 'profile.action.confirmed'|trans|capitalize }}{% endblock titre %}
+
 {% block fos_user_content %}
-    <h4>{{ 'registration.confirmed'|trans({'%username%': user.username}) }}</h4>
+    <section id="section-gray">
+    
+        <div id="contact-page" class="container-fluid">
+            <div class="row">
+                <div class="col-sm-6 col-sm-offset-3">
+    				<h4>{{ 'registration.confirmed'|trans({'%username%': user.username}) }}</h4>
+                </div>
+            </div>
+        </div>
+
+    </section>
     {#
     {% if app.session is not empty %}
         {% set targetUrl = app.session.get('_security.' ~ app.security.token.providerKey ~ '.target_path') %}

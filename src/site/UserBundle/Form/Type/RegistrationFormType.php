@@ -21,35 +21,39 @@ class RegistrationFormType extends BaseType {
 		$builder
             ->add('email', 'email', array(
                 'label' => 'fields.email',
+                'label_attr' => array('class' => 'text-muted'),
                 'translation_domain' => 'siteUserBundle',
                 'attr'      => array(
-                    'class'         => 'input-sm form-full',
+                    'class'         => 'input-sm form-control',
                     'placeholder'   => 'fields.email',
                     ),
                 ))
             ->add('username', null, array(
                 'label' => 'fields.username',
+                'label_attr' => array('class' => 'text-muted'),
                 'translation_domain' => 'siteUserBundle',
                 'attr'      => array(
-                    'class'         => 'input-sm form-full',
+                    'class'         => 'input-sm form-control',
                     'placeholder'   => 'fields.username',
                     ),
                 ))
             ->add('nom', 'text', array(
                 'label'     => 'fields.nom',
+                'label_attr' => array('class' => 'text-muted'),
                 'translation_domain' => 'siteUserBundle',
                 'required'  => false,
                 'attr'      => array(
-                    'class'         => 'input-sm form-full',
+                    'class'         => 'input-sm form-control',
                     'placeholder'   => 'fields.nom',
                     ),
                 ))
             ->add('prenom', 'text', array(
                 'label'     => 'fields.prenom',
+                'label_attr' => array('class' => 'text-muted'),
                 'translation_domain' => 'siteUserBundle',
                 'required'  => false,
                 'attr'      => array(
-                    'class'         => 'input-sm form-full',
+                    'class'         => 'input-sm form-control',
                     'placeholder'   => 'fields.prenom',
                     ),
                 ))
@@ -58,11 +62,13 @@ class RegistrationFormType extends BaseType {
                 'options' => array('translation_domain' => 'siteUserBundle'),
                 'first_options' => array(
                     'label' => 'form.password',
-                    'attr'  => array('class' => 'input-sm form-full'),
+                    'label_attr' => array('class' => 'text-muted'),
+                    'attr'  => array('class' => 'input-sm form-control'),
                     ),
                 'second_options' => array(
                     'label' => 'form.password_confirmation',
-                    'attr'  => array('class' => 'input-sm form-full'),
+                    'label_attr' => array('class' => 'text-muted'),
+                    'attr'  => array('class' => 'input-sm form-control'),
                     ),
                 'invalid_message' => 'fos_user.password.mismatch',
                 ))

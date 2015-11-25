@@ -18,6 +18,9 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\Security\Core\Validator\Constraint\UserPassword as OldUserPassword;
 use Symfony\Component\Security\Core\Validator\Constraints\UserPassword;
 use Symfony\Component\Form\Extension\Core\ChoiceList\ChoiceList;
+// Paramétrage de formulaire
+use Symfony\Component\Form\FormEvents;
+use Symfony\Component\Form\FormEvent;
 
 use site\UserBundle\Entity\User;
 
@@ -47,8 +50,8 @@ class ProfileFormType extends BaseType {
         $this->buildUserForm($builder, $options);
 
         $entity = new User();
-        $themesList = array_values($entity->getAdminskins());
-        $themesListKeys = array_keys($entity->getAdminskins());
+        // $themesList = array_values($entity->getAdminskins());
+        // $themesListKeys = array_keys($entity->getAdminskins());
 
         $builder
             // ->add('current_password', 'password', array(
@@ -60,46 +63,71 @@ class ProfileFormType extends BaseType {
             ->add('nom', 'text', array(
                 'translation_domain' => 'siteUserBundle',
                 'label'     => 'fields.nom',
+                'label_attr' => array('class' => 'text-muted'),
                 'required'  => false,
                 'attr' => array(
-                    'class' => 'input-sm form-full',
+                    'class' => 'input-sm form-control',
                     ),
                 ))
             ->add('prenom', 'text', array(
                 'translation_domain' => 'siteUserBundle',
                 'label'     => 'fields.prenom',
+                'label_attr' => array('class' => 'text-muted'),
                 'required'  => false,
                 'attr' => array(
-                    'class' => 'input-sm form-full',
-                    ),
-                ))
-            ->add('adminhelp', 'insCheck', array(
-                'translation_domain' => 'siteUserBundle',
-                "required" => false,
-                "label" => "fields.help",
-                'attr' => array(
-                    'class' => 'input-sm form-full',
-                    ),
-                ))
-            ->add('admintheme', 'choice', array(
-                'translation_domain' => 'siteUserBundle',
-                "required" => true,
-                "label" => "fields.theme",
-                "choice_list" => new ChoiceList($themesListKeys, $themesList),
-                'attr' => array(
-                    'class' => 'input-sm form-full chosen-select chosen-select-width chosen-select-no-results',
-                    'placeholder' => 'form.select',
+                    'class' => 'input-sm form-control',
                     ),
                 ))
             ->add('langue', 'text', array(
                 'translation_domain' => 'siteUserBundle',
                 "required" => true,
                 "label" => "fields.lang",
+                'label_attr' => array('class' => 'text-muted'),
                 'attr' => array(
-                    'class' => 'input-sm form-full',
+                    'class' => 'input-sm form-control',
                     ),
                 ))
         ;
+
+        $builder->addEventListener(
+            FormEvents::PRE_SET_DATA, function(FormEvent $event) {
+                $user = $event->getData();
+                $form = $event->getForm();
+
+                if(is_object($user)) {
+                    $roles = $user->getRoles();
+                    $validRoles = array("ROLE_ADMIN", "ROLE_SUPER_ADMIN", "ROLE_EDITOR", "ROLE_TRANSLATOR");
+                    if(count(array_intersect($roles, $validRoles)) > 0) {
+                        $form
+                            ->add('adminhelp', 'insCheck', array(
+                                'translation_domain' => 'siteUserBundle',
+                                "required" => false,
+                                "label" => "fields.help",
+                                'label_attr' => array('class' => 'text-muted'),
+                                'attr' => array(
+                                    'class' => 'input-sm form-control',
+                                    ),
+                                ))
+                            ->add('admintheme', 'choice', array(
+                                'translation_domain' => 'siteUserBundle',
+                                "required" => true,
+                                "label" => "fields.theme",
+                                'label_attr' => array('class' => 'text-muted'),
+                                "choice_list" => new ChoiceList(
+                                    array_keys($user->getAdminskins()),
+                                    array_values($user->getAdminskins())
+                                    ),
+                                'attr' => array(
+                                    'class' => 'input-sm form-control chosen-select chosen-select-width chosen-select-no-results',
+                                    'placeholder' => 'form.select',
+                                    ),
+                                ))
+                        ;
+                    }
+                }
+            }
+        );
+
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver) {
@@ -124,16 +152,18 @@ class ProfileFormType extends BaseType {
         $builder
             ->add('username', null, array(
                 'label' => 'form.username',
+                'label_attr' => array('class' => 'text-muted'),
                 'translation_domain' => 'siteUserBundle',
                 'attr' => array(
-                    'class' => 'input-sm form-full',
+                    'class' => 'input-sm form-control',
                     ),
                 ))
             ->add('email', 'email', array(
                 'label' => 'form.email',
+                'label_attr' => array('class' => 'text-muted'),
                 'translation_domain' => 'siteUserBundle',
                 'attr' => array(
-                    'class' => 'input-sm form-full',
+                    'class' => 'input-sm form-control',
                     ),
                 ))
         ;

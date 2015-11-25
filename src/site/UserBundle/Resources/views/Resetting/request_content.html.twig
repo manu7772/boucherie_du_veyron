@@ -1,14 +1,25 @@
 {% trans_default_domain 'siteUserBundle' %}
 
-<form action="{{ path('fos_user_resetting_send_email') }}" method="POST">
-	{% if invalid_username is defined %}
-	<h6 class="hideauto" data-hide="8000 1000 fade">
-		{{ 'resetting.request.invalid_username'|trans({'%username%': invalid_username}) }}
-	</h6>
-	{% endif %}
-	<div class="form-field-wrapper">
-		<label for="username">{{ 'resetting.request.username'|trans }}</label>
-		<input type="text" id="username" name="username" required="required" class="input-sm form-full" />
-		<input type="submit" value="{{ 'resetting.request.submit'|trans|capitalize }}" class="btn btn-md btn-black form-full" style="margin-top: 10px;" />
-	</div>
-</form>
+	<section id="section-gray">
+	
+		<div id="contact-page" class="container-fluid"><!--container-->
+			<div class="row">
+				<div class="col-sm-6 col-sm-offset-3">
+					{% if invalid_username is defined %}
+					<div class="form-group col-md-12">
+						<div class="status alert alert-danger">{{ 'resetting.request.invalid_username'|trans({'%username%': invalid_username}) }}</div>
+					</div>
+					{% endif %}
+					<form action="{{ path('fos_user_resetting_send_email') }}" method="POST">
+						<div class="form-group col-md-12">
+							<input type="text" id="username" name="username" required="required" class="form-control input-sm" placeholder="{{ 'resetting.request.username'|trans }}" />
+						</div>
+						<div class="form-group col-md-12">
+							<input type="submit" id="_submit" name="_submit" class="btn btn-primary btn-md btn-block" value="{{ 'resetting.request.submit'|trans|capitalize }}">
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+
+	</section>

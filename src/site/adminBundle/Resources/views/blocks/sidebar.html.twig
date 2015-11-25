@@ -8,7 +8,7 @@
 					<span>
 						<img alt="image" class="img-rounded" src="{{ asset('bundles/siteadmin/images/BDV_logo_admin.png') }}" />
 					</span>
-					{% if app.user is not null %}
+					{% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
 					<a data-toggle="dropdown" class="dropdown-toggle" href="#">
 						<span class="clear">
 							<span class="block m-t-xs"> <strong class="font-bold">{{ 'admin'|trans }}</strong></span> 

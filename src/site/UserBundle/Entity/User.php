@@ -65,21 +65,15 @@ class User extends BaseUser {
 	 */
 	protected $langue;
 
-	/**
-	 * @ORM\Column(name="sleepdata", type="text", unique=false, nullable=true)
-	 */
-	protected $sleepdata;
-
 	protected $adminskins;
 	private $validRoles;
 
 	public function __construct() {
 		parent::__construct();
 		$this->adminhelp = true;
-		$this->sleepdata = null;
 		$this->admintheme = $this->getDefaultAdminskin();
 		$this->langue = 'default_locale';
-		$this->validRoles = array(1 => 'ROLE_USER', 2 => 'ROLE_TRANSLATOR', 3 => 'ROLE_EDITOR', 4 => 'ROLE_ADMIN', 5 => static::ROLE_SUPER_ADMIN);
+		$this->validRoles = array(1 => 'ROLE_USER', 2 => 'ROLE_TRANSLATOR', 3 => 'ROLE_EDITOR', 4 => 'ROLE_ADMIN', 5 => 'ROLE_SUPER_ADMIN');
 	}
 
 	public function getAdminskins() {
@@ -210,7 +204,7 @@ class User extends BaseUser {
 		if($user === null) $user = $this;
 		$user_roles = $user->getRoles();
 		$best_role = null;
-		$this->validRoles = array(1 => 'ROLE_USER', 2 => 'ROLE_TRANSLATOR', 3 => 'ROLE_EDITOR', 4 => 'ROLE_ADMIN', 5 => static::ROLE_SUPER_ADMIN);
+		$this->validRoles = array(1 => 'ROLE_USER', 2 => 'ROLE_TRANSLATOR', 3 => 'ROLE_EDITOR', 4 => 'ROLE_ADMIN', 5 => 'ROLE_SUPER_ADMIN');
 		foreach($this->validRoles as $value => $roleToTest) {
 			if(in_array($roleToTest, $user_roles)) $best_role = $roleToTest;
 		}
@@ -237,36 +231,6 @@ class User extends BaseUser {
 	 */
 	public function haveRight(User $user) {
 		return $this->getBestRoleValue() >= $user->getBestRoleValue() ? true : false;
-	}
-
-
-
-	protected function setSleepdata() {
-		$this->sleepdata = $this->serialize();
-	}
-
-	protected function getSleepdata() {
-		return $this->sleepdata;
-	}
-
-	public function restoreSleepdata() {
-		if($this->sleepdata != null) $this->unserialize($this->getSleepdata());
-		else return false;
-	}
-
-	public function setEnabled($boolean) {
-		$temp = (Boolean) $boolean;
-		if($temp != $this->enabled) {
-			$this->enabled = $temp;
-			if($temp == false) {
-				// désactivation du compte
-				$this->setSleepdata();
-			} else {
-				// réactivation du compte
-				$this->restoreSleepdata();
-			}
-		}
-		return $this;
 	}
 
 

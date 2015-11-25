@@ -1,47 +1,58 @@
 {% trans_default_domain 'siteUserBundle' %}
-<div class="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2">
-	<div style="height:14px;" class="visible-xs"></div>
-	<h4 class="well well-md m-t-lg">Modifiez votre compte <small>ou <a href="{{ path('sitesite_homepage') }}">retour accueil</a></small><br /><small>Note : les libellés en <span class="required">rouge</span> sont obligatoires</small></h4>
-	{% if form_errors(form) != null %}
-	<div class="alert alert-danger">
-		{{ form_errors(form) }}
-	</div>
-	{% endif %}
-	<form action="{{ path('fos_user_profile_edit') }}" {{ form_enctype(form) }} method="POST" class="fos_user_profile_edit">
-		<div class="panel panel-default">
-			<div class="panel-heading">Informations de connexion</div>
-			<div class="panel-body">
-				<div class="col-sm-4">{{ form_label(form.email) }}</div>
-				<div class="col-sm-6">{{ form_widget(form.email) }}</div>
+
+	<section id="section-gray">
+	
+		<div id="contact-page" class="container-fluid">
+			<div class="row">
+				<div class="col-sm-6 col-sm-offset-3">
+					{% if form_errors(form) != null %}
+					<div class="status alert alert-danger">{{ form_errors(form) }}</div>
+					{% endif %}
+					<form action="{{ path('fos_user_profile_edit') }}" {{ form_enctype(form) }} method="POST" class="fos_user_profile_edit">
+						<h4>{{ 'info.compte'|trans|capitalize }}</h4>
+						<div class="form-group col-md-12">
+							{{ form_widget(form.username) }}
+							{{ form_errors(form.username) }}
+						</div>
+						<div class="form-group col-md-12">
+							{{ form_widget(form.email) }}
+							{{ form_errors(form.email) }}
+						</div>
+						<hr class="dotted">
+						<h5>{{ 'info.autres'|trans|capitalize }}</h5>
+						<div class="form-group col-md-12">
+							{{ form_widget(form.nom) }}
+							{{ form_errors(form.nom) }}
+						</div>
+						<div class="form-group col-md-12">
+							{{ form_widget(form.prenom) }}
+							{{ form_errors(form.prenom) }}
+						</div>
+						{% if form.adminhelp is defined %}
+						<div class="form-group col-md-12">
+							<label class="text-muted">{{ 'fields.help'|trans|capitalize }} </label>
+							{{ form_widget(form.adminhelp) }}
+							{{ form_errors(form.adminhelp) }}
+						</div>
+						{% endif %}
+						{% if form.admintheme is defined %}
+						<div class="form-group col-md-12">
+							{{ form_widget(form.admintheme) }}
+							{{ form_errors(form.admintheme) }}
+						</div>
+						{% endif %}
+						<div class="form-group col-md-12">
+							{{ form_widget(form.langue) }}
+							{{ form_errors(form.langue) }}
+						</div>
+
+						<div class="form-group col-md-12">
+							<input type="submit" id="_submit" name="_submit" class="btn btn-primary btn-md btn-block" value="{{ 'profile.edit.submit'|trans|capitalize }}">
+						</div>
+						{{ form_rest(form) }}
+					</form>
+				</div>
 			</div>
-				{{ form_errors(form.email) }}
-			<div class="panel-body">
-				<div class="col-sm-4">{{ form_label(form.username) }}</div>
-				<div class="col-sm-6">{{ form_widget(form.username) }}</div>
-			</div>
-				{{ form_errors(form.username) }}
 		</div>
 
-		<div class="panel panel-default">
-			<div class="panel-heading">Autres informations</div>
-			<div class="panel-body">
-				<div class="col-sm-4">{{ form_label(form.nom) }}</div>
-				<div class="col-sm-6">{{ form_widget(form.nom) }}</div>
-			</div>
-				{{ form_errors(form.nom) }}
-			<div class="panel-body">
-				<div class="col-sm-4">{{ form_label(form.prenom) }}</div>
-				<div class="col-sm-6">{{ form_widget(form.prenom) }}</div>
-			</div>
-				{{ form_errors(form.prenom) }}
-		</div>
-
-		<div class="panel panel-default">
-			<div class="panel-body">
-				<input type="submit" value="Enregistrer les modifications" class="btn btn-warning" />
-			</div>
-		</div>
-
-		{{ form_rest(form) }}
-	</form>
-</div>
+	</section>

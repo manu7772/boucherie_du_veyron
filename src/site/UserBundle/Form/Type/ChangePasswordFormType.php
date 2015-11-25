@@ -38,28 +38,33 @@ class ChangePasswordFormType extends AbstractType
             $constraint = new OldUserPassword();
         }
 
-        $builder->add('current_password', 'password', array(
-            'label' => 'form.current_password',
-            'translation_domain' => 'siteUserBundle',
-            'mapped' => false,
-            'constraints' => $constraint,
-            'attr'  => array(
-                'class' => 'input-sm form-full',
-                ),
-        ));
-        $builder->add('plainPassword', 'repeated', array(
-            'type' => 'password',
-            'options' => array('translation_domain' => 'siteUserBundle'),
-            'first_options' => array(
-                'label' => 'form.new_password',
-                'attr' => array('class' => 'input-sm form-full'),
-                ),
-            'second_options' => array(
-                'label' => 'form.new_password_confirmation',
-                'attr' => array('class' => 'input-sm form-full'),
-                ),
-            'invalid_message' => 'fos_user.password.mismatch',
-        ));
+        $builder
+            ->add('current_password', 'password', array(
+                'label' => 'form.current_password',
+                'label_attr' => array('class' => 'text-muted'),
+                'translation_domain' => 'siteUserBundle',
+                'mapped' => false,
+                'constraints' => $constraint,
+                'attr'  => array(
+                    'class' => 'input-sm form-control',
+                    )
+                ))
+            ->add('plainPassword', 'repeated', array(
+                'type' => 'password',
+                'options' => array('translation_domain' => 'siteUserBundle'),
+                'first_options' => array(
+                    'label' => 'form.new_password',
+                    'label_attr' => array('class' => 'text-muted'),
+                    'attr' => array('class' => 'input-sm form-control'),
+                    ),
+                'second_options' => array(
+                    'label' => 'form.new_password_confirmation',
+                    'label_attr' => array('class' => 'text-muted'),
+                    'attr' => array('class' => 'input-sm form-control'),
+                    ),
+                'invalid_message' => 'fos_user.password.mismatch',
+                ))
+            ;
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)

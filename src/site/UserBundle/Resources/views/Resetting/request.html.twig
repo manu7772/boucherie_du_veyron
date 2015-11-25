@@ -1,7 +1,7 @@
-{% extends "FOSUserBundle::layout.html.twig" %}
+{% extends "siteUserBundle::layout.html.twig" %}
 {% trans_default_domain 'siteUserBundle' %}
 
-{% block soustitre %}<div class="page-breadcrumb">{{ 'security.login.forgotten'|trans|capitalize }}</div>{% endblock soustitre %}
+{% block titre %}<i class="fa fa-user"></i> {{ 'security.login.forgotten'|trans|capitalize }}{% endblock titre %}
 
 {% block fos_user_content %}
 {% include "siteUserBundle:Resetting:request_content.html.twig" %}

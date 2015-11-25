@@ -31,13 +31,17 @@ fields:
     email: email
     nom: first name
     prenom: last name
+    help: admin help
+    theme: admin theme
+    lang: language
 
 profile:
     name: Informations on user
     action:
-        modify: modify
+        modify: modify your profile
         view: view profile
         create: create new account
+        confirmed: confirmation for new account
     show:
         username: Username
         email: Email

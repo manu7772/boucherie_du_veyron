@@ -1,9 +1,18 @@
-{% extends "FOSUserBundle::layout.html.twig" %}
+{% extends "siteUserBundle::layout.html.twig" %}
 {% trans_default_domain 'siteUserBundle' %}
 
-{% block soustitre %}<div class="page-breadcrumb">{{ 'registration.flash.user_created'|trans|capitalize }}</div>{% endblock soustitre %}
+{% block titre %}<i class="fa fa-user"></i> {{ 'registration.flash.user_created'|trans|capitalize }}{% endblock titre %}
 
 {% block fos_user_content %}
-	<h3>Confirmation de votre compte</h3>
-	<p>{{ 'registration.check_email'|trans({'%email%': user.email}) }}</p>
+    <section id="section-gray">
+    
+        <div id="contact-page" class="container-fluid">
+            <div class="row">
+                <div class="col-sm-6 col-sm-offset-3">
+    				<h4>{{ 'registration.check_email'|trans({'%email%': user.email}) }}</h4>
+                </div>
+            </div>
+        </div>
+
+    </section>
 {% endblock fos_user_content %}
