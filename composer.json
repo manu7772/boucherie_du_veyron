@@ -3,8 +3,9 @@
     "license": "proprietary",
     "type": "project",
     "autoload": {
-        "psr-4": {
-            "": "src/"
+        "psr-0": {
+            "": "src/",
+            "SymfonyStandard": "app/"
         }
     },
     "require" : {
@@ -30,11 +31,6 @@
         "ensepar/html2pdf": "~4.0",
         "ensepar/html2pdf-bundle": "dev-master",
         "nelmio/cors-bundle": "~1.4"
-    },
-    "autoload" : {
-        "psr-0" : {
-            "" : "src/"
-        }
     },
     "minimum-stability" : "stable",
     "config" : {
