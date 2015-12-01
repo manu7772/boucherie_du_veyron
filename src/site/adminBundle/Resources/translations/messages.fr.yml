@@ -1,4 +1,4 @@
-admin: 'Boucherie du Veyron'
+admin: 'Imago Guitare'
 date_format:
     date: Y-m-d
     time: 'H:i:s'
@@ -18,6 +18,7 @@ pageweb:
     dontexist: 'cette page web n''existe pas'
     moredetails: 'plus de détails sur %name%'
     bydefault: 'définir comme page d''accueil par défaut'
+    existe: cette page existe déjà
 message:
     name_s: messages
     name: message
@@ -29,6 +30,7 @@ message:
     backlist_btn: 'retour liste'
     dontexist: 'ce message n''existe pas'
     moredetails: 'plus de détails sur %name%'
+    existe: ce message existe déjà
 media:
     name_s: médias
     name: média
@@ -40,6 +42,7 @@ media:
     backlist_btn: 'retour liste'
     dontexist: 'ce média n''existe pas'
     moredetails: 'plus de détails sur %name%'
+    existe: ce media existe déjà
 fileFormat:
     name_s: 'types de fichier'
     name: 'type de fichier'
@@ -53,6 +56,11 @@ fileFormat:
     dontexist: 'ce type n''existe pas'
     suppression: 'le format de fichier %name% a été supprimé'
     moredetails: 'plus de détails sur %name%'
+    existe: ce type de fichier existe déjà
+    reset: réinitialiser tout
+    reset_question: voulez-vous vraiment réinitialiser les types de fichiers ?
+contentType:
+    existe: ce type existe déjà
 User:
     name_s: utilisateurs
     name: utilisateur
@@ -64,6 +72,7 @@ User:
     backlist_btn: 'retour liste'
     dontexist: 'cet utilisateur n''existe pas'
     moredetails: 'plus de détails sur %name%'
+    existe: cet utilisateur existe déjà
 tag:
     name_s: tags
     name: tag
@@ -93,6 +102,7 @@ all:
     dontexist: 'ce élément n''existe pas'
     suppression: 'l''élément %name% a été supprimé'
     moredetails: 'plus de détails sur %name%'
+    existe: cet élément existe déjà
 actions:
     name: actions
     voir: voir
@@ -106,6 +116,8 @@ actions:
     vue: 'vue en détails'
     repondre: répondre par mail
     activer: mode actif
+    desactiver: mode inactif
+    forbidden: actions interdites
 table:
     col:
         id: id
@@ -142,16 +154,25 @@ form:
     enregistrer: Enregistrer
     select: Sélectionner…
     nom: Nom
-    prenom: Prénom
-    telephone: Téléphone
+    typemime: 'Type de fichier'
     icone: Icône
     actif: Actif
+    groupes: Groups
+    fa_groupes: '<i class="fa fa-users"></i> Groups'
+    parent_folder: 'Dossier parent'
+    child_folders: 'Children folders'
+    fa_child_folders: '<i class="fa fa-folder-open"></i> Children folders'
+    fa_parent_folder: '<i class="fa fa-folder"></i> Parent folder'
+    creation: Création
+    update: 'Mise à jour'
+    current_version: 'Current version'
+    fa_current_version: '<i class="fa fa-files"></i> Current version'
     tags: Tags
     tags_create: 'Créez ici des tags en les séparant par des virgules…'
     fa_tags: '<i class="fa fa-tags"></i> Tags'
     fa_tags_list: '<i class="fa fa-tags"></i> Liste de tags'
-    creation: Création
-    update: 'Mise à jour'
+    fichiers: Files
+    fa_fichiers: '<i class="fa fa-files-o"></i> Files'
     telechargement: Téléchargement
     code: Texte de page
     background: Image de fond

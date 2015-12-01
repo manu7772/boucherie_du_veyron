@@ -19,9 +19,9 @@ menu:
     videos: vidéos
     login: connexion
     contact: contact
-    comment: comment commander
+    comment: commander
     metier: notre métier
-    fetes: menus de fêtes
+    fetes: fêtes
 search:
     name: rechercher…
 footer:

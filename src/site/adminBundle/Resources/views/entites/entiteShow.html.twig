@@ -8,12 +8,13 @@
 		<h2 class="row">
 			<div class="col-md-8">{{ (entite_name ~ '.name')|trans|capitalize }} {{ entite.nom|default('#' ~ entite.id) }}</div>
 			<div class="col-md-4">
+				{#
 				<a href="{{ path('siteadmin_entite', {entite: entite_name, id: entite.id, action: 'delete'}) }}" type="button" class="btn btn-xs btn-danger btn-outline pull-right need-confirmation" title="{{ 'actions.suppression'|trans|capitalize }}" data-message="{{ 'actions.suppQuestion'|trans({'%name%': entite.nom|default('#' ~ entite.id)})|capitalize }}"><i class="fa fa-times icon-wait-on-click"></i> {{ 'actions.supprimer'|trans|capitalize }}</a>
 				<a href="{{ path('siteadmin_entite', {entite: entite_name, id: entite.id, action: 'edit'}) }}" type="button" class="btn btn-xs btn-warning pull-right"><i class="fa fa-pencil icon-wait-on-click"></i> {{ 'actions.modifier'|trans|capitalize }}</a>
-				{#
 				<a href="{{ path('siteadmin_entite', {entite: entite_name, id: entite.id, action: 'show'}) }}" type="button" class="btn btn-xs btn-white pull-right"><i class="fa fa-eye icon-wait-on-click"></i> {{ 'actions.voir'|trans|capitalize }}</a>
 				#}
 				<a href="{{ path('siteadmin_entite', {entite: entite_name}) }}" type="button" class="btn btn-xs btn-white pull-right"><i class="fa fa-bars icon-wait-on-click"></i> {{ (entite_name ~ '.backlist_btn')|trans|capitalize }}</a>
+				<a href="{{ path('siteadmin_entite', {entite: entite_name, action: 'create'}) }}" type="button" class="btn btn-xs btn-warning pull-right"><i class="fa fa-plus icon-wait-on-click"></i> {{ (entite_name ~ '.create_btn')|trans|capitalize }}</a>
 			</div>
 		</h2>
 		<ol class="breadcrumb">

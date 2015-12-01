@@ -19,9 +19,9 @@ menu:
     videos: videos
     login: login
     contact: contact
-    comment: 'how to buy'
-    metier: 'our work'
-    fetes: eve's lunches
+    comment: 'order'
+    metier: 'our job'
+    fetes: celebrations
 search:
     name: search…
 footer:
