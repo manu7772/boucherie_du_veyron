@@ -34,7 +34,9 @@ fields:
     help: admin help
     theme: admin theme
     lang: language
+    avatar: avatar
 
+# Profile
 profile:
     name: Informations on user
     action:

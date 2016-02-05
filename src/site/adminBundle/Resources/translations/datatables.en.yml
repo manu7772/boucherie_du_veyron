@@ -11,7 +11,7 @@ zeroRecords: 'No element found'
 emptyTable: 'No data in this list'
 paginate:
     first: Fist
-    previous: Previoux
+    previous: Previous
     next: Next
     last: Last
 aria:

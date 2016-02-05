@@ -59,8 +59,8 @@ parameters:
             closeHtml: '<button type="button">&times;</button>'
             newestOnTop: false
     marketplace:
-        active: false
-        paiement: false
+        active: true
+        paiement: true
         devise:
             name: euro
             symb: €
@@ -101,7 +101,7 @@ twig:
         formFormatDate:  %formFormatDate%
         default_locales: %default_locales%
         list_locales: %list_locales%
-        marketplace: marketplace
+        marketplace: %marketplace%
     form:
         resources:
             # - 'sitegraphicsBundle:Form:form_div_layout.html.twig'
@@ -213,8 +213,9 @@ fos_user:
 stof_doctrine_extensions:
     orm:
         default:
-            loggable:       false
-            sluggable:      true
-            timestampable:  false
-            translatable:   false
-            tree:           true
+            loggable: false
+            sortable: true
+            sluggable: true
+            timestampable: false
+            translatable: false
+            tree: true

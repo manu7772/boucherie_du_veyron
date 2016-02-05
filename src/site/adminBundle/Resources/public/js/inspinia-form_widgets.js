@@ -4,12 +4,6 @@ jQuery(document).ready(function($) {
 	/***************************************/
 	/* initialisation ICHECK/IRADIO        */
 	/***************************************/
-	console.log("• Loading : ", "Image-cropper");
-	$('.image-cropper').cropper({});
-
-	/***************************************/
-	/* initialisation ICHECK/IRADIO        */
-	/***************************************/
 	$('.icheckbox, .iradio').each(function() {
 		$(this).iCheck({
 			checkboxClass: 'icheckbox_square-green',

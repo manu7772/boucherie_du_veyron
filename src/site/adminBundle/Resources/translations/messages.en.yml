@@ -1,3 +1,4 @@
+admin: 'Boucherie du Veyron'
 date_format:
     date: Y-m-d
     time: 'H:i:s'
@@ -5,6 +6,27 @@ date_format:
 entity:
     notblank:
         nom: You must give a name
+install:
+    name_s: setups
+    name: setup
+    info:
+        class: class:
+        elements: elements:
+    generation: generation
+    suppression: deletation
+    generer: generate
+    effacer: delete
+    sansnom: no name
+    message:
+        supprimes: '{0} No element have been deleted.|{1} %count% element have been deleted.|[2,+Inf] %count% elements have been deleted.'
+        generer:
+            title: Beware !
+            texte: 'All data will be deleted before generation. Please confirm this action.'
+        effacer:
+            title: Beware !
+            texte: 'All data will be deleted. Please confirm this action.'
+marketplace:
+    name: e-commerce
 pageweb:
     name_s: web pages
     name: web page
@@ -18,6 +40,18 @@ pageweb:
     moredetails: 'more details on %name%'
     bydefault: 'set as default homepage'
     existe: this web page already exists
+fiche:
+    name_s: notices
+    name: notice
+    not_found: 'no notice found'
+    x_found: '{0} no notice found|{1} 1 notice found|[2,+Inf] %count% notices found'
+    create: 'create new notice'
+    create_btn: 'new notice'
+    backlist: 'back to list of notices'
+    backlist_btn: 'back to list'
+    dontexist: 'this notice does not exist'
+    moredetails: 'more details on %name%'
+    existe: this notice already exists
 message:
     name_s: messages
     name: message
@@ -89,6 +123,51 @@ tag:
     moredetails: 'more details on %name%'
     index:
         addSpeech: 'To add several tags at once, separate them with commas'
+tauxTva:
+    name_s: TVA rates
+    name: TVA rate
+    not_found: 'no TVA rate found'
+    x_found: '{0} no TVA rate found|{1} 1 TVA rate found|[2,+Inf] %count% TVA rates found'
+    create: 'create new TVA rate'
+    create_btn: 'new TVA rate'
+    created: '{0} no TVA rate created|{1} %count% TVA rate have been created : %list%|[2,+Inf] %count% TVA rates have been created : %list%'
+    new: '{0,1}new TVA rate|[2,+Inf] %count% new TVA rates'
+    backlist: 'back to list of TVA rates'
+    backlist_btn: 'back to list'
+    dontexist: 'this TVA rate does not exist'
+    existe: 'this TVA rate already exists'
+    suppression: 'TVA rate %name% have been deleted'
+    moredetails: 'more details on %name%'
+article:
+    name_s: articles
+    name: article
+    not_found: 'no article found'
+    x_found: '{0} no article found|{1} 1 article found|[2,+Inf] %count% articles found'
+    create: 'create new article'
+    create_btn: 'new article'
+    created: '{0} no article created|{1} %count% article have been created : %list%|[2,+Inf] %count% articles have been created : %list%'
+    new: '{0,1}new article|[2,+Inf] %count% new articles'
+    backlist: 'back to list of articles'
+    backlist_btn: 'back to list'
+    dontexist: 'this article does not exist'
+    existe: 'this article already exists'
+    suppression: 'article %name% have been deleted'
+    moredetails: 'more details on %name%'
+panier:
+    name_s: baskets
+    name: basket
+    not_found: 'no basket found'
+    x_found: '{0} no basket found|{1} 1 basket found|[2,+Inf] %count% baskets found'
+    create: 'create new basket'
+    create_btn: 'new basket'
+    created: '{0} no basket created|{1} %count% basket have been created : %list%|[2,+Inf] %count% baskets have been created : %list%'
+    new: '{0,1}new basket|[2,+Inf] %count% new baskets'
+    backlist: 'back to list of baskets'
+    backlist_btn: 'back to list'
+    dontexist: 'this basket does not exist'
+    existe: 'this basket already exists'
+    suppression: 'basket %name% have been deleted'
+    moredetails: 'more details on %name%'
 all:
     name_s: all
     name: all
@@ -120,23 +199,30 @@ actions:
 table:
     col:
         id: id
+        libelle: label
+        valeur: value
         nom: name
+        originalnom: original file name
         slug: slug
         title: title
         titreh1: title H1
         modele: model
         keywords: key words
+        descriptif: summary
         metadescription: description
         attribut: attribute
         valeur: value
         creation: created
         maj: updated
+        jamais: not modified
         icone: icon
         typemime: 'file type'
         parent_folder: 'parent folder'
         child_folders: 'contains folders'
         child_files: 'contains files'
         visuel: picture
+        original: original
+        apercu: view
         version: version
         versions_list: 'available versions list'
         tag: tag
@@ -146,13 +232,22 @@ table:
         bundle: bundle
         objet: object
         message: message
+        admin: admin info
+        size: size
+        mediatype: Type of media
+        prix: price
+        TTC: TTC
+        HT: HT
+        TVA: VAT
 msg:
     supp: 'do you want to delete this element?'
     suppression: deleting
 form:
     enregistrer: Save
     select: Select…
-    nom: Name
+    nom: Last name
+    prenom: First name
+    telephone: Phone
     typemime: 'File type'
     icone: Icon
     actif: Enabled
@@ -179,6 +274,24 @@ form:
     message: Your message…
     envoyer: Send
     objet: Object of your message
+    fichier: file
+    supprimer: delete
+    zoomIn: zoom in
+    zoomOut: zoom out
+    flipH: horizontal flip
+    flipV: vertical flip
+    rotationG: rotate left
+    rotationD: rotate right
+    uploadNewImage: upload new picture
+    avatar: avatar
+    descriptif: summary
+    taux: rate
+    accroche: slogan
+sizes:
+    Ko: Kb
+    Mo: Mb
+    Go: Gb
+    To: Tb
 erreurs:
     supp_simple: 'error while deleting'
     suppression: 'error while deleting %name%'

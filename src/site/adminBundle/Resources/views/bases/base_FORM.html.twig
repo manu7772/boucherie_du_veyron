@@ -1,0 +1,32 @@
+{% extends 'siteadminBundle:bases:base_simple.html.twig' %}
+
+{% block stylesheets %}
+{{ parent() }}
+{% stylesheets filter='cssrewrite, lessphp, ?yui_css'
+'bundles/siteadmin/framework_inspinia/cropper-master/dist/cropper.css'
+%}
+<link rel="stylesheet" href="{{ asset_url }}" type="text/css" />
+{% endstylesheets %}
+{% endblock stylesheets %}
+
+{% block bodyattr %}{{ parent() }}{% endblock bodyattr %}
+
+{% block body %}
+{{ parent() }}
+{% endblock body %}
+
+{% block hiddendata %}{{ parent() }}{% endblock hiddendata %}
+
+{% block javascripts %}
+{{ parent() }}
+{% javascripts filter='?yui_js'
+'bundles/siteadmin/framework_inspinia/cropper-master/dist/cropper.js'
+'bundles/siteadmin/js/inspinia-cropper.js'
+%}
+<script type="text/javascript" src="{{ asset_url }}"></script>
+{% endjavascripts %}
+{% endblock javascripts %}
+
+{% block themeConfig %}
+{{ parent() }}
+{% endblock themeConfig %}

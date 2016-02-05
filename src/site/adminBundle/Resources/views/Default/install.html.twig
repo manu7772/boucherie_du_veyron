@@ -1,0 +1,75 @@
+{% extends 'siteadminBundle::page_admin_generic.html.twig' %}
+{% set cssjsloads = 'simple' %}
+{% set DEVMODE = (app.environment in ['dev', 'test']) or (is_granted('ROLE_SUPER_ADMIN')) %}
+
+{% block page_heading %}
+<div class="row wrapper border-bottom white-bg page-heading">
+	<div class="col-lg-12 m-t-xs">
+		<h2 class="row">
+			<div class="col-md-12">{{ 'install.name'|trans|capitalize }}</div>
+		</h2>
+		<ol class="breadcrumb">
+			<li><a href="{{ path('siteadmin_homepage') }}"><strong>{{ 'administration'|trans|capitalize }}</strong></a></li>
+			{% if entite|default(null) == null %}
+			<li>{{ 'install.name'|trans|capitalize }}</li>
+			{% else %}
+			<li><a href="{{ path('generate') }}"><strong>{{ 'install.name'|trans|capitalize }}</strong></a></li>
+			<li>{{ entite|capitalize }}</li>
+			{% endif %}
+		</ol>
+	</div>
+</div>
+{% endblock page_heading %}
+
+{% block content %}
+<div class="row">
+	<div class="col-md-12">
+
+		{% if created|default([])|length > 0 %}
+		<div class="row">
+			{% for keyent,onecreated in created if onecreated is iterable %}
+			<div class="alert alert-warning col-sm-12 col-md-6 col-lg-4">
+				<h3>{{ 'install.generation'|trans|capitalize }} : {{ keyent|capitalize }}</h3>
+				{% for key,item in onecreated %}
+				<p>{{ keyent }} {{ key }} : {{ item.id }} <small><em><i>({{ item.nom|default('install.sansnom'|trans) }})</i></em></small></p>
+				{% endfor %}
+			</div>
+			{% endfor %}
+		</div>
+		<div class="clearfix"></div>
+		{% endif %}
+
+		{% if emptied|default([])|length > 0 %}
+		<div class="row">
+			<div class="alert alert-danger col-xs-12">
+				<h3>{{ 'install.suppression'|trans|capitalize }}</h3>
+				{% for keyent,oneemptied in emptied %}
+				{% if oneemptied is iterable %}{% set oneemptied = oneemptied|length %}{% endif %}
+				<p><strong>{{ keyent|capitalize }}</strong> : {{ 'install.message.supprimes'|transchoice(oneemptied) }}</p>
+				{% endfor %}
+			</div>
+		</div>
+		<div class="clearfix"></div>
+		{% endif %}
+
+		<div class="row">
+			{% for item,data in info %}
+				<div class="col-sm-12 col-md-6 col-lg-4">
+					<div class="ibox float-e-margins">
+						<div class="ibox-title">
+							<h3>{{ 'install.generation'|trans|capitalize }} <strong>{{ item }}</strong></h3>
+						</div>
+						<div class="ibox-content" style='min-height: 140px;'>
+							<p><small><strong>{{ 'install.info.class'|trans|capitalize }}</strong> {{ data.classname|raw }}</small></p>
+							<p><small><strong>{{ 'install.info.elements'|trans|capitalize }}</strong> {{ data.size }}</small></p>
+							<hr>
+							<a href="{{ path('generate', {action: 'create', entite: item}) }}" type="button" class="btn btn-warning btn-xs need-confirmation" data-title="{{ 'install.message.generer.title'|trans|raw }}" data-message="{{ 'install.message.generer.texte'|trans|raw }}"><i class="fa fa-plus icon-wait-on-click"></i> {{ 'install.generer'|trans|capitalize }}</a>
+							<a href="{{ path('generate', {action: 'empty', entite: item}) }}" type="button" class="btn btn-danger btn-xs need-confirmation" data-title="{{ 'install.message.effacer.title'|trans|raw }}" data-message="{{ 'install.message.effacer.texte'|trans|raw }}"><i class="fa fa-times icon-wait-on-click"></i> {{ 'install.effacer'|trans|capitalize }}</a>
+						</div>
+					</div>
+				</div>
+			{% endfor %}
+		</div>
+	</div>
+</div>
+{% endblock content %}

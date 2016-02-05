@@ -132,6 +132,9 @@ class pageweb {
 		$this->tags = new ArrayCollection();
 	}
 
+	public function __toString() {
+		return $this->getNom();
+	}
 
 	/**
 	 * Get id
@@ -166,7 +169,7 @@ class pageweb {
 	 * @return version
 	 */
 	public function setHomepage($homepage) {
-		is_bool($homepage) ? $this->homepage = $homepage : $this->homepage = false;
+		$this->homepage = boolval($homepage);
 		return $this;
 	}
 
@@ -185,6 +188,17 @@ class pageweb {
 	 * @return pageweb
 	 */
 	public function setBackground(media $background = null) {
+		$this->background = $background;
+		$background->setPagewebBackground_reverse($this);
+		return $this;
+	}
+
+	/**
+	 * Set background
+	 * @param media $background
+	 * @return pageweb
+	 */
+	public function setBackground_reverse(media $background = null) {
 		$this->background = $background;
 		return $this;
 	}
@@ -260,13 +274,13 @@ class pageweb {
 	 * @return pageweb
 	 */
 	public function setKeywords($keywords = null) {
-		$tagslist = array();
-		foreach ($this->getTags() as $tag) {
-			$tagslist[] = $tag->getNom();
+		if(!is_string($keywords) && !is_array($keywords)) {
+			$this->keywords = implode($this->getTags()->toArray(), ', ');
+		} else if(is_array($keywords)) {
+			$this->keywords = implode($this->keywords, ', ');
+		} else {
+			$this->keywords = $keywords;
 		}
-		if(count($tagslist) > 0) $keywords = implode(', ', $tagslist);
-			else $keywords = null;
-		$this->keywords = $keywords;
 		return $this;
 	}
 

@@ -1,4 +1,6 @@
 {% extends 'siteadminBundle:entites:entiteList.html.twig' %}
+{% set cssjsloads = 'TAB' %}
+{% set DEVMODE = (app.environment in ['DEV', 'TEST']) or (is_granted('ROLE_SUPER_ADMIN')) %}
 
 {% block buttons %}
 {% endblock buttons %}
@@ -16,8 +18,7 @@
 							<th>{{ 'table.col.nom'|trans|capitalize }}</th>
 							<th>Actions</th>
 							<th>{{ 'table.col.email'|trans|capitalize }}</th>
-							<th>{{ 'table.col.objet'|trans|capitalize }}</th>
-							<th>{{ 'table.col.message'|trans|capitalize }}</th>
+							<th>{{ 'table.col.objet'|trans|capitalize }} - {{ 'table.col.message'|trans|capitalize }}</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -25,7 +26,11 @@
 						<tr{% if entite.statut.nom|default('Actif') != 'Actif' %} class="danger"{% endif %}>
 							{% if DEVMODE %}<td class="text-center">{{ entite.id }}</td>{% endif %}
 							<td>
+								{% if entite.user|default(null) != null %}
+								<a href="{{ path('siteUser_info', {username: entite.user.username}) }}"><strong>{{ entite.nom }}</strong></a>
+								{% else %}
 								{{ entite.nom }}
+								{% endif %}
 							</td>
 							<td>
 								<div class="btn-group">
@@ -59,8 +64,9 @@
 								{% endif %}
 							</td>
 							<td>{{ entite.email }}</td>
-							<td>{{ entite.objet }}</td>
-							<td>{{ entite.message }}</td>
+							<td>
+								<strong>{{ entite.objet|default('<i class="fa fa-ban text-muted"></i>')|raw }}</strong> - <small><i>{{ phraseCut(entite.message, 160) }}</i></small>
+							</td>
 						</tr>
 						{% endfor %}
 					</tbody>

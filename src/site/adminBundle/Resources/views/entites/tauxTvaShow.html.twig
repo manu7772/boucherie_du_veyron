@@ -1,0 +1,57 @@
+{% extends 'siteadminBundle:entites:entiteShow.html.twig' %}
+{% set cssjsloads = 'simple' %}
+{% set DEVMODE = (app.environment in ['DEV', 'TEST']) or (is_granted('ROLE_SUPER_ADMIN')) %}
+
+{% block page_heading %}
+	{{ parent() }}
+{% endblock page_heading %}
+
+{% block content %}
+<div class="row">
+
+	<div class="col-md-8">
+		<div class="ibox float-e-margins">
+			<div class="ibox-content">
+				<h2 class="row">
+					<div class="col-md-8 ellipsis">{{ entite.nom|default('#' ~ entite.id) }}</div>
+					<div class="col-md-4">
+						<!-- <a href="{{ path('siteadmin_entite', {entite: entite_name, id: entite.id, action: 'delete'}) }}" type="button" class="btn btn-xs btn-danger btn-outline pull-right need-confirmation" title="{{ 'actions.suppression'|trans|capitalize }}" data-message="{{ 'actions.suppQuestion'|trans({'%name%': entite.nom|default('#' ~ entite.id)})|capitalize }}"><i class="fa fa-times icon-wait-on-click"></i> {{ 'actions.supprimer'|trans|capitalize }}</a> -->
+						<!-- <a href="{{ path('siteadmin_entite', {entite: entite_name, id: entite.id, action: 'edit'}) }}" type="button" class="btn btn-xs btn-warning pull-right"><i class="fa fa-pencil icon-wait-on-click"></i> {{ 'actions.modifier'|trans|capitalize }}</a> -->
+					</div>
+				</h2>
+				<hr>
+				<table class="table table-striped table-bordered table-hover dataTables dataTable dtr-inline" id="DataTables_Table_0" role="grid" aria-describedby="DataTables_Table_0_info">
+					<thead>
+						<tr>
+							<th>{{ 'table.col.libelle'|trans|capitalize }}</th>
+							<th>{{ 'table.col.valeur'|trans|capitalize }}</th>
+						</tr>
+					</thead>
+					<tbody>
+						{% for lib,attr in {'table.col.nom': entite.nom, 'form.taux': entite.taux|number_format(0, ',', ' ') ~ '%', 'table.col.descriptif': entite.descriptif} %}
+						<tr>
+							<td><strong>{{ lib|trans|capitalize }}</strong></td>
+							<td>{{ attr }}</td>
+						</tr>
+						{% endfor %}
+						<tr>
+							<td><strong>{{ 'table.col.creation'|trans|capitalize }}</strong></td>
+							<td>{{ entite.dateCreation|date(formatDateHeure) }}</td>
+						</tr>
+						<tr>
+							<td><strong>{{ 'table.col.maj'|trans|capitalize }}</strong></td>
+							<td>
+								{% if entite.dateMaj|default(null) != null %}
+								{{ entite.dateMaj|date(formatDateHeure) }}
+								{% else %}
+								<small><i class='text-muted'>({{ 'table.col.jamais'|trans|capitalize }})</i></small>
+								{% endif %}
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock content %}

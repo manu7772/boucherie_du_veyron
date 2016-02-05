@@ -32,21 +32,28 @@ class messageType extends AbstractType {
      * @param array $options
      */
     public function buildForm(FormBuilderInterface $builder, array $options) {
+        // ajout de action si défini
+        if(isset($this->parametres['form_action'])) $builder->setAction($this->parametres['form_action']);
+        // Builder…
         $builder
             ->add('nom', 'text', array(
                 'label' => 'form.nom',
+                'translation_domain' => 'messages',
                 'required' => false,
                 ))
             ->add('email', 'email', array(
                 'label' => 'form.email',
+                'translation_domain' => 'messages',
                 'required' => true,
                 ))
             ->add('objet', 'text', array(
                 'label' => 'form.objet',
+                'translation_domain' => 'messages',
                 'required' => false,
                 ))
             ->add('message', 'textarea', array(
                 'label' => 'form.message',
+                'translation_domain' => 'messages',
                 'required' => true,
                 'attr' => array(
                     'rows' => '12',
@@ -62,6 +69,7 @@ class messageType extends AbstractType {
         // AJOUT SUBMIT
         $builder->add('submit', 'submit', array(
             'label' => 'form.enregistrer',
+            'translation_domain' => 'messages',
             'attr' => array(
                 'class' => "btn btn-md btn-block btn-info",
                 ),

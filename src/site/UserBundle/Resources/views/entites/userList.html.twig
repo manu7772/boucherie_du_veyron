@@ -5,7 +5,11 @@
 {% block page_heading %}
 <div class="row wrapper border-bottom white-bg page-heading">
 	<div class="col-lg-12 m-t-xs">
-		<h2>{{ htitle|capitalize }}</h2>
+		<h2 class="row">
+			<div class="col-md-8 ellipsis">{{ htitle|capitalize }}</div>
+			<div class="col-md-4">
+			</div>
+		</h2>
 		<ol class="breadcrumb">
 			<li><a href="{{ path('siteadmin_homepage') }}"><strong>Administration</strong></a></li>
 			<li><a href="{{ path('siteUser_users', {type: 'all'}) }}"><strong>Utilisateurs</strong></a></li>
@@ -48,6 +52,7 @@
 					<thead>
 						<tr>
 							<th>Login</th>
+							<th class='text-center'>avatar</th>
 							<th>Nom/prénom</th>
 							<th>Actions</th>
 							<th>Email</th>
@@ -67,16 +72,20 @@
 								<em class='text-muted'>(jamais connecté)</em>
 								{% endif %}
 							</td>
+							<td class='text-center'>
+								{% if user.avatar.isScreenableImage|default(false) != false %}
+								<img src="{{ user.avatar.imgThumbnail(64,64,'cut')|raw }}" class="img-rounded fa-border">
+								{% else %}
+								<i class="fa fa-ban fa-3x text-muted fa-border"></i>
+								{% endif %}
+							</td>
 							<td>
 								<strong>{{ user.nom }}</strong><br>{{ user.prenom }}
 							</td>
 							<td>
 								<div class="btn-group">
 									<a href="{{ path('siteUser_info', {username: user.username}) }}" type="button" class="btn btn-white btn-xs" title="Voir {{ user.username }}"><i class="fa fa-eye icon-wait-on-click"></i></a>
-									{% if user.id == app.user.id %}
-									<a href="{{ path('fos_user_profile_edit', {id: app.security.token.user.id}) }}" type="button" class="btn btn-white btn-xs" title="Modifier {{ user.username }}"><i class="fa fa-pencil icon-wait-on-click"></i></a>
-									<a href="{{ path('fos_user_deleting', {id: app.security.token.user.id}) }}" type="button" class="btn btn-white btn-xs need-confirmation" title="Supprimer votre compte ?" data-message="ATTENTION, vous êtes sur le point de supprimer votre compte ! Souhaitez-vous vraiment faire cette opération ?"><i class="fa fa-times icon-wait-on-click"></i></a>
-									{% elseif app.user.haveRight(user) %}
+									{% if app.user.haveRight(user) %}
 									<a href="{{ path('siteUser_edit', {username: user.username}) }}" type="button" class="btn btn-white btn-xs" title="Modifier {{ user.username }}"><i class="fa fa-pencil icon-wait-on-click"></i></a>
 									<a href="{{ path('siteUser_delete', {username: user.username}) }}" type="button" class="btn btn-white btn-xs need-confirmation" title="Supprimer {{ user.username }}" data-message="Souhaitez-vous vraiment supprimer ce compte ?"><i class="fa fa-times icon-wait-on-click"></i></a>
 									{% endif %}
@@ -119,25 +128,26 @@
 	<div class="col-lg-3">
 		<div class="contact-box center-version">
 			<a href="{{ path('siteUser_info', {username: user.username}) }}">
-				<!-- <img alt="image" class="img-circle" src="img/a2.jpg"> -->
+				{% if user.avatar.isScreenableImage|default(false) != false %}
+				<img alt="image" class="img-circle" src="{{ user.avatar.imgThumbnail(128,128,'cut')|raw }}">
+				{% else %}
 				<i class="fa fa-user fa-5x text-{{ classtype|default('muted')|raw }}"></i>
+				{% endif %}
 				<h3 class="m-b-xs"><strong>{{ user.prenom }} {{ user.nom|default(user.username) }}</strong></h3>
 				<div class="font-bold"><i class="fa fa-user"></i> {{ user.username }}</div>
 				<address class="m-t-md">
-					<strong>{{ user.adresse }}</strong><br>
-					{{ user.cp }}<br>
-					{{ user.ville }}<br>
-					<abbr title="Téléphone">Tél. </abbr> {{ user.tel }}
+					<strong>{{ user.adresse|default('-') }}</strong><br>
+					{{ user.cp|default('-') }}<br>
+					{{ user.ville|default('-') }}<br>
+					<abbr title="Téléphone">Tél. </abbr> {{ user.tel|default('-') }}
 				</address>
 			</a>
 			<div class="contact-box-footer">
-				<div class="m-t-xs btn-group">
-					<a href="{{ path('siteUser_info', {username: user.username}) }}" class="btn btn-xs btn-white"><i class="fa fa-eye icon-wait-on-click"></i> Voir</a>
-					<a href="{{ path('siteUser_edit', {username: user.username}) }}" class="btn btn-xs btn-white"><i class="fa fa-pencil icon-wait-on-click"></i> Modifier</a>
-					{% if user.id == app.user.id %}
-					<a href="{{ path('fos_user_deleting', {id: app.security.token.user.id}) }}" type="button" class="btn btn-white btn-xs need-confirmation" title="Supprimer votre compte ?" data-message="ATTENTION, vous êtes sur le point de supprimer votre compte ! Souhaitez-vous vraiment faire cette opération ?"><i class="fa fa-times icon-wait-on-click"></i></a>
-					{% elseif app.user.haveRight(user) %}
-					<a href="{{ path('siteUser_delete', {username: user.username}) }}" class="btn btn-xs btn-white need-confirmation" title="Supprimer {{ user.username }}" data-message="Souhaitez-vous vraiment supprimer ce compte ?"><i class="fa fa-times icon-wait-on-click"></i> Supprimer</a>
+				<div class="m-t-xs btn-group btn-block">
+					<a href="{{ path('siteUser_info', {username: user.username}) }}" class="btn btn-xs btn-white col-xs-4"><i class="fa fa-eye icon-wait-on-click"></i></a>
+					<a href="{{ path('siteUser_edit', {username: user.username}) }}" class="btn btn-xs btn-white col-xs-4"><i class="fa fa-pencil icon-wait-on-click"></i></a>
+					{% if app.user.haveRight(user) %}
+					<a href="{{ path('siteUser_delete', {username: user.username}) }}" class="btn btn-xs btn-white col-xs-4 need-confirmation" title="Supprimer {{ user.username }}" data-message="Souhaitez-vous vraiment supprimer ce compte ?"><i class="fa fa-times icon-wait-on-click"></i></a>
 					{% endif %}
 				</div>
 			</div>
@@ -148,7 +158,11 @@
 		<div class="contact-box">
 			<div class="col-sm-4">
 				<div class="text-center">
+					{% if user.avatar.isScreenableImage|default(false) != false %}
+					<img alt="image" class="img-circle" src="{{ user.avatar.imgThumbnail(62,62,'cut')|raw }}">
+					{% else %}
 					<i class="fa fa-user fa-5x text-{{ classtype|default('muted')|raw }}"></i>
+					{% endif %}
 					<div class="m-t-xs font-bold">{{ user.username }}</div>
 				</div>
 			</div>

@@ -1,4 +1,6 @@
 {% extends 'siteadminBundle:entites:entiteList.html.twig' %}
+{% set cssjsloads = 'TAB' %}
+{% set DEVMODE = (app.environment in ['DEV', 'TEST']) or (is_granted('ROLE_SUPER_ADMIN')) %}
 
 {% block page_heading %}
 	{{ parent() }}
@@ -16,6 +18,7 @@
 							{% if DEVMODE %}<th class="text-center">{{ 'table.col.id'|trans|capitalize }}</th>{% endif %}
 							<th>{{ 'table.col.nom'|trans|capitalize }}</th>
 							<th>Actions</th>
+							<th>{{ 'form.background'|trans|capitalize }}</th>
 							<th>{{ 'table.col.title'|trans|capitalize }}</th>
 							<th>{{ 'table.col.titreh1'|trans|capitalize }}</th>
 							<th>{{ 'table.col.modele'|trans|capitalize }}</th>
@@ -51,6 +54,7 @@
 									{% if entite.homepage %}{% set defcol = 'primary' %}{% endif %}
 									<a href="{{ path('siteadmin_pageweb_set_default', {id: entite.id, redir: path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params'))|url_encode()}) }}" type="button" class="btn btn-{{ defcol }} btn-xs" title="{{ 'pageweb.bydefault'|trans|capitalize }}"><i class="fa fa-check"></i></a>
 								</div>
+								{# - OFF ----------------------
 								{% if DEVMODE %}
 								<hr class="m-b-sm m-t-xs">
 								<div class="btn-group">
@@ -60,6 +64,16 @@
 									<a href="{{ path('siteadmin_entite', {entite: entite_name, id: entite.id, action: 'check'}) }}" type="button" class="btn btn-danger btn-xs" title="Checker article {{ entite.nom }}"><i class="fa fa-check"></i></a>
 									{% endif %}
 								</div>
+								{% endif %}
+								- OFF ---------------------- #}
+							</td>
+							<td class="text-center">
+								{% if entite.background|default(null) != null %}
+								<a href="{{ path('siteadmin_entite', {entite: 'media', id: entite.background.id, action: 'show'}) }}" class="docs-tooltip" data-toggle="tooltip" title="{{ (entite_name ~ '.moredetails')|trans({'%name%': entite.background.nom})|capitalize }}">
+									<img src="{{ entite.background.imgThumbnail(64, 64, 'cut')|raw }}" class="img-responsive img-thumbnail">
+								</a>
+								{% else %}
+								<i class="fa fa-ban fa-3x text-muted fa-border"></i>
 								{% endif %}
 							</td>
 							<td>{{ entite.title }}</td>

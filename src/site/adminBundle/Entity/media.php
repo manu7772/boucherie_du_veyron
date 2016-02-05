@@ -13,17 +13,19 @@ use site\services\aeImages;
 
 use site\adminBundle\Entity\pageweb;
 use site\adminBundle\Entity\fileFormat;
+use site\UserBundle\Entity\User;
 
 use \DateTime;
+use \Exception;
 use \SplFileInfo;
 
 /**
  * media
  *
  * @ORM\Table()
- * @ORM\Entity
- * @ORM\Entity(repositoryClass="mediaRepository")
+ * @ORM\Table(name="media")
  * @ORM\HasLifecycleCallbacks()
+ * @ORM\Entity(repositoryClass="site\adminBundle\Entity\mediaRepository")
  */
 class media {
 
@@ -33,36 +35,62 @@ class media {
 	 * @ORM\Id
 	 * @ORM\GeneratedValue(strategy="AUTO")
 	 */
-	private $id;
+	protected $id;
 
 	/**
 	 * @var string
 	 * @ORM\Column(name="nom", type="string", length=255)
 	 */
-	private $nom;
+	protected $nom;
 	
 	/**
 	 * @var string
 	 * @ORM\Column(name="originalnom", type="string", length=255)
 	 */
-	private $originalnom;
+	protected $originalnom;
 		
 	/**
 	 * @var string
 	 * @ORM\Column(name="binaryFile", type="blob")
 	 */
-	private $binaryFile;
+	protected $binaryFile;
 	
 	/**
-	 * @ORM\ManyToOne(targetEntity="fileFormat")
+	 * @var string
+	 * @ORM\Column(name="format", type="string", length=128)
 	 */
-	private $format;
+	protected $format;
+
+	/**
+	 * @var string
+	 * @ORM\Column(name="extension", type="string", length=8)
+	 */
+	protected $extension;
+
+	/**
+	 * @var string
+	 * @ORM\Column(name="mediaType", type="string", length=32)
+	 */
+	protected $mediaType;
+
+	/**
+	 * Strockage du media : 'database' / 'file'
+	 * @var string
+	 * @ORM\Column(name="stockSupport", type="string", length=16)
+	 */
+	protected $stockSupport;
 
 	/**
 	 * @ORM\OneToOne(targetEntity="pageweb", inversedBy="background")
 	 * @ORM\JoinColumn(nullable=true, unique=true, name="pageweb_id", referencedColumnName="id", onDelete="SET NULL")
 	 */
-	private $pagewebBackground;
+	protected $pagewebBackground;
+
+	/**
+	 * @ORM\OneToOne(targetEntity="site\UserBundle\Entity\User", inversedBy="avatar")
+	 * @ORM\JoinColumn(nullable=true, unique=true, name="User_id", referencedColumnName="id", onDelete="SET NULL")
+	 */
+	protected $userAvatar;
 
 	/**
 	 * @Gedmo\Slug(fields={"nom"})
@@ -70,13 +98,11 @@ class media {
 	 */
 	protected $slug;
 	
-	public $upload_file;
-	
 	/**
 	 * @var int
 	 * @ORM\Column(name="file_size", type="integer", length=10)
 	 */
-	private $fileSize;
+	protected $fileSize;
 
 	/**
 	 * @var DateTime
@@ -90,20 +116,53 @@ class media {
 	 */
 	protected $dateMaj;
 
-	private $rawCodeFile;
+
+	public $upload_file;
+	
+	protected $streamBinaryFile;
+	protected $infoForPersist;
+	protected $authorizedFormatsByType;
+	protected $schemaData;
+	protected $schemaBase;
+	protected $stockSupportList;
 	
 	public function __construct() {
-		
 		$this->dateCreation = new DateTime();
 		$this->dateMaj = null;
-		$this->rawCodeFile = null;
+		$this->infoForPersist = null;
 		$date = new DateTime();
 		$defaultVersion = $date->format('d-m-Y_H-i-s');
 		$this->setNom($defaultVersion);
+		$this->init();
 	}
 
 	public function __toString(){
-		return $this->name.' modifié le '.$this->updated->format('d-m-Y H:i:s');
+		if($this->dateMaj != null) return $this->nom.' modifié le '.$this->dateMaj->format('d-m-Y H:i:s');
+		else return $this->nom.' crée le '.$this->dateCreation->format('d-m-Y H:i:s');
+	}
+
+	protected function init() {
+		$this->streamBinaryFile = null;
+		$this->authorizedFormatsByType = array(
+			'image'	=> array('png', 'jpg', 'jpeg', 'gif'),
+			'pdf'	=> array('pdf'),
+			);
+		$this->schemaData = '#^(data:image/('.implode("|", $this->authorizedFormatsByType['image']).');base64,)#';
+		$this->schemaBase = 'data:image/__FORMAT__;base64,';
+		$this->stockSupportList = array('database', 'file');
+	}
+
+	/**
+	 * @ORM\PostLoad()
+	 */
+	public function onLoad($construct = false) {
+		$this->init();
+		// nom
+		if($this->getNom() == null) $this->setNom($this->getOriginalnom());
+		// binaryFile
+		if($this->binaryFile != null) {
+			$this->streamBinaryFile = stream_get_contents($this->binaryFile);
+		}
 	}
 
 	/**
@@ -113,36 +172,79 @@ class media {
 		return $this->format->getEnabled();
 	}
 
+	public function getShemaBase($format = null) {
+		// $this->schemaBase = 'data:image/***;base64,';
+		if(!is_string($format)) {
+			$format = 'png';
+			if($this->getFormat() != null) {
+				$format = $this->getFormat();
+			}
+		}
+		return preg_replace('#(__FORMAT__)#', $format, $this->schemaBase);
+	}
+
+	protected function getTypeOf($typeMime) {
+		$exp = explode('/', $typeMime);
+		if($exp[0] == 'image') return 'image';
+		if($exp[1] == 'pdf') return 'pdf';
+		return 'inconnu';
+	}
+
 	/**
 	 * @ORM\PrePersist()
 	 * @ORM\PreUpdate()
 	 */
-	public function upload(){
-		if (null === $this->upload_file) return;
-		
-		$strm = fopen($this->upload_file->getRealPath(),'rb');
-		$this->setBinaryFile(stream_get_contents($strm));
-		$this->setFileSize(filesize($this->upload_file->getRealPath()));
-		$this->setOriginalnom($this->upload_file->getClientOriginalName());
-	}
-	
-	/**
-	 * @ORM\PostLoad()
-	 * @return string - code brut du fichier / null si aucun code
-	 */
-	public function getRawCodeFile(){
-		if($this->rawCodeFile == null)
-			$this->rawCodeFile = stream_get_contents($this->binaryFile);
-		return $this->rawCodeFile;
+	public function upLoad(){
+		if($this->getId() != null) {
+			// test only on update…
+			if(null === $this->upload_file && null === $this->binaryFile) return;
+		}
+		if(null != $this->upload_file) {
+			// File
+			$stream = fopen($this->upload_file->getRealPath(),'rb');
+			$this->setBinaryFile(stream_get_contents($stream));
+			fclose($stream);
+			$this->setFileSize(filesize($this->upload_file->getRealPath()));
+			$this->setOriginalnom($this->upload_file->getClientOriginalName());
+			$this->setExtension($this->getUploadFile_extension());
+			$this->setFormat($this->getUploadFile_typemime());
+			$this->setStockSupport($this->stockSupportList[1]);
+		} else if(null != $this->binaryFile) {
+			// cropper
+			$info = $this->getInfoForPersist();
+			if(preg_match($this->schemaData, $this->binaryFile)) {
+				// Format non Raw
+				$rotenData = preg_replace($this->schemaData, '', $this->binaryFile);
+				$this->setBinaryFile(base64_decode($rotenData));
+				unset($rotenData);
+			}
+			if($info['fileStatus'] == 'filled') {
+				$this->setFileSize($info['file']['size']);
+				$this->setFormat($info['file']['type']);
+				$this->setMediaType($this->getTypeOf($info['file']['type']));
+				$ext = explode('.', $info['file']['name']);
+				$ext = end($ext);
+				if(!in_array($ext, $this->authorizedFormatsByType)) {
+					// format non trouvé, on prend sur le type mime
+					if(in_array($this->getMediaType(), array('image', 'pdf'))) {
+						$ext = explode('/', $info['file']['type'])[1];
+					} else $ext = 'txt';
+				}
+				$this->setExtension($ext);
+			}
+			$this->setStockSupport($this->stockSupportList[0]);
+		}
+		if($this->getNom() == null) $this->setNom($this->getOriginalnom());
 	}
 
-	/**
-	 * Retourne le code en Base64 du fichier / null si aucun
-	 * @return string
-	 */
-	public function getB64File(){
-		if($this->rawCodeFile !== null) return base64_encode($this->getRawCodeFile());
-			else return null;
+	public function getImgThumbnail($x = 128, $y = 128, $mode = 'cut') {
+		// return $this->getBinaryFile();
+		return $this->getShemaBase().base64_encode($this->getThumbnail($x, $y, $mode));
+	}
+
+	public function getImg() {
+		// return $this->getBinaryFile();
+		return $this->getShemaBase().base64_encode($this->getBinaryFile());
 	}
 
 	/**
@@ -152,36 +254,46 @@ class media {
 	 * @param string $mode = 'cut'
 	 * @return string
 	 */
-	public function getThumbnail($x = 256, $y = 256, $mode = 'cut') {
+	public function getThumbnail($x = 128, $y = 128, $mode = 'cut', $format = null) {
+		if(!in_array($format, $this->authorizedFormatsByType['image'])) $format = $this->getExtension();
 		$thumbnail = null;
-		if($this->getFormat()->getType() == 'image') {
+		// if($this->getFormat()->getType() == 'image') {
 			$aeImages = new aeImages();
-			// $codeImg = base64_decode($this->getB64File());
-			$codeImg = $this->getRawCodeFile();
-			$imageOrigin = @imagecreatefromstring($codeImg);
-			if($imageOrigin != false) {
-				// echo('Thumb file : '.$this->getId().'<br>');
-				$image = $aeImages->thumb_image($imageOrigin, $x, $y, $mode);
+			$image = @imagecreatefromstring($this->getBinaryFile());
+			if($image != false) {
+				$image = $aeImages->thumb_image($image, $x, $y, $mode);
 				ob_start();
-				imagepng($image);
+				switch ($format) {
+					case 'jpeg':
+					case 'jpg': imagejpeg($image); break;
+					case 'gif': imagegif($image); break;
+					case 'png': imagepng($image); break;
+					default: imagepng($image); break;
+				}
 				$thumbnail = ob_get_contents();
 				ob_end_clean();
 				imagedestroy($image);
-			}
-		}
+			} else return "Error while creating image object";
+		// }
 		return $thumbnail;
 	}
 
 	/**
-	 * Retourne un thumbnail en base64 du fichier / null si aucun
-	 * @param integer $x - taille X
-	 * @param integer $y - taille Y
-	 * @param string $mode = 'cut'
-	 * @return string
+	 * set infoForPersist
+	 * @param string $infoForPersist = null
+	 * @return media
 	 */
-	public function getThumbnailB64($x = 256, $y = 256, $mode = 'cut') {
-		$b64 = $this->getThumbnail($x, $y, $mode);
-		return $b64 === null ? null : base64_encode($b64);
+	public function setInfoForPersist($infoForPersist = null) {
+		if(!is_string($infoForPersist)) $infoForPersist = json_encode($infoForPersist);
+		$this->infoForPersist = $infoForPersist;
+		return $this;
+	}
+
+	/**
+	 * get infoForPersist
+	 */
+	public function getInfoForPersist() {
+		return json_decode($this->infoForPersist, true);
 	}
 
 	/**
@@ -229,7 +341,6 @@ class media {
 	 */
 	public function setBinaryFile($binaryFile) {
 		$this->binaryFile = $binaryFile;
-
 		return $this;
 	}
 
@@ -238,17 +349,28 @@ class media {
 	 * @return string 
 	 */
 	public function getBinaryFile() {
-		return $this->getRawCodeFile();
+		return $this->streamBinaryFile;
+		// return stream_get_contents($this->binaryFile);
 	}
 
 	/**
 	 * Set pagewebBackground
 	 * @param pageweb $pagewebBackground
-	 * @return Version
+	 * @return media
 	 */
 	public function setPagewebBackground(pageweb $pagewebBackground = null) {
 		$this->pagewebBackground = $pagewebBackground;
+		$pagewebBackground->setBackground_reverse($this);
+		return $this;
+	}
 
+	/**
+	 * Set pagewebBackground reversed side
+	 * @param pageweb $pagewebBackground
+	 * @return media
+	 */
+	public function setPagewebBackground_reverse(pageweb $pagewebBackground = null) {
+		$this->pagewebBackground = $pagewebBackground;
 		return $this;
 	}
 
@@ -261,13 +383,41 @@ class media {
 	}
 
 	/**
+	 * Set userAvatar
+	 * @param User $userAvatar
+	 * @return media
+	 */
+	public function setUserAvatar(User $userAvatar = null) {
+		$this->userAvatar = $userAvatar;
+		$userAvatar->setAvatar_reverse($this);
+		return $this;
+	}
+
+	/**
+	 * Set userAvatar reversed side
+	 * @param User $userAvatar
+	 * @return media
+	 */
+	public function setUserAvatar_reverse(User $userAvatar = null) {
+		$this->userAvatar = $userAvatar;
+		return $this;
+	}
+
+	/**
+	 * Get userAvatar
+	 * @return User 
+	 */
+	public function getUserAvatar() {
+		return $this->userAvatar;
+	}
+
+	/**
 	 * Set nom
 	 * @param string $nom
-	 * @return Version
+	 * @return media
 	 */
 	public function setNom($nom) {
 		$this->nom = $nom;
-
 		return $this;
 	}
 
@@ -282,11 +432,10 @@ class media {
 	/**
 	 * Set originalnom
 	 * @param string $originalnom
-	 * @return Version
+	 * @return media
 	 */
 	public function setOriginalnom($originalnom) {
 		$this->originalnom = $originalnom;
-
 		return $this;
 	}
 
@@ -303,9 +452,8 @@ class media {
 	 * @param fileFormat $format
 	 * @return Version
 	 */
-	public function setFormat(fileFormat $format = null) {
+	public function setFormat($format) {
 		$this->format = $format;
-
 		return $this;
 	}
 
@@ -315,6 +463,62 @@ class media {
 	 */
 	public function getFormat() {
 		return $this->format;
+	}
+
+	/**
+	 * Set extension
+	 * @param string $extension
+	 * @return Version
+	 */
+	public function setExtension($extension) {
+		$this->extension = strtolower($extension);
+		return $this;
+	}
+
+	/**
+	 * Get extension
+	 * @return string
+	 */
+	public function getExtension() {
+		return $this->extension;
+	}
+
+	/**
+	 * Set mediaType
+	 * @param string $mediaType
+	 * @return Version
+	 */
+	public function setMediaType($mediaType) {
+		$this->mediaType = strtolower($mediaType);
+		return $this;
+	}
+
+	/**
+	 * Get mediaType
+	 * @return string
+	 */
+	public function getMediaType() {
+		return $this->mediaType;
+	}
+
+	/**
+	 * Set stockSupport
+	 * @param string $stockSupport
+	 * @return Version
+	 */
+	public function setStockSupport($stockSupport) {
+		if(in_array($stockSupport, $this->stockSupportList)) {
+			$this->stockSupport = $stockSupport;
+		} else throw new Exception("Stock Support not recognized : ".$stockSupport.". Need : ".json_encode($this->stockSupportList), 1);
+		return $this;
+	}
+
+	/**
+	 * Get stockSupport
+	 * @return string
+	 */
+	public function getStockSupport() {
+		return $this->stockSupport;
 	}
 
 	/**
@@ -337,19 +541,11 @@ class media {
 	}
 
 	/**
-	 * Get first part of content-type (type)
-	 * @return string
-	 */
-	public function getType(){
-		return $this->getFormat()->getType();
-	}
-
-	/**
 	 * is version an IMAGE type ?
 	 * @return boolean
 	 */
 	public function isImage(){
-		return $this->getFormat()->isImage();
+		return $this->getMediaType() == 'image';
 	}
 
 	/**
@@ -357,7 +553,7 @@ class media {
 	 * @return boolean
 	 */
 	public function isScreenableImage(){
-		return ($this->isImage() && ($this->getRawCodeFile() !== null));
+		return ($this->isImage() && ($this->getBinaryFile() != null));
 	}
 
 	/**
@@ -365,7 +561,7 @@ class media {
 	 * @return boolean
 	 */
 	public function isPdf(){
-		return $this->getFormat()->isPdf();
+		return $this->getMediaType() == "pdf";
 	}
 
 	/**

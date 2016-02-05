@@ -8,14 +8,34 @@ services:
     #    class: AppBundle\Directory\ClassName
     #    arguments: ["@another_service_name", "plain_value", "%parameter_name%"]
 
+    # fonctionnalités de réponse pour Ajax notamment
+    aetools.aeReponse:
+        class: %ae_services%aeReponse
+        arguments: [@service_container]
+
     # fonctionnalités de base / boîte à outils
     aetools.aetools:
         class: %ae_services%aetools
         arguments: [@service_container]
 
+    # fonctionnalités d'entités
+    aetools.aeEntities:
+        class: %ae_services%aeEntities
+        arguments: [@service_container]
+
     # fonctionnalités de pages web
     aetools.pageweb:
         class: %ae_services%pageweb
+        arguments: [@service_container]
+
+    # fonctionnalités de panier
+    aetools.aePanier:
+        class: %ae_services%aePanier
+        arguments: [@service_container]
+
+    # fonctionnalités de medias
+    aetools.media:
+        class: %ae_services%aeMedia
         arguments: [@service_container]
 
     # Fonctions textes utiles et pratiques pour utilisation dans TWIG

@@ -9,9 +9,12 @@ use Doctrine\Common\Collections\ArrayCollection;
 // Slug
 use Gedmo\Mapping\Annotation as Gedmo;
 
+use \DateTime;
+
 /**
  * statut
  *
+ * @ORM\Entity
  * @ORM\Table(name="statut")
  * @ORM\Entity(repositoryClass="site\adminBundle\Entity\statutRepository")
  * @UniqueEntity(fields={"nom"}, message="Ce statut existe déjà.")

@@ -6,13 +6,16 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 use site\adminBundle\Entity\statut;
+use site\UserBundle\Entity\User;
 
 use \DateTime;
 
 /**
  * message
  *
+ * @ORM\Table()
  * @ORM\Table(name="message")
+ * @ORM\HasLifecycleCallbacks()
  * @ORM\Entity(repositoryClass="site\adminBundle\Entity\messageRepository")
  */
 class message {
@@ -47,6 +50,10 @@ class message {
 
     /**
      * @var string
+     * @Assert\Email(
+     *     message = "The email '{{ value }}' is not a valid email.",
+     *     checkMX = true
+     * )
      * @ORM\Column(name="email", type="string", nullable=false, unique=false)
      */
     private $email;
@@ -91,6 +98,12 @@ class message {
      * @ORM\JoinColumn(referencedColumnName="id", nullable=false, unique=false)
      */
     protected $statut;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="site\UserBundle\Entity\User", inversedBy="messages")
+     * @ORM\JoinColumn(referencedColumnName="id", nullable=true, unique=false, onDelete="SET NULL")
+     */
+    protected $user;
 
 
     public function __construct() {
@@ -265,7 +278,6 @@ class message {
      */
     public function setStatut(statut $statut) {
         $this->statut = $statut;
-    
         return $this;
     }
 
@@ -275,6 +287,25 @@ class message {
      */
     public function getStatut() {
         return $this->statut;
+    }
+
+    /**
+     * Set user
+     * @param user $user
+     * @return article
+     */
+    public function setUser(User $user = null, $doReverse = true) {
+        if($doReverse == true && $user != null) $user->addMessage($this, false);
+        $this->user = $user;
+        return $this;
+    }
+
+    /**
+     * Get user
+     * @return user 
+     */
+    public function getUser() {
+        return $this->user;
     }
 
 

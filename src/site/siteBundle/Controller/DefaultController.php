@@ -18,15 +18,22 @@ class DefaultController extends Controller {
 		$this->em = $this->getDoctrine()->getManager();
 		$this->repo = $this->em->getRepository('site\adminBundle\Entity\pageweb');
 		$data['pageweb'] = $this->repo->findOneByHomepage(1);
+		$this->pagewebactions($data);
 		// chargement de la pageweb
-		if(is_object($data['pageweb'])) {
+		if(isset($data['redirect'])) {
+			return $this->redirect($data['redirect']);
+		} else if(is_object($data['pageweb'])) {
 			return $this->render($data['pageweb']->getTemplate(), $data);
 		} else {
 			// si aucune page web… chargement de la page par défaut…
-			$data['title'] = 'La Boucherie du Veyron';
-			$data['description'] = 'La Boucherie du Veyron';
-			$data['keywords'] = 'La Boucherie du Veyron';
-			return $this->render('sitesiteBundle:Default:index.html.twig', $data);
+			// si aucune page web… chargement de la page par défaut…
+			$userService = $this->get('service.users');
+			$userService->usersExist(true);
+			return $this->redirect($this->generateUrl('generate'));
+			// $data['title'] = 'La Boucherie du Veyron';
+			// $data['description'] = 'La Boucherie du Veyron';
+			// $data['keywords'] = 'La Boucherie du Veyron';
+			// return $this->render('sitesiteBundle:Default:index.html.twig', $data);
 		}
 	}
 
@@ -40,7 +47,11 @@ class DefaultController extends Controller {
 		$this->repo = $this->em->getRepository('site\adminBundle\Entity\pageweb');
 		$data['pageweb'] = $this->repo->findOneBySlug($pageweb);
 		// chargement de la pageweb
-		return $this->render($data['pageweb']->getTemplate(), $data);
+		if(isset($data['redirect'])) {
+			return $this->redirect($data['redirect']);
+		} else if(is_object($data['pageweb'])) {
+			return $this->render($data['pageweb']->getTemplate(), $data);
+		}
 	}
 
 	protected function pagewebactions(&$data) {
@@ -58,19 +69,26 @@ class DefaultController extends Controller {
 						// get IP & DateTime
 						$message->setIp($request->getClientIp());
 						$message->setCreation(new DateTime());
+						if(is_object($this->getUser())) {
+							$message->setNom($this->getUser()->getNom());
+							$message->setPrenom($this->getUser()->getPrenom());
+							$message->setTelephone($this->getUser()->getTelephone());
+							$message->setEmail($this->getUser()->getEmail());
+							$message->setUser($this->getUser());
+						}
 						// enregistrement
 						$this->em->persist($message);
 						$this->em->flush();
 						$data['message_success'] = "message.success";
 						// nouveau formulaire
-						$new_message = new message();
+						$new_message = $this->getNewEntity('site\adminBundle\Entity\message');
 						$new_message->setNom($message->getNom());
-						$new_message->setPrenom($message->getPrenom());
 						$new_message->setPrenom($message->getPrenom());
 						$new_message->setTelephone($message->getTelephone());
 						$new_message->setEmail($message->getEmail());
 						// $new_message->setObjet($message->getObjet());
 						$form = $this->createForm(new contactmessageType($this, []), $new_message);
+						$data['redirect'] = $this->generateUrl('site_pageweb', array('pageweb' => $data['pageweb']));
 					} else {
 						$data['message_error'] = "message.error";
 					}

@@ -17,6 +17,7 @@ class twigTools extends Twig_Extension {
 
 	public function __construct(ContainerInterface $container) {
 		$this->container = $container;
+		$this->trans = $this->container->get('translator');
 	}
 
 	public function getFunctions() {
@@ -28,6 +29,8 @@ class twigTools extends Twig_Extension {
 			new Twig_SimpleFunction('colonizeWordsWithP', array($this, 'colonizeWordsWithP')),
 			new Twig_SimpleFunction('cleanSpaces', array($this, 'cleanSpaces')),
 			new Twig_SimpleFunction('adminDataType', array($this, 'adminDataType')),
+			new Twig_SimpleFunction('developpeArray', array($this, 'developpeArray')),
+			new Twig_SimpleFunction('developpeObject', array($this, 'developpeObject')),
 			new Twig_SimpleFunction('intervalDateFR', array($this, 'intervalDateFR')),
 			new Twig_SimpleFunction('dateFR', array($this, 'dateFR')),
 			new Twig_SimpleFunction('minUCfirst', array($this, 'minUCfirst')),
@@ -35,7 +38,6 @@ class twigTools extends Twig_Extension {
 			new Twig_SimpleFunction('magnifyText', array($this, 'magnifyText')),
 			new Twig_SimpleFunction('addZeros', array($this, 'addZeros')),
 			new Twig_SimpleFunction('dureeHM', array($this, 'dureeHM')),
-			new Twig_SimpleFunction('arrayprint', array($this, 'arrayprint')),
 			new Twig_SimpleFunction('slug', array($this, 'slug')),
 			new Twig_SimpleFunction('siteNFormat', array($this, 'siteNFormat')),
 			new Twig_SimpleFunction('pathTree', array($this, 'pathTree')),
@@ -62,7 +64,9 @@ class twigTools extends Twig_Extension {
 			new Twig_SimpleFunction('compareRoles', array($this, 'compareRoles')),
 			new Twig_SimpleFunction('permittedRoles', array($this, 'permittedRoles')),
 			new Twig_SimpleFunction('B64forImg', array($this, 'B64forImg')),
-			new Twig_SimpleFunction('thumbnail', array($this, 'thumbnail')),
+			new Twig_SimpleFunction('encode64', array($this, 'encode64')),
+			new Twig_SimpleFunction('ThumbMedia', array($this, 'ThumbMedia')),
+			new Twig_SimpleFunction('fileSizeDisplay', array($this, 'fileSizeDisplay')),
 			);
 	}
 
@@ -77,7 +81,6 @@ class twigTools extends Twig_Extension {
 		$bundle = 'siteadmin';
 		$domain = 'datatables';
 		$data = $aeTrans->parse_yaml($bundle, $domain, $language);
-		// $data = array($language => array("decimal" => "X", "paginate" => array("previous" => "HOP !")));
 		return json_encode($data, true);
 	}
 
@@ -252,7 +255,29 @@ class twigTools extends Twig_Extension {
 	 * @return string
 	 */
 	public function developpeObject($data) {
-		return print_r($data);
+		return $this->developpeArray($this->developpeObject_recursive($data));
+	}
+	public function developpeObject_recursive($data) {
+		$ret = array();
+		$ret['type'] = gettype($data);
+		$ret['data'] = array();
+		// tests…
+		if(is_object($data)) {
+			// object
+			$ret['classname'] = get_class($data);
+			$ret['methods'] = array();
+		} else if (is_array($data)) {
+			// array
+			foreach ($data as $key => $value) {
+				$ret['data'][] = $this->developpeObject_recursive($value);
+			}
+		} else {
+			// autre
+			if(is_bool($data)) return $data ? $ret['data'] = 'true' : $ret['data'] = 'false';
+				else return $ret['data'];
+		}
+		$ret['count'] = count($ret['data']);
+		return $ret;
 	}
 
 
@@ -927,15 +952,73 @@ class twigTools extends Twig_Extension {
 		return in_array($userRole, $this->addLowerRoles($roles));
 	}
 
-	public function B64forImg($version) {
-		if(is_object($version))
-			$format = $version->getFormat()->getContentType();
-			else $format = 'image/png';
-		return 'data:'.$format.';base64,'.base64_encode(stream_get_contents($version->getBinaryfile()));
+	public function B64forImg($media) {
+		// echo('<pre>');
+		// var_dump($media);
+		// die('</pre>');
+		$size = '2x';
+		if($media->isImage()) {
+			if($media->isScreenableImage()) {
+				$format = $media->getFormat_contentType();
+				// else $format = 'image/png';
+				return '<img src="data:'.$format.';base64,'.$media->getThumbnailB64(64,64).'">';
+			} else {
+				return '<i class="fa fa-question-circle fa-'.$size.' text-danger"></i>';
+			}
+		} else {
+			return '<i class="fa '.$media->getFormat_icon().' fa-'.$size.'"></i>';
+		}
 	}
 
-	public function thumbnail($file, $format = 'image/png') {
-		return 'data:'.$format.';base64,'.$file->getB64File();
+	public function ThumbMedia($media, $responsive = false, $classes = null, $sizex = null, $sizey = null) {
+		$size = '2x';
+		if($sizex == null && $sizey == null) $sizex = $sizey = 64;
+		if(is_array($classes)) $classes = implode(' ', $classes);
+		if(!is_string($classes)) $classes = "";
+		if(strlen($classes) > 0) $sep = " "; else $sep = "";
+		if($responsive == true) $classes = 'img-responsive'.$sep.$classes;
+		if($media->isImage()) {
+			if($media->isScreenableImage()) {
+				$format = $media->getFormat_contentType();
+				// $format = 'image/png';
+				return '<img src="data:'.$format.';base64,'.$media->getThumbnailB64($sizex,$sizey).'" class="'.$classes.'">';
+			} else {
+				return '<i class="fa fa-question-circle fa-'.$size.' text-danger"></i>';
+			}
+		} else {
+			return '<i class="fa '.$media->getFormat_icon().' fa-'.$size.'"></i>';
+		}
+	}
+
+	public function encode64($data) {
+		return base64_encode($data);
+	}
+
+	public function fileSizeDisplay($size, $unit = 'auto', $decimal = 0) {
+		$validUnits = array(
+			'auto'	=> 1,
+			'Ko'	=> 1024,
+			'Mo'	=> 1048576,
+			'Go'	=> 1073741824,
+			'To'	=> 1099511627776,
+			);
+		$decimal = intval($decimal);
+		$size = intval($size);
+		if(!is_int($size)) $size = 0;
+		if($size < 0) $size = 0;
+		if(!array_key_exists($unit, $validUnits)) $unit = 'auto';
+		switch ($unit) {
+			case 'auto':
+				// AUTO
+				foreach ($validUnits as $key => $value) if($key != 'auto') {
+					if($size > ($value - 1024)) $unit = $key;
+				}
+				return number_format($size / $validUnits[$unit], $decimal, ',', '')." ".$this->trans->trans('sizes.'.$unit);
+				break;
+			default:
+				return number_format($size / $validUnits[$unit], $decimal, ',', '')." ".$this->trans->trans('sizes.'.$unit);
+				break;
+		}
 	}
 
 }

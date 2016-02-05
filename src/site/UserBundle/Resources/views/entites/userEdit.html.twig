@@ -1,0 +1,53 @@
+{% extends 'siteadminBundle::page_admin_generic.html.twig' %}
+{% set cssjsloads = 'FORM' %}
+{% set DEVMODE = (app.environment in ['DEV', 'TEST']) or (is_granted('ROLE_SUPER_ADMIN')) %}
+
+{% block page_heading %}
+<div class="row wrapper border-bottom white-bg page-heading">
+	<div class="col-lg-12 m-t-xs">
+		<h2 class="row">
+			<div class="col-md-8 ellipsis">{{ htitle|capitalize }}</div>
+			<div class="col-md-4">
+			</div>
+		</h2>
+		<ol class="breadcrumb">
+			<li><a href="{{ path('siteadmin_homepage') }}"><strong>Administration</strong></a></li>
+			<li><a href="{{ path('siteUser_users', {type: 'all'}) }}"><strong>Utilisateur</strong></a></li>
+			<li><a href="{{ path('siteUser_info', {username: user.username}) }}"><strong>{{ user.username }}</strong>{% if user.id == app.user.id %} <em class="text-muted">(moi-même)</em>{% endif %}</a></li>
+			<li>Modification</li>
+		</ol>
+	</div>
+</div>
+{% endblock page_heading %}
+
+{% block content %}
+{%  if app.user.haveRight(user) %}
+<div class="row m-b-lg m-t-xs">
+	<div class="col-md-12">
+		{{ form_start(edit_form) }}
+		{{ form_errors(edit_form) }}
+		{% for child in edit_form %}
+			{{ form_row(child) }}
+		{% endfor %}
+		<input type="submit" id="_submit" name="_submit" class="btn btn-md btn-block btn-info" value="{{ 'form.enregistrer'|trans({}, 'messages')|capitalize }}">
+		{{ form_end(edit_form) }}
+	</div>
+
+	<div class="clearfix hidden-lg"></div>
+
+</div>
+
+{% else %}
+
+<div class="row">
+	<div class="col-md-12">
+		<div class="ibox float-e-margins">
+			<div class="ibox-content">
+				<h3><i class="fa fa-ban"></i> Vous n'avez les droits requis pour accéder au profil de cet utilisateur.</h3>
+			</div>
+		</div>
+	</div>
+</div>
+{% endif %}
+
+{% endblock content %}

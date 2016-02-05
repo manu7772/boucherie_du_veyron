@@ -1,12 +1,12 @@
 {% extends 'siteadminBundle::page_admin_generic.html.twig' %}
-{% set cssjsloads = 'simple' %}
+{% set cssjsloads = 'FORM' %}
 {% set DEVMODE = (app.environment in ['dev', 'test']) or (is_granted('ROLE_SUPER_ADMIN')) %}
 
 {% block page_heading %}
 <div class="row wrapper border-bottom white-bg page-heading">
 	<div class="col-lg-12 m-t-xs">
 		<h2 class="row">
-			<div class="col-md-8">{{ (entite_name ~ '.name')|trans|capitalize }} {{ entite.nom|default('#' ~ entite.id) }}</div>
+			<div class="col-md-8 ellipsis">{{ (entite_name ~ '.name')|trans|capitalize }} {{ entite.nom|default('#' ~ entite.id) }}</div>
 			<div class="col-md-4">
 				<a href="{{ path('siteadmin_entite', {entite: entite_name, id: entite.id, action: 'delete'}) }}" type="button" class="btn btn-xs btn-danger btn-outline pull-right need-confirmation" data-message="{{ 'actions.suppQuestion'|trans({'%name%': entite.nom|default('#' ~ entite.id)})|capitalize }}"><i class="fa fa-times icon-wait-on-click"></i> {{ 'actions.supprimer'|trans|capitalize }}</a>
 				{#

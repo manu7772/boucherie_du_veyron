@@ -1,12 +1,12 @@
 {% macro menu_Admin(menu) %}
 {% import _self as self %}
-{% for item in menu|default(menu_Admin) %}
-	{{ self.item_menu(item) }}
+{% for key,item in menu|default(menu_Admin) %}
+	{{ self.item_menu(key,item) }}
 {% endfor %}
 {% endmacro %}
 
-{% macro item_menu(level1) %}
-{% if (level1.environment|default('prod') == app.environment or app.environment in ['dev', 'test']) and (is_granted(level1.role|default(menu_Admin_default_role))) %}
+{% macro item_menu(key,level1) %}
+{% if (level1.environment|default('prod') == app.environment or app.environment in ['dev', 'test']) and (is_granted(level1.role|default(menu_Admin_default_role))) and not((key == 'marketplace') and not(marketplace.active == true)) %}
 {% import _self as self %}
 {% set down = '' %}
 {% set active = '' %}

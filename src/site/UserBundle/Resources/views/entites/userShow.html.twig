@@ -6,12 +6,9 @@
 <div class="row wrapper border-bottom white-bg page-heading">
 	<div class="col-lg-12 m-t-xs">
 		<h2 class="row">
-			<div class="col-md-8">{{ htitle }}</div>
+			<div class="col-md-8 ellipsis">{{ htitle|capitalize }}</div>
 			<div class="col-md-4">
-				{% if user.id == app.user.id %}
-				<a href="{{ path('fos_user_profile_edit') }}" type="button" class="btn btn-xs btn-warning pull-right" title="Modifier {{ user.username }}"><i class="fa fa-pencil icon-wait-on-click"></i> Modifier</a>
-				<a href="{{ path('fos_user_deleting', {id: app.user.id}) }}" type="button" class="btn btn-xs btn-danger btn-outline pull-right need-confirmation" title="Supprimer votre compte" data-message="Ceci est votre compte ! Souhaitez-vous vraiment supprimer votre compte ?"><i class="fa fa-times icon-wait-on-click"></i> Supprimer</a>
-				{% elseif app.user.haveRight(user) %}
+				{% if app.user.haveRight(user) %}
 				<a href="{{ path('siteUser_edit', {username: user.username}) }}" type="button" class="btn btn-xs btn-warning pull-right"><i class="fa fa-pencil icon-wait-on-click"></i> Modifier</a>
 				<a href="{{ path('siteUser_delete', {username: user.username}) }}" type="button" class="btn btn-xs btn-danger btn-outline pull-right need-confirmation" title="Supprimer {{ user.username }}" data-message="Souhaitez-vous vraiment supprimer ce compte ?"><i class="fa fa-times icon-wait-on-click"></i> Supprimer</a>
 				{% endif %}
@@ -20,7 +17,7 @@
 		<ol class="breadcrumb">
 			<li><a href="{{ path('siteadmin_homepage') }}"><strong>Administration</strong></a></li>
 			<li><a href="{{ path('siteUser_users', {type: 'all'}) }}"><strong>Utilisateurs</strong></a></li>
-			<li>{{ user.username }} {% if user.id == app.user.id %} <em>(moi-même)</em>{% endif %}</li>
+			<li>{{ user.username }}{% if user.id == app.user.id %} <em class="text-muted">(moi-même)</em>{% endif %}</li>
 		</ol>
 	</div>
 </div>
@@ -28,18 +25,21 @@
 
 {% block content %}
 {%  if app.user.haveRight(user) %}
-<div class="row m-b-lg m-t-lg">
-	<div class="col-md-8">
+<div class="row m-b-lg m-t-xs">
+	<div class="col-md-6">
 
 		<div class="profile-image">
-			<!-- <img src="img/a4.jpg" class="img-circle circle-border m-b-md" alt="profile"> -->
+			{% if user.avatar|default(null) != null %}
+			<img src="{{ user.avatar.imgThumbnail(128,128,'cut')|raw }}" class="img-circle circle-border m-b-md" alt="profile">
+			{% else %}
 			<i class="fa fa-user fa-5x m-b-md text-{{ userColor(user) }}" alt="profile"></i>
+			{% endif %}
 		</div>
 		<div class="profile-info">
 			<div class="">
 				<div>
-					<h2 class="no-margins">
-						{{ user.nom|default(user.username) }} {{ user.prenom }}
+					<h2 class="no-margins ellipsis">
+						{{ user.nom|default(user.username) }} {{ user.prenom|default('') }}
 					</h2>
 					<h4>
 						{% for role in user.roles %}
@@ -55,7 +55,7 @@
 		</div>
 	</div>
 	<br class="visible-xs">
-	<div class="col-md-4">
+	<div class="col-md-6">
 		<table class="table small m-b-xs">
 			<tbody>
 			<tr>
@@ -64,22 +64,28 @@
 					{% if user.lastLogin is not null %}
 					{{ dateFR(user.lastLogin, true) }} {{ user.lastLogin|date('H\\hi') }}
 					{% else %}
-					jamais
+					<i class="text-muted">(jamais)</i>
 					{% endif %}
 				</td>
 				<td>
 					{% if marketplace.active|default(false) %}
-					<strong>Panier</strong> {% if articlesPanier > 0 %}{{ articlesPanier }}{% else %}(vide){% endif %}
+					<strong>Panier</strong> {% if articlesPanier|default('?') > 0 %}{{ articlesPanier|default('?') }}{% else %}(vide){% endif %}
 					{% endif %}
+				</td>
+				<td>
+					<strong>Messages</strong> {{ user.messages|length }}
 				</td>
 			</tr>
 			{% if marketplace.active|default(false) %}
 			<tr>
 				<td>
-					<strong>Achats</strong> {{ factures|length }}
+					<strong>Achats</strong> {{ factures|default([])|length }}
 				</td>
-				<td title="{{ cumulHT|number_format(2, ',', '') }} € HT">
-					<strong>Total</strong> {{ cumulTTC|number_format(2, ',', '') }}&nbsp;€TTC
+				<td title="{{ cumulHT|default(0)|number_format(2, ',', '') }} €HT">
+					<strong>Total</strong> {{ cumulTTC|default(0)|number_format(2, ',', '') }}&nbsp;€TTC
+				</td>
+				<td>
+					<p></p>
 				</td>
 			</tr>
 			{% endif %}
@@ -130,7 +136,7 @@
 	<div class="col-md-6 col-lg-4">
 		<div class="ibox float-e-margins">
 			<div class="ibox-content">
-				<h2>Panier <small>{{ user.username }}</small> <div class="label label-info">{{ articlesPanier }}</div></h2>
+				<h2>Panier <small>{{ user.username }}</small> <div class="label label-info">{{ articlesPanier|default('?') }}</div></h2>
 				<p class="adminhelp"><small>Contenu actuel du panier de <strong>{{ user.username }}</strong>.</small></p>
 				<hr>
 				{% if user.paniers|length > 0 %}
@@ -188,13 +194,13 @@
 	<div class="col-md-6 col-lg-4">
 		<div class="ibox float-e-margins">
 			<div class="ibox-content">
-				<h2>Factures / Achats <small>{{ user.username }}</small> <div class="label label-info">{{ factures|length }}</div></h2>
+				<h2>Factures / Achats <small>{{ user.username }}</small> <div class="label label-info">{{ factures|default([])|length }}</div></h2>
 				<p class="adminhelp"><small>Liste des factures d'achats de <strong>{{ user.username }}</strong>.</small></p>
 				<hr>
-				{% if factures|length > 0 %}
+				{% if factures|default([])|length > 0 %}
 				<table class="table table-striped table-bordered table-hover">
 					<tbody>
-						{% for facture in factures %}
+						{% for facture in factures|default({}) %}
 						<tr>
 							<td colspan="2"><a href="{{ path('labo_vente_show', {id: facture.id}) }}"><strong>{{ facture.reference }}</strong></a></td>
 						</tr>
@@ -234,7 +240,41 @@
 	</div>
 	{% endif %}
 
-	<div class="clearfix hidden-lg"></div>
+	<hr>
+
+	<div class="col-md-12 col-lg-6">
+		<div class="ibox float-e-margins">
+			<div class="ibox-content">
+				<h2>Messages <small>{{ user.username }}</small> <div class="label label-info">{{ user.messages|length }}</div></h2>
+				<p class="adminhelp"><small>Liste des messages de <strong>{{ user.username }}</strong>.</small></p>
+				<hr>
+				{% if user.messages|length|default(0) > 0 %}
+				<table class="table table-striped table-bordered table-hover">
+					<tbody>
+						{% for message in user.messages|default({}) %}
+						<tr>
+							<td><strong>{{ message.objet|default('<i class="fa fa-ban text-muted"></i>')|raw }}</strong></td>
+						</tr>
+						<tr>
+							<td>
+								<blockquote>
+									<p>{{ message.message|raw }}</p>
+									<small>
+										<strong><a href="mailto:{{ user.email }}">Répondre</a></strong> - <cite>{{ message.creation|date(formatDateHeure) }}</cite>
+									</small>
+								</blockquote>
+							</td>
+						</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+				{% else %}
+				<p>Aucun Message</p>
+				{% endif %}
+			</div>
+		</div>
+	</div>
+
 
 </div>
 

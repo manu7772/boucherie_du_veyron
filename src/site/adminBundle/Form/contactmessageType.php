@@ -32,37 +32,67 @@ class contactmessageType extends AbstractType {
      * @param array $options
      */
     public function buildForm(FormBuilderInterface $builder, array $options) {
+        // ajout de action si défini
+        if(isset($this->parametres['form_action'])) $builder->setAction($this->parametres['form_action']);
+        // user
+        if(is_object($this->controller->getUser())) {
+            $user['nom'] = $this->controller->getUser()->getNom();
+            $user['prenom'] = $this->controller->getUser()->getPrenom();
+            $user['email'] = $this->controller->getUser()->getEmail();
+            $user['telephone'] = $this->controller->getUser()->getTelephone();
+            $disabled = true;
+        } else {
+            $user['nom'] = null;
+            $user['prenom'] = null;
+            $user['email'] = null;
+            $user['telephone'] = null;
+            $disabled = false;
+        }
+        // Builder…
         $builder
             ->add('nom', 'text', array(
+                'data' => $user['nom'],
                 'label' => 'form.nom',
+                'translation_domain' => 'messages',
                 'required' => false,
+                'disabled' => $disabled,
                 'attr' => array(
                     'placeholder' => 'form.nom',
                     )
                 ))
             ->add('prenom', 'text', array(
+                'data' => $user['prenom'],
                 'label' => 'form.prenom',
+                'translation_domain' => 'messages',
                 'required' => false,
+                'disabled' => $disabled,
                 'attr' => array(
                     'placeholder' => 'form.prenom',
                     )
                 ))
             ->add('email', 'email', array(
+                'data' => $user['email'],
                 'label' => 'form.email',
+                'translation_domain' => 'messages',
                 'required' => true,
+                'disabled' => $disabled,
                 'attr' => array(
                     'placeholder' => 'form.email',
                     )
                 ))
             ->add('telephone', 'text', array(
+                'data' => $user['telephone'],
                 'label' => 'form.telephone',
-                'required' => true,
+                'translation_domain' => 'messages',
+                'required' => false,
+                // 'disabled' => $disabled,
                 'attr' => array(
                     'placeholder' => 'form.telephone',
                     )
                 ))
             ->add('objet', 'text', array(
                 'label' => 'form.objet',
+                'translation_domain' => 'messages',
                 'required' => false,
                 'attr' => array(
                     'placeholder' => 'form.objet',
@@ -70,6 +100,7 @@ class contactmessageType extends AbstractType {
                 ))
             ->add('message', 'textarea', array(
                 'label' => 'form.message',
+                'translation_domain' => 'messages',
                 'required' => true,
                 'attr' => array(
                     'placeholder' => 'form.message',
@@ -87,6 +118,7 @@ class contactmessageType extends AbstractType {
         // AJOUT SUBMIT
         $builder->add('submit', 'submit', array(
             'label' => 'form.enregistrer',
+            'translation_domain' => 'messages',
             'attr' => array(
                 'class' => "btn btn-primary pull-right",
                 ),

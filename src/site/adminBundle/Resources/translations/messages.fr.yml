@@ -1,4 +1,4 @@
-admin: 'Imago Guitare'
+admin: 'Boucherie du Veyron'
 date_format:
     date: Y-m-d
     time: 'H:i:s'
@@ -6,6 +6,27 @@ date_format:
 entity:
     notblank:
         nom: Vous devez préciser le nom
+install:
+    name_s: installations
+    name: installation
+    info:
+        class: classe :
+        elements: éléments :
+    generation: génération
+    suppression: suppression
+    generer: générer
+    effacer: effacer
+    sansnom: sans nom
+    message:
+        supprimes: '{0} Aucun élément n''a été supprimé.|{1} %count% élément a été supprimé.|[2,+Inf] %count% éléments ont été supprimés.'
+        generer:
+            title: Attention !
+            texte: 'Les données existantes vont être totalement supprimées avant génération. Veuillez confirmer, s.v.p.'
+        effacer:
+            title: Attention !
+            texte: 'Les données existantes vont être totalement supprimées. Veuillez confirmer, s.v.p.'
+marketplace:
+    name: e-commerce
 pageweb:
     name_s: pages web
     name: page web
@@ -19,6 +40,18 @@ pageweb:
     moredetails: 'plus de détails sur %name%'
     bydefault: 'définir comme page d''accueil par défaut'
     existe: cette page existe déjà
+fiche:
+    name_s: fiches
+    name: fiche
+    not_found: 'aucune fiche trouvée'
+    x_found: '{0} aucune fiche trouvée|{1} 1 fiche trouvée|[2,+Inf] %count% fiches trouvées'
+    create: 'créer une nouvelle fiche'
+    create_btn: 'nouvelle fiche'
+    backlist: 'retour à la liste des fiches'
+    backlist_btn: 'retour liste'
+    dontexist: 'cette fiche n''existe pas'
+    moredetails: 'plus de détails sur %name%'
+    existe: cette fiche existe déjà
 message:
     name_s: messages
     name: message
@@ -90,6 +123,51 @@ tag:
     moredetails: 'plus de détails sur %name%'
     index:
         addSpeech: 'Pour ajouter plusieurs tags en une fois, séparez-les par des virgules'
+tauxTva:
+    name_s: taux TVA
+    name: taux TVA
+    not_found: 'aucun taux TVA trouvé'
+    x_found: '{0} aucun taux TVA trouvé|{1} 1 taux TVA trouvé|[2,+Inf] %count% tags trouvés'
+    create: 'créer un nouveau taux TVA'
+    create_btn: 'nouveau taux TVA'
+    created: '{0} Aucun taux TVA créé|{1} %count% taux TVA a été créé : %list%|[2,+Inf] %count% taux TVA ont été créés : %list%'
+    new: '{0,1} nouveau taux TVA|[2,+Inf] %count% nouveaux tags'
+    backlist: 'retour à la liste des tags'
+    backlist_btn: 'retour liste'
+    dontexist: 'ce taux TVA n''existe pas'
+    existe: 'ce taux TVA existe déjà'
+    suppression: 'le taux TVA %name% a été supprimé'
+    moredetails: 'plus de détails sur %name%'
+article:
+    name_s: articles
+    name: article
+    not_found: 'aucun article trouvé'
+    x_found: '{0} aucun article trouvé|{1} 1 article trouvé|[2,+Inf] %count% tags trouvés'
+    create: 'créer un nouveau article'
+    create_btn: 'nouveau article'
+    created: '{0} Aucun article créé|{1} %count% article a été créé : %list%|[2,+Inf] %count% article ont été créés : %list%'
+    new: '{0,1} nouveau article|[2,+Inf] %count% nouveaux tags'
+    backlist: 'retour à la liste des tags'
+    backlist_btn: 'retour liste'
+    dontexist: 'ce article n''existe pas'
+    existe: 'ce article existe déjà'
+    suppression: 'l''article %name% a été supprimé'
+    moredetails: 'plus de détails sur %name%'
+panier:
+    name_s: paniers
+    name: panier
+    not_found: 'aucun panier trouvé'
+    x_found: '{0} aucun panier trouvé|{1} 1 panier trouvé|[2,+Inf] %count% tags trouvés'
+    create: 'créer un nouveau panier'
+    create_btn: 'nouveau panier'
+    created: '{0} Aucun panier créé|{1} %count% panier a été créé : %list%|[2,+Inf] %count% panier ont été créés : %list%'
+    new: '{0,1} nouveau panier|[2,+Inf] %count% nouveaux tags'
+    backlist: 'retour à la liste des paniers'
+    backlist_btn: 'retour liste'
+    dontexist: 'ce panier n''existe pas'
+    existe: 'ce panier existe déjà'
+    suppression: 'le panier %name% a été supprimé'
+    moredetails: 'plus de détails sur %name%'
 all:
     name_s: tous
     name: tous
@@ -121,23 +199,30 @@ actions:
 table:
     col:
         id: id
+        libelle: libellé
+        valeur: valeur
         nom: nom
+        originalnom: nom du fichier
         slug: slug
         title: titre
         titreh1: titre H1
         modele: modèle
         keywords: mots clés
+        descriptif: descriptif
         metadescription: description
         attribut: attribut
         valeur: valeur
         creation: création
         maj: 'mise à jour'
+        jamais: non modifié
         icone: icône
         typemime: 'type mime'
         parent_folder: 'dossier parent'
         child_folders: 'contenu dossiers'
         child_files: 'contenu fichiers'
         visuel: visuel
+        original: original
+        apercu: aperçu
         version: version
         versions_list: 'liste des versions'
         tag: tag
@@ -147,6 +232,13 @@ table:
         bundle: bundle
         objet: objet
         message: message
+        admin: info admin
+        size: taille
+        mediatype: Type de média
+        prix: prix
+        TTC: TTC
+        HT: HT
+        TVA: TVA
 msg:
     supp: 'souhaitez-vous supprimer cet élément ?'
     suppression: suppression
@@ -154,6 +246,8 @@ form:
     enregistrer: Enregistrer
     select: Sélectionner…
     nom: Nom
+    prenom: Prénom
+    telephone: Téléphone
     typemime: 'Type de fichier'
     icone: Icône
     actif: Actif
@@ -180,6 +274,24 @@ form:
     message: Votre message…
     envoyer: Envoyer
     objet: Objet de votre message
+    fichier: fichier
+    supprimer: supprimer
+    zoomIn: zoom +
+    zoomOut: zoom -
+    flipH: retourner horizontalement
+    flipV: retourner verticalement
+    rotationG: rotation à gauche
+    rotationD: rotation à droite
+    uploadNewImage: charger une nouvelle image
+    avatar: avatar
+    descriptif: descriptif
+    taux: taux
+    accroche: accroche
+sizes:
+    Ko: Ko
+    Mo: Mo
+    Go: Go
+    To: To
 erreurs:
     supp_simple: 'erreur de suppression'
     suppression: 'erreur lors de la suppression de %name%'

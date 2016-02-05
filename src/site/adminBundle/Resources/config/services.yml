@@ -43,10 +43,10 @@ services:
     ###################################
 
     # Éléments de formulaires personnalisés
-    form.type.insImageCropper:
-        class: %adminFormType%insImageCropperType
+    form.type.filecropper:
+        class: %adminFormType%filecropperType
         tags:
-            - { name: form.type, alias: insImageCropper }
+            - { name: form.type, alias: filecropper }
 
     form.type.insColorpicker:
         class: %adminFormType%insColorpickerType

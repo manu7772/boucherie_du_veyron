@@ -6,26 +6,46 @@ twig:
             keywords: site.keywords
         formatDate:      "dd-MM-yyyy"
         formatDateHeure: "d-m-Y H:i:s"
-        fileFormats:
-            pdf:        pdf
-            jpg:        image
-            jpeg:       image
-            gif:        image
-            png:        image
-            default:    text
+        # fileFormats:
+        #     pdf:        pdf
+        #     jpg:        image
+        #     jpeg:       image
+        #     gif:        image
+        #     png:        image
+        #     default:    text
         default_icon: 'fa-caret-right'
         menu_Admin_default_role: %restrict_admin%
         menu_Admin:
-            item0:
+            accueil:
                 nom: 'accueil'
                 path: %homepage%
                 icon: 'fa-home'
-            item1:
+            traduction:
                 role: 'ROLE_TRANSLATOR'
                 nom: 'traduction.name'
                 path: 'sitetranslate_homepage'
                 icon: 'fa-flag'
-            item2:
+            marketplace:
+                role: 'ROLE_ADMIN'
+                nom: 'marketplace.name'
+                path: 'siteadmin_homepage'
+                icon: 'fa-shopping-cart'
+                level2: 
+                    article:
+                        role: 'ROLE_ADMIN'
+                        nom: 'article.name_s'
+                        path: 
+                            path: 'siteadmin_entite'
+                            params:
+                                entite: article
+                    tauxTva:
+                        role: 'ROLE_ADMIN'
+                        nom: 'tauxTva.name_s'
+                        path: 
+                            path: 'siteadmin_entite'
+                            params:
+                                entite: tauxTva
+            pageweb:
                 role: 'ROLE_EDITOR'
                 nom: 'pageweb.name_s'
                 path: 'siteadmin_homepage'
@@ -45,7 +65,7 @@ twig:
                             path: 'siteadmin_menus'
                             params:
                                 name: all
-            item3:
+            media:
                 role: 'ROLE_EDITOR'
                 nom: 'media.name_s'
                 path: 
@@ -53,12 +73,72 @@ twig:
                     params:
                         entite: media
                 icon: 'fa-film'
-            item4:
+                level2: 
+                    images:
+                        nom: 'images'
+                        path: 
+                            path: 'siteadmin_entite_type'
+                            params:
+                                entite: media
+                                type_related: _self
+                                type_field: mediaType
+                                type_values: image
+                    pdf:
+                        nom: 'pdf'
+                        path: 
+                            path: 'siteadmin_entite_type'
+                            params:
+                                entite: media
+                                type_related: _self
+                                type_field: mediaType
+                                type_values: pdf
+                    fiches:
+                        nom: 'fiche.name_s'
+                        path: 
+                            path: 'siteadmin_entite'
+                            params:
+                                entite: fiche
+            utilisateurs:
                 role: %restrict_admin%
                 nom: 'User.name_s'
                 path: 'site_user_homepage'
                 icon: 'fa-users'
-            item5:
+                level2: 
+                    Tous:
+                        nom: 'Tous'
+                        path: 
+                            path: 'siteUser_users'
+                    Public:
+                        nom: 'Public'
+                        path: 
+                            path: 'siteUser_users'
+                            params:
+                                type: ROLE_USER
+                    Traducteur:
+                        nom: 'Traducteur'
+                        path: 
+                            path: 'siteUser_users'
+                            params:
+                                type: ROLE_TRANSLATOR
+                    Editeur:
+                        nom: 'Editeur'
+                        path: 
+                            path: 'siteUser_users'
+                            params:
+                                type: ROLE_EDITOR
+                    Administrateur:
+                        nom: 'Administrateur'
+                        path: 
+                            path: 'siteUser_users'
+                            params:
+                                type: ROLE_ADMIN
+                    SuperAdmin:
+                        nom: 'Super admin'
+                        path: 
+                            path: 'siteUser_users'
+                            params:
+                                type: ROLE_SUPER_ADMIN
+            messages:
                 role: ROLE_EDITOR
                 nom: message.name_s
                 icon: fa-paper-plane
@@ -66,7 +146,7 @@ twig:
                     path: siteadmin_entite
                     params:
                         entite: message
-            item6:
+            parametres:
                 role: %restrict_admin%
                 nom: 'parametres'
                 path: 'siteadmin_homepage'
@@ -84,22 +164,16 @@ twig:
                             path: 'siteadmin_entite'
                             params:
                                 entite: fileFormat
-            item7:
+            help:
                 nom: 'help'
                 path: siteadmin_support
                 icon: 'fa-support'
-            # item8:
-            #     role: 'ROLE_SUPER_ADMIN'
-            #     nom: 'Super Admin'
-            #     path: 'siteadmin_homepage'
-            #     icon: 'fa-gear'
-            #     level2: 
-            #         item1:
-            #             nom: 'User.name_s'
-            #             path: 'siteadmin_homepage'
-            #         item2:
-            #             nom: 'parametres'
-            #             path: 'siteadmin_homepage'
-            #         item3:
-            #             nom: 'Réglages'
-            #             path: 'siteadmin_homepage'
+            ROLE_SUPER_ADMIN:
+                role: 'ROLE_SUPER_ADMIN'
+                nom: 'Super Admin'
+                path: 'siteadmin_homepage'
+                icon: 'fa-cogs'
+                level2: 
+                    item1:
+                        nom: 'install.name'
+                        path: 'generate'

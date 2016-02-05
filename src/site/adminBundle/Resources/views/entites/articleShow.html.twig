@@ -1,0 +1,164 @@
+{% extends 'siteadminBundle:entites:entiteShow.html.twig' %}
+{% set cssjsloads = 'TAB' %}
+{% set DEVMODE = (app.environment in ['DEV', 'TEST']) or (is_granted('ROLE_SUPER_ADMIN')) %}
+
+{% block page_heading %}
+	{{ parent() }}
+{% endblock page_heading %}
+
+{% block content %}
+<div class="row">
+
+	<div class="col-lg-6">
+		<div class="ibox float-e-margins">
+			<div class="ibox-content">
+				<h2>{{ entite.nom|raw }}{% if entite.marque|default(null) != null %} <small>- {{ entite.marque.nom|raw }}</small>{% endif %}{% if entite.statut.id > 1 %} - <small><i>({{ entite.statut.nom }})</i></small>{% endif %}</h2>
+				{% if entite.accroche != null %}<small>{{ entite.accroche|raw }}</small>{% endif %}
+				<hr>
+				<table class="table table-striped table-bordered table-hover" role="grid">
+					<thead>
+						<tr>
+							<th>Libellé</th>
+							<th>valeurs</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td><strong>{{ UCfirst('table.col.prix'|trans) }} {{ 'table.col.TTC'|trans }}</strong></td>
+							<td>{{ entite.prix|number_format(2, ',', '') }}€</td>
+						</tr>
+						<tr>
+							<td><strong>{{ UCfirst('table.col.prix'|trans) }} {{ 'table.col.HT'|trans }}</strong></td>
+							<td>{{ entite.prixHT|number_format(2, ',', '') }}€</td>
+						</tr>
+						<tr>
+							<td><strong>{{ 'table.col.TVA'|trans }}</strong></td>
+							<td>{{ entite.tauxTVA.taux|number_format(2, ',', '') }}% <i>({{ entite.tauxTVA.nom }})</i></td>
+						</tr>
+						<tr>
+							<td><strong>Keywords</strong></td>
+							<td>{{ entite.keywords }}</td>
+						</tr>
+						<tr>
+							<td><strong>Catégories</strong></td>
+							<td>{% for categorie in entite.categories %}<span class="label">{{ categorie.nom }}</span>&nbsp;{% endfor %}</td>
+						</tr>
+						<tr>
+							<td><strong>{{ 'table.col.maj'|trans|capitalize }}</strong></td>
+							<td>
+								{% if entite.dateMaj|default(null) != null %}
+								{{ entite.dateMaj|date(formatDateHeure) }}
+								{% else %}
+								<small><i class='text-muted'>({{ 'table.col.jamais'|trans|capitalize }})</i></small>
+								{% endif %}
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+
+	<div class="col-lg-6">
+		<div class="ibox float-e-margins">
+			<div class="ibox-title">
+				<h3>Autres données</h3>
+			</div>
+			<div class="ibox-content">
+				<div class="tabs-container">
+				    <ul class="nav nav-tabs">
+				        <li class="active"><a data-toggle="tab" href="#tab-1"><i class="fa fa-list-ul"></i></a></li>
+				        <li><a data-toggle="tab" href="#tab-3"><i class="fa fa-cube"></i></a></li>
+				        <li><a data-toggle="tab" href="#tab-5"><i class="fa fa-puzzle-piece"></i></a></li>
+				    </ul>
+				    {% set style = ' style="height: 200px; overflow-y: auto;"' %}
+				    <div class="tab-content">
+				        <div id="tab-1" class="tab-pane active">
+				            <div class="panel-body"{{ style|raw }}>
+				            	<h3 class='text-navy' style='margin-top:0px;'>Descriptif</h3>
+				            	<hr class="m-t-xs m-b-xs">
+				                {{ entite.descriptif|raw }}
+				            </div>
+				        </div>
+				        <div id="tab-3" class="tab-pane">
+				            <div class="panel-body"{{ style|raw }}>
+				            	<h3 class='text-navy' style='margin-top:0px;'>Articles liés</h3>
+				            	<hr class="m-t-xs m-b-xs">
+				            	{% if entite.articlesLies|length > 0 %}
+				            	{% for article in entite.articlesLies %}
+				                <label class="label">{{ article.nom }}</label>
+				                {% endfor %}
+				                {% else %}
+				                <p>Aucun article lié</p>
+				                {% endif %}
+				            </div>
+				        </div>
+				        <div id="tab-5" class="tab-pane">
+				            <div class="panel-body"{{ style|raw }}>
+				            	<h3 class='text-navy' style='margin-top:0px;'>Fiches</h3>
+				            	<hr class="m-t-xs m-b-xs">
+				            	{% if entite.fiches|length > 0 %}
+				            	{% for fiche in entite.fiches %}
+				                <label class="label">{{ fiche.nom }}</label>
+				                {% endfor %}
+				                {% else %}
+				                <p>Aucune fiche liée</p>
+				                {% endif %}
+				            </div>
+				        </div>
+				    </div>
+				</div>
+				<!-- <div class="clearfix"></div> -->
+			</div>
+		</div>
+	</div>
+
+	<div class="col-sm-6 col-md-4 col-lg-3">
+		<div class="ibox float-e-margins">
+			<div class="ibox-title">
+				<h3>{{ UCfirst('table.col.visuel'|trans) }}</h3>
+			</div>
+			<div class="ibox-content text-center">
+				{% if entite.image|default(null) != null %}
+				<img src="{{ entite.image.img|raw }}" class="img-responsive center-block img-rounded">
+				{% else %}
+				<i class="fa fa-ban fa-5x text-muted fa-border"></i>
+				{% endif %}
+			</div>
+		</div>
+	</div>
+
+	<div class="clearfix hidden-lg"></div>
+
+	{% if entite.images|length > 0 %}
+	<div class="col-sm-6 col-md-4 col-lg-3">
+		<div class="ibox float-e-margins">
+			<div class="ibox-title">
+				<h3>+{{ entite.images|length }} photo{{ plur(entite.images) }}</h3>
+			</div>
+			<div class="ibox-content">
+				<div class="carousel slide" id="carousel1">
+					<div class="carousel-inner">
+						{% for image in entite.images %}
+						<div class="item{% if loop.first %} active{% endif %}">
+							<img src="{{ image.img|raw }}" class="img-responsive center-block img-rounded">
+						</div>
+						{% endfor %}
+					</div>
+					<a data-slide="prev" href="#carousel1" class="left carousel-control">
+						<span class="icon-prev"></span>
+					</a>
+					<a data-slide="next" href="#carousel1" class="right carousel-control">
+						<span class="icon-next"></span>
+					</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	{% endif %}
+
+	<div class="clearfix"></div>
+
+
+</div>
+{% endblock content %}

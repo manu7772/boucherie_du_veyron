@@ -18,63 +18,72 @@ use site\adminBundle\Form\mediaType;
 
 class pagewebType extends AbstractType {
 
-    private $controller;
-    private $securityContext;
-    private $parametres;
-    private $pageweb;
-    
-    public function __construct(Controller $controller, $parametres = null) {
-        $this->controller = $controller;
-        $this->securityContext = $controller->get('security.context');
-        $this->pageweb = $controller->get('aetools.pageweb');
-        if($parametres === null) $parametres = array();
-        $this->parametres = $parametres;
-    }
+	private $controller;
+	private $securityContext;
+	private $parametres;
+	// private $pageweb;
+	
+	public function __construct(Controller $controller, $parametres = null) {
+		$this->controller = $controller;
+		$this->securityContext = $controller->get('security.context');
+		// $this->pageweb = $controller->get('aetools.pageweb');
+		if($parametres === null) $parametres = array();
+		$this->parametres = $parametres;
+	}
 
 	/**
 	 * @param FormBuilderInterface $builder
 	 * @param array $options
 	 */
 	public function buildForm(FormBuilderInterface $builder, array $options) {
-    	// ajout de action si défini
-    	if(isset($this->parametres['form_action'])) $builder->setAction($this->parametres['form_action']);
-    	// Builder…
+		// ajout de action si défini
+		if(isset($this->parametres['form_action'])) $builder->setAction($this->parametres['form_action']);
+		// Builder…
 		$builder
 			->add('nom', 'text', array(
 				'label' => 'form.nom',
+				'translation_domain' => 'messages',
 				'required' => true,
 				))
 			->add('code', 'insRichtext', array(
 				'label' => 'form.code',
+				'translation_domain' => 'messages',
 				'required' => false,
 				))
 			->add('title', 'text', array(
 				'label' => 'table.col.title',
+				'translation_domain' => 'messages',
 				'required' => true,
 				))
 			->add('titreh1', 'text', array(
 				'label' => 'table.col.titreh1',
+				'translation_domain' => 'messages',
 				'required' => true,
 				))
 			// ->add('keywords', 'text', array(
 			// 	'label' => 'table.col.keywords',
+			//	'translation_domain' => 'messages',
 			// 	'required' => false,
 			// 	))
 			->add('metadescription', 'text', array(
 				'label' => 'table.col.metadescription',
+				'translation_domain' => 'messages',
 				'required' => false,
 				))
 			->add('modele', 'choice', array(
 				'label' => 'table.col.modele',
+				'translation_domain' => 'messages',
 				'required' => true,
 				'choice_list' => $this->pageweb->getPagewebChoices(),
 				))
 			->add('background', new mediaType($this->controller), array(
 				'label' => 'form.background',
+				'translation_domain' => 'messages',
 				'required' => false,
 				))
 			->add('tags', 'entity', array(
 				'label' => 'tag.name_s',
+				'translation_domain' => 'messages',
 				'property' => 'nom',
 				'class' => 'site\adminBundle\Entity\tag',
 				'multiple' => true,
@@ -85,40 +94,41 @@ class pagewebType extends AbstractType {
 					),
 				))
 		;
-        // ajoute les valeurs hidden, passés en paramètre
-        $builder = $this->addHiddenValues($builder);
+		// ajoute les valeurs hidden, passés en paramètre
+		$builder = $this->addHiddenValues($builder);
 
-        // AJOUT SUBMIT
-        $builder->add('submit', 'submit', array(
-            'label' => 'form.enregistrer',
-            'attr' => array(
-                'class' => "btn btn-md btn-block btn-info",
-                ),
-            ))
-        ;
+		// AJOUT SUBMIT
+		$builder->add('submit', 'submit', array(
+			'label' => 'form.enregistrer',
+			'translation_domain' => 'messages',
+			'attr' => array(
+				'class' => "btn btn-md btn-block btn-info",
+				),
+			))
+		;
 	}
 	
-    /**
-     * addHiddenValues
-     * @param FormBuilderInterface $builder
-     * @return FormBuilderInterface
-     */
-    public function addHiddenValues(FormBuilderInterface $builder) {
-    	$data = array();
-    	$nom = 'hiddenData';
-        foreach($this->parametres as $key => $value) {
-        	if(is_string($value) || is_array($value) || is_bool($value)) {
-        		$data[$key] = $value;
-        	}
-        }
-        if($builder->has($nom)) $builder->remove($nom);
-        $builder->add($nom, 'hidden', array(
-            'data' => urlencode(json_encode($data, true)),
-            'mapped' => false,
-        ));
-        // }
-        return $builder;
-    }
+	/**
+	 * addHiddenValues
+	 * @param FormBuilderInterface $builder
+	 * @return FormBuilderInterface
+	 */
+	public function addHiddenValues(FormBuilderInterface $builder) {
+		$data = array();
+		$nom = 'hiddenData';
+		foreach($this->parametres as $key => $value) {
+			if(is_string($value) || is_array($value) || is_bool($value)) {
+				$data[$key] = $value;
+			}
+		}
+		if($builder->has($nom)) $builder->remove($nom);
+		$builder->add($nom, 'hidden', array(
+			'data' => urlencode(json_encode($data, true)),
+			'mapped' => false,
+		));
+		// }
+		return $builder;
+	}
 
 	/**
 	 * @param OptionsResolverInterface $resolver

@@ -6,6 +6,10 @@ siteadmin_support:
     path:     /support
     defaults: { _controller: siteadminBundle:Default:support }
 
+# GENERATION SITE
+generate:
+    path:     /generate/{action}/{entite}
+    defaults: { _controller: siteadminBundle:generate:index, action: null, entite: null }
 
 # ACTIONS ENTITES
 siteadmin_entite_type:

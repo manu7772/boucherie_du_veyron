@@ -19,6 +19,10 @@ class aeImages {
         // deform   : déforme l'image pour qu'elle soit exactement à la taille
         // no       : ne modifie pas la taille de l'image
         // calcul…
+
+        // if Raw data (string)
+        if(is_string($image)) $image = imagecreatefromstring($image);
+
         $x = imagesx($image);
         $y = imagesy($image);
         $ratio = $x / $y;

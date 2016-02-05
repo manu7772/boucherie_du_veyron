@@ -38,6 +38,7 @@ class tagType extends AbstractType {
         $builder
             ->add('nom', 'text', array(
                 'label'         => 'form.nom',
+                'translation_domain' => 'messages',
                 'required'      => true,
                 ))
         ;
@@ -47,6 +48,7 @@ class tagType extends AbstractType {
         // AJOUT SUBMIT
         $builder->add('submit', 'submit', array(
             'label' => 'form.enregistrer',
+            'translation_domain' => 'messages',
             'attr' => array(
                 'class' => "btn btn-md btn-block btn-info",
                 ),

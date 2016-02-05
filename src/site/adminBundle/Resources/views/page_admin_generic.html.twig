@@ -6,7 +6,7 @@
 	{{ render(controller('siteadminBundle:Default:sidebar', {option: null})) }}
 	{% endblock sidebar %}
 
-	<div id="page-wrapper" class="gray-bg dashbard-3" style="min-height: 700px;">
+	<div id="page-wrapper" class="gray-bg dashbard-3">
 	{% block pagewrapper %}
 
 		<div class="row border-bottom">
@@ -18,7 +18,7 @@
 		{% block page_heading %}
 		{% endblock page_heading %}
 
-		<div class="wrapper wrapper-content animated fadeInRight">
+		<div class="wrapper wrapper-content animated fadeInRight" style="min-height: 1024px;">
 			{% block content %}
 			{% endblock content %}
 		</div>

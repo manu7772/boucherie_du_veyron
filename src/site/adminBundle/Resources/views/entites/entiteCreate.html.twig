@@ -1,5 +1,5 @@
 {% extends 'siteadminBundle::page_admin_generic.html.twig' %}
-{% set cssjsloads = 'simple' %}
+{% set cssjsloads = 'FORM' %}
 {% set DEVMODE = (app.environment in ['dev', 'test']) or (is_granted('ROLE_SUPER_ADMIN')) %}
 
 {% block page_heading %}
@@ -22,21 +22,25 @@
 
 {% block content %}
 
-	{% set prior = ["nom"] %}
+	{% set noErrors = ['submit', 'submit2', '_token', 'hidden'] %}
+	{% set prior = ["submit2", "nom", "name"] %}
 	{% set lasts = ["submit"] %}
     {{ form_start(create_form) }}
     {{ form_errors(create_form) }}
 
     {% for item in prior if create_form[item] is defined %}
         {{ form_row(create_form[item]) }}
+        {% if item not in noErrors %}{{ form_errors(create_form[item]) }}{% endif %}
     {% endfor %}
 
-    {% for key,child in create_form.children if ((key not in prior) and (key not in lasts)) %}
+    {% for fieldname,child in create_form.children if ((fieldname not in prior) and (fieldname not in lasts)) %}
         {{ form_row(child) }}
+        {% if fieldname not in noErrors %}{{ form_errors(child) }}{% endif %}
     {% endfor %}
     
     {% for item in lasts if create_form[item] is defined %}
         {{ form_row(create_form[item]) }}
+        {% if item not in noErrors %}{{ form_errors(create_form[item]) }}{% endif %}
     {% endfor %}
 
     {{ form_rest(create_form) }}

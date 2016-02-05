@@ -7,6 +7,7 @@ main_home:
 site_site:
     resource: "@sitesiteBundle/Resources/config/routing.yml"
     prefix:   /{_locale}/
+    defaults: { _locale: %locale% }
     requirements:
         _locale: %default_locales%
 

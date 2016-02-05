@@ -69,8 +69,8 @@ class entiteController extends Controller {
 		
 		$data = $this->getEntiteData($entite, $type_related, $type_field, $type_values, $action, $id);
 		// EM
-		$this->em = $this->getDoctrine()->getManager();
-		$this->repo = $this->em->getRepository($data['classname']);
+		// $this->em = $this->getDoctrine()->getManager();
+		// $this->repo = $this->em->getRepository($data['classname']);
 		// actions selon entité…
 		switch ($data['entite_name']) {
 			// case 'une entité quelconque à traiter de manière particulière…':
@@ -158,7 +158,15 @@ class entiteController extends Controller {
 						break;
 					default:
 						// DEFAULT_ACTION
-						$data['entites'] = $this->repo->findAll();
+						if(isset($data['type']['type_related']) && isset($data['type']['type_field']) && isset($data['type']['type_values'])) {
+							// recherche par type
+							if(method_exists($this->repo, 'findWithField')) {
+								$data['entites'] = $this->repo->findWithField($data['type']);
+							} else throw new Exception("Method \"findWithField\" does not exist in Repository \"".$data['classname']."\"", 1);
+						} else {
+							// recherche globale
+							$data['entites'] = $this->repo->findAll();
+						}
 						break;
 				}
 				break;
@@ -293,8 +301,7 @@ class entiteController extends Controller {
 
 	protected function checkEntityBeforePersist(&$data) {
 		switch ($data['entite_name']) {
-			case 'reseau':
-				// retrait des articles liés
+			case 'media':
 				break;
 			
 			default:
@@ -463,6 +470,12 @@ class entiteController extends Controller {
 		return $newEntity;
 	}
 
+	/**
+	 * Désigne la pageweb comme homepage par défaut
+	 * @param integer $id
+	 * @param string $redir
+	 * @return redirectResponse
+	 */
 	public function pageweb_as_defaultAction($id, $redir) {
 		$this->em = $this->getDoctrine()->getManager();
 		$this->repo = $this->em->getRepository('site\adminBundle\Entity\pageweb');
@@ -476,13 +489,18 @@ class entiteController extends Controller {
 			));
 		} else {
 			$page->setHomepage(true);
-			$this->em->persist($page);
+			// $this->em->persist($page);
 			// on passe les autres pages en false s'il en existe
 			$pages = $this->repo->findByHomepage(true);
 			if(count($pages) > 0) foreach ($pages as $onepage) {
 				$onepage->setHomepage(false);
 			}
 			$this->em->flush();
+			$message = $this->get('flash_messages')->send(array(
+				'title'		=> 'Homepage',
+				'type'		=> flashMessage::MESSAGES_SUCCESS,
+				'text'		=> 'La page "'.$page->getNom().'" a été définie comme page d\'accueil par défaut.',
+			));
 		}
 		return $this->redirect(urldecode($redir));
 	}
