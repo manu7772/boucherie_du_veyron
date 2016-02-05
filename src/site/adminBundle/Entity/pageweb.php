@@ -169,7 +169,7 @@ class pageweb {
 	 * @return version
 	 */
 	public function setHomepage($homepage) {
-		$this->homepage = boolval($homepage);
+		$homepage == true ? $this->homepage = true : $this->homepage = false;
 		return $this;
 	}
 
