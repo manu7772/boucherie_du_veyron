@@ -1,5 +1,5 @@
 {% extends 'siteadminBundle::page_admin_generic.html.twig' %}
-{% set cssjsloads = 'TAB' %}
+{% set cssjsloads = 'FORM' %}
 {% set DEVMODE = (app.environment in ['DEV', 'TEST']) or (is_granted('ROLE_SUPER_ADMIN')) %}
 {% import 'siteadminBundle:blocks:sortable_nested_menu.html.twig' as nestmenu %}
 
@@ -36,13 +36,24 @@
 {% block content %}
 <div class="wrapper wrapper-content animated fadeInRight">
 	<div class="row">
-		<div class="col-md-8 col-md-offset-2">
+		<div class="col-md-8">
 			<div class="ibox ">
 				<div class="ibox-title">
-					<h5>{{ 'menu.name'|trans|capitalize }} <strong>{{ bundle }}@{{ name|default('') }}</strong> {{ nestmenu.options(bundle, name) }}</h5>
+					<span class="pull-right">{{ nestmenu.options(bundle, name) }}</span>
+					<h5>{{ 'menu.name'|trans|capitalize }} <strong>{{ bundle }}@{{ name|default('') }}</strong></h5>
 				</div>
 				<div class="ibox-content">
 					{{ nestmenu.menu(menu, bundle, name) }}
+				</div>
+			</div>
+		</div>
+		<div class="col-md-4">
+			<div class="ibox ">
+				<div class="ibox-title">
+					<h5><i class="fa fa-cog"></i> Options</h5>
+				</div>
+				<div class="ibox-content">
+					{{ nestmenu.params(menu, bundle, name) }}
 				</div>
 			</div>
 		</div>
@@ -51,5 +62,5 @@
 {% endblock content %}
 
 {% block end_javascripts %}
-	{{ nestmenu.js(bundle, name) }}
+{{ parent() }}
 {% endblock end_javascripts %}

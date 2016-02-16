@@ -20,11 +20,11 @@ class tauxTvaRepository extends EntityBaseRepository {
 	* defaultVal
 	* Renvoie le taux de TVA par défaut (ou null)
 	*/
-	public function defaultVal() {
-		$qb = $this->createQueryBuilder(self::ELEMENT)
-			->where(self::ELEMENT.'.nom = :n')
-			->setParameter('n', "normal");
-		return $qb->getQuery()->getOneOrNullResult();
-	}
+	// public function defaultVal() {
+	// 	$qb = $this->createQueryBuilder(self::ELEMENT)
+	// 		->where(self::ELEMENT.'.nom = :n')
+	// 		->setParameter('n', "normal");
+	// 	return $qb->getQuery()->getOneOrNullResult();
+	// }
 
 }

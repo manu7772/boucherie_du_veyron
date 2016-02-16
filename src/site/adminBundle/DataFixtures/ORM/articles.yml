@@ -1,0 +1,15 @@
+article:
+    order: 10
+    data:
+        -
+            nom: 'steak haché'
+            descriptif: '<p>code</p>'
+            prix: '12.8'
+        -
+            nom: 'filet de rumstec'
+            descriptif: '<p>code</p>'
+            prix: '18.4'
+        -
+            nom: 'faux filet'
+            descriptif: '<p>code</p>'
+            prix: '15.5'

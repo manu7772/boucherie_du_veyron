@@ -9,10 +9,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 // Slug
 use Gedmo\Mapping\Annotation as Gedmo;
 
-use site\adminBundle\Entity\tag;
+use site\adminBundle\Entity\baseEntity;
 use site\adminBundle\Entity\pageweb;
-use site\adminBundle\Entity\article;
-use site\adminBundle\Entity\statut;
 
 use \DateTime;
 
@@ -25,7 +23,9 @@ use \DateTime;
  * @ORM\Entity(repositoryClass="site\adminBundle\Entity\categorieRepository")
  * @Gedmo\Tree(type="nested")
  */
-class categorie {
+class categorie extends baseEntity {
+
+	// const CLASS_CATEGORIE = 'categorie';
 
 	/**
 	 * @var integer
@@ -79,16 +79,24 @@ class categorie {
 
 	/**
 	 * @Gedmo\TreeParent
-	 * @ORM\ManyToOne(targetEntity="categorie", inversedBy="children", cascade={"persist"})
+	 * @Gedmo\SortableGroup
+	 * @ORM\ManyToOne(targetEntity="site\adminBundle\Entity\categorie", inversedBy="children", cascade={"persist"})
 	 * @ORM\JoinColumn(name="parent_id", referencedColumnName="id", onDelete="CASCADE")
 	 */
 	protected $parent;
 
 	/**
-	 * @ORM\OneToMany(targetEntity="categorie", mappedBy="parent")
+	 * @ORM\OneToMany(targetEntity="site\adminBundle\Entity\categorie", mappedBy="parent")
 	 * @ORM\OrderBy({"lft" = "ASC"})
 	 */
 	protected $children;
+
+	/**
+	 * https://github.com/Atlantic18/DoctrineExtensions/blob/master/doc/sortable.md
+	 * @Gedmo\SortablePosition
+	 * @ORM\Column(type="integer")
+	 */
+	private $position;
 
 	/**
 	 * @var string
@@ -97,34 +105,20 @@ class categorie {
 	protected $descriptif;
 
 	/**
-	 * @var DateTime
-	 * @ORM\Column(name="created", type="datetime", nullable=false)
-	 */
-	protected $dateCreation;
-
-	/**
-	 * @var DateTime
-	 * @ORM\Column(name="updated", type="datetime", nullable=true)
-	 */
-	protected $dateMaj;
-
-	/**
-	 * @ORM\ManyToMany(targetEntity="site\adminBundle\Entity\article", inversedBy="categories")
+	 * - INVERSE
+	 * @Gedmo\SortableGroup
+	 * @ORM\ManyToMany(targetEntity="site\adminBundle\Entity\item", mappedBy="categories")
 	 * @ORM\JoinColumn(nullable=true, unique=false, onDelete="SET NULL")
 	 */
-	protected $articles;
+	protected $items;
 
 	/**
-	 * @ORM\ManyToOne(targetEntity="site\adminBundle\Entity\statut")
-	 * @ORM\JoinColumn(nullable=false, unique=false)
+	 * - INVERSE
+	 * @Gedmo\SortableGroup
+	 * @ORM\ManyToMany(targetEntity="site\adminBundle\Entity\tier", mappedBy="categories")
+	 * @ORM\JoinColumn(nullable=true, unique=false, onDelete="SET NULL")
 	 */
-	protected $statut;
-
-	/**
-	 * @Gedmo\Slug(fields={"nom"})
-	 * @ORM\Column(length=128, unique=true)
-	 */
-	protected $slug;
+	protected $tiers;
 
 	/**
 	 * @var string
@@ -140,43 +134,24 @@ class categorie {
 
 
 	public function __construct() {
-		$this->nom = null;
+		parent::__construct();
 		$this->pageweb = null;
 		$this->parent = null;
 		$this->children = new ArrayCollection();
-		$this->dateCreation = new DateTime();
-		$this->dateMaj = null;
-		$this->articles = new ArrayCollection();
+		$this->descriptif = null;
+		$this->items = new ArrayCollection();
+		$this->tiers = new ArrayCollection();
 		$this->couleur = "#FFFFFF";
 		$this->url = null;
 	}
 
-
 	/**
-	 * get id
-	 * @return integer
+	 * Renvoie le nom court de la classe
+	 * @return media
 	 */
-	public function getId() {
-		return $this->id;
-	}
-
-	/**
-	 * set nom
-	 * @param string $nom
-	 * @return categorie
-	 */
-	public function setNom($nom) {
-		$this->nom = $nom;
-		return $this;
-	}
-
-	/**
-	 * get nom
-	 * @return string
-	 */
-	public function getNom() {
-		return $this->nom;
-	}
+	// public function getClassName() {
+	// 	return self::CLASS_CATEGORIE;
+	// }
 
 	/**
 	 * set pageweb
@@ -185,6 +160,10 @@ class categorie {
 	 */
 	public function setPageweb(pageweb $pageweb) {
 		$this->pageweb = $pageweb;
+	}
+
+	public function getLvl() {
+		return $this->lvl;
 	}
 
 	/**
@@ -208,6 +187,27 @@ class categorie {
 	}
 
 	/**
+	 * Set position
+	 * @param integer $position
+	 * @return categorie
+	 */
+	public function setPosition($position) {
+		$this->position = $position;
+	}
+
+	/**
+	 * Get position
+	 * @return integer
+	 */
+	public function getPosition() {
+		return $this->position;
+	}
+
+	// public function addChildren(categorie $children = null) {
+	// 	return $this->children;
+	// }
+
+	/**
 	 * Set descriptif
 	 * @param string $descriptif
 	 * @return categorie
@@ -226,138 +226,63 @@ class categorie {
 	}
 
 	/**
-	 * Set dateCreation
-	 * @param DateTime $dateCreation
+	 * add item
+	 * @param item $item
 	 * @return categorie
 	 */
-	public function setDateCreation(Datetime $dateCreation) {
-		$this->dateCreation = $dateCreation;
+	public function addItem(item $item) {
+		$this->items->add($item);
 		return $this;
 	}
 
 	/**
-	 * Get dateCreation
-	 * @return DateTime 
-	 */
-	public function getDateCreation() {
-		return $this->dateCreation;
-	}
-
-	/**
-	 * @ORM\PreUpdate
-	 */
-	public function updateDateMaj() {
-		$this->setDateMaj(new Datetime());
-	}
-
-	/**
-	 * Set dateMaj
-	 * @param DateTime $dateMaj
-	 * @return categorie
-	 */
-	public function setDateMaj(Datetime $dateMaj) {
-		$this->dateMaj = $dateMaj;
-		return $this;
-	}
-
-	/**
-	 * Get dateMaj
-	 * @return DateTime 
-	 */
-	public function getDateMaj() {
-		return $this->dateMaj;
-	}
-
-	/**
-	 * add article
-	 * @param article $article
-	 * @return categorie
-	 */
-	public function addArticle(article $article) {
-		$this->articles->add($article);
-		$article->addCategorie_reverse($this);
-		return $this;
-	}
-
-	/**
-	 * add article reverse
-	 * @param article $article
-	 * @return categorie
-	 */
-	public function addArticle_reverse(article $article) {
-		$this->articles->add($article);
-		return $this;
-	}
-
-	/**
-	 * remove article
-	 * @param article $article
+	 * remove item
+	 * @param item $item
 	 * @return boolean
 	 */
-	public function removeArticle(article $article) {
-		$article->removeCategorie_reverse($this);
-		return $this->articles->removeElement($article);
+	public function removeItem(item $item) {
+		return $this->items->removeElement($item);
 	}
 
 	/**
-	 * remove article reverse
-	 * @param article $article
-	 * @return boolean
-	 */
-	public function removeArticle_reverse(article $article) {
-		return $this->articles->removeElement($article);
-	}
-
-	/**
-	 * get articles
+	 * get items
 	 * @return ArrayCollection
 	 */
-	public function getArticles() {
-		return $this->articles;
+	public function getItems() {
+		return $this->items;
 	}
 
-
-
 	/**
-	 * Set statut
-	 * @param integer $statut
-	 * @return baseEntity
+	 * add tier
+	 * @param tier $tier
+	 * @return categorie
 	 */
-	public function setStatut(statut $statut) {
-		$this->statut = $statut;
+	public function addTier(tier $tier) {
+		$this->tiers->add($tier);
 		return $this;
 	}
 
 	/**
-	 * Get statut
-	 * @return statut 
+	 * remove tier
+	 * @param tier $tier
+	 * @return boolean
 	 */
-	public function getStatut() {
-		return $this->statut;
+	public function removeTier(tier $tier) {
+		return $this->tiers->removeElement($tier);
 	}
 
 	/**
-	 * Set slug
-	 * @param integer $slug
-	 * @return baseEntity
+	 * get tiers
+	 * @return ArrayCollection
 	 */
-	public function setSlug($slug) {
-		$this->slug = $slug;
-		return $this;
-	}    
-
-	/**
-	 * Get slug
-	 * @return string
-	 */
-	public function getSlug() {
-		return $this->slug;
+	public function getTiers() {
+		return $this->tiers;
 	}
 
 	/**
 	 * Set couleur
 	 * @param string $couleur
-	 * @return version
+	 * @return categorie
 	 */
 	public function setCouleur($couleur) {
 		$this->couleur = $couleur;
@@ -389,6 +314,7 @@ class categorie {
 	public function getUrl() {
 		return $this->url;
 	}
+
 
 
 }

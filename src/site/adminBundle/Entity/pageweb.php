@@ -6,11 +6,13 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Doctrine\Common\Collections\ArrayCollection;
+use JMS\Serializer\Annotation\ExclusionPolicy;
+use JMS\Serializer\Annotation\Expose;
 // Slug
 use Gedmo\Mapping\Annotation as Gedmo;
 
-use site\adminBundle\Entity\tag;
-use site\adminBundle\Entity\media;
+use site\adminBundle\Entity\item;
+use site\adminBundle\Entity\image;
 
 use \DateTime;
 
@@ -22,16 +24,9 @@ use \DateTime;
  * @ORM\Entity(repositoryClass="site\adminBundle\Entity\pagewebRepository")
  * @ORM\HasLifecycleCallbacks()
  * @UniqueEntity(fields={"nom"}, message="pageweb.existe")
+ * @ExclusionPolicy("all")
  */
-class pageweb {
-
-	/**
-	 * @var integer
-	 * @ORM\Id
-	 * @ORM\Column(name="id", type="integer")
-	 * @ORM\GeneratedValue(strategy="AUTO")
-	 */
-	protected $id;
+class pageweb extends item {
 
 	/**
 	 * @var string
@@ -45,22 +40,6 @@ class pageweb {
 	 * )
 	 */
 	protected $nom;
-
-    /**
-     * @var boolean
-     * @ORM\Column(name="enabled", type="boolean", nullable=false, unique=false)
-     */
-	/**
-	 * @var boolean
-	 * @ORM\Column(name="homepage", type="boolean", nullable=false, unique=false)
-	 */
-	protected $homepage;
-
-    /**
-     * @ORM\OneToOne(targetEntity="media", mappedBy="pagewebBackground", cascade={"all"})
-	 * @ORM\JoinColumn(nullable=true, unique=true, name="bpagewebBackground_id", referencedColumnName="id", onDelete="SET NULL")
-     */
-    private $background;
 
 	/**
 	 * @var string
@@ -82,12 +61,6 @@ class pageweb {
 
 	/**
 	 * @var string
-	 * @ORM\Column(name="keywords", type="text", nullable=true, unique=false)
-	 */
-	protected $keywords;
-
-	/**
-	 * @var string
 	 * @ORM\Column(name="metadescription", type="text", nullable=true, unique=false)
 	 */
 	protected $metadescription;
@@ -98,117 +71,17 @@ class pageweb {
 	 */
 	protected $modele;
 
-	/**
-	 * @Gedmo\Slug(fields={"nom"})
-	 * @ORM\Column(length=128, unique=true)
-	 */
-	protected $slug;
-
-	/**
-	 * @var array
-	 * @ORM\ManyToMany(targetEntity="tag", inversedBy="pagewebs")
-	 * @ORM\JoinColumn(nullable=true, unique=false)
-	 */
-	protected $tags;
-
-	/**
-	 * @var DateTime
-	 * @ORM\Column(name="created", type="datetime", nullable=false)
-	 */
-	protected $dateCreation;
-
-	/**
-	 * @var DateTime
-	 * @ORM\Column(name="updated", type="datetime", nullable=true)
-	 */
-	protected $dateMaj;
-
 
 	public function __construct() {
-		$this->homepage = false;
-		$this->dateCreation = new DateTime();
-		$this->dateMaj = null;
-		$this->background = null;
-		$this->tags = new ArrayCollection();
+		parent::__construct();
 	}
 
-	public function __toString() {
-		return $this->getNom();
-	}
-
-	/**
-	 * Get id
-	 * @return integer 
-	 */
-	public function getId() {
-		return $this->id;
-	}
-
-	/**
-	 * Set nom
-	 * @param string $nom
-	 * @return pageweb
-	 */
-	public function setNom($nom) {
-		$this->nom = $nom;
-		return $this;
-	}
-
-	/**
-	 * Get nom
-	 * @return string 
-	 */
-	public function getNom() {
-		return $this->nom;
-	}
-
-	/**
-	 * Set homepage
-	 *
-	 * @param boolean $homepage
-	 * @return version
-	 */
-	public function setHomepage($homepage) {
-		$homepage == true ? $this->homepage = true : $this->homepage = false;
-		return $this;
-	}
-
-	/**
-	 * Get homepage
-	 *
-	 * @return boolean 
-	 */
-	public function getHomepage() {
-		return $this->homepage;
-	}
-
-	/**
-	 * Set background
-	 * @param media $background
-	 * @return pageweb
-	 */
-	public function setBackground(media $background = null) {
-		$this->background = $background;
-		$background->setPagewebBackground_reverse($this);
-		return $this;
-	}
-
-	/**
-	 * Set background
-	 * @param media $background
-	 * @return pageweb
-	 */
-	public function setBackground_reverse(media $background = null) {
-		$this->background = $background;
-		return $this;
-	}
-
-	/**
-	 * Get background
-	 * @return media 
-	 */
-	public function getBackground() {
-		return $this->background;
+	// /**
+	//  * Renvoie l'image principale
+	//  * @return image
+	//  */
+	public function getMainMedia() {
+		return $this->getImage();
 	}
 
 	/**
@@ -267,32 +140,6 @@ class pageweb {
 	}
 
 	/**
-	 * Set keywords
-	 * @ORM\PrePersist
-	 * @ORM\PreUpdate
-	 * @param string $keywords
-	 * @return pageweb
-	 */
-	public function setKeywords($keywords = null) {
-		if(!is_string($keywords) && !is_array($keywords)) {
-			$this->keywords = implode($this->getTags()->toArray(), ', ');
-		} else if(is_array($keywords)) {
-			$this->keywords = implode($this->keywords, ', ');
-		} else {
-			$this->keywords = $keywords;
-		}
-		return $this;
-	}
-
-	/**
-	 * Get keywords
-	 * @return string 
-	 */
-	public function getKeywords() {
-		return $this->keywords;
-	}
-
-	/**
 	 * Set metadescription
 	 * @param string $metadescription
 	 * @return pageweb
@@ -344,111 +191,6 @@ class pageweb {
 	public function getTemplate() {
 		$path = preg_split('#(src/|Resources/|views/|/)#', $this->modele);
 		return implode(array_slice($path, 0, -2)).':'.$path[count($path)-2].':'.$path[count($path)-1];
-	}
-
-	/**
-	 * Set slug
-	 * @param integer $slug
-	 * @return pageweb
-	 */
-	public function setSlug($slug) {
-		$this->slug = $slug;
-		return $this;
-	}
-
-	/**
-	 * Get slug
-	 * @return string
-	 */
-	public function getSlug() {
-		return $this->slug;
-	}
-
-	/**
-	 * Set dateCreation
-	 * @param DateTime $dateCreation
-	 * @return pageweb
-	 */
-	public function setDateCreation(DateTime $dateCreation) {
-		$this->dateCreation = $dateCreation;
-		return $this;
-	}
-
-	/**
-	 * Get dateCreation
-	 * @return DateTime 
-	 */
-	public function getDateCreation() {
-		return $this->dateCreation;
-	}
-
-	/**
-	 * @ORM\PreUpdate
-	 */
-	public function updateDateMaj() {
-		$this->setDateMaj(new DateTime());
-	}
-
-	/**
-	 * Set dateMaj
-	 * @param DateTime $dateMaj
-	 * @return pageweb
-	 */
-	public function setDateMaj(DateTime $dateMaj) {
-		$this->dateMaj = $dateMaj;
-		return $this;
-	}
-
-	/**
-	 * Get dateMaj
-	 * @return DateTime 
-	 */
-	public function getDateMaj() {
-		return $this->dateMaj;
-	}
-
-	/**
-	 * Add tag
-	 * @param tag $tag
-	 * @return pageweb
-	 */
-	public function addTag(tag $tag) {
-		$this->tags->add($tag);
-		$tag->addPageweb_reverse($this);
-		return $this;
-	}
-	/**
-	 * Add tag (reverse)
-	 * @param tag $tag
-	 * @return pageweb
-	 */
-	public function addTag_reverse(tag $tag) {
-		$this->tags->add($tag);
-		return $this;
-	}
-
-	/**
-	 * Remove tag
-	 * @param tag $tag
-	 */
-	public function removeTag(tag $tag) {
-		$this->tags->removeElement($tag);
-		$tag->removePageweb_reverse($this);
-	}
-	/**
-	 * Remove tag (reverse)
-	 * @param tag $tag
-	 */
-	public function removeTag_reverse(tag $tag) {
-		$this->tags->removeElement($tag);
-	}
-
-	/**
-	 * Get tags
-	 * @return ArrayCollection 
-	 */
-	public function getTags() {
-		return $this->tags;
 	}
 
 

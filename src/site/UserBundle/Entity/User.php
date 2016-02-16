@@ -11,6 +11,10 @@ use Doctrine\Common\Collections\ArrayCollection;
 use site\adminBundle\Entity\media;
 use site\adminBundle\Entity\message;
 use site\adminBundle\Entity\panier;
+use site\adminBundle\Entity\adresse;
+
+use \DateTime;
+use \ReflectionClass;
 
 /**
  * @ORM\Entity
@@ -52,18 +56,34 @@ class User extends BaseUser {
 	protected $prenom;
 
 	/**
+	 * @var integer - PROPRIÉTAIRE
+	 * @ORM\OneToOne(targetEntity="site\adminBundle\Entity\adresse", cascade={"all"}, inversedBy="user")
+	 * @ORM\JoinColumn(nullable=true, unique=true, onDelete="SET NULL")
+	 */
+	protected $adresse;
+
+	/**
+	 * @var integer - PROPRIÉTAIRE
+	 * @ORM\OneToOne(targetEntity="site\adminBundle\Entity\adresse", cascade={"all"}, inversedBy="userLivraison")
+	 * @ORM\JoinColumn(nullable=true, unique=true, onDelete="SET NULL")
+	 */
+	protected $adresseLivraison;
+
+	/**
 	 * @var string
 	 * @ORM\Column(name="telephone", type="string", length=24, nullable=true, unique=false)
 	 */
 	protected $telephone;
 
 	/**
+	 * - INVERSE
 	 * @ORM\OneToMany(targetEntity="site\adminBundle\Entity\panier", mappedBy="user", cascade={"persist", "remove"})
 	 * @ORM\JoinColumn(nullable=true, onDelete="SET NULL")
 	 */
 	private $paniers;
 
 	/**
+	 * - INVERSE
 	 * @ORM\OneToMany(targetEntity="site\adminBundle\Entity\message", mappedBy="user")
 	 * @ORM\JoinColumn(nullable=true, unique=true, onDelete="SET NULL")
 	 */
@@ -81,8 +101,9 @@ class User extends BaseUser {
 	protected $admintheme;
 
     /**
-     * @ORM\OneToOne(targetEntity="site\adminBundle\Entity\media", mappedBy="userAvatar", cascade={"all"})
-	 * @ORM\JoinColumn(nullable=true, unique=true, name="userAvatar_id", referencedColumnName="id", onDelete="SET NULL")
+     * - PROPRIÉTAIRE
+     * @ORM\OneToOne(targetEntity="site\adminBundle\Entity\image", inversedBy="userAvatar", cascade={"all"})
+	 * @ORM\JoinColumn(nullable=true, unique=true, onDelete="SET NULL")
      */
     private $avatar;
 
@@ -101,7 +122,9 @@ class User extends BaseUser {
 		$this->adminhelp = true;
 		$this->admintheme = $this->getDefaultAdminskin();
 		$this->avatar = null;
-		$this->langue = 'default_locale';
+		$this->adresse = null;
+		$this->adresseLivraison = null;
+		$this->langue = 'fr';
 		$this->validRoles = array(1 => 'ROLE_USER', 2 => 'ROLE_TRANSLATOR', 3 => 'ROLE_EDITOR', 4 => 'ROLE_ADMIN', 5 => 'ROLE_SUPER_ADMIN');
 	}
 
@@ -112,6 +135,34 @@ class User extends BaseUser {
 	public function getDefaultAdminskin() {
 		$skins = $this->getAdminskins();
 		return reset($skins);
+	}
+
+	/**
+	 * Renvoie le nom court de la classe
+	 * @return media
+	 */
+	public function getClassName() {
+		$class = new ReflectionClass(get_called_class());
+		return $class->getShortName();
+	}
+
+	/**
+	 * Renvoie la liste (array) des classes des parents de l'entité
+	 * @param boolean $short = false
+	 * @return array
+	 */
+	public function getParentsClassNames($short = false) {
+		$class = new ReflectionClass(get_called_class());
+		$short ?
+			$him = $class->getShortName():
+			$him = $class->getName();
+		$parents = array($him);
+		while($class = $class->getParentClass()) {
+			$short ?
+				$parents[] = $class->getShortName():
+				$parents[] = $class->getName();
+		}
+		return $parents;
 	}
 
 	/**
@@ -177,18 +228,17 @@ class User extends BaseUser {
 	}
 
 	/**
-	 * Add panier
+	 * Add panier - INVERSE
 	 * @param panier $panier
 	 * @return User
 	 */
-	public function addPanier(panier $panier, $doReverse = true) {
-		if($doReverse == true) $panier->setUser($this, false);
+	public function addPanier(panier $panier) {
 		$this->paniers->add($panier);
 		return $this;
 	}
 
 	/**
-	 * Remove panier
+	 * Remove panier - INVERSE
 	 * @param panier $panier
 	 * @return boolean
 	 */
@@ -197,7 +247,20 @@ class User extends BaseUser {
 	}
 
 	/**
-	 * Get paniers
+	 * Renvoie le nombre total d'articles dans le panier de l'utilisateur
+	 * @return integer
+	 */
+	public function getArticlesPanier() {
+		$Q = 0;
+		$paniers = $this->getPaniers();
+		foreach ($paniers as $panier) {
+			$Q += $panier->getQuantite();
+		}
+		return $Q;
+	}
+
+	/**
+	 * Get paniers - INVERSE
 	 * @return ArrayCollection 
 	 */
 	public function getPaniers() {
@@ -205,18 +268,17 @@ class User extends BaseUser {
 	}
 
 	/**
-	 * Add message
+	 * Add message - INVERSE
 	 * @param message $message
 	 * @return User
 	 */
-	public function addMessage(message $message, $doReverse = true) {
-		if($doReverse == true) $message->setUser($this, false);
+	public function addMessage(message $message) {
 		$this->messages->add($message);
 		return $this;
 	}
 
 	/**
-	 * Remove message
+	 * Remove message - INVERSE
 	 * @param message $message
 	 * @return boolean
 	 */
@@ -225,7 +287,7 @@ class User extends BaseUser {
 	}
 
 	/**
-	 * Get messages
+	 * Get messages - INVERSE
 	 * @return ArrayCollection 
 	 */
 	public function getMessages() {
@@ -238,7 +300,7 @@ class User extends BaseUser {
 	 * @return User
 	 */
 	public function setAdminhelp($adminhelp) {
-		if(is_bool($adminhelp)) $this->adminhelp = $adminhelp;
+		if($adminhelp == false) $this->adminhelp = false;
 			else $this->adminhelp = true;
 		return $this;
 	}
@@ -274,22 +336,12 @@ class User extends BaseUser {
 	}
 
 	/**
-	 * Set avatar
+	 * Set avatar - PROPRIÉTAIRE
 	 * @param media $avatar
 	 * @return pageweb
 	 */
 	public function setAvatar(media $avatar = null) {
-		$this->avatar = $avatar;
-		$avatar->setUserAvatar_reverse($this);
-		return $this;
-	}
-
-	/**
-	 * Set avatar
-	 * @param media $avatar
-	 * @return pageweb
-	 */
-	public function setAvatar_reverse(media $avatar = null) {
+		$avatar->setUserAvatar($this);
 		$this->avatar = $avatar;
 		return $this;
 	}
@@ -300,6 +352,44 @@ class User extends BaseUser {
 	 */
 	public function getAvatar() {
 		return $this->avatar;
+	}
+
+	/**
+	 * Set adresse - PROPRIÉTAIRE
+	 * @param adresse $adresse
+	 * @return User
+	 */
+	public function setAdresse(adresse $adresse = null) {
+		$adresse->setUser($this);
+		$this->adresse = $adresse;
+		return $this;
+	}
+
+	/**
+	 * Get adresse - PROPRIÉTAIRE
+	 * @return adresse 
+	 */
+	public function getAdresse() {
+		return $this->adresse;
+	}
+
+	/**
+	 * Set adresseLivraison - PROPRIÉTAIRE
+	 * @param adresse $adresseLivraison
+	 * @return User
+	 */
+	public function setAdresseLivraison(adresse $adresseLivraison = null) {
+		$adresseLivraison->setUserLivraison($this);
+		$this->adresseLivraison = $adresseLivraison;
+		return $this;
+	}
+
+	/**
+	 * Get adresseLivraison - PROPRIÉTAIRE
+	 * @return adresse 
+	 */
+	public function getAdresseLivraison() {
+		return $this->adresseLivraison;
 	}
 
 	/**

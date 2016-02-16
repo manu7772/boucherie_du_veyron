@@ -1,0 +1,63 @@
+name: menu2
+roles:
+    view: ROLE_EDITOR
+    edit: ROLE_ADMIN
+    delete: ROLE_SUPER_ADMIN
+menu:
+    accueil:
+        name: Accueil
+        path:
+            route: sitesite_homepage
+    langues:
+        icon: fa-flag
+        path:
+            route: '#'
+        children:
+            fr1:
+                name: traduction.languename.fr
+                path:
+                    route: sitesite_homepage
+                    params:
+                        _locale: fr
+            français:
+                name: traduction.languename.fr
+                path:
+                    route: sitesite_homepage
+                    params:
+                        _locale: fr
+            anglais:
+                name: traduction.languename.en
+                path:
+                    route: sitesite_homepage
+                    params:
+                        _locale: en
+            gb1:
+                name: traduction.languename.en
+                path:
+                    route: sitesite_homepage
+                    params:
+                        _locale: en
+    réalisations:
+        name: Réalisations
+        path:
+            route: site_pageweb
+            params:
+                pageweb: realisations
+    vidéos:
+        name: Vidéos
+        path:
+            route: site_pageweb
+            params:
+                pageweb: videos
+    contact:
+        name: Contact
+        path:
+            route: site_pageweb
+            params:
+                pageweb: contact
+    logout:
+        role: IS_AUTHENTICATED_REMEMBERED
+        name: layout.logout
+        trans_domain: siteUserBundle
+        path:
+            route: fos_user_security_logout

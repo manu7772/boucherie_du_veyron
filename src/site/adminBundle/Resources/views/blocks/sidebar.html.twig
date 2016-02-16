@@ -6,7 +6,9 @@
 			<li class="nav-header">
 				<div class="dropdown profile-element">
 					<span>
-						<img alt="image" class="img-rounded" src="{{ asset('bundles/siteadmin/images/BDV_logo_admin.png') }}" />
+						<a href="{{ path(homepage) }}">
+							<img alt="image" class="img-rounded" src="{{ asset('bundles/siteadmin/images/BDV_logo_admin.png') }}" />
+						</a>
 					</span>
 					{% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
 					<a data-toggle="dropdown" class="dropdown-toggle" href="#">

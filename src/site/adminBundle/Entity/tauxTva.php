@@ -8,6 +8,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Doctrine\Common\Collections\ArrayCollection;
 // Slug
 use Gedmo\Mapping\Annotation as Gedmo;
+use site\adminBundle\Entity\baseEntity;
 
 use \DateTime;
 
@@ -20,7 +21,7 @@ use \DateTime;
  * @ORM\Entity(repositoryClass="site\adminBundle\Entity\tauxTvaRepository")
  * @UniqueEntity(fields={"nom"}, message="Ce taux de tva existe déjà")
  */
-class tauxTva {
+class tauxTva extends baseEntity {
 
 	/**
 	 * @var integer
@@ -43,8 +44,6 @@ class tauxTva {
 	 */
 	protected $nom;
 
-	protected $nomlong;
-
 	/**
 	 * @var string
 	 * @ORM\Column(name="descriptif", type="text", nullable=true)
@@ -57,50 +56,14 @@ class tauxTva {
 	 */
 	protected $taux;
 
-	/**
-	 * @var DateTime
-	 * @ORM\Column(name="created", type="datetime", nullable=false)
-	 */
-	protected $dateCreation;
-
-	/**
-	 * @var DateTime
-	 * @ORM\Column(name="updated", type="datetime", nullable=true)
-	 */
-	protected $dateMaj;
-
 
 	public function __construct() {
-		$this->dateCreation = new DateTime();
-		$this->dateMaj = null;
+		parent::__construct();
 	}
 
-
-	/**
-	 * Get id
-	 * @return integer 
-	 */
-	public function getId() {
-		return $this->id;
-	}
-
-	/**
-	 * Set nom
-	 * @param string $nom
-	 * @return tauxTva
-	 */
-	public function setNom($nom) {
-		$this->nom = $nom;
-		return $this;
-	}
-
-	/**
-	 * Get nom
-	 * @return string 
-	 */
-	public function getNom() {
-		return $this->nom;
-	}
+    // public function getClassName(){
+    //     return parent::CLASS_TAUXTVA;
+    // }
 
 	/**
 	 * Get nom long
@@ -146,53 +109,5 @@ class tauxTva {
 		return $this->taux;
 	}
 
-	/**
-	 * Set dateCreation
-	 *
-	 * @param DateTime $dateCreation
-	 * @return tauxTva
-	 */
-	public function setDateCreation(DateTime $dateCreation) {
-		$this->dateCreation = $dateCreation;
-	
-		return $this;
-	}
-
-	/**
-	 * Get dateCreation
-	 *
-	 * @return DateTime 
-	 */
-	public function getDateCreation() {
-		return $this->dateCreation;
-	}
-
-	/**
-	 * @ORM\PreUpdate
-	 */
-	public function updateDateMaj() {
-		$this->setDateMaj(new DateTime());
-	}
-
-	/**
-	 * Set dateMaj
-	 *
-	 * @param DateTime $dateMaj
-	 * @return tauxTva
-	 */
-	public function setDateMaj(DateTime $dateMaj) {
-		$this->dateMaj = $dateMaj;
-	
-		return $this;
-	}
-
-	/**
-	 * Get dateMaj
-	 *
-	 * @return DateTime 
-	 */
-	public function getDateMaj() {
-		return $this->dateMaj;
-	}
 
 }

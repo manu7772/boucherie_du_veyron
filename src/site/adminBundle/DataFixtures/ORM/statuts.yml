@@ -1,0 +1,33 @@
+statut:
+    order: 1
+    data:
+        -
+            nom: 'Actif'
+            descriptif: 'Statut actif'
+            niveau: 'ROLE_USER'
+            default: 1
+        -
+            nom: 'Inactif'
+            descriptif: 'Statut inactif'
+            niveau: 'ROLE_ADMIN'
+            default: 0
+        -
+            nom: 'Expired'
+            descriptif: 'Statut expiré'
+            niveau: 'ROLE_ADMIN'
+            default: 0
+        -
+            nom: 'Deleted'
+            descriptif: 'Ecrasé'
+            niveau: 'ROLE_SUPER_ADMIN'
+            default: 0
+        -
+            nom: 'Dev'
+            descriptif: 'Statut pour mode dev'
+            niveau: 'ROLE_SUPER_ADMIN'
+            default: 0
+        -
+            nom: 'Test'
+            descriptif: 'Statut pour tests'
+            niveau: 'ROLE_SUPER_ADMIN'
+            default: 0

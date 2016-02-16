@@ -4,6 +4,9 @@
 {{ parent() }}
 {% stylesheets filter='cssrewrite, lessphp, ?yui_css'
 'bundles/siteadmin/framework_inspinia/cropper-master/dist/cropper.css'
+'bundles/siteadmin/framework_inspinia/noUiSlider.8.3.0/nouislider.css'
+'bundles/siteadmin/framework_inspinia/noUiSlider.8.3.0/nouislider.pips.css'
+'bundles/siteadmin/framework_inspinia/noUiSlider.8.3.0/nouislider.tooltips.css'
 %}
 <link rel="stylesheet" href="{{ asset_url }}" type="text/css" />
 {% endstylesheets %}
@@ -20,8 +23,11 @@
 {% block javascripts %}
 {{ parent() }}
 {% javascripts filter='?yui_js'
+'bundles/siteadmin/js/jquery.mask.min.js'
+'bundles/siteadmin/js/inspinia-form_widgets.js'
 'bundles/siteadmin/framework_inspinia/cropper-master/dist/cropper.js'
 'bundles/siteadmin/js/inspinia-cropper.js'
+'bundles/siteadmin/framework_inspinia/noUiSlider.8.3.0/nouislider.js'
 %}
 <script type="text/javascript" src="{{ asset_url }}"></script>
 {% endjavascripts %}

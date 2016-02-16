@@ -6,6 +6,15 @@ siteadmin_support:
     path:     /support
     defaults: { _controller: siteadminBundle:Default:support }
 
+# SADMIN
+siteadmin_sadmin_index:
+    path:     /superadmin
+    defaults: { _controller: siteadminBundle:superadmin:index }
+
+siteadmin_sadmin_entities:
+    path:     /superadmin/entities/{entity}/{field}
+    defaults: { _controller: siteadminBundle:superadmin:entities, entity: null, field: null }
+
 # GENERATION SITE
 generate:
     path:     /generate/{action}/{entite}
@@ -42,6 +51,10 @@ siteadmin_menus_action:
 siteadmin_ajax_modify:
     path:     /menus/ajax-modify/{bundle}/{name}
     defaults: { _controller: siteadminBundle:menus:modify }
+
+siteadmin_ajax_maxDepth:
+    path:     /menus/ajax-maxDepht/{bundle}/{name}/{value}
+    defaults: { _controller: siteadminBundle:menus:changeMaxDepth }
 
 # USERS
 siteUser_users:

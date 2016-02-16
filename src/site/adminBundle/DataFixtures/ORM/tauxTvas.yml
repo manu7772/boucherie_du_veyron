@@ -1,0 +1,18 @@
+tauxTva:
+    order: 3
+    data:
+        -
+            nom: 'réduit'
+            descriptif: 'Taux de tva réduit'
+            taux: 5.5
+            default: false
+        -
+            nom: 'normal'
+            descriptif: 'Taux de tva normal'
+            taux: 20
+            default: true
+        -
+            nom: 'luxe'
+            descriptif: 'Taux de tva de luxe'
+            taux: 33
+            default: false

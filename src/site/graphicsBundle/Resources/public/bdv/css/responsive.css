@@ -555,6 +555,13 @@ text-align: center;
 .inset-list .pull-left{
 	float: none !important;
 }
+.pull-left {
+  margin-right: 22px;
+}
+.pull-right {
+  margin-left: 22px;
+}
+
 
 .header_top .col-sm-6:first-child{
 	display: block;

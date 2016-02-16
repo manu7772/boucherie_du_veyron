@@ -1,4 +1,11 @@
 admin: 'Boucherie du Veyron'
+roles:
+    IS_AUTHENTICATED_ANONYMOUSLY: public
+    ROLE_USER: connected
+    ROLE_TRANSLATOR: translator
+    ROLE_EDITOR: éditor
+    ROLE_ADMIN: administrator
+    ROLE_SUPER_ADMIN: webmaster
 date_format:
     date: Y-m-d
     time: 'H:i:s'
@@ -52,9 +59,59 @@ fiche:
     dontexist: 'this notice does not exist'
     moredetails: 'more details on %name%'
     existe: this notice already exists
+marque:
+    name_s: brands
+    name: brand
+    not_found: 'no brand found'
+    x_found: '{0} no brand found|{1} 1 brand found|[2,+Inf] %count% brands found'
+    create: 'create new brand'
+    create_btn: 'new brand'
+    backlist: 'back to list of brands'
+    backlist_btn: 'back to list'
+    dontexist: 'this brand does not exist'
+    moredetails: 'more details on %name%'
+    existe: this brand already exists
+boutique:
+    name_s: stores
+    name: store
+    not_found: 'no store found'
+    x_found: '{0} no store found|{1} 1 store found|[2,+Inf] %count% stores found'
+    create: 'create new store'
+    create_btn: 'new store'
+    backlist: 'back to list of stores'
+    backlist_btn: 'back to list'
+    dontexist: 'this store does not exist'
+    moredetails: 'more details on %name%'
+    existe: this store already exists
+image:
+    name_s: images
+    name: image
+    not_found: 'no image found'
+    x_found: '{0} no image found|{1} 1 image found|[2,+Inf] %count% images found'
+    create: 'create new image'
+    create_btn: 'new image'
+    backlist: 'back to list of images'
+    backlist_btn: 'back to list'
+    dontexist: 'this image does not exist'
+    moredetails: 'more details on %name%'
+    existe: this image already exists
+pdf:
+    name_s: pdf files
+    name: pdf file
+    consulter: consult pdf files list
+    not_found: 'no pdf file found'
+    x_found: '{0} no pdf file found|{1} 1 pdf file found|[2,+Inf] %count% pdf files found'
+    create: 'create new pdf file'
+    create_btn: 'new pdf file'
+    backlist: 'back to list of pdf files'
+    backlist_btn: 'back to list'
+    dontexist: 'this pdf file does not exist'
+    moredetails: 'more details on %name%'
+    existe: 'this pdf file already exists'
 message:
     name_s: messages
     name: message
+    consulter: consult messages list
     not_found: 'no message found'
     x_found: '{0} no message found|{1} 1 message found|[2,+Inf] %count% messages found'
     create: 'create new message'
@@ -64,6 +121,14 @@ message:
     dontexist: 'this message does not exist'
     moredetails: 'more details on %name%'
     existe: 'this message already exists'
+    action:
+        supprimer: delete
+        repondre: answer to the sender of the message
+        lu: mark as red
+        nonlu: mark as not red
+    etat:
+        lu: red
+        nonlu: not red
 media:
     name_s: medias
     name: media
@@ -106,6 +171,21 @@ User:
     dontexist: 'this user does not exist'
     moredetails: 'more details on %name%'
     existe: this user already exists
+reseau:
+    name_s: outlets
+    name: outlet
+    not_found: 'no outlet found'
+    x_found: '{0} no outlet found|{1} 1 outlet found|[2,+Inf] %count% outlets found'
+    create: 'create new outlet'
+    create_btn: 'new outlet'
+    created: '{0} no outlet created|{1} %count% outlet have been created : %list%|[2,+Inf] %count% outlets have been created : %list%'
+    new: '{0,1}new outlet|[2,+Inf] %count% new outlets'
+    backlist: 'back to list of outlets'
+    backlist_btn: 'back to list'
+    dontexist: 'this outlet does not exist'
+    existe: 'this outlet already exists'
+    suppression: 'outlet %name% have been deleted'
+    moredetails: 'more details on %name%'
 tag:
     name_s: tags
     name: tag
@@ -168,6 +248,21 @@ panier:
     existe: 'this basket already exists'
     suppression: 'basket %name% have been deleted'
     moredetails: 'more details on %name%'
+user:
+    name_s: users
+    name: user
+    not_found: 'no user found'
+    x_found: '{0} no user found|{1} 1 user found|[2,+Inf] %count% users found'
+    create: 'create new user'
+    create_btn: 'new user'
+    created: '{0} no user created|{1} %count% user have been created : %list%|[2,+Inf] %count% users have been created : %list%'
+    new: '{0,1}new user|[2,+Inf] %count% new users'
+    backlist: 'back to list of users'
+    backlist_btn: 'back to list'
+    dontexist: 'this user does not exist'
+    existe: 'this user already exists'
+    suppression: 'user %name% have been deleted'
+    moredetails: 'more details on %name%'
 all:
     name_s: all
     name: all
@@ -185,6 +280,7 @@ actions:
     name: actions
     voir: view
     modification: modification
+    modifierName: modify %name%
     modifier: modify
     creation: create
     ajouter: add
@@ -192,10 +288,10 @@ actions:
     supprimer: delete
     suppQuestion: Do you really want to delete %name% ?
     vue: 'detail view'
-    repondre: answer by mail
     activer: enable
     desactiver: disable
     forbidden: actions are forbidden
+    repondre: answer
 table:
     col:
         id: id
@@ -235,10 +331,14 @@ table:
         admin: admin info
         size: size
         mediatype: Type of media
+        logo: logotype
+        vitrine: store photo
+        adresse: adress
         prix: price
         TTC: TTC
         HT: HT
         TVA: VAT
+        montantTVA: part TVA
 msg:
     supp: 'do you want to delete this element?'
     suppression: deleting
@@ -287,6 +387,9 @@ form:
     descriptif: summary
     taux: rate
     accroche: slogan
+    cp: zip code
+    ville: city
+    commentaire: comment
 sizes:
     Ko: Kb
     Mo: Mb
@@ -297,7 +400,13 @@ erreurs:
     suppression: 'error while deleting %name%'
 recherche:
     name: search
+statistique:
+    name: statistic
+    name_s: statistics
 administration: manager
+superadmin:
+    name: webmaster
+    entites: Doctrine entities
 savoirplus: 'view more'
 copyright: copyright
 non: 'no'

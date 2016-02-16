@@ -19,24 +19,38 @@ class statutRepository extends EntityBaseRepository {
 	/** Renvoie la(les) valeur(s) par défaut --> ATTENTION : dans un array()
 	* @param $defaults = liste des éléments par défaut
 	*/
-	public function defaultVal($defaults = null) {
-		if($defaults === null) $defaults = array("Actif");
-		$qb = $this->createQueryBuilder('element');
-		$qb->where($qb->expr()->in('element.nom', $defaults));
-		return $qb->getQuery()->getOneOrNullResult();
-	}
+	// public function defaultVal($defaults = null) {
+	// 	if($defaults === null) $defaults = array("actif");
+	// 	$qb = $this->createQueryBuilder(self::ELEMENT);
+	// 	$qb->where($qb->expr()->in(self::ELEMENT.'.slug', $defaults));
+	// 	return $qb->getQuery()->getOneOrNullResult();
+	// }
 
 	public function findActif() {
-		$qb = $this->createQueryBuilder('element');
-		$qb->where('element.nom = :nom')
-			->setParameter('nom', 'Actif');
+		$qb = $this->createQueryBuilder(self::ELEMENT);
+		$qb->where(self::ELEMENT.'.slug = :slug')
+			->setParameter('slug', 'actif');
 		return $qb->getQuery()->getOneOrNullResult();
 	}
 
 	public function findInactif() {
-		$qb = $this->createQueryBuilder('element');
-		$qb->where('element.nom = :nom')
-			->setParameter('nom', 'Inactif');
+		$qb = $this->createQueryBuilder(self::ELEMENT);
+		$qb->where(self::ELEMENT.'.slug = :slug')
+			->setParameter('slug', 'inactif');
+		return $qb->getQuery()->getOneOrNullResult();
+	}
+
+	public function findExpired() {
+		$qb = $this->createQueryBuilder(self::ELEMENT);
+		$qb->where(self::ELEMENT.'.slug = :slug')
+			->setParameter('slug', 'expired');
+		return $qb->getQuery()->getOneOrNullResult();
+	}
+
+	public function findDeleted() {
+		$qb = $this->createQueryBuilder(self::ELEMENT);
+		$qb->where(self::ELEMENT.'.slug = :slug')
+			->setParameter('slug', 'deleted');
 		return $qb->getQuery()->getOneOrNullResult();
 	}
 
@@ -44,23 +58,23 @@ class statutRepository extends EntityBaseRepository {
 		$list = null;
 		switch($role) {
 			case "ROLE_EDITOR":
-				$list = array("Actif", "Inactif");
+				$list = array("actif", "inactif", "expired");
 				break;
 			case "ROLE_USER":
-				$list = array("Actif", "Inactif");
+				$list = array("actif", "inactif", "expired");
 				break;
 			case "ROLE_ADMIN":
-				$list = array("Actif", "Inactif");
+				$list = array("actif", "inactif", "expired");
 				break;
 			case "ROLE_SUPER_ADMIN":
 				// all
 				break;
 			default:
-				$list = array("Actif", "Inactif");
+				$list = array("actif", "inactif", "expired");
 				break;
 		}
-		$qb = $this->createQueryBuilder('element');
-		if(is_array($list)) $qb->where($qb->expr()->in('element.nom', $list));
+		$qb = $this->createQueryBuilder(self::ELEMENT);
+		if(is_array($list)) $qb->where($qb->expr()->in(self::ELEMENT.'.slug', $list));
 		return $qb;
 	}
 

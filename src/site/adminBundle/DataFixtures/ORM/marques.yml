@@ -1,0 +1,7 @@
+marque:
+    order: 6
+    data:
+        -
+            nom: 'Charollais'
+        -
+            nom: 'de Bresse'

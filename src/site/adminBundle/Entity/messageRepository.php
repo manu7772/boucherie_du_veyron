@@ -16,4 +16,19 @@ use Doctrine\ORM\Mapping\ClassMetadata;
  */
 class messageRepository extends EntityBaseRepository {
 
+	public function findAll() {
+		$qb = $this->createQueryBuilder(self::ELEMENT);
+		$qb->orderBy(self::ELEMENT.'.creation', 'DESC');
+		return $qb->getQuery()->getResult();
+	}
+
+	public function findNotRead() {
+		$qb = $this->createQueryBuilder(self::ELEMENT);
+		$qb
+			->where($qb->expr()->isNull('element.read'))
+			->orderBy(self::ELEMENT.'.creation', 'DESC')
+			;
+		return $qb->getQuery()->getResult();
+	}
+
 }

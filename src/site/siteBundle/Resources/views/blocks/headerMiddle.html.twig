@@ -53,22 +53,28 @@
 							</button>
 						</div>
 						<div class="mainmenu pull-left">
-							{% if is_granted(menu.roles.view|default(null)) or (menu.roles.view|default(null) == null) %}
+							{% if is_granted(menu.roles.view|default('IS_AUTHENTICATED_ANONYMOUSLY')) %}
 							<ul class="nav navbar-nav collapse navbar-collapse">
-								{% for item in menu.menu if (is_granted(item.role|default(null)) or item.role|default(null) == null) %}
+								{% for items in menu.menu %}
+								{% for key,item in items if is_granted(item.role|default('IS_AUTHENTICATED_ANONYMOUSLY')) %}
 								{% set icon = '' %}
 								{% if item.icon is defined %}{% set icon = '<i class="fa ' ~ item.icon ~ '"></i>' %}{% endif %}
 								{% set path = '#' %}
 								{% if item.path.route|default('#') != '#' %}
 									{% set path = path(item.path.route, item.path.params|default([])) %}
 								{% endif %}
-								{% set name = '' %}
-								{% if item.name|default('') != '' %}{% set name = ' ' ~ item.name|trans({}, item.trans_domain|default(null))|capitalize %}{% endif %}
-								<li><a href="{{ path|raw }}"{% if item.title|default(null) != null %} title="{{ item.title|trans({}, item.trans_domain|default(null))|capitalize }}"{% endif %}>{{ icon|raw }}{{ name }}</a></li>
+								{% if key != 'children' %}
+									{% set name = '' %}
+									{% if item.name|default('') != '' %}{% set name = ' ' ~ item.name|trans({}, item.trans_domain|default(null))|capitalize %}{% endif %}
+									<li>
+										<a href="{{ path|raw }}"{% if item.title|default(null) != null %} title="{{ item.title|trans({}, item.trans_domain|default(null))|capitalize }}"{% endif %}>{{ icon|raw }}{{ name }}</a>
+									</li>
+								{% endif %}
+								{% endfor %}
 								{% endfor %}
 							</ul>
 							{% else %}
-							<p>Menu non autorisé.</p>
+							<p><i class="fa fa-ban text-muted"></i> Menu non autorisé.</p>
 							{% endif %}
 						</div>
 					</div><!--/interne-menu-->

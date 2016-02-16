@@ -23,29 +23,29 @@ class panierRepository extends EntityBaseRepository {
 	}
 
 	public function getUserArticles($userId) {
-		$qb = $this->createQueryBuilder('element');
-		$qb->leftJoin('element.user', 'user')
+		$qb = $this->createQueryBuilder(self::ELEMENT);
+		$qb->leftJoin(self::ELEMENT.'.user', 'user')
 			->where('user.id = :u')
 			->setParameter('u', $userId)
 			// ->addSelect('user')
-			->leftJoin('element.article', 'art')
+			->leftJoin(self::ELEMENT.'.article', 'art')
 			->addSelect('art');
 		return $qb->getQuery()->getResult();
 	}
 
 	public function getUserPanier($userId) {
-		$qb = $this->createQueryBuilder('element');
-		$qb->leftJoin('element.user', 'user')
+		$qb = $this->createQueryBuilder(self::ELEMENT);
+		$qb->leftJoin(self::ELEMENT.'.user', 'user')
 			->where('user.id = :u')
 			->setParameter('u', $userId);
 		return $qb->getQuery()->getResult();
 	}
 
 	public function getOneArticleOfUser($articleId, $userId) {
-		$qb = $this->createQueryBuilder('element');
-		$qb->where('element.user = :u')
+		$qb = $this->createQueryBuilder(self::ELEMENT);
+		$qb->where(self::ELEMENT.'.user = :u')
 			->setParameter('u', $userId)
-			->andWhere('element.article = :art')
+			->andWhere(self::ELEMENT.'.article = :art')
 			->setParameter('art', $articleId);
 		return $qb->getQuery()->getOneOrNullResult();
 	}

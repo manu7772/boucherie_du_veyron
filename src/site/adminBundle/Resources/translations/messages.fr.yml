@@ -1,4 +1,11 @@
 admin: 'Boucherie du Veyron'
+roles:
+    IS_AUTHENTICATED_ANONYMOUSLY: public
+    ROLE_USER: connecté
+    ROLE_TRANSLATOR: traducteur
+    ROLE_EDITOR: éditeur
+    ROLE_ADMIN: administrateur
+    ROLE_SUPER_ADMIN: webmaster
 date_format:
     date: Y-m-d
     time: 'H:i:s'
@@ -52,9 +59,59 @@ fiche:
     dontexist: 'cette fiche n''existe pas'
     moredetails: 'plus de détails sur %name%'
     existe: cette fiche existe déjà
+marque:
+    name_s: marques
+    name: marque
+    not_found: 'aucune marque trouvée'
+    x_found: '{0} aucune marque trouvée|{1} 1 marque trouvée|[2,+Inf] %count% marques trouvées'
+    create: 'créer une nouvelle marque'
+    create_btn: 'nouvelle marque'
+    backlist: 'retour à la liste des marques'
+    backlist_btn: 'retour liste'
+    dontexist: 'cette marque n''existe pas'
+    moredetails: 'plus de détails sur %name%'
+    existe: cette marque existe déjà
+boutique:
+    name_s: boutiques
+    name: boutique
+    not_found: 'aucune boutique trouvée'
+    x_found: '{0} aucune boutique trouvée|{1} 1 boutique trouvée|[2,+Inf] %count% boutiques trouvées'
+    create: 'créer une nouvelle boutique'
+    create_btn: 'nouvelle boutique'
+    backlist: 'retour à la liste des boutiques'
+    backlist_btn: 'retour liste'
+    dontexist: 'cette boutique n''existe pas'
+    moredetails: 'plus de détails sur %name%'
+    existe: cette boutique existe déjà
+image:
+    name_s: images
+    name: image
+    not_found: 'aucune image trouvée'
+    x_found: '{0} aucune image trouvée|{1} 1 image trouvée|[2,+Inf] %count% images trouvées'
+    create: 'créer une nouvelle image'
+    create_btn: 'nouvelle image'
+    backlist: 'retour à la liste des images'
+    backlist_btn: 'retour liste'
+    dontexist: 'cette image n''existe pas'
+    moredetails: 'plus de détails sur %name%'
+    existe: cette image existe déjà
+pdf:
+    name_s: fichiers PDF
+    name: fichier PDF
+    consulter: consulter la fichier PDFrie
+    not_found: 'aucun fichier PDF trouvé'
+    x_found: '{0} aucun fichier PDF trouvé|{1} 1 fichier PDF trouvé|[2,+Inf] %count% fichiers PDF trouvés'
+    create: 'créer un nouveau fichier PDF'
+    create_btn: 'nouveau fichier PDF'
+    backlist: 'retour à la liste des fichiers PDF'
+    backlist_btn: 'retour liste'
+    dontexist: 'ce fichier PDF n''existe pas'
+    moredetails: 'plus de détails sur %name%'
+    existe: ce fichier PDF existe déjà
 message:
     name_s: messages
     name: message
+    consulter: consulter la messagerie
     not_found: 'aucun message trouvé'
     x_found: '{0} aucun message trouvé|{1} 1 message trouvé|[2,+Inf] %count% messages trouvés'
     create: 'créer un nouveau message'
@@ -64,6 +121,14 @@ message:
     dontexist: 'ce message n''existe pas'
     moredetails: 'plus de détails sur %name%'
     existe: ce message existe déjà
+    action:
+        supprimer: supprimer
+        repondre: répondre à l'expéditeur
+        lu: marquer comme lu
+        nonlu: marquer comme non lu
+    etat:
+        lu: lu
+        nonlu: non lu
 media:
     name_s: médias
     name: média
@@ -106,6 +171,21 @@ User:
     dontexist: 'cet utilisateur n''existe pas'
     moredetails: 'plus de détails sur %name%'
     existe: cet utilisateur existe déjà
+reseau:
+    name_s: réseaux
+    name: réseau
+    not_found: 'aucun réseau trouvé'
+    x_found: '{0} aucun réseau trouvé|{1} 1 réseau trouvé|[2,+Inf] %count% réseaux trouvés'
+    create: 'créer un nouveau réseau'
+    create_btn: 'nouveau réseau'
+    created: '{0} Aucun réseau créé|{1} %count% réseau a été créé : %list%|[2,+Inf] %count% réseaux ont été créés : %list%'
+    new: '{0,1} nouveau réseau|[2,+Inf] %count% nouveaux réseaux'
+    backlist: 'retour à la liste des réseaux'
+    backlist_btn: 'retour liste'
+    dontexist: 'ce réseau n''existe pas'
+    existe: 'ce réseau existe déjà'
+    suppression: 'le réseau %name% a été supprimé'
+    moredetails: 'plus de détails sur %name%'
 tag:
     name_s: tags
     name: tag
@@ -168,6 +248,21 @@ panier:
     existe: 'ce panier existe déjà'
     suppression: 'le panier %name% a été supprimé'
     moredetails: 'plus de détails sur %name%'
+user:
+    name_s: utilisateurs
+    name: utilisateur
+    not_found: 'aucun utilisateur trouvé'
+    x_found: '{0} aucun utilisateur trouvé|{1} 1 utilisateur trouvé|[2,+Inf] %count% tags trouvés'
+    create: 'créer un nouveau utilisateur'
+    create_btn: 'nouveau utilisateur'
+    created: '{0} Aucun utilisateur créé|{1} %count% utilisateur a été créé : %list%|[2,+Inf] %count% utilisateur ont été créés : %list%'
+    new: '{0,1} nouveau utilisateur|[2,+Inf] %count% nouveaux tags'
+    backlist: 'retour à la liste des utilisateurs'
+    backlist_btn: 'retour liste'
+    dontexist: 'ce utilisateur n''existe pas'
+    existe: 'ce utilisateur existe déjà'
+    suppression: 'le utilisateur %name% a été supprimé'
+    moredetails: 'plus de détails sur %name%'
 all:
     name_s: tous
     name: tous
@@ -185,6 +280,7 @@ actions:
     name: actions
     voir: voir
     modification: modification
+    modifierName: modifier %name%
     modifier: modifier
     creation: création
     ajouter: ajouter
@@ -192,10 +288,10 @@ actions:
     supprimer: supprimer
     suppQuestion: Souhaitez-vous vraiment supprimer %name% ?
     vue: 'vue en détails'
-    repondre: répondre par mail
     activer: mode actif
     desactiver: mode inactif
     forbidden: actions interdites
+    repondre: répondre
 table:
     col:
         id: id
@@ -235,10 +331,14 @@ table:
         admin: info admin
         size: taille
         mediatype: Type de média
+        logo: logotype
+        vitrine: vitrine
+        adresse: adresse
         prix: prix
         TTC: TTC
         HT: HT
         TVA: TVA
+        montantTVA: montant TVA
 msg:
     supp: 'souhaitez-vous supprimer cet élément ?'
     suppression: suppression
@@ -287,6 +387,9 @@ form:
     descriptif: descriptif
     taux: taux
     accroche: accroche
+    cp: code postal
+    ville: ville
+    commentaire: commentaire
 sizes:
     Ko: Ko
     Mo: Mo
@@ -297,7 +400,13 @@ erreurs:
     suppression: 'erreur lors de la suppression de %name%'
 recherche:
     name: recherche
+statistique:
+    name: statistique
+    name_s: statistiques
 administration: administration
+superadmin:
+    name: webmaster
+    entites: entités Doctrine
 savoirplus: 'en savoir plus'
 copyright: copyright
 non: non

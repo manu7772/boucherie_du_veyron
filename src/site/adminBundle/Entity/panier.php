@@ -13,6 +13,7 @@ use site\adminBundle\Entity\article;
 use site\UserBundle\Entity\User;
 
 use \DateTime;
+use \ReflectionClass;
 
 /**
  * panier
@@ -24,7 +25,7 @@ use \DateTime;
  */
 class panier {
 
-	protected $id;
+	// const CLASS_PANIER = 'panier';
 
 	/**
 	 * @ORM\Id
@@ -41,6 +42,13 @@ class panier {
 	protected $article;
 
 	/**
+	 * https://github.com/Atlantic18/DoctrineExtensions/blob/master/doc/sortable.md
+	 * @Gedmo\SortablePosition
+	 * @ORM\Column(type="integer")
+	 */
+	private $position;
+
+	/**
 	 * @var integer
 	 * @ORM\Column(name="quantite", type="integer", nullable=false, unique=false)
 	 */
@@ -50,24 +58,55 @@ class panier {
 	 * @var DateTime
 	 * @ORM\Column(name="created", type="datetime", nullable=false)
 	 */
-	protected $dateCreation;
+	protected $created;
 
 	/**
 	 * @var DateTime
 	 * @ORM\Column(name="updated", type="datetime", nullable=true)
 	 */
-	protected $dateMaj;
-
+	protected $updated;
 
 
 	public function __construct() {
-		$this->dateCreation = new DateTime();
-		$this->dateMaj = null;
+		$this->created = new DateTime();
+		$this->updated = null;
 		$this->quantite = 0;
+	}
+
+	/**
+	 * Renvoie le nom court de la classe
+	 * @return media
+	 */
+	public function getClassName() {
+		$class = new ReflectionClass(get_called_class());
+		return $class->getShortName();
+	}
+
+	/**
+	 * Renvoie la liste (array) des classes des parents de l'entité
+	 * @param boolean $short = false
+	 * @return array
+	 */
+	public function getParentsClassNames($short = false) {
+		$class = new ReflectionClass(get_called_class());
+		$short ?
+			$him = $class->getShortName():
+			$him = $class->getName();
+		$parents = array($him);
+		while($class = $class->getParentClass()) {
+			$short ?
+				$parents[] = $class->getShortName():
+				$parents[] = $class->getName();
+		}
+		return $parents;
 	}
 
 	public function getId() {
 		return 'User#'.$this->getUser()->getId().'/Article#'.$this->getArticle()->getId();
+	}
+
+	public function __toString() {
+		return $this->getQuantite()." x ".$this->getArticle()->getNom();
 	}
 
 	/**
@@ -98,6 +137,23 @@ class panier {
 		$this->article = $article;
 	
 		return $this;
+	}
+
+	/**
+	 * Set position
+	 * @param integer $position
+	 * @return panier
+	 */
+	public function setPosition($position) {
+		$this->position = $position;
+	}
+
+	/**
+	 * Get position
+	 * @return integer
+	 */
+	public function getPosition() {
+		return $this->position;
 	}
 
 	/**
@@ -165,46 +221,46 @@ class panier {
 	}
 
 	/**
-	 * Set dateCreation
-	 * @param DateTime $dateCreation
-	 * @return article
+	 * Set created
+	 * @param DateTime $created
+	 * @return panier
 	 */
-	public function setDateCreation($dateCreation) {
-		$this->dateCreation = $dateCreation;
+	public function setCreated(DateTime $created) {
+		$this->created = $created;
 		return $this;
 	}
 
 	/**
-	 * Get dateCreation
+	 * Get created
 	 * @return DateTime 
 	 */
-	public function getDateCreation() {
-		return $this->dateCreation;
+	public function getCreated() {
+		return $this->created;
 	}
 
 	/**
 	 * @ORM\PreUpdate
 	 */
-	public function updateDateMaj() {
-		$this->setDateMaj(new DateTime());
+	public function updateDate() {
+		$this->setUpdated(new DateTime());
 	}
 
 	/**
-	 * Set dateMaj
-	 * @param DateTime $dateMaj
-	 * @return article
+	 * Set updated
+	 * @param DateTime $updated
+	 * @return panier
 	 */
-	public function setDateMaj($dateMaj) {
-		$this->dateMaj = $dateMaj;
+	public function setUpdated(DateTime $updated) {
+		$this->updated = $updated;
 		return $this;
 	}
 
 	/**
-	 * Get dateMaj
+	 * Get updated
 	 * @return DateTime 
 	 */
-	public function getDateMaj() {
-		return $this->dateMaj;
+	public function getUpdated() {
+		return $this->updated;
 	}
 
 

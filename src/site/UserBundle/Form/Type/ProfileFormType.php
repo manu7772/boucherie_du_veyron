@@ -23,7 +23,7 @@ use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormEvent;
 
 use site\UserBundle\Entity\User;
-use site\adminBundle\Form\mediaType;
+use site\adminBundle\Form\imageType;
 
 use FOS\UserBundle\Form\Type\ProfileFormType as BaseType;
 
@@ -88,7 +88,7 @@ class ProfileFormType extends BaseType {
 					'class' => 'input-sm form-control',
 					),
 				))
-			->add('avatar', new mediaType(), array(
+			->add('avatar', new imageType(), array(
 				'translation_domain' => 'siteUserBundle',
 				'label' => 'fields.avatar',
 				'required' => false,

@@ -17,23 +17,20 @@ class DefaultController extends Controller {
 	public function indexAction() {
 		$this->em = $this->getDoctrine()->getManager();
 		$this->repo = $this->em->getRepository('site\adminBundle\Entity\pageweb');
-		$data['pageweb'] = $this->repo->findOneByHomepage(1);
-		$this->pagewebactions($data);
-		// chargement de la pageweb
-		if(isset($data['redirect'])) {
-			return $this->redirect($data['redirect']);
-		} else if(is_object($data['pageweb'])) {
-			return $this->render($data['pageweb']->getTemplate(), $data);
+		$data['pageweb'] = $this->repo->findOneByDefault(1);
+		if(is_object($data['pageweb'])) {
+			$this->pagewebactions($data);
+			// chargement de la pageweb
+			if(isset($data['redirect'])) {
+				return $this->redirect($data['redirect']);
+			} else if(is_object($data['pageweb'])) {
+				return $this->render($data['pageweb']->getTemplate(), $data);
+			}
 		} else {
-			// si aucune page web… chargement de la page par défaut…
 			// si aucune page web… chargement de la page par défaut…
 			$userService = $this->get('service.users');
 			$userService->usersExist(true);
 			return $this->redirect($this->generateUrl('generate'));
-			// $data['title'] = 'La Boucherie du Veyron';
-			// $data['description'] = 'La Boucherie du Veyron';
-			// $data['keywords'] = 'La Boucherie du Veyron';
-			// return $this->render('sitesiteBundle:Default:index.html.twig', $data);
 		}
 	}
 
@@ -42,20 +39,27 @@ class DefaultController extends Controller {
 		// if($params == null) $params = array();
 		$data = $this->get('tools_json')->JSonExtract($params);
 		$data['pageweb'] = $pageweb;
-		$this->pagewebactions($data);
 		// find $pageweb
 		$this->repo = $this->em->getRepository('site\adminBundle\Entity\pageweb');
 		$data['pageweb'] = $this->repo->findOneBySlug($pageweb);
-		// chargement de la pageweb
-		if(isset($data['redirect'])) {
-			return $this->redirect($data['redirect']);
-		} else if(is_object($data['pageweb'])) {
-			return $this->render($data['pageweb']->getTemplate(), $data);
+		if(is_object($data['pageweb'])) {
+			$this->pagewebactions($data);
+			// chargement de la pageweb
+			if(isset($data['redirect'])) {
+				return $this->redirect($data['redirect']);
+			} else if(is_object($data['pageweb'])) {
+				return $this->render($data['pageweb']->getTemplate(), $data);
+			}
+		} else {
+			// si aucune page web… chargement de la page par défaut…
+			$userService = $this->get('service.users');
+			$userService->usersExist(true);
+			return $this->redirect($this->generateUrl('generate'));
 		}
 	}
 
 	protected function pagewebactions(&$data) {
-		switch ($data['pageweb']) {
+		switch ($data['pageweb']->getModelename()) {
 			case 'contact':
 				// page contact
 				$message = $this->getNewEntity('site\adminBundle\Entity\message');
@@ -108,8 +112,9 @@ class DefaultController extends Controller {
 		$this->em = $this->getDoctrine()->getManager();
 		if(method_exists($newEntity, 'setStatut')) {
 			// si un champ statut existe
-			$inactif = $this->em->getRepository('site\adminBundle\Entity\statut')->defaultVal();
-			$newEntity->setStatut($inactif);
+			$statut = $this->em->getRepository('site\adminBundle\Entity\statut')->defaultVal();
+			if(is_array($statut)) $statut = reset($statut);
+			$newEntity->setStatut($statut);
 		}
 		return $newEntity;
 	}

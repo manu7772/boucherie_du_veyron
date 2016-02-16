@@ -1,81 +1,100 @@
 {% extends 'siteadminBundle:entites:entiteList.html.twig' %}
 {% set cssjsloads = 'TAB' %}
+{% set bodyclass = ['fixed-sidebar', 'full-height-layout'] %}
 {% set DEVMODE = (app.environment in ['DEV', 'TEST']) or (is_granted('ROLE_SUPER_ADMIN')) %}
 
 {% block buttons %}
 {% endblock buttons %}
 
-{% block content %}
-<div class="row">
-	<div class="col-md-12">
-		<div class="ibox float-e-margins">
-			<div class="ibox-content">
-				{% if entites|length > 0 %}
-				<table class="table table-striped table-bordered table-hover dataTables dataTable dtr-inline" id="DataTables_Table_0" role="grid" aria-describedby="DataTables_Table_0_info">
-					<thead>
-						<tr>
-							{% if DEVMODE %}<th class="text-center">{{ 'table.col.id'|trans|capitalize }}</th>{% endif %}
-							<th>{{ 'table.col.nom'|trans|capitalize }}</th>
-							<th>Actions</th>
-							<th>{{ 'table.col.email'|trans|capitalize }}</th>
-							<th>{{ 'table.col.objet'|trans|capitalize }} - {{ 'table.col.message'|trans|capitalize }}</th>
-						</tr>
-					</thead>
-					<tbody>
-						{% for entite in entites if(entite.statut.nom == 'Actif' or DEVMODE) %}
-						<tr{% if entite.statut.nom|default('Actif') != 'Actif' %} class="danger"{% endif %}>
-							{% if DEVMODE %}<td class="text-center">{{ entite.id }}</td>{% endif %}
-							<td>
+{% block wrapcontent %}
+{% if entites|length > 0 %}
+{% set extrait = 120 %}
+<div class="fh-breadcrumb">
+	<div class="fh-column">
+		<div class="full-height-scroll">
+			<ul class="list-group elements-list">
+				{% for entite in entites if(entite.statut.nom == 'Actif' or DEVMODE) %}
+				<li class="list-group-item{% if loop.first %} active{% endif %}">
+					<a data-toggle="tab" href="#tab-{{ loop.index }}">
+						<small class="pull-right text-muted"> {{ entite.creation|localizeddate('medium', 'none') }}</small>
+						<strong{% if entite.isRead|default(false) %} class='text-navy'{% endif %}>
+							{{ entite.nom|default(entite.email)|raw }}
+						</strong>
+						<div class="small m-t-xs">
+							<p>{{ phraseCut(entite.objet|default(phraseCut(entite.message, extrait)), extrait)|raw }}</p>
+							<p class="m-b-none">
 								{% if entite.user|default(null) != null %}
-								<a href="{{ path('siteUser_info', {username: entite.user.username}) }}"><strong>{{ entite.nom }}</strong></a>
+								<i class="fa fa-user pull-right text-navy"></i>
+								{% endif %}
+								<i class="fa fa-envelope"></i> {{ phraseCut(entite.email, 22) }}
+							</p>
+						</div>
+					</a>
+				</li>
+				{% endfor %}
+			</ul>
+		</div>
+	</div>
+	<div class="full-height">
+		<div class="full-height-scroll white-bg border-left">
+			<div class="element-detail-box">
+				<div class="tab-content">
+					{% for entite in entites if(entite.statut.nom == 'Actif' or DEVMODE) %}
+					<div id="tab-{{ loop.index }}" class="tab-pane{% if loop.first %} active{% endif %}">
+						<div class="pull-right">
+							<div class="tooltip-demo">
+								{% if entite.read %}
+								<!-- <a role='button' class="btn btn-white btn-xs" data-toggle="tooltip" data-placement="left" title="{{ UCfirst('message.action.lu'|trans) }}"><i class="fa fa-eye-slash icon-wait-on-click"></i> {{ UCfirst('message.etat.nonlu'|trans) }}</a> -->
 								{% else %}
-								{{ entite.nom }}
+								<!-- <a role='button' class="btn btn-white btn-xs" data-toggle="tooltip" data-placement="left" title="{{ UCfirst('message.action.nonlu'|trans) }}"><i class="fa fa-eye icon-wait-on-click"></i> {{ UCfirst('message.etat.lu'|trans) }}</a> -->
 								{% endif %}
-							</td>
-							<td>
-								<div class="btn-group">
-									<a href="mailto:{{ entite.email }}" type="button" class="btn btn-white btn-xs" title="{{ 'actions.repondre'|trans|capitalize }}"><i class="fa fa-paper-plane"></i></a>
-									{% set question = 'actions.suppQuestion'|trans({'%name%': entite.nom|default(entite.objet|default(phraseCut(entite.message, 20)|raw))}) %}
-									{% if type.type_values|default(null) != null %}
-									<a href="{{ path('siteadmin_entite_type', {entite: entite_name, type_related: type.type_related, type_field: type.type_field, type_values: type.type_values|join(type_value_joiner)|url_encode, id: entite.id, action: 'delete'}) }}" type="button" class="btn btn-white btn-xs need-confirmation" title="{{ 'actions.supprimer'|trans|capitalize }}" data-message="{{ question }}"><i class="fa fa-times"></i></a>
-									{% else %}
-									<a href="{{ path('siteadmin_entite', {entite: entite_name, id: entite.id, action: 'delete'}) }}" type="button" class="btn btn-white btn-xs need-confirmation" title="{{ 'actions.supprimer'|trans|capitalize }}" data-message="{{ question }}"><i class="fa fa-times"></i></a>
-									{% endif %}
-								</div>
+								<a href="mailto:{{ entite.email }}" role='button' class="btn btn-white btn-xs" data-toggle="tooltip" data-placement="bottom" title="{{ UCfirst('message.action.repondre'|trans) }}"><i class="fa fa-envelope"></i> {{ UCfirst('actions.repondre'|trans) }}</a>
+								{% set question = UCfirst('actions.suppQuestion'|trans({'%name%': entite.nom|default(entite.objet|default(phraseCut(entite.message, 20)|raw))})) %}
+								<a href="{{ path('siteadmin_entite', {entite: entite_name, id: entite.id, action: 'delete'}) }}" role='button' class="btn btn-white btn-xs need-confirmation" data-toggle="tooltip" data-placement="bottom" title="{{ UCfirst('message.action.supprimer'|trans) }}" data-message="{{ question }}"><i class="fa fa-trash-o icon-wait-on-click"></i> {{ UCfirst('actions.supprimer'|trans) }}</a>
 								{% if DEVMODE %}
-								<hr class="m-b-sm m-t-xs">
-								<div class="btn-group">
-									{% if type.type_values|default(null) != null %}
-									<a href="{{ path('siteadmin_entite_type', {entite: entite_name, type_related: type.type_related, type_field: type.type_field, type_values: type.type_values|join(type_value_joiner)|url_encode, id: entite.id, action: 'check'}) }}" type="button" class="btn btn-danger btn-xs" title="Checker article {{ entite.nom }}"><i class="fa fa-check"></i></a>
-									<a href="{{ path('siteadmin_entite_type', {entite: entite_name, type_related: type.type_related, type_field: type.type_field, type_values: type.type_values|join(type_value_joiner)|url_encode, id: entite.id, action: 'show'}) }}" type="button" class="btn btn-danger btn-xs" title="{{ (entite_name ~ '.moredetails')|trans({'%name%': entite.nom})|capitalize }}"><i class="fa fa-eye"></i></a>
-									<a href="{{ path('siteadmin_entite_type', {entite: entite_name, type_related: type.type_related, type_field: type.type_field, type_values: type.type_values|join(type_value_joiner)|url_encode, id: entite.id, action: 'edit'}) }}" type="button" class="btn btn-danger btn-xs" title="{{ 'actions.modifier'|trans|capitalize }}"><i class="fa fa-pencil"></i></a>
-									{% if(entite.statut.nom|default('Actif') != 'Actif') %}
-									<a href="{{ path('siteadmin_entite_type', {entite: entite_name, type_related: type.type_related, type_field: type.type_field, type_values: type.type_values|join(type_value_joiner)|url_encode, id: entite.id, action: 'active'}) }}" type="button" class="btn btn-danger btn-xs" title="{{ 'actions.activer'|trans|capitalize }}"><i class="fa fa-star"></i></a>
+									<a href="{{ path('siteadmin_entite', {entite: entite_name, id: entite.id, action: 'edit'}) }}" role='button' class="btn btn-danger btn-xs"><i class="fa fa-pencil icon-wait-on-click"></i></a>
+									{% if entite.statut.nom != 'Actif' %}
+									<a href="{{ path('siteadmin_entite', {entite: entite_name, id: entite.id, action: 'active'}) }}" role='button' class="btn btn-danger btn-xs"><i class="fa fa-star icon-wait-on-click"></i></a>
 									{% endif %}
-									{% else %}
-									<a href="{{ path('siteadmin_entite', {entite: entite_name, id: entite.id, action: 'check'}) }}" type="button" class="btn btn-danger btn-xs" title="Checker article {{ entite.nom }}"><i class="fa fa-check"></i></a>
-									<a href="{{ path('siteadmin_entite', {entite: entite_name, id: entite.id, action: 'show'}) }}" type="button" class="btn btn-danger btn-xs" title="{{ (entite_name ~ '.moredetails')|trans({'%name%': entite.nom})|capitalize }}"><i class="fa fa-eye"></i></a>
-									<a href="{{ path('siteadmin_entite', {entite: entite_name, id: entite.id, action: 'edit'}) }}" type="button" class="btn btn-danger btn-xs" title="{{ 'actions.modifier'|trans|capitalize }}"><i class="fa fa-pencil"></i></a>
-									{% if(entite.statut.nom|default('Actif') != 'Actif') %}
-									<a href="{{ path('siteadmin_entite', {entite: entite_name, id: entite.id, action: 'active'}) }}" type="button" class="btn btn-danger btn-xs" title="{{ 'actions.activer'|trans|capitalize }}"><i class="fa fa-star"></i></a>
-									{% endif %}
-									{% endif %}
-								</div>
 								{% endif %}
-							</td>
-							<td>{{ entite.email }}</td>
-							<td>
-								<strong>{{ entite.objet|default('<i class="fa fa-ban text-muted"></i>')|raw }}</strong> - <small><i>{{ phraseCut(entite.message, 160) }}</i></small>
-							</td>
-						</tr>
-						{% endfor %}
-					</tbody>
-				</table>
-				{% else %}
-				<h3><i class="fa fa-ban"></i> {{ (entite_name ~ '.not_found')|trans|capitalize }}</h3>
-				{% endif %}
+							</div>
+						</div>
+						<div class="small text-muted">
+							<i class="fa fa-clock-o"></i> {{ entite.creation|localizeddate('full', 'short') }}
+						</div>
+						<hr class="m-t-md m-b-sm">
+						<p>
+							{% if entite.nom %}{{ entite.nom }} {% endif %}
+							{% if entite.prenom %}{{ entite.prenom }} {% endif %}
+							{% if entite.nom or entite.prenom %} <i class="fa fa-angle-right"></i> {% endif %}
+							<a href="mailto:{{ entite.email }}" data-toggle="tooltip" data-placement="bottom" title="{{ UCfirst('message.action.repondre'|trans) }}">{{ entite.email }}</a>
+							{% if entite.user|default(null) != null %}
+							<a href="{{ path('siteUser_info', {username: entite.user.username}) }}" class="btn btn-xs btn-default pull-right" data-toggle="tooltip" data-placement="left" title="{{ UCfirst('user.moredetails'|trans({'%name%': entite.user.username})) }}">
+								<i class="fa fa-user m-r-xs"></i>{{ entite.user }}
+							</a>
+							{% endif %}
+						</p>
+						<hr class="m-t-xs m-b-xs">
+						<h1>{{ entite.objet|default('…')|raw }}</h1>
+						<p>{{ entite.message|raw }}</p>
+					</div>
+					{% endfor %}
+				</div>
 			</div>
 		</div>
 	</div>
 </div>
-{% endblock content %}
+{% else %}
+<div class="wrapper wrapper-content animated fadeInRight">
+	<div class="row">
+		<div class="col-md-12">
+			<div class="ibox float-e-margins">
+				<div class="ibox-content">
+					<h3><i class="fa fa-ban"></i> {{ UCfirst((entite_name ~ '.not_found')|trans) }}</h3>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+{% endif %}
+{% endblock wrapcontent %}

@@ -7,6 +7,9 @@ use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\ClassMetadata;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+
+use DateTime;
 
 /**
  * EntityBaseRepository
@@ -17,6 +20,77 @@ use Doctrine\ORM\Mapping\ClassMetadata;
 class EntityBaseRepository extends EntityRepository {
 
 	const ELEMENT = 'element';
+
+	protected $initCMD;
+	protected $ClassMetadata;
+	protected $fields;
+	protected $entity_shortName;
+	protected $entity_className;
+	protected $em;
+	protected $adminMode;
+
+	public function __construct(EntityManager $em, ClassMetadata $ClassMetadata) {
+		$this->ClassMetadata = $ClassMetadata;
+		parent::__construct($em, $this->ClassMetadata);
+		$this->em = $em;
+		$this->adminMode = 0;
+		$this->initCMData();
+	}
+
+	/** Renvoie la(les) valeur(s) par défaut --> ATTENTION : dans un array()
+	* @param $defaults = liste des éléments par défaut
+	*/
+	public function defaultVal() {
+		$qb = $this->createQueryBuilder(self::ELEMENT);
+		$qb->where(self::ELEMENT.'.default = :def')
+			->setParameter('def', 1)
+			;
+		return $qb->getQuery()->getResult();
+	}
+
+	/**
+	 * Détermine le niveau de séléction des éléments sensibles du site selon User / bundle / etc.
+	 * @param ContainerInterface $container
+	 * @return integer
+	 */
+	public function declareMode(ContainerInterface $container) {
+		$this->user = $container->get('security.context')->getToken()->getUser();
+		$controller = $container->get('request')->attributes->get('_controller');
+		$this->bundle = str_replace('\\', '', explode('Bundle', $controller)[0]);
+
+		// récupération des éléments de config
+		$this->modeParameters = $container->getParameter('repository-admin-mode');
+		$this->adminMode = $this->modeParameters['default'];
+		if(isset($this->modeParameters['bundles']) && is_object($this->user)) {
+			$userRole = $this->user->getBestRole();
+			if(array_key_exists($this->bundle, $this->modeParameters['bundles'])) {
+				if(isset($this->modeParameters['bundles'][$this->bundle]['default'])) $this->adminMode = $this->modeParameters['bundles'][$this->bundle]['default'];
+				if(isset($this->modeParameters['bundles'][$this->bundle][$userRole])) $this->adminMode = $this->modeParameters['bundles'][$this->bundle][$userRole];
+			}
+		}
+		// is_object($this->user) ? $user = $this->user.' / '.$userRole : $user = "anon." ;
+		// echo('<h4>User / role : '.$user.'</h4>');
+		// echo('<h4>Bundlename : '.$this->bundle.'</h4>');
+		// echo('<h4 style="color:red;">Niveau : '.$this->adminMode.'</h4>');
+	}
+
+	public function compileForMode(QueryBuilder &$qb) {
+		// mode normal : suppression des éléments périmés, sadmin, etc.
+		switch ($this->adminMode) {
+			case 2: // + haut niveau d'accès
+				break;
+			case 1: // niveau ADMIN
+				$this->defaultStatut($qb, array("Actif", "Inactif", "Expired"));
+				// $this->excludeExpired($qb);
+				// $this->excludeNotPublished($qb);
+				break;
+			default: // niveau USER
+				$this->defaultStatut($qb);
+				$this->excludeExpired($qb);
+				$this->excludeNotPublished($qb);
+				break;
+		}
+	}
 
 	/**
 	 * Recherche des entités selon des valeurs/champ
@@ -35,8 +109,11 @@ class EntityBaseRepository extends EntityRepository {
 					->where($qb->expr()->in('entity.'.$data['type_field'], $data['type_values']));
 			}
 		} else throw new Exception("Missing parameters for Repository method \"findWithField\"", 1);
+		// mode normal : suppression des éléments périmés, sadmin, etc.
+		$this->compileForMode($qb);
 		return $qb->getQuery()->$getMethod();
 	}
+
 
 	// public function findByField($types, $self = '_self', $asArray = false) {
 	// 	$asArray == true ? $getMethod = 'getArrayResult' : $getMethod = 'getResult';
@@ -56,6 +133,73 @@ class EntityBaseRepository extends EntityRepository {
 	// 	}
 	// 	return array();
 	// }
+
+	/**
+	 * initCMData
+	 */
+	private function initCMData() {
+		if($this->initCMD === false) {
+			$this->initCMD = true;
+			// ajout champs single
+			$fields = $this->ClassMetadata->getColumnNames();
+			foreach($fields as $f) {
+				$this->fields[$f]['nom'] = $f;
+				$this->fields[$f]['type'] = 'single';
+			}
+			// ajout champs associated
+			$assoc = $this->ClassMetadata->getAssociationMappings();
+			foreach($assoc as $nom => $field) {
+				$this->fields[$nom]['nom'] = $nom;
+				$this->fields[$nom]['type'] = 'association';
+			}
+			$this->entity_shortName = $this->ClassMetadata->getReflectionClass()->getShortName();
+			$this->entity_className = $this->ClassMetadata->getReflectionClass()->getNamespaceName();
+		}
+	}
+
+	/**
+	 * defaultStatut
+	 * Sélect element de statut = actif uniquement
+	 * @param QueryBuilder &$qb
+	 * @param array/string $statut = null
+	 */
+	protected function defaultStatut(QueryBuilder &$qb, $statut = null) {
+		if(array_key_exists("statut", $this->getFields())) {
+			if($statut === null) $statut = array("Actif");
+			if(is_string($statut)) $statut = array($statut);
+			$qb->join(self::ELEMENT.'.statut', 'stat')
+				->andWhere($qb->expr()->in('stat.nom', $statut));
+		}
+		// return $qb;
+	}
+
+	/**
+	 * excludeExpired
+	 * Sélect elements non expirés
+	 * @param Doctrine\ORM\QueryBuilder $qb
+	 * @return QueryBuilder
+	 */
+	protected function excludeExpired(QueryBuilder &$qb) {
+		if(array_key_exists("dateExpiration", $this->getFields())) {
+			$qb->andWhere(self::ELEMENT.'.dateExpiration > :date OR '.self::ELEMENT.'.dateExpiration is null')
+				->setParameter('date', new DateTime());
+		}
+		// return $qb;
+	}
+
+	/**
+	 * excludeNotPublished
+	 * Sélect elements publiés
+	 * @param Doctrine\ORM\QueryBuilder $qb
+	 * @return QueryBuilder
+	 */
+	protected function excludeNotPublished(QueryBuilder &$qb) {
+		if(array_key_exists("datePublication", $this->getFields())) {
+			$qb->andWhere(self::ELEMENT.'.datePublication < :date OR '.self::ELEMENT.'.datePublication is null')
+				->setParameter('date', new DateTime());
+		}
+		// return $qb;
+	}
 
 
 }

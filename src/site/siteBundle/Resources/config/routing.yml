@@ -6,3 +6,9 @@ site_pageweb:
     path:       /page/{pageweb}/{params}
     defaults:   { _controller: sitesiteBundle:Default:pageweb, params: null }
 
+
+# Gestion du panier
+panier_action:
+    path:       /panier/action/{action}/{id}/{param}
+    defaults:   { _controller: sitesiteBundle:panier:panier, action: 'add', id: null, param: null }
+

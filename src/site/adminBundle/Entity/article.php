@@ -6,14 +6,16 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Doctrine\Common\Collections\ArrayCollection;
+use JMS\Serializer\Annotation\ExclusionPolicy;
+use JMS\Serializer\Annotation\Expose;
 // Slug
 use Gedmo\Mapping\Annotation as Gedmo;
 
-use site\adminBundle\Entity\statut;
-use site\adminBundle\Entity\media;
+use site\adminBundle\Entity\item;
+
+use site\adminBundle\Entity\reseau;
 use site\adminBundle\Entity\marque;
 use site\adminBundle\Entity\tauxTva;
-use site\adminBundle\Entity\categorie;
 
 use \DateTime;
 
@@ -24,53 +26,9 @@ use \DateTime;
  * @ORM\Table(name="article")
  * @ORM\HasLifecycleCallbacks()
  * @ORM\Entity(repositoryClass="site\adminBundle\Entity\articleRepository")
+ * @ExclusionPolicy("all")
  */
-class article {
-
-	/**
-	 * @var integer
-	 * @ORM\Id
-	 * @ORM\Column(name="id", type="integer")
-	 * @ORM\GeneratedValue(strategy="AUTO")
-	 */
-	protected $id;
-
-	/**
-	 * @var string
-	 * @ORM\Column(name="nom", type="string", length=100, nullable=false, unique=false)
-	 * @Assert\NotBlank(message = "Vous devez nommer cet artible.")
-	 * @Assert\Length(
-	 *      min = "3",
-	 *      max = "100",
-	 *      minMessage = "Le nom doit comporter au moins {{ limit }} lettres.",
-	 *      maxMessage = "Le nom doit comporter au maximum {{ limit }} lettres."
-	 * )
-	 */
-	protected $nom;
-
-	/**
-	 * @var string
-	 * @ORM\Column(name="descriptif", type="text", nullable=true, unique=false)
-	 */
-	protected $descriptif;
-
-	/**
-	 * @var DateTime
-	 * @ORM\Column(name="created", type="datetime", nullable=false)
-	 */
-	protected $dateCreation;
-
-	/**
-	 * @var DateTime
-	 * @ORM\Column(name="updated", type="datetime", nullable=true)
-	 */
-	protected $dateMaj;
-
-	/**
-	 * @ORM\ManyToOne(targetEntity="site\adminBundle\Entity\statut")
-	 * @ORM\JoinColumn(nullable=false, unique=false)
-	 */
-	protected $statut;
+class article extends item {
 
 	/**
 	 * @var string
@@ -112,59 +70,32 @@ class article {
 	protected $tauxTva;
 
 	/**
-	 * @ORM\ManyToOne(targetEntity="site\adminBundle\Entity\marque")
-	 * @ORM\JoinColumn(nullable=true)
+	 * - PROPRIÉTAIRE
+	 * @ORM\ManyToOne(targetEntity="site\adminBundle\Entity\marque", inversedBy="articles")
+	 * @ORM\JoinColumn(nullable=true, unique=false, onDelete="SET NULL")
 	 */
 	protected $marque;
 
 	/**
-	 * @var array
-	 * @ORM\ManyToOne(targetEntity="site\adminBundle\Entity\media", cascade={"all"})
+	 * - PROPRIÉTAIRE
+	 * @ORM\ManyToMany(targetEntity="site\adminBundle\Entity\reseau", inversedBy="articles")
 	 * @ORM\JoinColumn(nullable=true, unique=false, onDelete="SET NULL")
 	 */
-	protected $image;
+	protected $reseaus;
 
 	/**
-	 * @var array
-	 * @ORM\ManyToMany(targetEntity="site\adminBundle\Entity\media")
+	 * - PROPRIÉTAIRE
+	 * @ORM\OneToOne(targetEntity="site\adminBundle\Entity\pdf", cascade={"all"}, inversedBy="article")
 	 * @ORM\JoinColumn(nullable=true, unique=false, onDelete="SET NULL")
 	 */
-	protected $images;
+	protected $pdf;
 
 	/**
-	 * @var array
-	 * @ORM\OneToOne(targetEntity="site\adminBundle\Entity\media", cascade={"all"})
-	 * @ORM\JoinColumn(nullable=true, unique=true, onDelete="SET NULL")
-	 */
-	protected $fichierPdf;
-
-	/**
-	 * @var array
-	 * @ORM\OneToOne(targetEntity="site\adminBundle\Entity\media", cascade={"all"})
-	 * @ORM\JoinColumn(nullable=true, unique=true, onDelete="SET NULL")
-	 */
-	protected $ficheTechniquePdf;
-
-	/**
-	 * @var array
-	 * @ORM\ManyToMany(targetEntity="site\adminBundle\Entity\categorie", mappedBy="articles")
+	 * - INVERSE
+	 * @ORM\ManyToMany(targetEntity="site\adminBundle\Entity\fiche", mappedBy="articles")
 	 * @ORM\JoinColumn(nullable=true, unique=false, onDelete="SET NULL")
-	 */
-	protected $categories;
-
-	/**
-	 * @var array
-	 * @ORM\ManyToMany(targetEntity="site\adminBundle\Entity\fiche", inversedBy="articles")
-	 * @ORM\JoinColumn(nullable=true, unique=false)
 	 */
 	protected $fiches;
-
-	/**
-	 * @var array
-	 * @ORM\ManyToMany(targetEntity="site\adminBundle\Entity\tag", inversedBy="articles")
-	 * @ORM\JoinColumn(nullable=true, unique=false)
-	 */
-	protected $tags;
 
 	/**
 	 * @var array
@@ -182,40 +113,26 @@ class article {
 	 */
 	protected $articlesLies;
 
-	/**
-	 * @Gedmo\Slug(fields={"nom"})
-	 * @ORM\Column(length=128, unique=true)
-	 */
-	protected $slug;
-
-	protected $keywords;
 
 	public function __construct() {
-		$this->nom = null;
-		$this->descriptif = null;
-		$this->dateCreation = new DateTime();
-		$this->dateMaj = null;
-		$this->statut = null;
+		parent::__construct();
 		$this->refFabricant = null;
 		$this->accroche = null;
-		$this->keywords = null;
 		$this->prix = 0;
 		$this->prixHT = 0;
 		$this->tauxTva = null;
 		$this->marque = null;
-		$this->image = null;
-		$this->images = new ArrayCollection();
-		$this->fichierPdf = null;
-		$this->ficheTechniquePdf = null;
-		$this->categories = new ArrayCollection();
+		$this->reseaus = new ArrayCollection();
 		$this->fiches = new ArrayCollection();
-		$this->tags = new ArrayCollection();
 		$this->articlesParents = new ArrayCollection();
 		$this->articlesLies = new ArrayCollection();
 	}
 
+    // public function getClassName(){
+    //     return parent::CLASS_ARTICLE;
+    // }
+
 	/**
-	 * 
 	 * @ORM\PrePersist
 	 * @ORM\PreUpdate
 	 */
@@ -233,114 +150,13 @@ class article {
 		}
 	}
 
-	public function __toString() {
-		return $this->getNom();
-	}
-
-	/**
-	 * Get id
-	 * @return integer 
-	 */
-	public function getId() {
-		return $this->id;
-	}
-
-	/**
-	 * Set nom
-	 * @param string $nom
-	 * @return article
-	 */
-	public function setNom($nom) {
-		$this->nom = $nom;
-		return $this;
-	}
-
-	/**
-	 * Get nom
-	 * @return string 
-	 */
-	public function getNom() {
-		return $this->nom;
-	}
-
-	/**
-	 * Set descriptif
-	 * @param string $descriptif
-	 * @return article
-	 */
-	public function setDescriptif($descriptif) {
-		$this->descriptif = $descriptif;
-		return $this;
-	}
-
-	/**
-	 * Get descriptif
-	 * @return string 
-	 */
-	public function getDescriptif() {
-		return $this->descriptif;
-	}
-
-	/**
-	 * Set dateCreation
-	 * @param DateTime $dateCreation
-	 * @return article
-	 */
-	public function setDateCreation($dateCreation) {
-		$this->dateCreation = $dateCreation;
-		return $this;
-	}
-
-	/**
-	 * Get dateCreation
-	 * @return DateTime 
-	 */
-	public function getDateCreation() {
-		return $this->dateCreation;
-	}
-
-	/**
-	 * @ORM\PreUpdate
-	 */
-	public function updateDateMaj() {
-		$this->setDateMaj(new DateTime());
-	}
-
-	/**
-	 * Set dateMaj
-	 * @param DateTime $dateMaj
-	 * @return article
-	 */
-	public function setDateMaj($dateMaj) {
-		$this->dateMaj = $dateMaj;
-		return $this;
-	}
-
-	/**
-	 * Get dateMaj
-	 * @return DateTime 
-	 */
-	public function getDateMaj() {
-		return $this->dateMaj;
-	}
-
-	/**
-	 * Set statut
-	 * @param statut $statut
-	 * @return article
-	 */
-	public function setStatut(statut $statut) {
-		$this->statut = $statut;
-		return $this;
-	}
-
-	/**
-	 * Get statut
-	 * @return statut 
-	 */
-	public function getStatut() {
-		return $this->statut;
-	}
+	// /**
+	//  * Renvoie l'image principale
+	//  * @return image
+	//  */
+	// public function getMainMedia() {
+	// 	return $this->getImage();
+	// }
 
 	/**
 	 * Set refFabricant
@@ -449,17 +265,19 @@ class article {
 	}
 
 	/**
-	 * Set marque
+	 * Set marque - PROPRIÉTAIRE
 	 * @param marque $marque
 	 * @return article
 	 */
-	public function setMarque(marque $marque) {
+	public function setMarque(marque $marque = null) {
+		if($marque == null) $marque->removeArticle($this);
+		else $marque->addArticle($this);
 		$this->marque = $marque;
 		return $this;
 	}
 
 	/**
-	 * Get marque
+	 * Get marque - PROPRIÉTAIRE
 	 * @return marque 
 	 */
 	public function getMarque() {
@@ -467,179 +285,55 @@ class article {
 	}
 
 	/**
-	 * Set image
-	 * @param image $image
+	 * Set pdf - PROPRIÉTAIRE
+	 * @param pdf $pdf
 	 * @return article
 	 */
-	public function setImage(media $image = null) {
-		$this->image = $image;
+	public function setpdf(pdf $pdf = null) {
+		$pdf->setArticle($this);
+		$this->pdf = $pdf;
 		return $this;
 	}
 
 	/**
-	 * Get image
-	 * @return image 
+	 * Get pdf - PROPRIÉTAIRE
+	 * @return pdf 
 	 */
-	public function getImage() {
-		return $this->image;
+	public function getpdf() {
+		return $this->pdf;
 	}
 
 	/**
-	 * Add image
-	 * @param media $image
+	 * Add reseau
+	 * @param reseau $reseau
 	 * @return article
 	 */
-	public function addImage(media $image) {
-		$this->images->add($image);
-		$image->addArticle_reverse($this);
+	public function addReseau(reseau $reseau) {
+		$reseau->addArticle($this);
+		$this->reseaus->add($reseau);
 		return $this;
 	}
 
 	/**
-	 * Add image reverse
-	 * @param media $image
-	 * @return article
-	 */
-	public function addImage_reverse(media $image) {
-		$this->images->add($image);
-		return $this;
-	}
-
-	/**
-	 * Remove image
-	 * @param media $image
-	 */
-	public function removeImage(media $image) {
-		$image->removeArticle_reverse($this);
-		return $this->images->removeElement($image);
-	}
-
-	/**
-	 * Remove image reverse
-	 * @param media $image
-	 */
-	public function removeImage_reverse(media $image) {
-		return $this->images->removeElement($image);
-	}
-
-	/**
-	 * Get images
-	 * @return ArrayCollection 
-	 */
-	public function getImages() {
-		return $this->images;
-	}
-
-	/**
-	 * Set fichierPdf
-	 * @param fichierPdf $fichierPdf
-	 * @return article
-	 */
-	public function setFichierPdf(media $fichierPdf = null) {
-		$this->fichierPdf = $fichierPdf;
-		if($fichierPdf != null) $fichierPdf->setArticle_reverse($this);
-			else $fichierPdf->setArticle_reverse(null);
-		return $this;
-	}
-
-	/**
-	 * Set fichierPdf reverse
-	 * @param fichierPdf $fichierPdf
-	 * @return article
-	 */
-	public function setFichierPdf_reverse(media $fichierPdf = null) {
-		$this->fichierPdf = $fichierPdf;
-		return $this;
-	}
-
-	/**
-	 * Get fichierPdf
-	 * @return media 
-	 */
-	public function getFichierPdf() {
-		return $this->fichierPdf;
-	}
-
-	/**
-	 * Set ficheTechniquePdf
-	 * @param media $ficheTechniquePdf
-	 * @return article
-	 */
-	public function setFicheTechniquePdf(media $ficheTechniquePdf = null) {
-		$this->ficheTechniquePdf = $ficheTechniquePdf;
-		if($ficheTechniquePdf != null) $ficheTechniquePdf->setArticle_reverse($this);
-			else $ficheTechniquePdf->setArticle_reverse(null);
-		return $this;
-	}
-
-	/**
-	 * Set ficheTechniquePdf reverse
-	 * @param media $ficheTechniquePdf
-	 * @return article
-	 */
-	public function setFicheTechniquePdf_reverse(media $ficheTechniquePdf = null) {
-		$this->ficheTechniquePdf = $ficheTechniquePdf;
-		return $this;
-	}
-
-	/**
-	 * Get ficheTechniquePdf
-	 * @return media 
-	 */
-	public function getFicheTechniquePdf() {
-		return $this->ficheTechniquePdf;
-	}
-
-	/**
-	 * Get categories
-	 * @return ArrayCollection 
-	 */
-	public function getCategories() {
-		return $this->categories;
-	}
-
-	/**
-	 * Add categorie
-	 * @param categorie $categorie
-	 * @return article
-	 */
-	public function addCategorie(categorie $categorie) {
-		$this->categories->add($categorie);
-		$categorie->addArticle_reverse($this);
-		return $this;
-	}
-
-	/**
-	 * Add categorie reverse
-	 * @param categorie $categorie
-	 * @return article
-	 */
-	public function addCategorie_reverse(categorie $categorie) {
-		$this->categories->add($categorie);
-		return $this;
-	}
-
-	/**
-	 * Remove categorie
-	 * @param categorie $categorie
+	 * Remove reseau
+	 * @param reseau $reseau
 	 * @return boolean
 	 */
-	public function removeCategorie(categorie $categorie) {
-		$categorie->removeArticle_reverse($this);
-		return $this->categories->removeElement($categorie);
+	public function removeReseau(reseau $reseau) {
+		$reseau->removeArticle($this);
+		return $this->reseaus->removeElement($reseau);
 	}
 
 	/**
-	 * Remove categorie
-	 * @param categorie $categorie
-	 * @return boolean
+	 * Get reseaus
+	 * @return ArrayCollection 
 	 */
-	public function removeCategorie_reverse(categorie $categorie) {
-		return $this->categories->removeElement($categorie);
+	public function getReseaus() {
+		return $this->reseaus;
 	}
 
 	/**
-	 * Get fiches
+	 * Get fiches - INVERSE
 	 * @return ArrayCollection 
 	 */
 	public function getFiches() {
@@ -647,89 +341,21 @@ class article {
 	}
 
 	/**
-	 * Add fiche
+	 * Add fiche - INVERSE
 	 * @param fiche $fiche
 	 * @return article
 	 */
-	public function addFiche(fiche $fiche, $doReverse = true) {
-		if($doReverse == true) $fiche->addArticle($this, false);
-		$this->fiches->add($fiches);
+	public function addFiche(fiche $fiche) {
+		$this->fiches->add($fiche);
 		return $this;
 	}
 
 	/**
-	 * Remove fiche
+	 * Remove fiche - INVERSE
 	 * @param fiche $fiche
 	 */
-	public function removeFiche(fiche $fiche, $doReverse = true) {
-		if($doReverse == true) $fiche->removeArticle($this, false);
+	public function removeFiche(fiche $fiche) {
 		return $this->fiches->removeElement($fiche);
-	}
-
-	/**
-	 * Set keywords
-	 * @ORM\PostLoad
-	 * @param string $keywords
-	 * @return article
-	 */
-	public function setKeywords($keywords = null) {
-		$this->keywords = implode($this->getTags()->toArray(), ', ');
-		return $this;
-	}
-
-	/**
-	 * Get keywords
-	 * @return string 
-	 */
-	public function getKeywords() {
-		return $this->keywords;
-	}
-
-	/**
-	 * Add tag
-	 * @param tag $tag
-	 * @return article
-	 */
-	public function addTag(tag $tag, $doReverse = true) {
-		if($doReverse == true) $tag->addArticle($this, false);
-		$this->tags->add($tag);
-		return $this;
-	}
-
-	/**
-	 * Remove tag
-	 * @param tag $tag
-	 * @return boolean
-	 */
-	public function removeTag(tag $tag, $doReverse = true) {
-		if($doReverse == true) $tag->removeArticle($this, false);
-		return $this->tags->removeElement($tag);
-	}
-
-	/**
-	 * Get tags
-	 * @return ArrayCollection 
-	 */
-	public function getTags() {
-		return $this->tags;
-	}
-
-	/**
-	 * Set slug
-	 * @param integer $slug
-	 * @return baseEntity
-	 */
-	public function setSlug($slug) {
-		$this->slug = $slug;
-		return $this;
-	}    
-
-	/**
-	 * Get slug
-	 * @return string
-	 */
-	public function getSlug() {
-		return $this->slug;
 	}
 
 	/**

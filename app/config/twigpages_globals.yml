@@ -18,7 +18,7 @@ twig:
         menu_Admin:
             accueil:
                 nom: 'accueil'
-                path: %homepage%
+                path: siteadmin_homepage
                 icon: 'fa-home'
             traduction:
                 role: 'ROLE_TRANSLATOR'
@@ -38,6 +38,27 @@ twig:
                             path: 'siteadmin_entite'
                             params:
                                 entite: article
+                    marques:
+                        role: 'ROLE_ADMIN'
+                        nom: 'marque.name_s'
+                        path: 
+                            path: 'siteadmin_entite'
+                            params:
+                                entite: marque
+                    boutiques:
+                        role: 'ROLE_ADMIN'
+                        nom: 'boutique.name_s'
+                        path: 
+                            path: 'siteadmin_entite'
+                            params:
+                                entite: boutique
+                    reseaux:
+                        role: 'ROLE_ADMIN'
+                        nom: 'reseau.name_s'
+                        path: 
+                            path: 'siteadmin_entite'
+                            params:
+                                entite: reseau
                     tauxTva:
                         role: 'ROLE_ADMIN'
                         nom: 'tauxTva.name_s'
@@ -68,36 +89,39 @@ twig:
             media:
                 role: 'ROLE_EDITOR'
                 nom: 'media.name_s'
-                path: 
-                    path: 'siteadmin_entite'
-                    params:
-                        entite: media
+                path: 'siteadmin_homepage'
                 icon: 'fa-film'
                 level2: 
                     images:
-                        nom: 'images'
+                        nom: 'image.name_s'
                         path: 
-                            path: 'siteadmin_entite_type'
+                            path: 'siteadmin_entite'
                             params:
-                                entite: media
-                                type_related: _self
-                                type_field: mediaType
-                                type_values: image
+                                entite: image
+                                # type_related: _self
+                                # type_field: mediaType
+                                # type_values: image
                     pdf:
-                        nom: 'pdf'
+                        nom: 'pdf.name_s'
                         path: 
-                            path: 'siteadmin_entite_type'
+                            path: 'siteadmin_entite'
                             params:
-                                entite: media
-                                type_related: _self
-                                type_field: mediaType
-                                type_values: pdf
+                                entite: pdf
+                                # type_related: _self
+                                # type_field: mediaType
+                                # type_values: pdf
                     fiches:
                         nom: 'fiche.name_s'
                         path: 
                             path: 'siteadmin_entite'
                             params:
                                 entite: fiche
+                    tags:
+                        nom: 'tag.name_s'
+                        path: 
+                            path: 'siteadmin_entite'
+                            params:
+                                entite: tag
             utilisateurs:
                 role: %restrict_admin%
                 nom: 'User.name_s'
@@ -152,13 +176,7 @@ twig:
                 path: 'siteadmin_homepage'
                 icon: 'fa-gear'
                 level2: 
-                    item0:
-                        nom: 'tag.name_s'
-                        path: 
-                            path: 'siteadmin_entite'
-                            params:
-                                entite: tag
-                    item1:
+                    fileFormat:
                         nom: 'fileFormat.name_s'
                         path: 
                             path: 'siteadmin_entite'
@@ -170,10 +188,16 @@ twig:
                 icon: 'fa-support'
             ROLE_SUPER_ADMIN:
                 role: 'ROLE_SUPER_ADMIN'
-                nom: 'Super Admin'
-                path: 'siteadmin_homepage'
+                nom: 'superadmin.name'
+                path: 'siteadmin_sadmin_index'
                 icon: 'fa-cogs'
                 level2: 
-                    item1:
+                    sadminHome:
+                        nom: 'superadmin.name'
+                        path: 'siteadmin_sadmin_index'
+                    generate:
                         nom: 'install.name'
                         path: 'generate'
+                    entities:
+                        nom: 'superadmin.entites'
+                        path: 'siteadmin_sadmin_entities'

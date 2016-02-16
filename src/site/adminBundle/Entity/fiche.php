@@ -6,8 +6,12 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Doctrine\Common\Collections\ArrayCollection;
+use JMS\Serializer\Annotation\ExclusionPolicy;
+use JMS\Serializer\Annotation\Expose;
 // Slug
 use Gedmo\Mapping\Annotation as Gedmo;
+
+use site\adminBundle\Entity\item;
 
 use \DateTime;
 
@@ -18,21 +22,14 @@ use \DateTime;
  * @ORM\Table(name="fiche")
  * @ORM\HasLifecycleCallbacks()
  * @ORM\Entity(repositoryClass="site\adminBundle\Entity\ficheRepository")
+ * @ExclusionPolicy("all")
  */
-class fiche {
-
-	/**
-	 * @var integer
-	 * @ORM\Id
-	 * @ORM\Column(name="id", type="integer")
-	 * @ORM\GeneratedValue(strategy="AUTO")
-	 */
-	protected $id;
+class fiche extends item {
 
 	/**
 	 * @var string
 	 * @ORM\Column(name="nom", type="string", length=100, nullable=false, unique=false)
-	 * @Assert\NotBlank(message = "Vous devez nommer cet artible.")
+	 * @Assert\NotBlank(message = "Vous devez nommer cette fiche")
 	 * @Assert\Length(
 	 *      min = "3",
 	 *      max = "100",
@@ -41,24 +38,6 @@ class fiche {
 	 * )
 	 */
 	protected $nom;
-
-	/**
-	 * @var string
-	 * @ORM\Column(name="descriptif", type="text", nullable=true, unique=false)
-	 */
-	protected $descriptif;
-
-	/**
-	 * @var DateTime
-	 * @ORM\Column(name="created", type="datetime", nullable=false)
-	 */
-	protected $dateCreation;
-
-	/**
-	 * @var DateTime
-	 * @ORM\Column(name="updated", type="datetime", nullable=true)
-	 */
-	protected $dateMaj;
 
 	/**
 	 * @var DateTime
@@ -71,12 +50,6 @@ class fiche {
 	 * @ORM\Column(name="dateExpiration", type="datetime", nullable=true)
 	 */
 	protected $dateExpiration;
-
-	/**
-	 * @ORM\ManyToOne(targetEntity="site\adminBundle\Entity\statut")
-	 * @ORM\JoinColumn(nullable=false, unique=false)
-	 */
-	protected $statut;
 
 	/**
 	 * @var string
@@ -101,33 +74,11 @@ class fiche {
 	protected $duree;
 
 	/**
-	 * @var array
-	 * @ORM\ManyToOne(targetEntity="site\adminBundle\Entity\media", cascade={"all"})
+	 * @var array - PROPRIÉTAIRE
+	 * @ORM\ManyToMany(targetEntity="site\adminBundle\Entity\article", inversedBy="fiches")
 	 * @ORM\JoinColumn(nullable=true, unique=false, onDelete="SET NULL")
 	 */
-	protected $image;
-
-	/**
-	 * @Gedmo\Slug(fields={"nom"})
-	 * @ORM\Column(length=128, unique=true)
-	 */
-	protected $slug;
-
-	/**
-	 * @var array
-	 * @ORM\ManyToMany(targetEntity="site\adminBundle\Entity\article", mappedBy="fiches")
-	 * @ORM\JoinColumn(nullable=true, unique=false)
-	 */
 	protected $articles;
-
-	/**
-	 * @var array
-	 * @ORM\ManyToMany(targetEntity="site\adminBundle\Entity\tag", inversedBy="fiches")
-	 * @ORM\JoinColumn(nullable=true, unique=false)
-	 */
-	protected $tags;
-
-	protected $keywords;
 
 	protected $listeNiveaux = array(
 		"débutant" => "débutant",
@@ -149,21 +100,27 @@ class fiche {
         );
 
 	public function __construct() {
-		$this->dateCreation = new DateTime();
+		parent::__construct();
 		$this->datePublication = new DateTime();
-		$this->dateMaj = null;
 		$this->dateExpiration = null;
 		$this->articles = new ArrayCollection();
 		reset($this->listeNiveaux);
 		$this->setNiveau(current($this->listeNiveaux)); // Niveau par défaut
 		$this->duree = 30;
 		$this->tags = new ArrayCollection();
-		$this->keywords = null;
 	}
 
-	public function __toString() {
-		return $this->getNom();
-	}
+    // public function getClassName(){
+    //     return parent::CLASS_FICHE;
+    // }
+
+	// /**
+	//  * Renvoie l'image principale
+	//  * @return image
+	//  */
+	// public function getMainMedia() {
+	// 	return $this->getImage();
+	// }
 
 	/**
 	 * get niveaux
@@ -182,99 +139,12 @@ class fiche {
 	}
 
 	/**
-	 * Get id
-	 * @return integer 
-	 */
-	public function getId() {
-		return $this->id;
-	}
-
-	/**
-	 * Set nom
-	 * @param string $nom
-	 * @return fiche
-	 */
-	public function setNom($nom) {
-		$this->nom = $nom;
-		return $this;
-	}
-
-	/**
-	 * Get nom
-	 * @return string 
-	 */
-	public function getNom() {
-		return $this->nom;
-	}
-
-	/**
-	 * Set descriptif
-	 * @param string $descriptif
-	 * @return fiche
-	 */
-	public function setDescriptif($descriptif) {
-		$this->descriptif = $descriptif;
-		return $this;
-	}
-
-	/**
-	 * Get descriptif
-	 * @return string 
-	 */
-	public function getDescriptif() {
-		return $this->descriptif;
-	}
-
-	/**
-	 * Set dateCreation
-	 * @param DateTime $dateCreation
-	 * @return fiche
-	 */
-	public function setDateCreation($dateCreation) {
-		$this->dateCreation = $dateCreation;
-		return $this;
-	}
-
-	/**
-	 * Get dateCreation
-	 * @return DateTime 
-	 */
-	public function getDateCreation() {
-		return $this->dateCreation;
-	}
-
-	/**
-	 * @ORM\PreUpdate
-	 */
-	public function updateDateMaj() {
-		$this->setDateMaj(new DateTime());
-	}
-
-	/**
-	 * Set dateMaj
-	 * @param DateTime $dateMaj
-	 * @return fiche
-	 */
-	public function setDateMaj($dateMaj) {
-		$this->dateMaj = $dateMaj;
-		return $this;
-	}
-
-	/**
-	 * Get dateMaj
-	 * @return DateTime 
-	 */
-	public function getDateMaj() {
-		return $this->dateMaj;
-	}
-
-	/**
 	 * Set datePublication
 	 * @param DateTime $datePublication
 	 * @return fiche
 	 */
 	public function setDatePublication($datePublication = null) {
-		if(($datePublication < $this->dateCreation) || ($datePublication === null)) $datePublication = $this->dateCreation;
+		if(($datePublication < $this->created) || ($datePublication === null)) $datePublication = $this->created;
 		$this->datePublication = $datePublication;
 		return $this;
 	}
@@ -293,7 +163,7 @@ class fiche {
 	 * @return fiche
 	 */
 	public function setDateExpiration($dateExpiration = null) {
-		if(($dateExpiration < $this->dateCreation) && ($dateExpiration !== null)) $dateExpiration = null;
+		if(($dateExpiration < $this->created) && ($dateExpiration !== null)) $dateExpiration = null;
 		$this->dateExpiration = $dateExpiration;
 		return $this;
 	}
@@ -304,24 +174,6 @@ class fiche {
 	 */
 	public function getDateExpiration() {
 		return $this->dateExpiration;
-	}
-
-	/**
-	 * Set statut
-	 * @param statut $statut
-	 * @return fiche
-	 */
-	public function setStatut(statut $statut) {
-		$this->statut = $statut;
-		return $this;
-	}
-
-	/**
-	 * Get statut
-	 * @return statut 
-	 */
-	public function getStatut() {
-		return $this->statut;
 	}
 
 	/**
@@ -379,42 +231,6 @@ class fiche {
 	}
 
 	/**
-	 * Set slug
-	 * @param string $slug
-	 * @return fiche
-	 */
-	public function setSlug($slug) {
-		$this->slug = $slug;
-		return $this;
-	}
-
-	/**
-	 * Get slug
-	 * @return string 
-	 */
-	public function getSlug() {
-		return $this->slug;
-	}
-
-	/**
-	 * Set image
-	 * @param image $image
-	 * @return fiche
-	 */
-	public function setImage(media $image = null) {
-		$this->image = $image;
-		return $this;
-	}
-
-	/**
-	 * Get image
-	 * @return image 
-	 */
-	public function getImage() {
-		return $this->image;
-	}
-
-	/**
 	 * Get articles
 	 * @return ArrayCollection 
 	 */
@@ -427,8 +243,8 @@ class fiche {
 	 * @param article $article
 	 * @return video
 	 */
-	public function addArticle(article $article, $doReverse = true) {
-		if($doReverse == true) $article->addFiche($this, false);
+	public function addArticle(article $article) {
+		$article->addFiche($this);
 		$this->articles->add($article);
 		return $this;
 	}
@@ -438,57 +254,9 @@ class fiche {
 	 * @param article $article
 	 * @return boolean
 	 */
-	public function removeArticle(article $article, $doReverse = true) {
-		if($doReverse == true) $article->removeFiche($this, false);
+	public function removeArticle(article $article) {
+		$article->removeFiche($this);
 		return $this->articles->removeElement($article);
-	}
-
-	/**
-	 * Set keywords
-	 * @ORM\PostLoad
-	 * @param string $keywords
-	 * @return fiche
-	 */
-	public function setKeywords($keywords = null) {
-		$this->keywords = implode($this->getTags()->toArray(), ', ');
-		return $this;
-	}
-
-	/**
-	 * Get keywords
-	 * @return string 
-	 */
-	public function getKeywords() {
-		return $this->keywords;
-	}
-
-	/**
-	 * Add tag
-	 * @param tag $tag
-	 * @return fiche
-	 */
-	public function addTag(tag $tag, $doReverse = true) {
-		if($doReverse == true) $tag->addArticle($this, false);
-		$this->tags->add($tag);
-		return $this;
-	}
-
-	/**
-	 * Remove tag
-	 * @param tag $tag
-	 * @return boolean
-	 */
-	public function removeTag(tag $tag, $doReverse = true) {
-		if($doReverse == true) $tag->removeArticle($this, false);
-		return $this->tags->removeElement($tag);
-	}
-
-	/**
-	 * Get tags
-	 * @return ArrayCollection 
-	 */
-	public function getTags() {
-		return $this->tags;
 	}
 
 }

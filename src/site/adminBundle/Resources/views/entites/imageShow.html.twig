@@ -49,10 +49,6 @@
 					</thead>
 					<tbody>
 						<tr>
-							<td><strong>{{ 'table.col.mediatype'|trans|capitalize }}</strong></td>
-							<td>{{ entite.mediaType|default('?') }}</td>
-						</tr>
-						<tr>
 							<td><strong>{{ 'table.col.nom'|trans|capitalize }}</strong></td>
 							<td>{{ entite.nom }}</td>
 						</tr>
@@ -66,13 +62,13 @@
 						</tr>
 						<tr>
 							<td><strong>{{ 'table.col.creation'|trans|capitalize }}</strong></td>
-							<td>{{ entite.dateCreation|date(formatDateHeure) }}</td>
+							<td>{{ entite.created|date(formatDateHeure) }}</td>
 						</tr>
 						<tr>
 							<td><strong>{{ 'table.col.maj'|trans|capitalize }}</strong></td>
 							<td>
-								{% if entite.dateMaj|default(null) != null %}
-								{{ entite.dateMaj|date(formatDateHeure) }}
+								{% if entite.updated|default(null) != null %}
+								{{ entite.updated|date(formatDateHeure) }}
 								{% else %}
 								<small><i class='text-muted'>({{ 'table.col.jamais'|trans|capitalize }})</i></small>
 								{% endif %}

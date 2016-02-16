@@ -611,22 +611,20 @@ class aetools {
 	 */
 	public function verifDossierAndCreate($dossier, $chmod = null) {
 		$result = true;
-		$dossiersTmp = explode(self::SLASH, $dossier);
-		$dossiers = array();
-		foreach ($dossiersTmp as $dossier) {
-			if(strlen(trim($dossier)) > 0) $dossiers[] = $dossier;
-		}
+		$dossiers = preg_split('#['.self::SLASH.']+#', $dossier, -1, PREG_SPLIT_NO_EMPTY);
 		if($chmod === null || !preg_match('#^[0-7]{4}$#', $chmod."")) $chmod = self::DEFAULT_CHMOD;
 		// création des dossiers
+		$cumul = "";
 		foreach ($dossiers as $dossier) {
-			$doss = $this->getCurrentPath().$dossier;
+			$doss = $this->getCurrentPath().$cumul.$dossier;
 			if(!file_exists($doss)) {
 				if(!is_dir($doss)) {
-					if (!mkdir($doss, $chmod, true)) {
-						$result = false;
+					if(!mkdir($doss, $chmod, true)) {
+						return false;
 					}
 				}
 			}
+			$cumul .= $dossier.self::SLASH;
 		}
 		return $result;
 	}

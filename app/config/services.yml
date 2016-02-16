@@ -23,9 +23,14 @@ services:
         class: %ae_services%aeEntities
         arguments: [@service_container]
 
-    # fonctionnalités de pages web
-    aetools.pageweb:
-        class: %ae_services%pageweb
+    # fonctionnalités de tag
+    aetools.aeTag:
+        class: %ae_services%aeTag
+        arguments: [@service_container]
+
+    # fonctionnalités de message
+    aetools.aeMessage:
+        class: %ae_services%aeMessage
         arguments: [@service_container]
 
     # fonctionnalités de panier
@@ -33,15 +38,75 @@ services:
         class: %ae_services%aePanier
         arguments: [@service_container]
 
-    # fonctionnalités de medias
-    aetools.media:
+    #######################
+    ### ITEM            ###
+    #######################
+
+    # fonctionnalités de item
+    aetools.aeItem:
+        class: %ae_services%aeItem
+        arguments: [@service_container]
+
+    # fonctionnalités de article
+    aetools.aeArticle:
+        class: %ae_services%aeArticle
+        arguments: [@service_container]
+
+    # fonctionnalités de pageweb
+    aetools.aePageweb:
+        class: %ae_services%aePageweb
+        arguments: [@service_container]
+
+    # fonctionnalités de fiche
+    aetools.aeFiche:
+        class: %ae_services%aeFiche
+        arguments: [@service_container]
+
+    #######################
+    ### MEDIA           ###
+    #######################
+
+    # fonctionnalités de media
+    aetools.aeMedia:
         class: %ae_services%aeMedia
         arguments: [@service_container]
+
+    # fonctionnalités de image
+    aetools.aeImage:
+        class: %ae_services%aeImage
+        arguments: [@service_container]
+
+    # fonctionnalités de pdf
+    aetools.aePdf:
+        class: %ae_services%aePdf
+        arguments: [@service_container]
+
+
+
+    #######################
+    ### FIXTURES        ###
+    #######################
+
+    # fonctionnalités de fixtures
+    aetools.aefixtures:
+        class: %ae_services%aeFixtures
+        arguments: [@service_container]
+
+
+    #######################
+    ### TWIG EXTENSIONS ###
+    #######################
 
     # Fonctions textes utiles et pratiques pour utilisation dans TWIG
     aetools.textutilities:
         class: %ae_services%twigTools
         arguments: [@service_container]
+        tags:
+            - { name: twig.extension }
+
+    # Twig extension for dates
+    twig.extension.intl:
+        class: Twig_Extensions_Extension_Intl
         tags:
             - { name: twig.extension }
 
@@ -55,6 +120,22 @@ services:
         arguments: [@router, @service_container]
         public: false
 
+    ###################################
+    ### EVENT LISTENER SUR DOCTRINE ENTITIES
+    ###################################
+
+    # Utilitaire de gestion sur les entités
+    # acmeGroup.entityUtils:
+    #     class: %ae_services%entityListener
+    #     arguments: [@service_container]
+    #     tags:
+    #         - { name: doctrine.event_listener, event: postLoad }
+    #         - { name: doctrine.event_listener, event: prePersist }
+    #         - { name: doctrine.event_listener, event: postPersist }
+    #         - { name: doctrine.event_listener, event: preUpdate }
+    #         - { name: doctrine.event_listener, event: postUpdate }
+    #         - { name: doctrine.event_listener, event: preRemove }
+    #         - { name: doctrine.event_listener, event: postRemove }
 
     ######################
     ### EVENT LISTENER ###

@@ -1,6 +1,8 @@
 <?php
 namespace site\services;
 
+use Symfony\Component\DependencyInjection\ContainerInterface;
+
 use site\services\aeImages;
 
 use site\adminBundle\Entity\media;
@@ -12,6 +14,7 @@ class aeMedia extends aeImages {
 	protected $container;		// container
 	protected $em;				// entity manager
 	protected $repo;			// repository
+	protected $entitiesService;	// service entities
 
 	public function __construct(ContainerInterface $container) {
 		$this->container = $container;
@@ -19,20 +22,19 @@ class aeMedia extends aeImages {
 	}
 
 	public function init() {
+		$this->entitiesService = $this->container->get('aetools.aeEntities');
 		$this->em = $this->container->get('doctrine')->getManager();
 		$this->repo = $this->em->getRepository('siteadminBundle:media');
 	}
 
 	/**
-	 * Do some operations and optimisation after getting media from a form
-	 * @param media $media
-	 * @return media
+	 * Check entity after change (edit…)
+	 * @param media $entity
 	 */
-	public function computeMediaData(media &$media, $persist = false) {
-		//
-		echo('<h3>Enregistrement media : '.$media->getNom().'</h3>');
-		if($persist === true) $this->saveMedia($media);
-		return $media;
+	public function checkAfterChange(media &$entity) {
+	    // 
+	    $this->entitiesService->checkStatuts($entity, false);
+	    $this->entitiesService->checkInversedLinks($entity, false);
 	}
 
 	/**
@@ -40,8 +42,8 @@ class aeMedia extends aeImages {
 	 * @param media $media
 	 * @return aeMedia
 	 */
-	public function saveMedia(media $media) {
-		$this->em->persist($media);
+	public function saveMedia(media &$entity) {
+		$this->em->persist($entity);
 		$this->em->flush();
 		return $this;
 	}

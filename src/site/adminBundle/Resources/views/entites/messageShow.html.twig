@@ -1,0 +1,45 @@
+{% extends 'siteadminBundle:entites:entiteShow.html.twig' %}
+{% set cssjsloads = 'simple' %}
+{% set DEVMODE = (app.environment in ['DEV', 'TEST']) or (is_granted('ROLE_SUPER_ADMIN')) %}
+
+{% block page_heading %}
+	{{ parent() }}
+{% endblock page_heading %}
+
+{% block content %}
+<div class="row">
+
+	<div class="col-md-8">
+		<div class="ibox float-e-margins">
+			<div class="ibox-content">
+				<h2 class="row">
+					<div class="col-md-8 ellipsis">{{ entite.objet|default(entite.nom|default('#' ~ entite.id)) }}</div>
+					<div class="col-md-4">
+						<!-- <a href="{{ path('siteadmin_entite', {entite: entite_name, id: entite.id, action: 'delete'}) }}" type="button" class="btn btn-xs btn-danger btn-outline pull-right need-confirmation" title="{{ 'actions.suppression'|trans|capitalize }}" data-message="{{ 'actions.suppQuestion'|trans({'%name%': entite.nom|default('#' ~ entite.id)})|capitalize }}"><i class="fa fa-times icon-wait-on-click"></i> {{ 'actions.supprimer'|trans|capitalize }}</a> -->
+						<!-- <a href="{{ path('siteadmin_entite', {entite: entite_name, id: entite.id, action: 'edit'}) }}" type="button" class="btn btn-xs btn-warning pull-right"><i class="fa fa-pencil icon-wait-on-click"></i> {{ 'actions.modifier'|trans|capitalize }}</a> -->
+					</div>
+				</h2>
+			</div>
+		</div>
+	</div>
+
+	{#
+	<div class="col-md-4">
+		<div class="ibox float-e-margins">
+			<div class="ibox-title">
+				<h3>Logotype</h3>
+			</div>
+			<div class="ibox-content text-center" style='min-height: 180px;'>
+				{% if entite.logoImage.fichierNom is defined %}
+				<img src="{{ asset('images/logo/' ~ entite.logoImage.fichierNom) }}" class="img-rounded img-responsive center-block">
+				{% else %}
+				<i class="fa fa-times fa-3x text-muted"></i>
+				{% endif %}
+			</div>
+		</div>
+	</div>
+	#}
+
+
+</div>
+{% endblock content %}

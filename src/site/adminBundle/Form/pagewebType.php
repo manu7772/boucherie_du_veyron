@@ -2,7 +2,7 @@
 
 namespace site\adminBundle\Form;
 
-use Symfony\Component\Form\AbstractType;
+use site\adminBundle\Form\baseType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -14,22 +14,9 @@ use Symfony\Component\Security\Core\SecurityContext;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormEvent;
 
-use site\adminBundle\Form\mediaType;
+use site\adminBundle\Form\imageType;
 
-class pagewebType extends AbstractType {
-
-	private $controller;
-	private $securityContext;
-	private $parametres;
-	// private $pageweb;
-	
-	public function __construct(Controller $controller, $parametres = null) {
-		$this->controller = $controller;
-		$this->securityContext = $controller->get('security.context');
-		// $this->pageweb = $controller->get('aetools.pageweb');
-		if($parametres === null) $parametres = array();
-		$this->parametres = $parametres;
-	}
+class pagewebType extends baseType {
 
 	/**
 	 * @param FormBuilderInterface $builder
@@ -37,7 +24,8 @@ class pagewebType extends AbstractType {
 	 */
 	public function buildForm(FormBuilderInterface $builder, array $options) {
 		// ajout de action si défini
-		if(isset($this->parametres['form_action'])) $builder->setAction($this->parametres['form_action']);
+		$this->initBuilder($builder);
+		$this->pageweb = $this->controller->get('aetools.aePageweb');
 		// Builder…
 		$builder
 			->add('nom', 'text', array(
@@ -76,7 +64,8 @@ class pagewebType extends AbstractType {
 				'required' => true,
 				'choice_list' => $this->pageweb->getPagewebChoices(),
 				))
-			->add('background', new mediaType($this->controller), array(
+			// 1 image :
+			->add('image', new imageType($this->controller), array(
 				'label' => 'form.background',
 				'translation_domain' => 'messages',
 				'required' => false,
@@ -95,46 +84,13 @@ class pagewebType extends AbstractType {
 				))
 		;
 		// ajoute les valeurs hidden, passés en paramètre
-		$builder = $this->addHiddenValues($builder);
-
-		// AJOUT SUBMIT
-		$builder->add('submit', 'submit', array(
-			'label' => 'form.enregistrer',
-			'translation_domain' => 'messages',
-			'attr' => array(
-				'class' => "btn btn-md btn-block btn-info",
-				),
-			))
-		;
-	}
-	
-	/**
-	 * addHiddenValues
-	 * @param FormBuilderInterface $builder
-	 * @return FormBuilderInterface
-	 */
-	public function addHiddenValues(FormBuilderInterface $builder) {
-		$data = array();
-		$nom = 'hiddenData';
-		foreach($this->parametres as $key => $value) {
-			if(is_string($value) || is_array($value) || is_bool($value)) {
-				$data[$key] = $value;
-			}
-		}
-		if($builder->has($nom)) $builder->remove($nom);
-		$builder->add($nom, 'hidden', array(
-			'data' => urlencode(json_encode($data, true)),
-			'mapped' => false,
-		));
-		// }
-		return $builder;
+		$this->addHiddenValues($builder, true);
 	}
 
 	/**
 	 * @param OptionsResolverInterface $resolver
 	 */
-	public function setDefaultOptions(OptionsResolverInterface $resolver)
-	{
+	public function setDefaultOptions(OptionsResolverInterface $resolver) {
 		$resolver->setDefaults(array(
 			'data_class' => 'site\adminBundle\Entity\pageweb'
 		));
@@ -143,8 +99,7 @@ class pagewebType extends AbstractType {
 	/**
 	 * @return string
 	 */
-	public function getName()
-	{
+	public function getName() {
 		return 'site_adminbundle_pageweb';
 	}
 }

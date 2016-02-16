@@ -1,77 +1,89 @@
 {% macro menu(menu, bundle, name) %}
 {% set idnest = bundle ~ name %}
 {% import _self as self %}
-<div class="dd" id="{{ idnest }}">
-	{{ self.menuL1(menu.menu) }}
+{% set roles = {} %}
+{% for role in ['IS_AUTHENTICATED_ANONYMOUSLY', 'ROLE_USER', 'ROLE_TRANSLATOR', 'ROLE_EDITOR', 'ROLE_ADMIN', 'ROLE_SUPER_ADMIN'] %}
+{% set roles = roles|merge({(role): UCfirst(('roles.' ~ role)|trans)}) %}
+{% endfor %}
+<div class="dd master-nestable-menu" id="{{ idnest }}" data-maxDepth="{{ menu.maxDepth|default(3) }}" data-bundle="{{ bundle }}" data-name="{{ name }}" data-url="{{ path('siteadmin_ajax_modify', {bundle: bundle, name: name}) }}" data-info-roles="{{ roles|json_encode }}">
+	{{ self.menuL1(menu.menu, idnest) }}
 </div>
-{% if (app.environment|upper in ['DEV', 'TEST']) or (is_granted('ROLE_SUPER_ADMIN')) %}
-<div class="m-t-md"><h5>Output data (DEV)</h5></div>
-<div id="{{ idnest }}-output" class="form-control" style='height:64px;overflow:auto;color:green;'></div>
-{% endif %}
 {% endmacro %}
 
-{% macro menuL1(menu) %}
+{% macro menuL1(menu, idnest) %}
 {% import _self as self %}
 <ol class="dd-list">
-	{% for id,item in menu %}
-	<li class="dd-item" data-id="{{ id }}">
-		<div class="dd-handle">
-			<span class="pull-right"><small>{{ item.role|default('public') }}</small></span>
-			{% if item.icon is defined %}<span class="label label-primary"><i class="fa {{ item.icon }}"></i></span>{% else %}<span class="label label-default"><i class="fa fa-ban"></i></span>{% endif %} {{ (item.name|default('<i>Sans texte</i>'))|trans({}, item.trans_domain|default(null))|raw }}
+	{% for items in menu %}
+	{% for nom,item in items if nom != 'children' %}
+	<li id="li-{{ idnest ~ nom }}" class="dd-item" data-{{ nom }}="{{ item|json_encode }}">
+		<div class="dd-handle" data-toggle="#nest-options-{{ idnest }}{{ nom }}">
+			<span class="pull-right"><small>{{- UCfirst(('roles.' ~ item.role|default('IS_AUTHENTICATED_ANONYMOUSLY'))|trans) -}}</small></span>
+			{%- if item.icon is defined -%}
+			<span class="label label-primary m-r-xs"><i class="fa {{ item.icon }}"></i></span>
+			{%- else -%}
+			<span class="label label-default m-r-xs"><i class="fa fa-times"></i></span>
+			{%- endif -%}
+			<span class="text">
+			{{- (item.name|default('<i>Sans texte</i>'))|trans({}, item.trans_domain|default(null))|raw }}
+			</span>
 		</div>
-		{% if item.items|default([])|length > 0 %}
-			{{ self.menuL1(item.items) }}
+		{% if items.children is defined %}
+			{{ self.menuL1(items.children, idnest) }}
 		{% endif %}
 	</li>
 	{% endfor %}
+	{% endfor %}
 </ol>
+{% endmacro %}
+
+
+{% macro params(menu, bundle, name) %}
+{% import _self as self %}
+{% set idnest = bundle ~ name %}
+<div style="margin-bottom:60px;">
+	<h4>Niveaux max. <span id="majDS{{ idnest }}">{{ menu.maxDepth|default(3) }}</span></h4>
+	<div class="depthSlider" data-maj-target="#majDS{{ idnest }}" data-idnest="{{ idnest }}" data-steps="{{ menu.maxDepth|default(3) }}" data-url="{{ path('siteadmin_ajax_maxDepth', {bundle: bundle, name: name, value: '###value###'}) }}"></div>
+</div>
+<hr class="m-b-sm m-t-sm">
+<div class="menu-params row">
+	{{ self.paramsL1(menu.menu, idnest) }}
+</div>
+{% endmacro %}
+
+{% macro paramsL1(menu, idnest) %}
+{% import _self as self %}
+	{% for items in menu %}
+	{% for nom,item in items %}
+	{% if nom != 'children' %}
+	<div id="nest-options-{{ idnest }}{{ nom }}" class='menu-params-item col-xs-12'>
+		<label for="#{{ idnest }}{{ nom }}-name">Nom</label>
+		<input id="{{ idnest }}{{ nom }}-name" class='name form-control' value='{{ item.name|default('?') }}' data-idnest="{{ idnest }}" data-nom="{{ nom }}">
+		<hr>
+		<label for="#{{ idnest }}{{ nom }}-role">Visibilité</label>
+		<select name="role" class='role form-control' data-idnest="{{ idnest }}" data-nom="{{ nom }}">
+			{% for role in ['IS_AUTHENTICATED_ANONYMOUSLY', 'ROLE_USER', 'ROLE_TRANSLATOR', 'ROLE_EDITOR', 'ROLE_ADMIN', 'ROLE_SUPER_ADMIN'] if is_granted(role) %}
+			<option{% if item.role|default('IS_AUTHENTICATED_ANONYMOUSLY') == role %} selected{% endif %} value="{{ role }}">{{ UCfirst(('roles.' ~ role)|trans) }}</option>
+			{% endfor %}
+		</select>
+		<hr>
+	</div>
+	{% else %}
+		{{ self.paramsL1(item, idnest) }}
+	{% endif %}
+	{% endfor %}
+	{% endfor %}
 {% endmacro %}
 
 
 
 {% macro options(bundle, name) %}
 {% set idnest = bundle ~ name %}
-<span id="nest-menu-{{ idnest }}">
+{#
+<span class="nest-menu" data-idnest="#{{ idnest }}">
 	<button type="button" data-action="expandAll" class="btn btn-white btn-xs"><i class="fa fa-plus"></i></button>
 	<button type="button" data-action="collapseAll" class="btn btn-white btn-xs"><i class="fa fa-minus"></i></button>
 </span>
+#}
 {% endmacro %}
 
-{% macro js(bundle, name) %}
-{% set idnest = bundle ~ name %}
-	// output data
-	$('#{{ idnest }}').nestable({
-		group: 1
-	}).on('change', function() {
-		var fordata = $(this).nestable('serialize');
-		var outputdata = window.JSON.stringify(fordata);
-		if($('#{{ idnest }}-output').length) {
-			$('#{{ idnest }}-output').text(outputdata).css('color', 'orange');
-		}
-		// envoi ajax
-		var url = "{{ path('siteadmin_ajax_modify', {bundle: bundle, name: name}) }}";
-		$.ajax({
-			url: url,
-			method: "POST",
-			data: {tree: fordata},
-		}).done(function(data) {
-			{% if (app.environment|upper in ['DEV', 'TEST']) or (is_granted('ROLE_SUPER_ADMIN')) %}
-			// alert(data);
-			if($('#{{ idnest }}-output').length) {
-				$('#{{ idnest }}-output').text(window.JSON.stringify(data)).css('color', 'green');
-			}
-			{% endif %}
-		}).fail(function( jqXHR, textStatus ) {
-			{% if (app.environment|upper in ['DEV', 'TEST']) or (is_granted('ROLE_SUPER_ADMIN')) %}
-			// alert( "Request failed: " + textStatus );
-			if($('#{{ idnest }}-output').length) {
-				$('#{{ idnest }}-output').text("Request failed: " + textStatus).css('color', 'red');
-			}
-			{% endif %}
-		});
-	});
 
-	$('body').on('click', '#nest-menu-{{ idnest }} button', function (e) {
-		$('#{{ idnest }}').nestable($(this).attr('data-action'));
-	});
-{% endmacro %}

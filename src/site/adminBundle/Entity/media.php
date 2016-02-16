@@ -3,31 +3,40 @@
 namespace site\adminBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation\ExclusionPolicy;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Doctrine\Common\Collections\ArrayCollection;
 // Slug
 use Gedmo\Mapping\Annotation as Gedmo;
+use site\adminBundle\Entity\baseSubEntity;
 
 use site\services\aeImages;
 
-use site\adminBundle\Entity\pageweb;
-use site\adminBundle\Entity\fileFormat;
+use site\adminBundle\Entity\item;
 use site\UserBundle\Entity\User;
 
 use \DateTime;
 use \Exception;
 use \SplFileInfo;
 
+
 /**
- * media
- *
- * @ORM\Table()
- * @ORM\Table(name="media")
- * @ORM\HasLifecycleCallbacks()
+ * @ORM\Entity
  * @ORM\Entity(repositoryClass="site\adminBundle\Entity\mediaRepository")
+ * @ORM\InheritanceType("JOINED")
+ * @ORM\DiscriminatorColumn(name="class_name", type="string")
+ * @ORM\DiscriminatorMap({"image" = "image", "pdf" = "pdf"})
+ * @ORM\HasLifecycleCallbacks
+ *
+ * @ExclusionPolicy("all")
  */
-class media {
+abstract class media extends baseSubEntity {
+
+    const CLASS_IMAGE		= "image";
+    const CLASS_PDF			= "pdf";
+    // const CLASS_VIDEO		= "video";
+    // const CLASS_AUDIO		= "audio";
 
 	/**
 	 * @var integer
@@ -37,86 +46,53 @@ class media {
 	 */
 	protected $id;
 
+
 	/**
+	 * Nom du fichier original du media
 	 * @var string
-	 * @ORM\Column(name="nom", type="string", length=255)
-	 */
-	protected $nom;
-	
-	/**
-	 * @var string
-	 * @ORM\Column(name="originalnom", type="string", length=255)
+	 * @ORM\Column(name="originalnom", type="string", length=255, nullable=true, unique=false)
 	 */
 	protected $originalnom;
 		
 	/**
+	 * Contenu numérique du media
 	 * @var string
-	 * @ORM\Column(name="binaryFile", type="blob")
+	 * @ORM\Column(name="binaryFile", type="blob", nullable=true, unique=false)
 	 */
 	protected $binaryFile;
 	
 	/**
+	 * Type mime (d'origine) du media
 	 * @var string
-	 * @ORM\Column(name="format", type="string", length=128)
+	 * @ORM\Column(name="format", type="string", length=128, nullable=true, unique=false)
 	 */
 	protected $format;
 
 	/**
+	 * Extension originale du nom de fichier du media
 	 * @var string
-	 * @ORM\Column(name="extension", type="string", length=8)
+	 * @ORM\Column(name="extension", type="string", length=8, nullable=true, unique=false)
 	 */
 	protected $extension;
 
 	/**
+	 * Stockage du media : 'database' / 'file'
 	 * @var string
-	 * @ORM\Column(name="mediaType", type="string", length=32)
+	 * @ORM\Column(name="stockage", type="string", length=16, nullable=false, unique=false)
 	 */
-	protected $mediaType;
+	protected $stockage;
 
 	/**
-	 * Strockage du media : 'database' / 'file'
-	 * @var string
-	 * @ORM\Column(name="stockSupport", type="string", length=16)
-	 */
-	protected $stockSupport;
-
-	/**
-	 * @ORM\OneToOne(targetEntity="pageweb", inversedBy="background")
-	 * @ORM\JoinColumn(nullable=true, unique=true, name="pageweb_id", referencedColumnName="id", onDelete="SET NULL")
-	 */
-	protected $pagewebBackground;
-
-	/**
-	 * @ORM\OneToOne(targetEntity="site\UserBundle\Entity\User", inversedBy="avatar")
-	 * @ORM\JoinColumn(nullable=true, unique=true, name="User_id", referencedColumnName="id", onDelete="SET NULL")
-	 */
-	protected $userAvatar;
-
-	/**
-	 * @Gedmo\Slug(fields={"nom"})
-	 * @ORM\Column(length=128, unique=true)
-	 */
-	protected $slug;
-	
-	/**
+	 * Taille du fichier d'origine du media
+	 * (ou taille du champ "binaryFile" -> à développer)
 	 * @var int
-	 * @ORM\Column(name="file_size", type="integer", length=10)
+	 * @ORM\Column(name="file_size", type="integer", length=10, nullable=true, unique=false)
 	 */
 	protected $fileSize;
 
 	/**
-	 * @var DateTime
-	 * @ORM\Column(name="created", type="datetime", nullable=false)
+	 * upload file
 	 */
-	protected $dateCreation;
-
-	/**
-	 * @var DateTime
-	 * @ORM\Column(name="updated", type="datetime", nullable=true)
-	 */
-	protected $dateMaj;
-
-
 	public $upload_file;
 	
 	protected $streamBinaryFile;
@@ -124,33 +100,47 @@ class media {
 	protected $authorizedFormatsByType;
 	protected $schemaData;
 	protected $schemaBase;
-	protected $stockSupportList;
+	protected $stockageList;
 	
 	public function __construct() {
-		$this->dateCreation = new DateTime();
-		$this->dateMaj = null;
+		parent::__construct();
+
 		$this->infoForPersist = null;
-		$date = new DateTime();
-		$defaultVersion = $date->format('d-m-Y_H-i-s');
-		$this->setNom($defaultVersion);
+		// $date = new DateTime();
+		// $defaultVersion = $date->format('d-m-Y_H-i-s');
+		// $this->setNom($defaultVersion);
 		$this->init();
 	}
 
-	public function __toString(){
-		if($this->dateMaj != null) return $this->nom.' modifié le '.$this->dateMaj->format('d-m-Y H:i:s');
-		else return $this->nom.' crée le '.$this->dateCreation->format('d-m-Y H:i:s');
-	}
+	// public function __toString(){
+	// 	if($this->dateMaj != null) return $this->nom.' modifié le '.$this->dateMaj->format('d-m-Y H:i:s');
+	// 	else return $this->nom.' crée le '.$this->dateCreation->format('d-m-Y H:i:s');
+	// }
+
+    // public function getClassName(){
+    //     return parent::CLASS_MEDIA;
+    // }
 
 	protected function init() {
 		$this->streamBinaryFile = null;
 		$this->authorizedFormatsByType = array(
-			'image'	=> array('png', 'jpg', 'jpeg', 'gif'),
-			'pdf'	=> array('pdf'),
+			self::CLASS_IMAGE	=> array('png', 'jpg', 'jpeg', 'gif'),
+			self::CLASS_PDF		=> array('pdf'),
 			);
-		$this->schemaData = '#^(data:image/('.implode("|", $this->authorizedFormatsByType['image']).');base64,)#';
+
+		// CLASS_IMAGE
+		$this->schemaData = '#^(data:image/('.implode("|", $this->authorizedFormatsByType[self::CLASS_IMAGE]).');base64,)#';
 		$this->schemaBase = 'data:image/__FORMAT__;base64,';
-		$this->stockSupportList = array('database', 'file');
+
+		$this->stockageList = array('database', 'file');
+		// stockage en database par défaut
+		$this->setStockage($this->stockageList[0]);
 	}
+
+
+
+
+
 
 	/**
 	 * @ORM\PostLoad()
@@ -208,7 +198,7 @@ class media {
 			$this->setOriginalnom($this->upload_file->getClientOriginalName());
 			$this->setExtension($this->getUploadFile_extension());
 			$this->setFormat($this->getUploadFile_typemime());
-			$this->setStockSupport($this->stockSupportList[1]);
+			// $this->setStockage($this->stockageList[1]);
 		} else if(null != $this->binaryFile) {
 			// cropper
 			$info = $this->getInfoForPersist();
@@ -232,51 +222,14 @@ class media {
 				}
 				$this->setExtension($ext);
 			}
-			$this->setStockSupport($this->stockSupportList[0]);
+			// $this->setStockage($this->stockageList[0]);
 		}
 		if($this->getNom() == null) $this->setNom($this->getOriginalnom());
+		// Définit un nom si aucun n'est donné
+		$this->defineNom();
 	}
 
-	public function getImgThumbnail($x = 128, $y = 128, $mode = 'cut') {
-		// return $this->getBinaryFile();
-		return $this->getShemaBase().base64_encode($this->getThumbnail($x, $y, $mode));
-	}
 
-	public function getImg() {
-		// return $this->getBinaryFile();
-		return $this->getShemaBase().base64_encode($this->getBinaryFile());
-	}
-
-	/**
-	 * Retourne un thumbnail du fichier / null si aucun
-	 * @param integer $x - taille X
-	 * @param integer $y - taille Y
-	 * @param string $mode = 'cut'
-	 * @return string
-	 */
-	public function getThumbnail($x = 128, $y = 128, $mode = 'cut', $format = null) {
-		if(!in_array($format, $this->authorizedFormatsByType['image'])) $format = $this->getExtension();
-		$thumbnail = null;
-		// if($this->getFormat()->getType() == 'image') {
-			$aeImages = new aeImages();
-			$image = @imagecreatefromstring($this->getBinaryFile());
-			if($image != false) {
-				$image = $aeImages->thumb_image($image, $x, $y, $mode);
-				ob_start();
-				switch ($format) {
-					case 'jpeg':
-					case 'jpg': imagejpeg($image); break;
-					case 'gif': imagegif($image); break;
-					case 'png': imagepng($image); break;
-					default: imagepng($image); break;
-				}
-				$thumbnail = ob_get_contents();
-				ob_end_clean();
-				imagedestroy($image);
-			} else return "Error while creating image object";
-		// }
-		return $thumbnail;
-	}
 
 	/**
 	 * set infoForPersist
@@ -296,13 +249,11 @@ class media {
 		return json_decode($this->infoForPersist, true);
 	}
 
-	/**
-	 * Get id
-	 * @return integer 
-	 */
-	public function getId() {
-		return $this->id;
-	}
+
+
+
+
+
 
 	/**
 	 * Get upload file name
@@ -324,20 +275,20 @@ class media {
 		return $this->upload_file->guessExtension();
 	}
 
-	/**
+	/*!!!! <---- ;-)
 	 * Get upload file extension
 	 * @return string 
 	 */
-	public function getUploadFile_isRealyAFile() {
-		if (null === $this->upload_file) return false;
-		$fileInfo = new SplFileInfo($this->upload_file->getRealPath());
-		return ($fileInfo->isFile() && !($fileInfo->isDir()) && !($fileInfo->isExecutable()) && !($fileInfo->isLink()));
-	}
+	// public function getUploadFile_isRealyAFile() {
+	// 	if (null === $this->upload_file) return false;
+	// 	$fileInfo = new SplFileInfo($this->upload_file->getRealPath());
+	// 	return ($fileInfo->isFile() && !($fileInfo->isDir()) && !($fileInfo->isExecutable()) && !($fileInfo->isLink()));
+	// }
 
 	/**
 	 * Set binaryFile
 	 * @param string $binaryFile
-	 * @return Version
+	 * @return media
 	 */
 	public function setBinaryFile($binaryFile) {
 		$this->binaryFile = $binaryFile;
@@ -350,84 +301,24 @@ class media {
 	 */
 	public function getBinaryFile() {
 		return $this->streamBinaryFile;
-		// return stream_get_contents($this->binaryFile);
 	}
 
+
+
+
 	/**
-	 * Set pagewebBackground
-	 * @param pageweb $pagewebBackground
+	 * Define nom
 	 * @return media
 	 */
-	public function setPagewebBackground(pageweb $pagewebBackground = null) {
-		$this->pagewebBackground = $pagewebBackground;
-		$pagewebBackground->setBackground_reverse($this);
+	public function defineNom() {
+		if($this->nom == null) {
+			$date = new DateTime();
+			$defaultVersion = $date->format('d-m-Y_H-i-s')."_".rand(10000,99999);
+		}
 		return $this;
 	}
 
-	/**
-	 * Set pagewebBackground reversed side
-	 * @param pageweb $pagewebBackground
-	 * @return media
-	 */
-	public function setPagewebBackground_reverse(pageweb $pagewebBackground = null) {
-		$this->pagewebBackground = $pagewebBackground;
-		return $this;
-	}
 
-	/**
-	 * Get pagewebBackground
-	 * @return pageweb 
-	 */
-	public function getPagewebBackground() {
-		return $this->pagewebBackground;
-	}
-
-	/**
-	 * Set userAvatar
-	 * @param User $userAvatar
-	 * @return media
-	 */
-	public function setUserAvatar(User $userAvatar = null) {
-		$this->userAvatar = $userAvatar;
-		$userAvatar->setAvatar_reverse($this);
-		return $this;
-	}
-
-	/**
-	 * Set userAvatar reversed side
-	 * @param User $userAvatar
-	 * @return media
-	 */
-	public function setUserAvatar_reverse(User $userAvatar = null) {
-		$this->userAvatar = $userAvatar;
-		return $this;
-	}
-
-	/**
-	 * Get userAvatar
-	 * @return User 
-	 */
-	public function getUserAvatar() {
-		return $this->userAvatar;
-	}
-
-	/**
-	 * Set nom
-	 * @param string $nom
-	 * @return media
-	 */
-	public function setNom($nom) {
-		$this->nom = $nom;
-		return $this;
-	}
-
-	/**
-	 * Get nom
-	 * @return string
-	 */
-	public function getNom() {
-		return $this->nom;
-	}
 
 	/**
 	 * Set originalnom
@@ -450,7 +341,7 @@ class media {
 	/**
 	 * Set format
 	 * @param fileFormat $format
-	 * @return Version
+	 * @return media
 	 */
 	public function setFormat($format) {
 		$this->format = $format;
@@ -468,7 +359,7 @@ class media {
 	/**
 	 * Set extension
 	 * @param string $extension
-	 * @return Version
+	 * @return media
 	 */
 	public function setExtension($extension) {
 		$this->extension = strtolower($extension);
@@ -486,7 +377,7 @@ class media {
 	/**
 	 * Set mediaType
 	 * @param string $mediaType
-	 * @return Version
+	 * @return media
 	 */
 	public function setMediaType($mediaType) {
 		$this->mediaType = strtolower($mediaType);
@@ -502,33 +393,32 @@ class media {
 	}
 
 	/**
-	 * Set stockSupport
-	 * @param string $stockSupport
-	 * @return Version
+	 * Set stockage
+	 * @param string $stockage
+	 * @return media
 	 */
-	public function setStockSupport($stockSupport) {
-		if(in_array($stockSupport, $this->stockSupportList)) {
-			$this->stockSupport = $stockSupport;
-		} else throw new Exception("Stock Support not recognized : ".$stockSupport.". Need : ".json_encode($this->stockSupportList), 1);
+	public function setStockage($stockage) {
+		if(in_array($stockage, $this->stockageList)) {
+			$this->stockage = $stockage;
+		} else throw new Exception("Stock Support not recognized : ".$stockage.". Need : ".json_encode($this->stockageList), 1);
 		return $this;
 	}
 
 	/**
-	 * Get stockSupport
+	 * Get stockage
 	 * @return string
 	 */
-	public function getStockSupport() {
-		return $this->stockSupport;
+	public function getStockage() {
+		return $this->stockage;
 	}
 
 	/**
 	 * Set fileSize
 	 * @param integer $fileSize
-	 * @return Version
+	 * @return media
 	 */
 	public function setFileSize($fileSize) {
 		$this->fileSize = $fileSize;
-
 		return $this;
 	}
 
@@ -540,16 +430,11 @@ class media {
 		return $this->fileSize;
 	}
 
-	/**
-	 * is version an IMAGE type ?
-	 * @return boolean
-	 */
-	public function isImage(){
-		return $this->getMediaType() == 'image';
-	}
+
+
 
 	/**
-	 * is version a screenable IMAGE type ?
+	 * is media a screenable IMAGE type ?
 	 * @return boolean
 	 */
 	public function isScreenableImage(){
@@ -557,73 +442,32 @@ class media {
 	}
 
 	/**
-	 * is version a PDF type ?
+	 * is media an IMAGE type ?
+	 * @return boolean
+	 */
+	public function isImage(){
+		return $this->getClass(true) == self::CLASS_IMAGE;
+	}
+
+	/**
+	 * is media a PDF type ?
 	 * @return boolean
 	 */
 	public function isPdf(){
-		return $this->getMediaType() == "pdf";
+		return $this->getClass(true) == self::CLASS_PDF;
 	}
 
-	/**
-	 * Set slug
-	 * @param integer $slug
-	 * @return media
-	 */
-	public function setSlug($slug) {
-		$this->slug = $slug;
-		return $this;
-	}
+
 
 	/**
-	 * Get slug
-	 * @return string
+	 * Get id
+	 * @return integer 
 	 */
-	public function getSlug() {
-		return $this->slug;
+	public function getId() {
+		return $this->id;
 	}
 
-	/**
-	 * Set dateCreation
-	 * @param DateTime $dateCreation
-	 * @return pageweb
-	 */
-	public function setDateCreation(DateTime $dateCreation) {
-		$this->dateCreation = $dateCreation;
-		return $this;
-	}
 
-	/**
-	 * Get dateCreation
-	 * @return DateTime 
-	 */
-	public function getDateCreation() {
-		return $this->dateCreation;
-	}
-
-	/**
-	 * @ORM\PreUpdate
-	 */
-	public function updateDateMaj() {
-		$this->setDateMaj(new DateTime());
-	}
-
-	/**
-	 * Set dateMaj
-	 * @param DateTime $dateMaj
-	 * @return pageweb
-	 */
-	public function setDateMaj(DateTime $dateMaj) {
-		$this->dateMaj = $dateMaj;
-		return $this;
-	}
-
-	/**
-	 * Get dateMaj
-	 * @return DateTime 
-	 */
-	public function getDateMaj() {
-		return $this->dateMaj;
-	}
 
 
 }

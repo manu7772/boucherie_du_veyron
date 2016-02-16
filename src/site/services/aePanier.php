@@ -33,6 +33,16 @@ class aePanier {
     }
 
     /**
+     * Check panier after change (edit…)
+     * @param panier $panier
+     * 
+     */
+    public function checkAfterChange($panier) {
+        // 
+        $this->container->get('aetools.aeEntities')->checkInversedLinks($panier, false);
+    }
+
+    /**
      * ajouteArticle
      * @param article $article
      * @param User $user
@@ -40,13 +50,13 @@ class aePanier {
      * @return aeReponse
      */
     public function ajouteArticle(article $article, $user = null, $quantite = 1) {
-        if($user === null) $user = $this->container->getUser();
+        // if($user === null) $user = $this->container->getUser();
         if(is_object($user)) {
             $art = $this->_repo->getOneArticleOfUser($article->getId(), $user->getId());
             if($art === null) {
                 // article non présent dans le panier
-                $art = $this->newObject();
-                $art->setPropUser($user);
+                $art = new panier();
+                $art->setUser($user);
                 $art->setArticle($article);
                 $art->setQuantite($quantite);
                 $this->_em->persist($art);
@@ -73,7 +83,7 @@ class aePanier {
      * @return aeReponse
      */
     public function reduitArticle(article $article, $user = null, $quantite = 1) {
-        if($user === null) $user = $this->container->getUser();
+        // if($user === null) $user = $this->container->getUser();
         if(is_object($user)) {
             $art = $this->_repo->getOneArticleOfUser($article->getId(), $user->getId());
             if($art === null) {
@@ -107,7 +117,7 @@ class aePanier {
      * @return aeReponse
      */
     public function SupprimeArticle(article $article, $user = null) {
-        if($user === null) $user = $this->container->getUser();
+        // if($user === null) $user = $this->container->getUser();
         if(is_object($user)) {
             $art = $this->_repo->getOneArticleOfUser($article->getId(), $user->getId());
             if($art === null) {
@@ -132,7 +142,7 @@ class aePanier {
      * @return aeReponse
      */
     public function videPanier($user = null) {
-        if($user === null) $user = $this->container->getUser();
+        // if($user === null) $user = $this->container->getUser();
         if(is_object($user)) {
             $art = $this->_repo->getUserArticles($user->getId());
             if(count($art) < 1) {
@@ -158,7 +168,7 @@ class aePanier {
      * @return array of article
      */
     public function getArticlesOfUser($user = null) {
-        if($user === null) $user = $this->container->getUser();
+        // if($user === null) $user = $this->container->getUser();
         if(is_object($user)) {
             // if($user === null) $user = $this->container->getUser();
             return $this->_repo->getUserArticles($user->getId());
@@ -174,7 +184,7 @@ class aePanier {
      * @return array
      */
     public function getInfosPanier($user = null) {
-        if($user === null) $user = $this->container->getUser();
+        // if($user === null) $user = $this->container->getUser();
         if(is_object($user)) {
             // if($user === null) $user = $this->container->getUser();
             $articles = $this->_repo->getUserPanier($user->getId());

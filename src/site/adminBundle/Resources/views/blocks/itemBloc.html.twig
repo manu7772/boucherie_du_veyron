@@ -1,0 +1,53 @@
+{% macro bloc1(item) %}
+<div class="col-sm-6 col-md-4 col-lg-3">
+	<div class="ibox-content text-center" style="border:1px solid #999;">
+		<h3 class="ellipsis m-t-none">{{ item.nom }}</h3>
+		<div class="m-b-sm" style="height:96px;">
+			<a href="{{ path('siteadmin_entite', {entite: item.className, id: item.id, action: 'show'}) }}">
+				{% if item.mainMedia.isScreenableImage|default(null) != null %}
+				<img alt="image" src="{{ item.mainMedia.imgThumbnail(96,96,'cut') }}" class="img-rounded">
+				{% else %}
+				<i class="fa fa-ban fa-5x text-muted m-t-sm"></i>
+				{% endif %}
+			</a>
+		</div>
+		{% if item.className in ['pageweb'] %}
+		<p class="font-bold ellipsis">{{ item.title|default('…') }}</p>
+		{% elseif item.className in ['article', 'fiche'] %}
+		<p class="font-bold ellipsis">{{ item.accroche|default('…') }}</p>
+		{% else %}
+		<p class="font-bold ellipsis">…</p>
+		{% endif %}
+		<div class="text-center btn-group btn-block">
+			<a href="{{ path('siteadmin_entite', {entite: item.className, id: item.id, action: 'show'}) }}" class="btn btn-xs btn-white col-xs-6 m-b-none" data-toggle="tooltip" data-placement="bottom" title="{{ UCfirst((item.className ~ '.moredetails')|trans({'%name%': item.nom})) }}"><i class="fa fa-eye icon-wait-on-click"></i></a>
+			<a href="{{ path('siteadmin_entite', {entite: item.className, id: item.id, action: 'edit'}) }}" class="btn btn-xs btn-white col-xs-6 m-b-none" data-toggle="tooltip" data-placement="bottom" title="{{ UCfirst('actions.modifierName'|trans({'%name%': item.nom})) }}"><i class="fa fa-pencil icon-wait-on-click"></i></a>
+		</div>
+	</div>
+</div>
+{% endmacro %}
+
+{% macro bloc2(item) %}
+<div class="col-sm-6 col-md-4 col-lg-3">
+	<div class="widget white-bg" style="border:1px solid #999;">
+		<div class="row vertical-align">
+			<div class="col-xs-4">
+				{% if item.mainMedia.isScreenableImage|default(null) != null %}
+				<img alt="image" src="{{ item.mainMedia.imgThumbnail(64,64,'cut') }}" class="img-responsive img-rounded">
+				{% else %}
+				<i class="fa fa-ban fa-3x text-muted"></i>
+				{% endif %}
+			</div>
+			<div class="col-xs-8 text-right">
+				<h4 class="font-bold ellipsis">{{ item.nom }}</h4>
+				{% if item.className in ['pageweb'] %}
+				<small class="text-muted ellipsis">{{ item.title|default('…') }}</small>
+				{% elseif item.className in ['article', 'fiche'] %}
+				<small class="text-muted ellipsis">{{ item.accroche|default('…') }}</small>
+				{% else %}
+				<small class="text-muted ellipsis">…</small>
+				{% endif %}
+			</div>
+		</div>
+	</div>
+</div>
+{% endmacro %}

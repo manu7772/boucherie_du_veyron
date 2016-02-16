@@ -17,12 +17,15 @@ class aeMenus {
 
 	const ARRAY_GLUE = '___';
 	const SOURCE_FILES = 'src/';
+	const WEB_SOURCE_FILES = 'web/';
 	const FOLD_RESOURCES = 'Resources';
 	const FOLD_PUBLIC = 'public';
+	const WEB_FOLD_PUBLIC = 'menus';
 	const FOLD_MENU = 'menus';
 	const BUNDLE_EXTENSION = 'Bundle';
 	const GO_TO_ROOT = '/../../../../';
 	const MAX_YAML_LEVEL = 32;
+	const YML_PREG_MOTIF = '\.yml$';
 
 	protected $container; 			// container
 	protected $aetools; 			// aetools
@@ -33,20 +36,79 @@ class aeMenus {
 	protected $bundles_list;		// array des bundles/path : $array(bundle => path)
 	protected $files_list;			// array des fichiers, classés par bundles
 	protected $rootPath;			// Dossier root du site
+	protected $menusPath;			// Dossier web/menus du site
 
 	public function __construct(ContainerInterface $container) {
 		$this->container = $container;
 		$this->aetools = new aetools();
 		$this->rootPath = __DIR__.self::GO_TO_ROOT;
-		$this->aetools->setRootPath("/");
+		$this->menusPath = $this->rootPath.self::WEB_SOURCE_FILES.self::WEB_FOLD_PUBLIC;
+		$this->aetools->setRootPath(aetools::SLASH);
 		// récupération de fichiers et check
-		$this->initFiles();
+		$check = false;
+		$check = true;
+		if(!file_exists($this->menusPath)) $check = true;
+		$this->initFiles($check);
 	}
 
-	protected function initFiles() {
+	protected function initFiles($verif = false) {
+		$this->verifWebFiles();
+		// Vérification…
+		if($verif === true) {
+			// echo('<h2>CHECK !</h2>');
+			$this->verifFiles($this->web_files_list);
+			$this->verifWebFiles();
+		}
+		// echo('<pre>');
+		// echo('<h2>fold_menu</h2>');
+		// var_dump($this->fold_menu);
+		// echo('<h2>bundles_list</h2>');
+		// var_dump($this->bundles_list);
+		// die();
+		return $this->files_list;
+	}
+
+	public function verifWebFiles() {
 		// initialisation
 		$this->bundles_list = array();
 		$this->files_list = array();
+		// Création du dossier web/menus s'il n'existe pas
+		$pathname = self::WEB_SOURCE_FILES.self::WEB_FOLD_PUBLIC;
+		// echo('<h3>création web/menus : '.$pathname.'</h3>');
+		$this->aetools->verifDossierAndCreate($pathname);
+		// récupération des menus web/menus
+		$this->web_files_list = array();
+		// dossiers web/menus/{bundle}
+		$fold_web_bundles = $this->aetools->exploreDir(self::WEB_SOURCE_FILES.self::WEB_FOLD_PUBLIC, aetools::ALL_FILES, "dossiers", false);
+		foreach ($fold_web_bundles as $bundle) {
+			$this->bundles_list[$bundle['nom']] = $bundle['sitepath'].$bundle['nom'];
+		}
+		foreach ($this->bundles_list as $bundlename => $bundlepath) {
+			// $files = $this->aetools->exploreDir(self::WEB_SOURCE_FILES.self::WEB_FOLD_PUBLIC.aetools::SLASH.$bundlename, aetools::ALL_FILES, "fichiers", false);
+			$fileslist = $this->getMenuFiles($bundlepath);
+			if(count($fileslist) > 0) foreach ($fileslist as $key => $file) {
+				// ajout de données
+				$name = preg_replace('#'.self::YML_PREG_MOTIF.'#', '', $file['nom']);
+				$this->files_list[$bundlename][$name] = $file;
+				$this->files_list[$bundlename][$name]['statut_message'] = 'traduction.file_found';
+				$this->files_list[$bundlename][$name]['statut'] = 1;
+				$this->files_list[$bundlename][$name]['roles'] = $this->getRightsOfMenu($bundlename, $name);
+			}
+		}
+
+		// echo('<pre style="color:green;">');
+		// 	// echo('<h2>fold_web_bundles</h2>');
+		// 	// var_dump($fold_web_bundles);
+		// 	echo('<h2>bundles_list</h2>');
+		// 	var_dump($this->bundles_list);
+		// 	echo('<h2>files_list</h2>');
+		// 	var_dump($this->files_list);
+		// echo('</pre>');
+	}
+
+	public function verifFiles($webfiles) {
+		$bundles_list = array();
+		$files_list = array();
 		// récupération des dossiers "menus", enfants DIRECTS des dossiers "Resources", uniquement dans "src"
 		$fold_resources = $this->aetools->exploreDir(self::SOURCE_FILES, self::FOLD_PUBLIC, "dossiers");
 		$this->fold_menu = array();
@@ -60,27 +122,38 @@ class aeMenus {
 			$path = $folder['sitepath'].$folder['nom'];
 			// constitution de la liste des bundles
 			$bundle = $this->getBundle($path);
-			$this->bundles_list[$bundle] = $path;
+			$bundles_list[$bundle] = $path;
 			// recherche des fichiers
 			$fileslist = $this->getMenuFiles($path);
 			if(count($fileslist) > 0) foreach ($fileslist as $key => $file) {
 				// ajout de données
-				$name = preg_replace('#\.yml$#', '', $file['nom']);
-				$this->files_list[$bundle][$name] = $file;
-				$this->files_list[$bundle][$name]['statut_message'] = 'traduction.file_found';
-				$this->files_list[$bundle][$name]['statut'] = 1;
-				$this->files_list[$bundle][$name]['roles'] = $this->getRightsOfMenu($bundle, $name);
+				$name = preg_replace('#'.self::YML_PREG_MOTIF.'#', '', $file['nom']);
+				$files_list[$bundle][$name] = $file;
+				$files_list[$bundle][$name]['statut_message'] = 'traduction.file_found';
+				$files_list[$bundle][$name]['statut'] = 1;
+				$files_list[$bundle][$name]['roles'] = $this->getRightsOfMenu($bundle, $name);
 			}
 		}
-		// echo('<pre>');
-		// // echo('<h2>fold_menu</h2>');
-		// // var_dump($this->fold_menu);
-		// // echo('<h2>bundles_list</h2>');
-		// // var_dump($this->bundles_list);
-		// echo('<h2>files_list</h2>');
-		// var_dump($this->files_list);
-		// die('</pre>');
-		return $this->files_list;
+		// crée les dossiers dans web/menus/…
+		foreach ($bundles_list as $name => $path) {
+			$pathname = self::WEB_SOURCE_FILES.self::WEB_FOLD_PUBLIC.aetools::SLASH.$name;
+			// echo('<h3>création web/menus/… ->'.$pathname.'</h3>');
+			$this->aetools->verifDossierAndCreate($pathname);
+		}
+		// copie les fichiers si non présents
+		foreach ($files_list as $bundlename => $file) {
+			foreach ($file as $filename => $oneFile) {
+				$fichierNew = $this->menusPath.aetools::SLASH.$bundlename.aetools::SLASH.$oneFile['nom'];
+				if(!file_exists($fichierNew))
+					copy($oneFile['full'], $fichierNew);
+			}
+		}
+		// echo('<pre style="color:orange;">');
+		// 	echo('<h2>files_list</h2>');
+		// 	var_dump($files_list);
+		// 	echo('<h2>bundles_list</h2>');
+		// 	var_dump($bundles_list);
+		// echo('</pre>');
 	}
 
 	/**
@@ -101,7 +174,7 @@ class aeMenus {
 	 * @return array
 	 */
 	protected function getMenuFiles($path) {
-		return $this->aetools->exploreDir($path, "\.yml$", "fichiers", false, true);
+		return $this->aetools->exploreDir($path, self::YML_PREG_MOTIF, "fichiers", false, true);
 	}
 
 
@@ -257,7 +330,17 @@ class aeMenus {
 	 * @return array
 	 */
 	public function getBundle($path) {
-		return strtolower(str_replace(array(self::FOLD_RESOURCES, self::FOLD_PUBLIC, self::FOLD_MENU, self::SOURCE_FILES, self::BUNDLE_EXTENSION, '/'), '', $path));
+		return strtolower(str_replace(array(
+			self::FOLD_RESOURCES,
+			self::FOLD_PUBLIC,
+			self::WEB_FOLD_PUBLIC,
+			self::FOLD_MENU,
+			self::SOURCE_FILES,
+			self::WEB_SOURCE_FILES,
+			self::BUNDLE_EXTENSION,
+			aetools::SLASH
+			), '', $path)
+		);
 	}
 
 	/**
@@ -267,6 +350,41 @@ class aeMenus {
 	 */
 	public function getPath($bundle) {
 		return isset($this->bundles_list[$bundle]) ? $this->bundles_list[$bundle] : false;
+	}
+
+
+	/**
+	 * Définit le menu directement en injectant un tableau $data
+	 * @param string $bundle
+	 * @param string $name
+	 * @param array $data
+	 * @return string
+	 */
+	public function setMenu($bundle, $name, $data) {
+		if(!is_array($data)) return false;
+		$menu = $this->parse_yaml_fromFile($this->files_list[$bundle][$name]['full']);
+		$menu['menu'] = $data;
+		$result = $this->dump_yaml_toFile($this->files_list[$bundle][$name]['full'], $menu, false);
+		return $result ? $menu['menu'] : $result;
+	}
+
+	/**
+	 * Définit le menu directement en injectant un tableau $data
+	 * @param string $bundle
+	 * @param string $name
+	 * @param integer $value
+	 * @return integer
+	 */
+	public function setMaxDepth($bundle, $name, $value) {
+		$value = intval($value);
+		if($value < 1) $value = 1;
+		$menu = $this->parse_yaml_fromFile($this->files_list[$bundle][$name]['full']);
+		if(isset($menu['maxDepth'])) $oldvalue = $menu['maxDepth'];
+			else $oldvalue = 1;
+		$menu['maxDepth'] = $value;
+		$result = $this->dump_yaml_toFile($this->files_list[$bundle][$name]['full'], $menu, false);
+		// return $oldvalue;
+		return $result ? $menu['maxDepth'] : $oldvalue;
 	}
 
 	/**
@@ -289,7 +407,7 @@ class aeMenus {
 		// $flatmenu = $this->getFlatItemsOfMenu($menu);
 		foreach ($data as $key => $item) {
 			$recursmenu[$item['id']] = $flatmenu[$item['id']];
-			if(isset($item['children'])) $recursmenu[$item['id']]['items'] = $this->reorder($flatmenu, $item['children']);
+			if(isset($item['children'])) $recursmenu[$item['id']]['children'] = $this->reorder($flatmenu, $item['children']);
 		}
 		return $recursmenu;
 	}
@@ -298,9 +416,9 @@ class aeMenus {
 		$items = array();
 		foreach ($menu as $id => $item) {
 			$items[$id] = $item;
-			if(isset($item['items'])) {
-				$items = $items + $this->getFlatItemsOfMenu($item['items']);
-				unset($items[$id]['items']);
+			if(isset($item['children'])) {
+				$items += $this->getFlatItemsOfMenu($item['children']);
+				unset($items[$id]['children']);
 			}
 		}
 		return $items;

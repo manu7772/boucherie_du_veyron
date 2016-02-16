@@ -13,31 +13,30 @@ menu:
         path:
             route: '#'
         items:
+            fr1:
+                name: traduction.languename.fr
+                path:
+                    route: sitesite_homepage
+                    params:
+                        _locale: fr
             français:
                 name: traduction.languename.fr
                 path:
                     route: sitesite_homepage
                     params:
                         _locale: fr
+            anglais:
+                name: traduction.languename.en
+                path:
+                    route: sitesite_homepage
+                    params:
+                        _locale: en
             gb1:
                 name: traduction.languename.en
                 path:
                     route: sitesite_homepage
                     params:
                         _locale: en
-                items:
-                    fr1:
-                        name: traduction.languename.fr
-                        path:
-                            route: sitesite_homepage
-                            params:
-                                _locale: fr
-                    anglais:
-                        name: traduction.languename.en
-                        path:
-                            route: sitesite_homepage
-                            params:
-                                _locale: en
     réalisations:
         name: Réalisations
         path:

@@ -48,7 +48,8 @@ class twigTools extends Twig_Extension {
 			new Twig_SimpleFunction('unserializeT', array($this, 'unserializeT')),
 			new Twig_SimpleFunction('paramsByUrl', array($this, 'paramsByUrl')),
 			new Twig_SimpleFunction('implode', array($this, 'implode')),
-			new Twig_SimpleFunction('plur', array($this, 'plur')),
+			new Twig_SimpleFunction('plur', array($this, 'pluriel')),
+			new Twig_SimpleFunction('plurNumber', array($this, 'plurNumber')),
 			new Twig_SimpleFunction('valueOfObject', array($this, 'valueOfObject')),
 			new Twig_SimpleFunction('imgVolume', array($this, 'imgVolume')),
 			new Twig_SimpleFunction('annee', array($this, 'annee')),
@@ -67,6 +68,7 @@ class twigTools extends Twig_Extension {
 			new Twig_SimpleFunction('encode64', array($this, 'encode64')),
 			new Twig_SimpleFunction('ThumbMedia', array($this, 'ThumbMedia')),
 			new Twig_SimpleFunction('fileSizeDisplay', array($this, 'fileSizeDisplay')),
+			new Twig_SimpleFunction('fromNow', array($this, 'fromNow')),
 			);
 	}
 
@@ -694,9 +696,19 @@ class twigTools extends Twig_Extension {
 	 * @return string
 	 */
 	public function pluriel($elem, $s = "s") {
-		$r = "";
-		if(count($elem) > 1) $r = $s;
-		return $r;
+		return count($elem) > 1 ? $s : "";
+	}
+
+	/**
+	 * plurNumber
+	 * Renvoie un "s" si $elem > 1
+	 * on peut remplacer le "s" par "x" ou autre
+	 * @param $elem
+	 * @param $s
+	 * @return string
+	 */
+	public function plurNumber($elem, $s = "s") {
+		return $elem > 1 ? $s : "";
 	}
 
 	/**
@@ -1020,5 +1032,19 @@ class twigTools extends Twig_Extension {
 				break;
 		}
 	}
+
+	public function fromNow(DateTime $time, $echelle = "minutes") {
+		$result = $time->diff(new DateTime());
+		$seconds = ($result->days * 86400) + (intval($result->format('%h')) * 3600) + (intval($result->format('%i')) * 60) + intval($result->format('%s'));
+		switch($echelle) {
+			case 'jours':		$reponse = $result->days; break;
+			case 'heures':		$reponse = (int)($seconds / 3600); break;
+			case 'secondes':	$reponse = $seconds; break;
+			default: 			$reponse = (int)($seconds / 60); break; // minutes
+		}
+		if($result->format('%R') == '-') $reponse = -$reponse;
+		return $reponse;
+	}
+
 
 }

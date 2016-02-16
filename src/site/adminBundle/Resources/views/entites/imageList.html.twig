@@ -66,7 +66,7 @@
 								</div>
 								{# - OFF ----------------------
 								{% if DEVMODE %}
-								<hr class="m-b-sm m-t-xs">
+								<hr class="m-b-xs m-t-xs">
 								<div class="btn-group">
 									{% if type.type_values|default(null) != null %}
 									<a href="{{ path('siteadmin_entite_type', {entite: entite_name, type_related: type.type_related, type_field: type.type_field, type_values: type.type_values|join(type_value_joiner)|url_encode, id: entite.id, action: 'check'}) }}" type="button" class="btn btn-danger btn-xs" title="Checker {{ entite_name }} {{ entite.nom }}"><i class="fa fa-check icon-wait-on-click"></i></a>
@@ -92,12 +92,11 @@
 							{# <td>{{ entite.originalnom }}</td> #}
 							{% if DEVMODE %}
 							<td>
-								• {{ entite.mediaType }}<br>
 								• {{ entite.format }}<br>
-								• {{ entite.stockSupport }}<br>
-								• {{ entite.dateCreation|date(formatDateHeure) }}<br>
-								{% if entite.dateMaj|default(null) != null %}
-								• {{ entite.dateMaj|date(formatDateHeure) }}
+								• {{ entite.stockage }}<br>
+								• {{ entite.created|date(formatDateHeure) }}<br>
+								{% if entite.updated|default(null) != null %}
+								• {{ entite.updated|date(formatDateHeure) }}
 								{% else %}
 								• <small><i class='text-muted'>({{ 'table.col.jamais'|trans|capitalize }})</i></small>
 								{% endif %}

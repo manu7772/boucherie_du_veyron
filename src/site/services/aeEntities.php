@@ -54,8 +54,9 @@ class aeEntities extends aetools {
 	protected $completeListOfEnties = null;	// liste des entités complète
 
 
-	public function __construct(ContainerInterface $container = null) {
+	public function __construct(ContainerInterface $container = null, $em = null) {
 		parent::__construct($container);
+		$this->_em = $em; // ---> IMPORTANT : l'entityListener fournit SON entityManager !!
 		$this->initDataaeEntities();
 		return $this;
 	}
@@ -466,7 +467,9 @@ class aeEntities extends aetools {
 					}
 				}
 				// load…
+				// echo('<h3>Entite : '.$classEntite.'</h3>');
 				foreach($defaultFields as $field => $value) {
+					// echo('Field : '.$field.' / val. : '.$value.'<br>');
 					$this->fillAssociatedField($field, $newObject, array($field => $value), true);
 				}
 			}
@@ -832,9 +835,10 @@ class aeEntities extends aetools {
 	 */
 	public function hasField($field, $entite = null) {
 		$CMD = $this->getClassMetadata($entite);
-		if($CMD !== false) {
-			return $CMD->hasField($field);
-		} else throw new Exception("Entité (".gettype($entite).") inexistante. (".$this->getName()."::hasField() / Ligne ".__LINE__.")", 1);
+		if(is_object($CMD)) {
+			$isAbstract = $CMD->getReflectionClass()->isAbstract();
+			return !$isAbstract ? $CMD->hasField($field) : false;
+		} else throw new Exception("Entité (".gettype($entite)." : ".$entite.") inexistante. (".$this->getName()."::hasField() / Ligne ".__LINE__.")", 1);
 	}
 
 	/**
@@ -843,9 +847,10 @@ class aeEntities extends aetools {
 	 */
 	public function getFieldNamesOfEntity($entite) {
 		$CMD = $this->getClassMetadata($entite);
-		if($CMD !== false) {
-			return $CMD->getFieldNames();
-		} else throw new Exception("Entité (".gettype($entite).") inexistante. (".$this->getName()."::getFieldNamesOfEntity() / Ligne ".__LINE__.")", 1);
+		if(is_object($CMD)) {
+			$isAbstract = $CMD->getReflectionClass()->isAbstract();
+			return !$isAbstract ? $CMD->getFieldNames(): array();
+		} else throw new Exception("Entité (".gettype($entite)." : ".$entite.") inexistante. (".$this->getName()."::getFieldNamesOfEntity() / Ligne ".__LINE__.")", 1);
 	}
 
 	/**
@@ -854,13 +859,14 @@ class aeEntities extends aetools {
 	 */
 	public function getAssociationNamesOfEntity($entite) {
 		$CMD = $this->getClassMetadata($entite);
-		if($CMD !== false) {
-			return $CMD->getAssociationNames();
-		} else throw new Exception("Entité (".gettype($entite).") inexistante. (".$this->getName()."::getAssociationNamesOfEntity() / Ligne ".__LINE__.")", 1);
+		if(is_object($CMD)) {
+			$isAbstract = $CMD->getReflectionClass()->isAbstract();
+			return !$isAbstract ? $CMD->getAssociationNames(): array();
+		} else throw new Exception("Entité (".gettype($entite)." : ".$entite.") inexistante. (".$this->getName()."::getAssociationNamesOfEntity() / Ligne ".__LINE__.")", 1);
 	}
 
 	/**
-	 * Renvoie la liste des noms des associations
+	 * Renvoie la liste des noms des champs + associations
 	 * @return array
 	 */
 	public function getAllFieldNamesOfEntity($entite) {
@@ -869,7 +875,7 @@ class aeEntities extends aetools {
 			$b = $this->getAssociationNamesOfEntity($entite);
 			if($a !== false && $b !== false) return array_merge($a, $b);
 				else return false;
-		} else throw new Exception("Entité (".gettype($entite).") inexistante. (".$this->getName()."::getAllFieldNamesOfEntity() / Ligne ".__LINE__.")", 1);
+		} else throw new Exception("Entité (".gettype($entite)." : ".$entite.") inexistante. (".$this->getName()."::getAllFieldNamesOfEntity() / Ligne ".__LINE__.")", 1);
 	}
 
 	/**
@@ -880,12 +886,12 @@ class aeEntities extends aetools {
 	 */
 	public function getTargetEntity($field, $entite = null) {
 		$CMD = $this->getClassMetadata($entite);
-		if($CMD !== false) {
+		if(is_object($CMD)) {
 			if($this->hasAssociation($field, $entite)) {
 				$obj_mapping = $CMD->getAssociationMapping($field);
 				return $obj_mapping['targetEntity'];
 			}
-		} else throw new Exception("Entité (".gettype($entite).") inexistante. (".$this->getName()."::hasField() / Ligne ".__LINE__.")", 1);
+		} else throw new Exception("Entité (".gettype($entite)." : ".$entite.") inexistante. (".$this->getName()."::hasField() / Ligne ".__LINE__.")", 1);
 		return null;
 	}
 
@@ -897,7 +903,7 @@ class aeEntities extends aetools {
 	 */
 	public function isUniqueField($field, $entite = null) {
 		$CMD = $this->getClassMetadata($entite);
-		if($CMD !== false) {
+		if(is_object($CMD)) {
 			if($this->hasField($field, $entite)) {//throw new Exception("Champ (".$entite."::".$field.") inexistant. (".$this->getName()."::isUniqueField() / Ligne ".__LINE__.")", 1);
 				return $CMD->isUniqueField($field);
 			}
@@ -908,7 +914,7 @@ class aeEntities extends aetools {
 					// !!!! cas d'association type collection… à améliorer
 					else return true;
 			}
-		} else throw new Exception("Entité (".gettype($entite).") inexistante. (".$this->getName()."::isUniqueField() / Ligne ".__LINE__.")", 1);
+		} else throw new Exception("Entité (".gettype($entite)." : ".$entite.") inexistante. (".$this->getName()."::isUniqueField() / Ligne ".__LINE__.")", 1);
 	}
 
 	/**
@@ -919,7 +925,7 @@ class aeEntities extends aetools {
 	 */
 	public function isNullableField($field, $entite = null) {
 		$CMD = $this->getClassMetadata($entite);
-		if($CMD !== false) {
+		if(is_object($CMD)) {
 			if($this->hasField($field, $entite)) {//throw new Exception("Champ (".$entite."::".$field.") inexistant. (".$this->getName()."::isNullableField() / Ligne ".__LINE__.")", 1);
 				return $CMD->isNullable($field);
 			}
@@ -930,7 +936,7 @@ class aeEntities extends aetools {
 					// !!!! cas d'association type collection… à améliorer
 					else return true;
 			}
-		} else throw new Exception("Entité (".gettype($entite).") inexistante. (".$this->getName()."::isNullableField() / Ligne ".__LINE__.")", 1);
+		} else throw new Exception("Entité (".gettype($entite)." : ".$entite.") inexistante. (".$this->getName()."::isNullableField() / Ligne ".__LINE__.")", 1);
 	}
 
 	/**
@@ -942,13 +948,13 @@ class aeEntities extends aetools {
 	public function getTypeOfField($field, $entite = null) {
 		$CMD = $this->getClassMetadata($entite);
 		// $this->writeConsole(self::TAB2.'Info '.__LINE__." : "."getTypeOfField = ", 'headline', false);
-		if($CMD !== false) {
+		if(is_object($CMD)) {
 			if($this->hasField($field, $entite)) { // throw new Exception("Champ (".$entite."::".$field.") inexistant. (".$this->getName()."::getTypeOfField() / Ligne ".__LINE__.")", 1);
 				$type = $CMD->getTypeOfField($field);
 				// $this->writeConsole('Type de champ : '.$type);
 				return $type;
 			} else return false;
-		} else throw new Exception("Entité (".gettype($entite).") inexistante. (".$this->getName()."::getTypeOfField() / Ligne ".__LINE__.")", 1);
+		} else throw new Exception("Entité (".gettype($entite)." : ".$entite.") inexistante. (".$this->getName()."::getTypeOfField() / Ligne ".__LINE__.")", 1);
 	}
 
 	/**
@@ -983,8 +989,47 @@ class aeEntities extends aetools {
 			}
 			// $this->writeConsole(self::TAB2.'Info '.__LINE__." : ".$methode, 'headline');
 			if(method_exists($entite, $methode)) return $methode;
-				else throw new Exception("Setter (".$methode.") inexistant : VOUS DEVEZ LE CRÉER. (".$this->getName()."::getMethodOfSetting() / Ligne ".__LINE__.")", 1);
-		} else throw new Exception("Entité (".gettype($entite).") inexistante. (".$this->getName()."::getMethodOfSetting() / Ligne ".__LINE__.")", 1);
+				else return null;
+				// else throw new Exception("Setter (".$methode.") inexistant : VOUS DEVEZ LE CRÉER. (".$this->getName()."::getMethodOfSetting() / Ligne ".__LINE__.")", 1);
+		} else throw new Exception("Entité (".gettype($entite)." : ".$entite.") inexistante. (".$this->getName()."::getMethodOfSetting() / Ligne ".__LINE__.")", 1);
+		return false;
+	}
+
+	/**
+	 * Renvoie le nom de la méthode de suppression / false si la méthode est manquante
+	 * @param string $field
+	 * @param object $entite
+	 * @return string
+	 */
+	public function getMethodOfRemoving($field, $entite = null) {
+		// $this->writeConsole(self::TAB2.'Info '.__LINE__." : "."getMethodOfSetting", 'headline');
+		$methode = false;
+		if($this->getClassMetadata($entite) !== false) {
+			$TOF = $this->getTypeOfField($field, $entite);
+			if($TOF !== false) {
+				if($TOF === Type::TARRAY) {
+					// Type arrayCollection
+					$methode = $this->getMethodNameWith($field, 'remove');
+				} else {
+					$methode = false;
+				}
+			} else {
+				switch ($this->getTypeOfAssociation($field, $entite)) {
+					case self::COLLECTION_ASSOC_NAME: // collection
+						// $this->writeConsole(self::TAB2.'Info '.__LINE__." : ".self::COLLECTION_ASSOC_NAME, 'headline');
+						$methode = $this->getMethodNameWith($field, 'remove');
+						break;
+					case self::SINGLE_ASSOC_NAME: // single
+						// $this->writeConsole(self::TAB2.'Info '.__LINE__." : ".self::SINGLE_ASSOC_NAME, 'headline');
+						$methode = false;
+						break;
+				}
+			}
+			// $this->writeConsole(self::TAB2.'Info '.__LINE__." : ".$methode, 'headline');
+			if(method_exists($entite, $methode)) return $methode;
+				else return null;
+				// else throw new Exception("Setter (".$methode.") inexistant : VOUS DEVEZ LE CRÉER. (".$this->getName()."::getMethodOfSetting() / Ligne ".__LINE__.")", 1);
+		} else throw new Exception("Entité (".gettype($entite)." : ".$entite.") inexistante. (".$this->getName()."::getMethodOfRemoving() / Ligne ".__LINE__.")", 1);
 		return false;
 	}
 
@@ -1010,8 +1055,9 @@ class aeEntities extends aetools {
 				}
 			}
 			if(method_exists($entite, $methode)) return $methode;
-				else throw new Exception("Getter (".$methode.") inexistant : VOUS DEVEZ LE CRÉER. (".$this->getName()."::getMethodOfGetting() / Ligne ".__LINE__.")", 1);
-		} else throw new Exception("Entité (".gettype($entite).") inexistante. (".$this->getName()."::getMethodOfGetting() / Ligne ".__LINE__.")", 1);
+				else return null;
+				// else throw new Exception("Getter (".$methode.") inexistant : VOUS DEVEZ LE CRÉER. (".$this->getName()."::getMethodOfGetting() / Ligne ".__LINE__.")", 1);
+		} else throw new Exception("Entité (".gettype($entite)." : ".$entite.") inexistante. (".$this->getName()."::getMethodOfGetting() / Ligne ".__LINE__.")", 1);
 		return false;
 	}
 
@@ -1023,12 +1069,12 @@ class aeEntities extends aetools {
 	 */
 	public function isAssociationWithSingleJoinColumn($field, $entite = null) {
 		$CMD = $this->getClassMetadata($entite);
-		if($CMD !== false) {
+		if(is_object($CMD)) {
 			// $this->writeConsole(self::TAB2.'Info '.__LINE__.' : isAssociationWithSingleJoinColumn ? '.$field." ---> ".get_class($entite), 'headline');
 			// if(!$this->hasField($field, $entite)) throw new Exception("Champ (".$entite."::".$field.") inexistant. (".$this->getName()."::isAssociationWithSingleJoinColumn() / Ligne ".__LINE__.")", 1);
 			// $this->isAssociationWithSingleJoinColumn($field) ? $this->writeConsole('OUI !') : $this->writeConsole('NON !');
 			return $CMD->isAssociationWithSingleJoinColumn($field, $entite);
-		} else throw new Exception("Entité (".gettype($entite).") inexistante. (".$this->getName()."::isAssociationWithSingleJoinColumn() / Ligne ".__LINE__.")", 1);
+		} else throw new Exception("Entité (".gettype($entite)." : ".$entite.") inexistante. (".$this->getName()."::isAssociationWithSingleJoinColumn() / Ligne ".__LINE__.")", 1);
 	}
 
 	/**
@@ -1039,12 +1085,27 @@ class aeEntities extends aetools {
 	 */
 	public function hasAssociation($field, $entite = null) {
 		$CMD = $this->getClassMetadata($entite);
-		if($CMD !== false) {
+		if(is_object($CMD)) {
 			// $this->writeConsole(self::TAB2.'Info '.__LINE__.' : hasAssociation ? '.$field." ---> ".get_class($entite), 'headline');
 			// if(!$this->hasField($field, $entite)) throw new Exception("Champ (".$entite."::".$field.") inexistant. (".$this->getName()."::hasAssociation() / Ligne ".__LINE__.")", 1);
 			// $CMD->hasAssociation($field) ? $this->writeConsole('OUI !') : $this->writeConsole('NON !');
 			return $CMD->hasAssociation($field);
-		} else throw new Exception("Entité (".gettype($entite).") inexistante. (".$this->getName()."::hasAssociation() / Ligne ".__LINE__.")", 1);
+		} else throw new Exception("Entité (".gettype($entite)." : ".$entite.") inexistante. (".$this->getName()."::hasAssociation() / Ligne ".__LINE__.")", 1);
+	}
+
+	/**
+	 * Renvoie si une relation est de type bidirectionnelle
+	 * true si oui
+	 * false si non ou si pas d'association 
+	 * @param string $field
+	 * @param object $entite
+	 * @return boolean
+	 */
+	public function isIdentifier($field, $entite = null) {
+		$CMD = $this->getClassMetadata($entite);
+		if(is_object($CMD)) {
+			return $CMD->isIdentifier($field);
+		} else throw new Exception("Entité (".gettype($entite)." : ".$entite.") inexistante. (".$this->getName()."::isBidirectional() / Ligne ".__LINE__.")", 1);
 	}
 
 	/**
@@ -1057,31 +1118,130 @@ class aeEntities extends aetools {
 	 */
 	public function isBidirectional($field, $entite = null) {
 		$CMD = $this->getClassMetadata($entite);
-		if($CMD !== false) {
+		if(is_object($CMD)) {
 			// if(!$this->hasField($field, $entite)) throw new Exception("Champ (".$entite."::".$field.") inexistant. (".$this->getName()."::isBidirectional() / Ligne ".__LINE__.")", 1);
 			if(!$this->hasAssociation($field, $entite)) return false;
 			$tar_entity = $this->getTargetEntity($field, $entite);
 			$tar_field = $this->get_OtherSide_sourceField($field, $entite);
 			return ($this->isAssociationInverseSide($field, $entite) || $this->isAssociationInverseSide($tar_field, $tar_entity));
-		} else throw new Exception("Entité (".gettype($entite).") inexistante. (".$this->getName()."::isBidirectional() / Ligne ".__LINE__.")", 1);
+		} else throw new Exception("Entité (".gettype($entite)." : ".$entite.") inexistante. (".$this->getName()."::isBidirectional() / Ligne ".__LINE__.")", 1);
 	}
 
-	// /**
-	//  * Renvoie si une relation bidirectionnelle est propriétaire
-	//  * true si oui
-	//  * false si non ou si pas d'association 
-	//  * @param string $field
-	//  * @param object $entite
-	//  * @return boolean
-	//  */
-	// public function isAssociationMappedSide($field, $entite = null) {
-	// 	$CMD = $this->getClassMetadata($entite);
-	// 	if($CMD !== false) {
-	// 		// if(!$this->hasField($field, $entite)) throw new Exception("Champ (".$entite."::".$field.") inexistant. (".$this->getName()."::isAssociationMappedSide() / Ligne ".__LINE__.")", 1);
-	// 		// if(!$this->isBidirectional($field, $entite)) return false;
-	// 		return is_string($CMD->getAssociationMappedByTargetField($field));
-	// 	} else throw new Exception("Entité (".gettype($entite).") inexistante. (".$this->getName()."::isAssociationMappedSide() / Ligne ".__LINE__.")", 1);
-	// }
+	/**
+	 * Vérifie et associe les champs liés + bidirectionnels + inverseSide
+	 * @param object $entity
+	 * @param boolean $flush = true
+	 * @return boolean
+	 */
+	public function checkInversedLinks(&$entity, $flush = true) {
+		$r = true;
+		// $this->getEm()->persist($entity);
+		// $this->getEm()->flush(); // flush : sinon on obtient de objets Doctrine\ORM\PersistentCollection
+		$classname = get_class($entity);
+		$shortname = $this->getEntityShortName($classname);
+		echo('<p><strong>Classe entité : '.$classname.' / '.$shortname.'</strong></p>');
+		$fields = $this->getInverseSideFields($classname);
+		foreach ($fields as $field) {
+			// uniquement si "mappedBy"…
+			echo('<p>- field : '.$field.'</p>');
+			$otherSideSource = $this->get_OtherSide_sourceField($field, $classname);
+			if(is_string($otherSideSource)) {
+				echo('<p>--> field mapped : '.$otherSideSource.'</p>');
+				// il faut rattacher…
+				$target = $this->getEntityClassName($this->getTargetEntity($field, $classname));
+				// $targetRepo = $this->getEm()->getRepository($target);
+				$get = $this->getMethodOfGetting($field, $classname);
+				echo('<p>--> target : '.$target.' -> '.$get.'()</p>');
+				// return Doctrine\ORM\PersistentCollection->getValues()
+				$data = $entity->$get()->getValues();
+				// if(get_class($data) == $target) $data = array($data);
+				// if(gettype($data) == Type::TARRAY) $data = 
+				if(is_array($data)) {
+					echo('<p>--> éléments : '.count($data).'</p>');
+					foreach ($data as $item) if($target != $classname) {
+						$targetClass = get_class($item);
+						$nom = $item->getId();
+						if(method_exists($item, 'getNom')) $nom .= '/'.$item->getNom();
+						echo('<p style="color:green;">--> vérif : '.$target.' = '.$targetClass.' => '.$nom.'</p>');
+						$dataSet = $this->getMethodOfSetting($otherSideSource, $targetClass);
+						$dataGet = $this->getMethodOfGetting($otherSideSource, $targetClass);
+						$entities = $item->$dataGet()->getValues();
+						if(is_object($entities)) $entities = array($entities);
+						$entities = new ArrayCollection($entities);
+						if(!$entities->contains($entity)) $item->$dataSet($entity);
+					}
+				} else {
+					// echo('<p>--> éléments : <span style="color:red;">'.get_class($data).'</span></p>');
+				}
+				// check les liens éventuellement perdus…
+				$this->checkLosts($field, $entity);
+			}
+		}
+		// die('<h3>fin :-)</h3>');
+		// flush…
+		if($flush == true) $r = $this->getEm()->flush();
+		return $r;
+	}
+
+	/**
+	 * Répare (supprime) les inverseSide manquants sur une entité
+	 * @param object $field
+	 * @param string $entity
+	 * @param boolean $flush = true
+	 * @return boolean
+	 */
+	public function checkLosts($field, $entity, $flush = true) {
+		$classname = get_class($entity);
+		// liste des champs liés + bidirectionnels + inverseSide
+		$fields = $this->getInverseSideFields($classname);
+		// flush…
+		if($flush == true) $r = $this->getEm()->flush();
+		return $r;
+	}
+
+	/**
+	 * Renvoie les champs INVERSESIDE (mappedBy)
+	 * @param string $entite
+	 * @return array
+	 */
+	public function getInverseSideFields($entite) {
+		$list = array();
+		$shortname = $this->getEntityShortName($entite);
+		$fields = $fields = $this->getAssociationNamesOfEntity($entite);
+		foreach ($fields as $field) {
+			if($field != $shortname && $this->isAssociationInverseSide($field, $entite) && !$this->isAssociationWithSingleJoinColumn($field, $entite)) {
+				$list[] = $field;
+			}
+		}
+		return $list;
+	}
+
+	public function checkStatuts(&$entity, $flush = true) {
+		if(method_exists($entity, 'getStatut')) {
+			if($entity->getStatut() == null) {
+				$statut = $this->getEm()->getRepository('site\adminBundle\Entity\statut')->defaultVal();
+				if(is_array($statut)) $statut = reset($statut);
+				if(is_object($statut)) $entity->setStatut($statut);
+			}
+		}
+	}
+
+	/**
+	 * Renvoie les champs PROPRIÉTAIRES (inversedBy)
+	 * @param string $entite
+	 * @return array
+	 */
+	public function getProprietarySideFields($entite) {
+		$list = array();
+		$shortname = $this->getEntityShortName($entite);
+		$fields = $fields = $this->getAssociationNamesOfEntity($entite);
+		foreach ($fields as $field) {
+			if($field != $shortname && !$this->isAssociationInverseSide($field, $entite) && !$this->isAssociationWithSingleJoinColumn($field, $entite)) {
+				$list[] = $field;
+			}
+		}
+		return $list;
+	}
 
 	/**
 	 * Renvoie si une relation bidirectionnelle est propriétaire
@@ -1091,13 +1251,25 @@ class aeEntities extends aetools {
 	 * @param object $entite
 	 * @return boolean
 	 */
+	public function isAssociationMappedSide($field, $entite = null) {
+		return !$this->isAssociationInverseSide($field, $entite);
+	}
+
+	/**
+	 * Renvoie si une relation bidirectionnelle est inverse
+	 * true si oui
+	 * false si non ou si pas d'association 
+	 * @param string $field
+	 * @param object $entite
+	 * @return boolean
+	 */
 	public function isAssociationInverseSide($field, $entite = null) {
 		$CMD = $this->getClassMetadata($entite);
-		if($CMD !== false) {
+		if(is_object($CMD)) {
 			// if(!$this->hasField($field, $entite)) throw new Exception("Champ (".$entite."::".$field.") inexistant. (".$this->getName()."::isAssociationInverseSide() / Ligne ".__LINE__.")", 1);
 			// if(!$this->isBidirectional($field, $entite)) return false;
 			return $CMD->isAssociationInverseSide($field);
-		} else throw new Exception("Entité (".gettype($entite).") inexistante. (".$this->getName()."::isAssociationInverseSide() / Ligne ".__LINE__.")", 1);
+		} else throw new Exception("Entité (".gettype($entite)." : ".$entite.") inexistante. (".$this->getName()."::isAssociationInverseSide() / Ligne ".__LINE__.")", 1);
 	}
 
 	/**
@@ -1109,7 +1281,7 @@ class aeEntities extends aetools {
 	public function getTypeOfAssociation($field, $entite = null) {
 		// $this->writeConsole(self::TAB2.'Info '.__LINE__.' : getTypeOfAssociation ? '.$field." ---> ".get_class($entite), 'headline');
 		$CMD = $this->getClassMetadata($entite);
-		if($CMD !== false) {
+		if(is_object($CMD)) {
 			// $this->writeConsole(self::TAB2.'Info '.__LINE__.' : getTypeOfAssociation ? '.$field." ---> ".get_class($entite), 'headline');
 			// if(!$this->hasField($field, $entite)) throw new Exception("Champ (".$entite."::".$field.") inexistant. (".$this->getName()."::getTypeOfAssociation() / Ligne ".__LINE__.")", 1);
 			// Champ non associatif
@@ -1117,7 +1289,7 @@ class aeEntities extends aetools {
 			// Champ associatif : renvoie le type : "single" / "collection"
 			if($CMD->isCollectionValuedAssociation($field)) return self::COLLECTION_ASSOC_NAME;
 			if($CMD->isSingleValuedAssociation($field)) return self::SINGLE_ASSOC_NAME;
-		} else throw new Exception("Entité (".gettype($entite).") inexistante. (".$this->getName()."::getTypeOfAssociation() / Ligne ".__LINE__.")", 1);
+		} else throw new Exception("Entité (".gettype($entite)." : ".$entite.") inexistante. (".$this->getName()."::getTypeOfAssociation() / Ligne ".__LINE__.")", 1);
 	}
 
 	// ASSOCIATION : ENTITÉS INVERSES OU MAPPED
@@ -1131,7 +1303,7 @@ class aeEntities extends aetools {
 	 */
 	public function get_OtherSide_sourceField($field, $entite = null) {
 		$CMD = $this->getClassMetadata($entite);
-		if($CMD !== false) {
+		if(is_object($CMD)) {
 			// if($this->hasField($field, $entite)) {
 				if($this->hasAssociation($field, $entite)) {
 					$association = $CMD->getAssociationMapping($field);
@@ -1140,7 +1312,30 @@ class aeEntities extends aetools {
 				}
 			// }
 			return false;
-		} else throw new Exception("Entité (".gettype($entite).") inexistante. (".$this->getName()."::getFieldNamesOfEntity() / Ligne ".__LINE__.")", 1);
+		} else throw new Exception("Entité (".gettype($entite)." : ".$entite.") inexistante. (".$this->getName()."::getFieldNamesOfEntity() / Ligne ".__LINE__.")", 1);
+	}
+
+
+	// DELETIONS
+
+	public function softDelete(&$entite) {
+		if(method_exists($entite, 'setStatut')) {
+			// si un champ statut existe : Règle :
+			// actif ---> inactif
+			// inactif ou expired ---> deleted (uniquement visible du SUPER ADMIN)
+			if($entite->getStatut()->getSlug() == 'actif') {
+				$statut = $this->getEm()->getRepository('site\adminBundle\Entity\statut')->findInactif();
+			} else {
+				$statut = $this->getEm()->getRepository('site\adminBundle\Entity\statut')->findDeleted();
+			}
+			if(is_array($statut)) $statut = reset($statut);
+			if(is_object($statut)) $entite->setStatut($statut);
+				else $this->getEm()->remove($entite);
+		} else {
+			// sinon on la supprime
+			$this->getEm()->remove($entite);
+		}
+		$this->getEm()->flush();
 	}
 
 
@@ -1151,7 +1346,9 @@ class aeEntities extends aetools {
 	 * @return manager
 	 */
 	public function getEm() {
-		if(is_object($this->container)) $this->_em = $this->container->get('doctrine')->getManager();
+		if($this->_em == null) {
+			if(is_object($this->container)) $this->_em = $this->container->get('doctrine')->getManager();
+		}
 		return $this->_em;
 	}
 
@@ -1177,6 +1374,9 @@ class aeEntities extends aetools {
 				$this->repo[$entity]->setVersion($versionSlug);
 			} // else $this->writeConsole('Aucune méthode de version prévue dans le repository !!!', 'error');
 			// $this->writeConsole('Repository défini pour '.$entity.' : OK.');
+			if(method_exists($this->repo[$entity], "declareMode")) {
+				$this->repo[$entity]->declareMode($this->container);
+			}
 			return $this->repo[$entity];
 		}
 		return false;
@@ -1190,14 +1390,18 @@ class aeEntities extends aetools {
 	public function getClassMetadata(&$entity = null, $extended = false) {
 		$entityCopy = $this->getEntityClassName($entity);
 		if($extended === true) $entityCopy = $entity;
-		if($entityCopy === false) throw new Exception("Entité \"".$entity."\" inexistante. (".$this->getName()."::getClassMetadata() / Ligne ".__LINE__.")", 1);
-		if(!isset($this->CMD[$entityCopy])) {
-			$this->CMD[$entityCopy] = $this->getEm()->getClassMetadata($entityCopy);
+		if($entityCopy !== false) {
+			if(!isset($this->CMD[$entityCopy])) {
+				$this->CMD[$entityCopy] = $this->getEm()->getClassMetadata($entityCopy);
+			}
+			// renvoie la classe dans l'objet entity SI ça n'est pas un objet. Sinon on la garde telle quelle.
+			if(!is_object($entity)) $entity = $entityCopy;
+			// Renvoie l'objet ClassMetadata
+			return $this->CMD[$entityCopy];
+		} else {
+			return null;
+			// return throw new Exception("Entité \"".$entity."\" inexistante. (".$this->getName()."::getClassMetadata() / Ligne ".__LINE__.")", 1);
 		}
-		// renvoie la classe dans l'objet entity SI ça n'est pas un objet. Sinon on la garde telle quelle.
-		if(!is_object($entity)) $entity = $entityCopy;
-		// Renvoie l'objet ClassMetadata
-		return $this->CMD[$entityCopy];
 	}
 
 	// /**
@@ -1245,7 +1449,7 @@ class aeEntities extends aetools {
 	//  */
 	// public function getMetaInfoField($className, $field) {
 	// 	$CMD = $this->getClassMetadata($className);
-	// 	if($CMD !== false) {
+	// 	if(is_object($CMD)) {
 	// 		$r = array();
 	// 		// $field = $CMD->getFieldForColumn($column);
 	// 		if($CMD->hasAssociation($field) === false) {

@@ -58,37 +58,37 @@
 	<div class="col-md-6">
 		<table class="table small m-b-xs">
 			<tbody>
-			<tr>
-				<td{% if user.lastLogin is not null %} title="{{ user.lastLogin|date(formatDateHeure) }}"{% endif %}>
-					<strong>Login</strong> 
-					{% if user.lastLogin is not null %}
-					{{ dateFR(user.lastLogin, true) }} {{ user.lastLogin|date('H\\hi') }}
-					{% else %}
-					<i class="text-muted">(jamais)</i>
-					{% endif %}
-				</td>
-				<td>
-					{% if marketplace.active|default(false) %}
-					<strong>Panier</strong> {% if articlesPanier|default('?') > 0 %}{{ articlesPanier|default('?') }}{% else %}(vide){% endif %}
-					{% endif %}
-				</td>
-				<td>
-					<strong>Messages</strong> {{ user.messages|length }}
-				</td>
-			</tr>
-			{% if marketplace.active|default(false) %}
-			<tr>
-				<td>
-					<strong>Achats</strong> {{ factures|default([])|length }}
-				</td>
-				<td title="{{ cumulHT|default(0)|number_format(2, ',', '') }} €HT">
-					<strong>Total</strong> {{ cumulTTC|default(0)|number_format(2, ',', '') }}&nbsp;€TTC
-				</td>
-				<td>
-					<p></p>
-				</td>
-			</tr>
-			{% endif %}
+				<tr>
+					<td{% if user.lastLogin is not null %} title="{{ user.lastLogin|date(formatDateHeure) }}"{% endif %}>
+						<strong>Login</strong> 
+						{% if user.lastLogin is not null %}
+						{{ dateFR(user.lastLogin, true) }} {{ user.lastLogin|date('H\\hi') }}
+						{% else %}
+						<i class="text-muted">(jamais)</i>
+						{% endif %}
+					</td>
+					<td>
+						<p></p>
+					</td>
+					<td>
+						<strong>Messages</strong> {{ user.messages|length }}
+					</td>
+				</tr>
+				{% if marketplace.active|default(false) %}
+				<tr>
+					<td>
+						{% if marketplace.active|default(false) %}
+						<strong>Panier</strong> {% if user.articlesPanier|default(0) > 0 %}{{ user.articlesPanier }}{% else %}(vide){% endif %}
+						{% endif %}
+					</td>
+					<td>
+						<strong>Achats</strong> {{ factures|default([])|length }}
+					</td>
+					<td title="{{ cumulHT|default(0)|number_format(2, ',', '') }} {{ marketplace.devise.symb }}HT">
+						<strong>Total</strong> {{ cumulTTC|default(0)|number_format(2, ',', '') }}&nbsp;{{ marketplace.devise.symb }}{{ 'table.col.TTC'|trans }}
+					</td>
+				</tr>
+				{% endif %}
 			</tbody>
 		</table>
 	</div>
@@ -136,7 +136,7 @@
 	<div class="col-md-6 col-lg-4">
 		<div class="ibox float-e-margins">
 			<div class="ibox-content">
-				<h2>Panier <small>{{ user.username }}</small> <div class="label label-info">{{ articlesPanier|default('?') }}</div></h2>
+				<h2>Panier <small>{{ user.username }}</small> <div class="label label-info">{{ user.articlesPanier|default(0) }}</div></h2>
 				<p class="adminhelp"><small>Contenu actuel du panier de <strong>{{ user.username }}</strong>.</small></p>
 				<hr>
 				{% if user.paniers|length > 0 %}
@@ -151,8 +151,8 @@
 										<tr>
 											<td><strong>Article</strong></td>
 											<td><strong>Q.</strong></td>
-											<td><strong>Prix<sup>TTC</sup></strong></td>
-											<td><strong>Total<sup>TTC</sup></strong></td>
+											<td><strong>Prix<sup>{{ 'table.col.TTC'|trans }}</sup></strong></td>
+											<td><strong>Total<sup>{{ 'table.col.TTC'|trans }}</sup></strong></td>
 										</tr>
 										{% set totalpanierTTC = 0 %}
 										{% set totalpanierHT = 0 %}
@@ -160,19 +160,19 @@
 										{% set totalpanierTTC = totalpanierTTC + (panier.article.prix * panier.quantite) %}
 										{% set totalpanierHT = totalpanierHT + (panier.article.prixHT * panier.quantite) %}
 										<tr>
-											<td><a href="{{ path('labo_ins_entite', {entite: 'article', id: panier.article.id, action: 'show'}) }}" title="{{ dateFR(panier.dateCreation) }} {{ panier.dateCreation|date('H:i:s') }}">{{ panier.article.nom }}</a></td>
+											<td><a href="{{ path('siteadmin_entite', {entite: 'article', id: panier.article.id, action: 'show'}) }}" title="{{ dateFR(panier.updated|default(panier.created)) }} {{ panier.updated|default(panier.created)|date('H:i:s') }}">{{ panier.article.nom }}</a></td>
 											<td>x&nbsp;{{ panier.quantite }}</td>
-											<td>{{ panier.article.prix|number_format(2, ',', '') }}&nbsp;€</td>
-											<td>{{ (panier.quantite * panier.article.prix)|number_format(2, ',', '') }}&nbsp;€</td>
+											<td>{{ panier.article.prix|number_format(2, ',', '') }}&nbsp;{{ marketplace.devise.symb }}</td>
+											<td>{{ (panier.quantite * panier.article.prix)|number_format(2, ',', '') }}&nbsp;{{ marketplace.devise.symb }}</td>
 										</tr>
 										{% endfor %}
 										<tr style="border-top: 2px solid #bbb;">
-											<td colspan="3"><strong>Total TTC</strong></td>
-											<td><strong>{{ totalpanierTTC|number_format(2, ',', '') }}&nbsp;€</strong></td>
+											<td colspan="3"><strong>Total {{ 'table.col.TTC'|trans }}</strong></td>
+											<td><strong>{{ totalpanierTTC|number_format(2, ',', '') }}&nbsp;{{ marketplace.devise.symb }}</strong></td>
 										</tr>
 										<tr>
 											<td colspan="3"><em>Total HT</em></td>
-											<td><em>{{ totalpanierHT|number_format(2, ',', '') }}&nbsp;€</em></td>
+											<td><em>{{ totalpanierHT|number_format(2, ',', '') }}&nbsp;{{ marketplace.devise.symb }}</em></td>
 										</tr>
 									</tbody>
 								</table>
@@ -210,12 +210,12 @@
 									<tbody>
 										<tr>
 											<td class="text-center"><strong>Nb.Art.</strong></td>
-											<td><strong>Total<sup>TTC</sup></strong></td>
+											<td><strong>Total<sup>{{ 'table.col.TTC'|trans }}</sup></strong></td>
 											<td><strong>Statut</strong></td>
 										</tr>
 										<tr>
 											<td class="text-center">{{ facture.nbArticles }}</td>
-											<td>{{ facture.prixtotal|number_format(2, ',', '') }}&nbsp;€</td>
+											<td>{{ facture.prixtotal|number_format(2, ',', '') }}&nbsp;{{ marketplace.devise.symb }}</td>
 											<td>
 												{% if facture.stade == 100 %}{% set color = 'danger' %}
 												{% elseif facture.stade == 3 %}{% set color = 'warning' %}
@@ -246,7 +246,7 @@
 		<div class="ibox float-e-margins">
 			<div class="ibox-content">
 				<h2>Messages <small>{{ user.username }}</small> <div class="label label-info">{{ user.messages|length }}</div></h2>
-				<p class="adminhelp"><small>Liste des messages de <strong>{{ user.username }}</strong>.</small></p>
+				<p class="adminhelp"><small>Liste des messages de <strong>{{ user.username }}</strong> | <a href="{{ path('siteadmin_entite', {entite: 'message'}) }}">Consulter messagerie</a></small></p>
 				<hr>
 				{% if user.messages|length|default(0) > 0 %}
 				<table class="table table-striped table-bordered table-hover">

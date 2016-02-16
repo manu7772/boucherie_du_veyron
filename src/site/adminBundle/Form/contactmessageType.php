@@ -2,7 +2,7 @@
 
 namespace site\adminBundle\Form;
 
-use Symfony\Component\Form\AbstractType;
+use site\adminBundle\Form\baseType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -14,18 +14,7 @@ use Symfony\Component\Security\Core\SecurityContext;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormEvent;
 
-class contactmessageType extends AbstractType {
-
-    private $controller;
-    private $securityContext;
-    private $parametres;
-    
-    public function __construct(Controller $controller, $parametres = null) {
-        $this->controller = $controller;
-        $this->securityContext = $controller->get('security.context');
-        if($parametres === null) $parametres = array();
-        $this->parametres = $parametres;
-    }
+class contactmessageType extends baseType {
 
     /**
      * @param FormBuilderInterface $builder
@@ -33,7 +22,7 @@ class contactmessageType extends AbstractType {
      */
     public function buildForm(FormBuilderInterface $builder, array $options) {
         // ajout de action si défini
-        if(isset($this->parametres['form_action'])) $builder->setAction($this->parametres['form_action']);
+        $this->initBuilder($builder);
         // user
         if(is_object($this->controller->getUser())) {
             $user['nom'] = $this->controller->getUser()->getNom();
@@ -112,39 +101,7 @@ class contactmessageType extends AbstractType {
             // ->add('ip')
         ;
         // ajoute les valeurs hidden, passés en paramètre
-        $builder = $this->addHiddenValues($builder);
-
-
-        // AJOUT SUBMIT
-        $builder->add('submit', 'submit', array(
-            'label' => 'form.enregistrer',
-            'translation_domain' => 'messages',
-            'attr' => array(
-                'class' => "btn btn-primary pull-right",
-                ),
-            ))
-        ;
-    }
-    
-    /**
-     * addHiddenValues
-     * @param FormBuilderInterface $builder
-     * @return FormBuilderInterface
-     */
-    public function addHiddenValues(FormBuilderInterface $builder) {
-        $data = array();
-        $nom = 'hiddenData';
-        foreach($this->parametres as $key => $value) {
-            if(is_string($value) || is_array($value) || is_bool($value)) {
-                $data[$key] = $value;
-            }
-        }
-        if($builder->has($nom)) $builder->remove($nom);
-        $builder->add($nom, 'hidden', array(
-            'data' => urlencode(json_encode($data, true)),
-            'mapped' => false,
-        ));
-        return $builder;
+        $this->addHiddenValues($builder, true);
     }
 
     /**

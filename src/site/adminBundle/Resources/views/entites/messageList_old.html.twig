@@ -1,0 +1,81 @@
+{% extends 'siteadminBundle:entites:entiteList.html.twig' %}
+{% set cssjsloads = 'TAB' %}
+{% set DEVMODE = (app.environment in ['DEV', 'TEST']) or (is_granted('ROLE_SUPER_ADMIN')) %}
+
+{% block buttons %}
+{% endblock buttons %}
+
+{% block content %}
+<div class="row">
+	<div class="col-md-12">
+		<div class="ibox float-e-margins">
+			<div class="ibox-content">
+				{% if entites|length > 0 %}
+				<table class="table table-striped table-condensed table-bordered table-hover dataTables dataTable dtr-inline" id="DataTables_Table_0" role="grid" aria-describedby="DataTables_Table_0_info">
+					<thead>
+						<tr>
+							{% if DEVMODE %}<th class="text-center">{{ 'table.col.id'|trans|capitalize }}</th>{% endif %}
+							<th>{{ 'table.col.nom'|trans|capitalize }}</th>
+							<th>Actions</th>
+							<th>{{ 'table.col.email'|trans|capitalize }}</th>
+							<th>{{ 'table.col.objet'|trans|capitalize }} - {{ 'table.col.message'|trans|capitalize }}</th>
+						</tr>
+					</thead>
+					<tbody>
+						{% for entite in entites if(entite.statut.nom == 'Actif' or DEVMODE) %}
+						<tr{% if entite.statut.nom|default('Actif') != 'Actif' %} class="danger"{% endif %}>
+							{% if DEVMODE %}<td class="text-center">{{ entite.id }}</td>{% endif %}
+							<td>
+								{% if entite.user|default(null) != null %}
+								<a href="{{ path('siteUser_info', {username: entite.user.username}) }}"><strong>{{ entite.nom }}</strong></a>
+								{% else %}
+								{{ entite.nom }}
+								{% endif %}
+							</td>
+							<td>
+								<div class="btn-group">
+									<a href="mailto:{{ entite.email }}" type="button" class="btn btn-white btn-xs" title="{{ 'actions.repondre'|trans|capitalize }}"><i class="fa fa-paper-plane"></i></a>
+									{% set question = 'actions.suppQuestion'|trans({'%name%': entite.nom|default(entite.objet|default(phraseCut(entite.message, 20)|raw))}) %}
+									{% if type.type_values|default(null) != null %}
+									<a href="{{ path('siteadmin_entite_type', {entite: entite_name, type_related: type.type_related, type_field: type.type_field, type_values: type.type_values|join(type_value_joiner)|url_encode, id: entite.id, action: 'delete'}) }}" type="button" class="btn btn-white btn-xs need-confirmation" title="{{ 'actions.supprimer'|trans|capitalize }}" data-message="{{ question }}"><i class="fa fa-times"></i></a>
+									{% else %}
+									<a href="{{ path('siteadmin_entite', {entite: entite_name, id: entite.id, action: 'delete'}) }}" type="button" class="btn btn-white btn-xs need-confirmation" title="{{ 'actions.supprimer'|trans|capitalize }}" data-message="{{ question }}"><i class="fa fa-times"></i></a>
+									{% endif %}
+								</div>
+								{% if DEVMODE %}
+								<hr class="m-b-xs m-t-xs">
+								<div class="btn-group">
+									{% if type.type_values|default(null) != null %}
+									<a href="{{ path('siteadmin_entite_type', {entite: entite_name, type_related: type.type_related, type_field: type.type_field, type_values: type.type_values|join(type_value_joiner)|url_encode, id: entite.id, action: 'check'}) }}" type="button" class="btn btn-danger btn-xs" title="Checker article {{ entite.nom }}"><i class="fa fa-check"></i></a>
+									<a href="{{ path('siteadmin_entite_type', {entite: entite_name, type_related: type.type_related, type_field: type.type_field, type_values: type.type_values|join(type_value_joiner)|url_encode, id: entite.id, action: 'show'}) }}" type="button" class="btn btn-danger btn-xs" title="{{ (entite_name ~ '.moredetails')|trans({'%name%': entite.nom})|capitalize }}"><i class="fa fa-eye"></i></a>
+									<a href="{{ path('siteadmin_entite_type', {entite: entite_name, type_related: type.type_related, type_field: type.type_field, type_values: type.type_values|join(type_value_joiner)|url_encode, id: entite.id, action: 'edit'}) }}" type="button" class="btn btn-danger btn-xs" title="{{ 'actions.modifier'|trans|capitalize }}"><i class="fa fa-pencil"></i></a>
+									{% if(entite.statut.nom|default('Actif') != 'Actif') %}
+									<a href="{{ path('siteadmin_entite_type', {entite: entite_name, type_related: type.type_related, type_field: type.type_field, type_values: type.type_values|join(type_value_joiner)|url_encode, id: entite.id, action: 'active'}) }}" type="button" class="btn btn-danger btn-xs" title="{{ 'actions.activer'|trans|capitalize }}"><i class="fa fa-star"></i></a>
+									{% endif %}
+									{% else %}
+									<a href="{{ path('siteadmin_entite', {entite: entite_name, id: entite.id, action: 'check'}) }}" type="button" class="btn btn-danger btn-xs" title="Checker article {{ entite.nom }}"><i class="fa fa-check"></i></a>
+									<a href="{{ path('siteadmin_entite', {entite: entite_name, id: entite.id, action: 'show'}) }}" type="button" class="btn btn-danger btn-xs" title="{{ (entite_name ~ '.moredetails')|trans({'%name%': entite.nom})|capitalize }}"><i class="fa fa-eye"></i></a>
+									<a href="{{ path('siteadmin_entite', {entite: entite_name, id: entite.id, action: 'edit'}) }}" type="button" class="btn btn-danger btn-xs" title="{{ 'actions.modifier'|trans|capitalize }}"><i class="fa fa-pencil"></i></a>
+									{% if(entite.statut.nom|default('Actif') != 'Actif') %}
+									<a href="{{ path('siteadmin_entite', {entite: entite_name, id: entite.id, action: 'active'}) }}" type="button" class="btn btn-danger btn-xs" title="{{ 'actions.activer'|trans|capitalize }}"><i class="fa fa-star"></i></a>
+									{% endif %}
+									{% endif %}
+								</div>
+								{% endif %}
+							</td>
+							<td>{{ entite.email }}</td>
+							<td>
+								<strong>{{ entite.objet|default('<i class="fa fa-ban text-muted"></i>')|raw }}</strong> - <small><i>{{ phraseCut(entite.message, 160) }}</i></small>
+							</td>
+						</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+				{% else %}
+				<h3><i class="fa fa-ban"></i> {{ (entite_name ~ '.not_found')|trans|capitalize }}</h3>
+				{% endif %}
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock content %}

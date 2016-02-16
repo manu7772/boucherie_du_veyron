@@ -1,0 +1,23 @@
+name: sidemenu
+roles:
+    view: ROLE_EDITOR
+    edit: ROLE_ADMIN
+    delete: ROLE_SUPER_ADMIN
+menu:
+    1:
+        name: bundles.admin.name
+        icon: fa-cog
+        path: siteadmin_homepage
+    2:
+        name: bundles.translate.name
+        icon: fa-flag
+        path: sitetranslate_homepage
+        role: ROLE_TRANSLATOR
+    3:
+        name: bundles.User.name
+        icon: fa-users
+        role: ROLE_ADMIN
+        path:
+            path: site_user_homepage
+            params:
+                name: contact

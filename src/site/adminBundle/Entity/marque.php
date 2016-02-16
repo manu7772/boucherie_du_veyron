@@ -6,11 +6,14 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Doctrine\Common\Collections\ArrayCollection;
+use JMS\Serializer\Annotation\ExclusionPolicy;
+use JMS\Serializer\Annotation\Expose;
 // Slug
 use Gedmo\Mapping\Annotation as Gedmo;
 
-use site\adminBundle\Entity\statut;
-use site\adminBundle\Entity\media;
+use site\adminBundle\Entity\tier;
+
+use site\adminBundle\Entity\article;
 
 use \DateTime;
 
@@ -22,16 +25,9 @@ use \DateTime;
  * @ORM\HasLifecycleCallbacks()
  * @ORM\Entity(repositoryClass="site\adminBundle\Entity\marqueRepository")
  * @UniqueEntity(fields={"nom"}, message="Cette marque est déjà enregistrée")
+ * @ExclusionPolicy("all")
  */
-class marque {
-
-	/**
-	 * @var integer
-	 * @ORM\Id
-	 * @ORM\Column(name="id", type="integer")
-	 * @ORM\GeneratedValue(strategy="AUTO")
-	 */
-	protected $id;
+class marque extends tier {
 
 	/**
 	 * @var string
@@ -53,64 +49,25 @@ class marque {
 	protected $descriptif;
 
 	/**
-	 * @var DateTime
-	 * @ORM\Column(name="created", type="datetime", nullable=false)
+	 * - INVERSE
+	 * @ORM\OneToMany(targetEntity="site\adminBundle\Entity\article", mappedBy="marque")
+	 * @ORM\JoinColumn(nullable=true, unique=false, onDelete="SET NULL")
 	 */
-	protected $dateCreation;
-
-	/**
-	 * @var DateTime
-	 * @ORM\Column(name="updated", type="datetime", nullable=true)
-	 */
-	protected $dateMaj;
-
-	/**
-	 * @ORM\ManyToOne(targetEntity="site\adminBundle\Entity\statut")
-	 * @ORM\JoinColumn(nullable=false, unique=false)
-	 */
-	protected $statut;
-
-	/**
-	 * @var integer
-	 * @ORM\ManyToOne(targetEntity="site\adminBundle\Entity\media")
-	 * @ORM\JoinColumn(nullable=true, unique=false)
-	 */
-	protected $logo;
+	protected $articles;
 
 
 	public function __construct() {
-		$this->nom = null;
+		parent::__construct();
 		$this->descriptif = null;
-		$this->dateCreation = new DateTime();
-		$this->dateMaj = null;
-		$this->logo = null;
-	}
-
-
-	/**
-	 * Get id
-	 * @return integer 
-	 */
-	public function getId() {
-		return $this->id;
+		$this->articles = new ArrayCollection();
 	}
 
 	/**
-	 * Set nom
-	 * @param string $nom
-	 * @return marque
+	 * Renvoie l'image principale
+	 * @return image
 	 */
-	public function setNom($nom) {
-		$this->nom = $nom;
-		return $this;
-	}
-
-	/**
-	 * Get nom
-	 * @return string 
-	 */
-	public function getNom() {
-		return $this->nom;
+	public function getMainMedia() {
+		return $this->getLogo();
 	}
 
 	/**
@@ -132,81 +89,30 @@ class marque {
 	}
 
 	/**
-	 * Set dateCreation
-	 * @param DateTime $dateCreation
+	 * Add article - INVERSE
+	 * @param article $article
 	 * @return marque
 	 */
-	public function setDateCreation($dateCreation) {
-		$this->dateCreation = $dateCreation;
+	public function addArticle(article $article) {
+		$this->articles->add($article);
 		return $this;
 	}
 
 	/**
-	 * Get dateCreation
-	 * @return DateTime 
+	 * Remove article - INVERSE
+	 * @param article $article
+	 * @return boolean
 	 */
-	public function getDateCreation() {
-		return $this->dateCreation;
+	public function removeArticle(article $article) {
+		return $this->articles->removeElement($article);
 	}
 
 	/**
-	 * @ORM\PreUpdate
+	 * Get articles - INVERSE
+	 * @return ArrayCollection
 	 */
-	public function updateDateMaj() {
-		$this->setDateMaj(new DateTime());
+	public function getArticles() {
+		return $this->articles;
 	}
 
-	/**
-	 * Set dateMaj
-	 * @param DateTime $dateMaj
-	 * @return marque
-	 */
-	public function setDateMaj($dateMaj) {
-		$this->dateMaj = $dateMaj;
-		return $this;
-	}
-
-	/**
-	 * Get dateMaj
-	 * @return DateTime 
-	 */
-	public function getDateMaj() {
-		return $this->dateMaj;
-	}
-
-	/**
-	 * Set statut
-	 * @param statut $statut
-	 * @return marque
-	 */
-	public function setStatut(statut $statut = null) {
-		$this->statut = $statut;
-		return $this;
-	}
-
-	/**
-	 * Get statut
-	 * @return statut 
-	 */
-	public function getStatut() {
-		return $this->statut;
-	}
-
-	/**
-	 * Set logo
-	 * @param media $logo
-	 * @return marque
-	 */
-	public function setLogo(media $logo = null) {
-		$this->logo = $logo;
-		return $this;
-	}
-
-	/**
-	 * Get logo
-	 * @return media 
-	 */
-	public function getLogo() {
-		return $this->logo;
-	}
 }

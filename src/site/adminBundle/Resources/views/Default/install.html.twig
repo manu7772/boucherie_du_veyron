@@ -28,11 +28,13 @@
 		{% if created|default([])|length > 0 %}
 		<div class="row">
 			{% for keyent,onecreated in created if onecreated is iterable %}
-			<div class="alert alert-warning col-sm-12 col-md-6 col-lg-4">
+			<div class="alert alert-warning col-xs-12">
 				<h3>{{ 'install.generation'|trans|capitalize }} : {{ keyent|capitalize }}</h3>
-				{% for key,item in onecreated %}
-				<p>{{ keyent }} {{ key }} : {{ item.id }} <small><em><i>({{ item.nom|default('install.sansnom'|trans) }})</i></em></small></p>
-				{% endfor %}
+				<div class="row">
+					{% for key,item in onecreated %}
+					<p class="col-sm-6 col-md-3 col-lg-2">{{ keyent }} : {{ item.id }} <small><em><i>({{ item.nom|default('install.sansnom'|trans) }})</i></em></small></p>
+					{% endfor %}
+				</div>
 			</div>
 			{% endfor %}
 		</div>
@@ -43,31 +45,54 @@
 		<div class="row">
 			<div class="alert alert-danger col-xs-12">
 				<h3>{{ 'install.suppression'|trans|capitalize }}</h3>
-				{% for keyent,oneemptied in emptied %}
-				{% if oneemptied is iterable %}{% set oneemptied = oneemptied|length %}{% endif %}
-				<p><strong>{{ keyent|capitalize }}</strong> : {{ 'install.message.supprimes'|transchoice(oneemptied) }}</p>
-				{% endfor %}
+				<div class="row">
+					{% for keyent,oneemptied in emptied %}
+					{% if oneemptied is iterable %}{% set oneemptied = oneemptied|length %}{% endif %}
+					<p class="col-sm-6 col-md-3 col-lg-2"><strong>{{ keyent|capitalize }}</strong> : {{ 'install.message.supprimes'|transchoice(oneemptied) }}</p>
+					{% endfor %}
+				</div>
 			</div>
 		</div>
 		<div class="clearfix"></div>
 		{% endif %}
 
 		<div class="row">
-			{% for item,data in info %}
-				<div class="col-sm-12 col-md-6 col-lg-4">
-					<div class="ibox float-e-margins">
-						<div class="ibox-title">
-							<h3>{{ 'install.generation'|trans|capitalize }} <strong>{{ item }}</strong></h3>
-						</div>
-						<div class="ibox-content" style='min-height: 140px;'>
-							<p><small><strong>{{ 'install.info.class'|trans|capitalize }}</strong> {{ data.classname|raw }}</small></p>
-							<p><small><strong>{{ 'install.info.elements'|trans|capitalize }}</strong> {{ data.size }}</small></p>
-							<hr>
-							<a href="{{ path('generate', {action: 'create', entite: item}) }}" type="button" class="btn btn-warning btn-xs need-confirmation" data-title="{{ 'install.message.generer.title'|trans|raw }}" data-message="{{ 'install.message.generer.texte'|trans|raw }}"><i class="fa fa-plus icon-wait-on-click"></i> {{ 'install.generer'|trans|capitalize }}</a>
-							<a href="{{ path('generate', {action: 'empty', entite: item}) }}" type="button" class="btn btn-danger btn-xs need-confirmation" data-title="{{ 'install.message.effacer.title'|trans|raw }}" data-message="{{ 'install.message.effacer.texte'|trans|raw }}"><i class="fa fa-times icon-wait-on-click"></i> {{ 'install.effacer'|trans|capitalize }}</a>
-						</div>
+			<h2 class="col-xs-12">Fichiers fixtures</h2>
+			{% for item,data in info if data.fixtures|default(null) is iterable %}
+			<div class="col-sm-12 col-md-6 col-lg-4">
+				<div class="ibox float-e-margins">
+					<div class="ibox-title">
+						<h3>{{ 'install.generation'|trans|capitalize }} <strong>{{ data.fixtures.nb }} {{ item }}</strong> <div class="label label-danger pull-right">{{ data.fixtures.ord }}</div></h3>
+					</div>
+					<div class="ibox-content" style='min-height: 140px;'>
+						<p><small><strong>{{ 'install.info.class'|trans|capitalize }}</strong> {{ data.classname|raw }}</small></p>
+						<p><small><strong>{{ 'install.info.elements'|trans|capitalize }}</strong> {{ data.size }}</small></p>
+						<hr>
+						<a href="{{ path('generate', {action: 'create', entite: item}) }}" type="button" class="btn btn-warning btn-xs need-confirmation" data-title="{{ 'install.message.generer.title'|trans|raw }}" data-message="{{ 'install.message.generer.texte'|trans|raw }}"><i class="fa fa-plus icon-wait-on-click"></i> {{ 'install.generer'|trans|capitalize }}</a>
+						<a href="{{ path('generate', {action: 'empty', entite: item}) }}" type="button" class="btn btn-danger btn-xs need-confirmation" data-title="{{ 'install.message.effacer.title'|trans|raw }}" data-message="{{ 'install.message.effacer.texte'|trans|raw }}"><i class="fa fa-times icon-wait-on-click"></i> {{ 'install.effacer'|trans|capitalize }}</a>
 					</div>
 				</div>
+			</div>
+			{% endfor %}
+		</div>
+		<div class="row">
+			<hr>
+			<h2 class="col-xs-12">Autres entités sans fixtures</h2>
+			{% for item,data in info if data.fixtures|default(null) == null %}
+			<div class="col-sm-12 col-md-6 col-lg-4">
+				<div class="ibox float-e-margins">
+					<div class="ibox-title">
+						<h3>{{ 'install.generation'|trans|capitalize }} <strong>{{ item }}</strong></h3>
+					</div>
+					<div class="ibox-content" style='min-height: 140px;'>
+						<p><small><strong>{{ 'install.info.class'|trans|capitalize }}</strong> {{ data.classname|raw }}</small></p>
+						<p><small><strong>{{ 'install.info.elements'|trans|capitalize }}</strong> {{ data.size }}</small></p>
+						<!-- <hr> -->
+						<!-- <a href="{{ path('generate', {action: 'create', entite: item}) }}" type="button" class="btn btn-warning btn-xs need-confirmation" data-title="{{ 'install.message.generer.title'|trans|raw }}" data-message="{{ 'install.message.generer.texte'|trans|raw }}"><i class="fa fa-plus icon-wait-on-click"></i> {{ 'install.generer'|trans|capitalize }}</a> -->
+						<!-- <a href="{{ path('generate', {action: 'empty', entite: item}) }}" type="button" class="btn btn-danger btn-xs need-confirmation" data-title="{{ 'install.message.effacer.title'|trans|raw }}" data-message="{{ 'install.message.effacer.texte'|trans|raw }}"><i class="fa fa-times icon-wait-on-click"></i> {{ 'install.effacer'|trans|capitalize }}</a> -->
+					</div>
+				</div>
+			</div>
 			{% endfor %}
 		</div>
 	</div>

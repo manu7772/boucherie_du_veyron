@@ -7,6 +7,15 @@ imports:
 # Put parameters here that don't need to change on each machine where the app is deployed
 # http://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
+    repository-admin-mode:
+        default: 0
+        bundles:
+            sitesite:
+                default: 0
+            siteadmin:
+                default: 1
+                ROLE_ADMIN: 1
+                ROLE_SUPER_ADMIN: 2
     menus:
         site-menu:
             bundle: sitesite
@@ -17,8 +26,9 @@ parameters:
     locale:                 fr
     homepage:               sitesite_homepage
     restrict_admin:         ROLE_ADMIN
-    formatDate:             "dd-MM-yyyy"
-    formatDateHeure:        "Y-m-d H:i:s"
+    formatDate:             "dd-MM-yyyy" # formulaires
+    formatDateOnly:         "d-m-Y"
+    formatDateHeure:        "d-m-Y H:i:s"
     formFormatDate:         "dd/mm/yyyy"
     timezone:               "Europe/Paris"
     default_locales:        "fr|en"
@@ -61,6 +71,7 @@ parameters:
     marketplace:
         active: true
         paiement: true
+        statistiques: false
         devise:
             name: euro
             symb: €
@@ -96,8 +107,10 @@ twig:
         webmaster: %webmaster%
         sidemenuswitcher: true
         searchswitcher: false
+        homepage: %homepage%
         formatDate: %formatDate%
         formatDateHeure: %formatDateHeure%
+        formatDateOnly: %formatDateOnly%
         formFormatDate:  %formFormatDate%
         default_locales: %default_locales%
         list_locales: %list_locales%
@@ -213,9 +226,9 @@ fos_user:
 stof_doctrine_extensions:
     orm:
         default:
-            loggable: false
+            tree: true
             sortable: true
             sluggable: true
+            loggable: false
             timestampable: false
             translatable: false
-            tree: true

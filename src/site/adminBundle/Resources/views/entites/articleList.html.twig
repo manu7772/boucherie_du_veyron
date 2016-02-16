@@ -19,7 +19,7 @@
 							<th class="text-center" style="width:1%;">{{ 'table.col.visuel'|trans|capitalize }}</th>
 							<th>{{ 'table.col.nom'|trans|capitalize }}</th>
 							<th>Actions</th>
-							<th>{{ 'table.col.accroche'|trans|capitalize }}</th>
+							<th>{{ 'form.accroche'|trans|capitalize }}</th>
 							<th>{{ 'table.col.prix'|trans|capitalize }}</th>
 						</tr>
 					</thead>
@@ -28,9 +28,9 @@
 						<tr>
 							{% if DEVMODE %}<td class="text-center">{{ entite.id }}</td>{% endif %}
 							<td class="text-center">
-								{% if entite.image|default(null) != null %}
-								<a href="{{ path('siteadmin_entite', {entite: 'media', id: entite.image.id, action: 'show'}) }}" class="docs-tooltip" data-toggle="tooltip" title="{{ (entite_name ~ '.moredetails')|trans({'%name%': entite.image.nom})|capitalize }}">
-									<img src="{{ entite.image.imgThumbnail(64, 64, 'cut')|raw }}" class="img-responsive img-thumbnail">
+								{% if entite.mainMedia|default(null) != null %}
+								<a href="{{ path('siteadmin_entite', {entite: entite.mainMedia.className, id: entite.mainMedia.id, action: 'show'}) }}" class="docs-tooltip" data-toggle="tooltip" title="{{ (entite_name ~ '.moredetails')|trans({'%name%': entite.mainMedia.nom})|capitalize }}">
+									<img src="{{ entite.mainMedia.imgThumbnail(64, 64, 'cut')|raw }}" class="img-responsive img-thumbnail">
 								</a>
 								{% else %}
 								<i class="fa fa-ban fa-3x text-muted fa-border"></i>
@@ -60,7 +60,7 @@
 								</div>
 								{# - OFF ----------------------
 								{% if DEVMODE %}
-								<hr class="m-b-sm m-t-xs">
+								<hr class="m-b-xs m-t-xs">
 								<div class="btn-group">
 									{% if type.type_values|default(null) != null %}
 									<a href="{{ path('siteadmin_entite_type', {entite: entite_name, type_related: type.type_related, type_field: type.type_field, type_values: type.type_values|join(type_value_joiner)|url_encode, id: entite.id, action: 'check'}) }}" type="button" class="btn btn-danger btn-xs" title="Checker article {{ entite.nom }}"><i class="fa fa-check"></i></a>

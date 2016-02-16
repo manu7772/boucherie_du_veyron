@@ -3,8 +3,15 @@ namespace site\services;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\Extension\Core\ChoiceList\ChoiceList;
+use site\services\aeItem;
 
-class pageweb {
+use site\adminBundle\Entity\pageweb;
+use site\adminBundle\Entity\pagewebRepository;
+use site\adminBundle\Entity\item;
+use site\adminBundle\Entity\itemRepository;
+
+// call in controller with $this->get('aetools.aePageweb');
+class aePageweb extends aeItem {
 
     const ARRAY_GLUE = '___';
     const SOURCE_FILES = 'src/';
@@ -21,12 +28,21 @@ class pageweb {
     protected $files_list;
 
     public function __construct(ContainerInterface $container) {
-        $this->container = $container;
+        parent::__construct($container);
+        $this->repo = $this->em->getRepository('siteadminBundle:pageweb');
         $this->aetools = $this->container->get('aetools.aetools');
         $this->rootPath = __DIR__.self::GO_TO_ROOT;
         $this->aetools->setRootPath("/");
         // récupération de fichiers et check
         $this->initFiles();
+    }
+
+    /**
+     * Check entity after change (edit…)
+     * @param item $entity
+     */
+    public function checkAfterChange(item &$entity) {
+        parent::checkAfterChange($entity);
     }
 
     protected function initFiles() {

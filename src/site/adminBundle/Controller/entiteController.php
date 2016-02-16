@@ -16,6 +16,7 @@ class entiteController extends Controller {
 	const DEFAULT_ACTION 		= 'list';
 	const TYPE_VALUE_JOINER 	= '___';
 
+	protected $entityService;
 
 	protected function getEntiteData($entite, $type_related = null, $type_field = null, $type_values = null, $action = null, $id = null) {
 		if($action == null) $action = self::DEFAULT_ACTION;
@@ -37,8 +38,9 @@ class entiteController extends Controller {
 		$data['entites'] = array();
 		$data['id'] = $id;
 		// EM
-		$this->em = $this->getDoctrine()->getManager();
-		$this->repo = $this->em->getRepository($data['classname']);
+		$this->entityService = $this->get('aetools.aeEntities');
+		$this->em = $this->entityService->getEm();
+		$this->repo = $this->entityService->getRepo($data['classname']);
 		// autres éléments…
 		switch ($data['entite_name']) {
 			case '...':
@@ -211,7 +213,11 @@ class entiteController extends Controller {
 		// récupération hiddenData
 		$req = $request->request->get($typeTmp->getName());
 		// if(!isset($req["hiddenData"])) throw new Exception("entitePostFormPageAction : hiddenData absent ! (".$typeTmp->getName().")", 1);
-		$data = json_decode(urldecode($req["hiddenData"]), true);
+		if(isset($req["hiddenData"])) {
+			$data = json_decode(urldecode($req["hiddenData"]), true);
+		} else {
+			// 
+		}
 		// echo('<pre>');
 		// var_dump($req);
 		// EntityManager
@@ -237,14 +243,7 @@ class entiteController extends Controller {
 		} else {
 			switch ($data['action']) {
 				case 'delete':
-					if(method_exists($data['entite'], 'setStatut')) {
-						// si un champ statut existe
-						$inactif = $this->em->getRepository('site\adminBundle\Entity\statut')->findInactif();
-						$data['entite']->setStatut($inactif);
-					} else {
-						// sinon on la supprime
-						$this->em->remove($data['entite']);
-					}
+					$this->get('aetools.aeEntities')->softDelete($data['entite']);
 					$this->em->flush();
 					if(isset($data['onSuccess'])) return $this->redirect($data['onSuccess']);
 					break;
@@ -255,16 +254,20 @@ class entiteController extends Controller {
 					if($form->isValid()) {
 						// formulaire valide -> enregistrement -> renvoi à l'url de success
 						$this->checkEntityBeforePersist($data);
+						// 
 						$this->em->persist($data['entite']);
 						$this->em->flush();
 						if($data['action'] == "create") {
 							$data['id'] = $data['entite']->getId();
 							unset($data['onSuccess']);
 							$this->addContextActionsToData($data);
+							$nom = $data['entite']->getId();
+							if(method_exists($data['entite'], 'getName')) $nom = $data['entite']->getName();
+							if(method_exists($data['entite'], 'getNom')) $nom = $data['entite']->getNom();
 							$message = $this->get('flash_messages')->send(array(
 								'title'		=> 'Saisie enregistrée',
 								'type'		=> flashMessage::MESSAGES_SUCCESS,
-								'text'		=> 'Le nouvel élément a bien été enregistré.',
+								'text'		=> 'Le nouvel élément "'.$nom.'" a bien été enregistré.',
 							));
 						} else {
 							$message = $this->get('flash_messages')->send(array(
@@ -294,19 +297,29 @@ class entiteController extends Controller {
 					}
 					break;
 			}
-
 		}
 		return $this->redirect($this->generateUrl('siteadmin_entite', $data['entite_name']));
 	}
 
+	/**
+	 * Check d'une entite avant de la persister
+	 */
 	protected function checkEntityBeforePersist(&$data) {
-		switch ($data['entite_name']) {
-			case 'media':
-				break;
-			
-			default:
-				# code...
-				break;
+		$launchInverse = true;
+		// lance le checkAfterChange
+		$serviceName = 'aetools.ae'.ucfirst($data['entite_name']);
+		if($this->has($serviceName)) {
+			// et si la méthode existe…
+			$checkMethod = 'checkAfterChange';
+			$entityService = $this->get($serviceName);
+			if(method_exists($entityService, $checkMethod)) {
+				$entityService->$checkMethod($data['entite']);
+				$launchInverse = false;
+			}
+		}
+		// !!! vérifie les liens inverses !!! (si le service n'a pu être lancé)
+		if($launchInverse == true) {
+			$this->get('aetools.aeEntities')->checkInversedLinks($data['entite'], false);
 		}
 	}
 
@@ -464,8 +477,15 @@ class entiteController extends Controller {
 		$this->em = $this->getDoctrine()->getManager();
 		if(method_exists($newEntity, 'setStatut')) {
 			// si un champ statut existe
-			$inactif = $this->em->getRepository('site\adminBundle\Entity\statut')->defaultVal();
-			$newEntity->setStatut($inactif);
+			$defaultStatut = $this->em->getRepository('site\adminBundle\Entity\statut')->defaultVal();
+			if(is_array($defaultStatut)) $defaultStatut = reset($defaultStatut);
+			if(is_object($defaultStatut)) $newEntity->setStatut($defaultStatut);
+		}
+		if(method_exists($newEntity, 'setTauxTva')) {
+			// si un champ statut existe
+			$defaultTauxTva = $this->em->getRepository('site\adminBundle\Entity\tauxTva')->defaultVal();
+			if(is_array($defaultTauxTva)) $defaultTauxTva = reset($defaultTauxTva);
+			if(is_object($defaultTauxTva)) $newEntity->setTauxTva($defaultTauxTva);
 		}
 		return $newEntity;
 	}
@@ -488,12 +508,12 @@ class entiteController extends Controller {
 				'text'		=> 'Cette page <strong>#"'.$id.'"</strong> n\'a pu être touvée',
 			));
 		} else {
-			$page->setHomepage(true);
+			$page->setDefault(true);
 			// $this->em->persist($page);
 			// on passe les autres pages en false s'il en existe
-			$pages = $this->repo->findByHomepage(true);
+			$pages = $this->repo->findByDefault(true);
 			if(count($pages) > 0) foreach ($pages as $onepage) {
-				$onepage->setHomepage(false);
+				$onepage->setDefault(false);
 			}
 			$this->em->flush();
 			$message = $this->get('flash_messages')->send(array(

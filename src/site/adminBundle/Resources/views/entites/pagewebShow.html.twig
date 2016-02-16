@@ -66,8 +66,8 @@
 				<h3>{{ 'form.background'|trans|capitalize }}</h3>
 			</div>
 			<div class="ibox-content text-center" style='min-height: 180px;'>
-				{% if entite.background|default(null) != null %}
-				<img src="{{ entite.background.img|raw }}" class="img-responsive center-block img-rounded">
+				{% if entite.mainMedia|default(null) != null %}
+				<img src="{{ entite.mainMedia.img|raw }}" class="img-responsive center-block img-rounded">
 				{% else %}
 				<i class="fa fa-ban fa-5x text-muted fa-border"></i>
 				{% endif %}

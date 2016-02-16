@@ -19,15 +19,16 @@
 		'bundles/siteadmin/framework_inspinia/css/plugins/jasny/jasny-bootstrap.min.css'
 		'bundles/siteadmin/framework_inspinia/css/plugins/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css'
 
-		'bundles/siteadmin/framework_inspinia/css/style.less'
 		'bundles/siteadmin/css/style.less'
+		'bundles/siteadmin/framework_inspinia/css/style.less'
 		%}
 		<link rel="stylesheet" href="{{ asset_url }}" type="text/css" />
 		{% endstylesheets %}
 		{% endblock stylesheets %}
 		<link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
 	</head>
-	<body{% block bodyattr %} class="{{ app.user.admintheme|default('skin-0')}}"{% endblock bodyattr %}>
+	{% set bodyclass = (bodyclass|default([]))|merge([app.user.admintheme|default('skin-0')]) %}
+	<body{% block bodyattr %} class="{{ bodyclass|join(' ') }}"{% endblock bodyattr %}>
 		<span class="sqblock-wrapper" style="display:none;">
 			{% block SQBlock %}
 			{% endblock SQBlock %}
@@ -58,8 +59,6 @@
 		'bundles/siteadmin/framework_inspinia/js/plugins/jasny/jasny-bootstrap.min.js'
 		'bundles/siteadmin/framework_inspinia/js/plugins/nestable/jquery.nestable.js'
 
-		'bundles/siteadmin/js/jquery.mask.min.js'
-		'bundles/siteadmin/js/inspinia-form_widgets.js'
 		'bundles/siteadmin/js/inspinia-help.js'
 		'bundles/siteadmin/js/inspinia-data-messages.js'
 		'bundles/sitetranslate/js/inspinia-languages.js'

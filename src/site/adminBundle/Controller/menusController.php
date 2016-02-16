@@ -55,15 +55,28 @@ class menusController extends Controller {
 
 	/**
 	 * Ajax modification d'un menu
-	 * @param string @name
+	 * @param string $bundle
+	 * @param string $name
 	 * @return boolean
 	 */
 	public function modifyAction($bundle, $name) {
 		$aeMenus = $this->get('aeMenus');
 		$request = $this->getRequest();
 		$tree = $request->request->get('tree');
-		$data = $aeMenus->changeOrderInFile($bundle, $name, $tree);
+		$data = $aeMenus->setMenu($bundle, $name, $tree);
 		return new JsonResponse($data);
+	}
+
+	/**
+	 * Ajax modification de l'attribut maxDepth d'un menu
+	 * @param string $bundle
+	 * @param string $name
+	 * @param string $value
+	 * @return boolean
+	 */
+	public function changeMaxDepthAction($bundle, $name, $value) {
+		$value = $this->get('aeMenus')->setMaxDepth($bundle, $name, $value);
+		return new JsonResponse(array('value' => $value));
 	}
 
 

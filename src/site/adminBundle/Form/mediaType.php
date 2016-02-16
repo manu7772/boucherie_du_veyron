@@ -2,7 +2,7 @@
 
 namespace site\adminBundle\Form;
 
-use Symfony\Component\Form\AbstractType;
+use site\adminBundle\Form\baseType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -14,30 +14,19 @@ use Symfony\Component\Security\Core\SecurityContext;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormEvent;
 
-class mediaType extends AbstractType {
-
-    private $controller = null;
-    private $securityContext = null;
-    private $parametres;
-    
-    public function __construct(Controller $controller = null, $parametres = null) {
-    	if(null !== $controller) {
-	        $this->controller = $controller;
-	        $this->securityContext = $controller->get('security.context');
-	    }
-        if($parametres === null) $parametres = array();
-        $this->parametres = $parametres;
-    }
+class mediaType extends baseType {
 
 	/**
 	 * @param FormBuilderInterface $builder
 	 * @param array $options
 	 */
 	public function buildForm(FormBuilderInterface $builder, array $options) {
-    	// ajout de action si défini
-    	if(isset($this->parametres['form_action'])) $builder->setAction($this->parametres['form_action']);
+		// ajout de action si défini
+		$this->initBuilder($builder);
     	// Builder…
     	$builder->getData() == null ? $deletable = true : $deletable = false;
+    	// nom à ne pas mettre si imbriqué
+    	if(!($builder->getData() == null))
 		$builder
 			->add('nom', 'text', array(
 				'label'         => 'form.nom',
@@ -45,6 +34,8 @@ class mediaType extends AbstractType {
 				'disabled'      => false,
 				'required'		=> false,
 				))
+			;
+		$builder
 			->add('originalnom', 'hidden', array(
 				'required'		=> false,
 				'translation_domain' => 'messages',
@@ -83,64 +74,11 @@ class mediaType extends AbstractType {
 				));
 		;
 
-        // ajoute les valeurs hidden, passés en paramètre
-        // $builder = $this->addHiddenValues($builder);
-
-		// $factory = $builder->getFormFactory();
-		// $builder->addEventListener(
-		// 	FormEvents::PRE_SET_DATA,
-		// 	function(FormEvent $event) use ($factory) {
-		// 		$data = $event->getData();
-		// 		// important : GARDER CETTE CONDITION CI-DESSOUS (toujours !!!)
-		// 		if(null === $data) return;
-		// 		if(null === $data->getId()) {
-		// 			// rien, on laisse dans le champ
-		// 			$event->getForm()
-		// 				->add('upload_file', 'file', array(
-		// 					'label' => 'form.telechargement',
-		// 					));
-		// 			// $event->getForm()->add(
-		// 			//     $factory->createNamed('upload_file', 'file', null, array('label' => 'Fichier à télécharger'))
-		// 			// );
-		// 		} else {
-		// 			// $event->getForm()->remove('upload_file');
-		// 		}
-		// 	}
-		// );
-
-        // AJOUT SUBMIT seulement si pas de parent
-        if(!($builder->getData() == null)) {
-	        $builder->add('submit', 'submit', array(
-	            'label' => 'form.enregistrer',
-	            'translation_domain' => 'messages',
-	            'attr' => array(
-	                'class' => "btn btn-md btn-block btn-info",
-	                ),
-	            ))
-	        ;
-	    }
+		// ajoute les valeurs hidden, passés en paramètre
+		$this->addHiddenValues($builder, true);
+		// $this->addSubmit($builder);
 	}
 
-    /**
-     * addHiddenValues
-     * @param FormBuilderInterface $builder
-     * @return FormBuilderInterface
-     */
-    public function addHiddenValues(FormBuilderInterface $builder) {
-    	$data = array();
-    	$nom = 'hiddenData';
-        foreach($this->parametres as $key => $value) {
-        	if(is_string($value) || is_array($value) || is_bool($value)) {
-        		$data[$key] = $value;
-        	}
-        }
-        if($builder->has($nom)) $builder->remove($nom);
-        $builder->add($nom, 'hidden', array(
-            'data' => urlencode(json_encode($data, true)),
-            'mapped' => false,
-        ));
-        return $builder;
-    }
 	/**
 	 * @param OptionsResolverInterface $resolver
 	 */

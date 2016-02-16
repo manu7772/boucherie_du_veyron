@@ -1,0 +1,52 @@
+name: boucherie
+roles:
+    view: IS_AUTHENTICATED_ANONYMOUSLY
+    edit: ROLE_ADMIN
+    delete: ROLE_SUPER_ADMIN
+maxDepth: 2
+menu:
+    -
+        2:
+            nom: accueil
+            name: menu.accueil
+            role: ROLE_ADMIN
+            path:
+                route: site_pageweb
+                params:
+                    pageweb: homepage
+    -
+        1:
+            nom: comment
+            name: menu.comment
+            role: ROLE_ADMIN
+            path:
+                route: site_pageweb
+                params:
+                    pageweb: commander
+    -
+        3:
+            nom: metier
+            name: menu.metier
+            role: ROLE_USER
+            path:
+                route: site_pageweb
+                params:
+                    pageweb: metier
+    -
+        5:
+            nom: contact
+            name: menu.contact
+            role: ROLE_ADMIN
+            path:
+                route: site_pageweb
+                params:
+                    pageweb: contact
+    -
+        4:
+            nom: fetes
+            name: menu.fetes
+            role: ROLE_USER
+            path:
+                route: site_pageweb
+                params:
+                    pageweb: fetes2015

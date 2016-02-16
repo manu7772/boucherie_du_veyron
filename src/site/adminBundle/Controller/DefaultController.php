@@ -25,6 +25,7 @@ class DefaultController extends Controller {
 
 	public function indexAction() {
 		$data = array();
+		$data['messages'] = $this->get('aetools.aeMessage')->getRepo()->findNotRead();
 		return $this->render('siteadminBundle:Default:index.html.twig', $data);
 	}
 

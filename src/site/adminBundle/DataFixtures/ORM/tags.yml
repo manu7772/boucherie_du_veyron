@@ -1,0 +1,49 @@
+tag:
+    order: 2
+    data:
+        -
+            nom: boucherie
+        -
+            nom: boucher
+        -
+            nom: traiteur
+        -
+            nom: charcutier
+        -
+            nom: viande
+        -
+            nom: boeuf
+        -
+            nom: porc
+        -
+            nom: volaille
+        -
+            nom: mouton
+        -
+            nom: agneau
+        -
+            nom: steak
+        -
+            nom: entrecôte
+        -
+            nom: haché
+        -
+            nom: pâté
+        -
+            nom: confit
+        -
+            nom: dinde
+        -
+            nom: filet
+        -
+            nom: légumes
+        -
+            nom: Cerdon
+        -
+            nom: Veyron
+        -
+            nom: Poncin
+        -
+            nom: Ain
+        -
+            nom: Rhône-Alpes

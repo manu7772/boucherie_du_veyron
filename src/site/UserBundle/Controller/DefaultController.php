@@ -103,6 +103,10 @@ class DefaultController extends Controller {
 				$dispatcher = $this->get('event_dispatcher');
 				$event = new FormEvent($form, $request);
 				$dispatcher->dispatch(FOSUserEvents::PROFILE_EDIT_SUCCESS, $event);
+				if($data['user']->getAvatar() != null) {
+					$avatar = $data['user']->getAvatar();
+					$this->get('aetools.aeImage')->checkAfterChange($avatar);
+				}
 				$userManager->updateUser($data['user']);
 				//
 				return $this->redirect($this->generateUrl('siteUser_info', array('username' => $username)));
