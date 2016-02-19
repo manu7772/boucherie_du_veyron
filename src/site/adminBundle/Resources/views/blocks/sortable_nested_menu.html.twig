@@ -1,76 +1,90 @@
-{% macro menu(menu, bundle, name) %}
+{% macro menu(menu, bundle, name, pagewebs, translates) %}
 {% set idnest = bundle ~ name %}
 {% import _self as self %}
+
 {% set roles = {} %}
 {% for role in ['IS_AUTHENTICATED_ANONYMOUSLY', 'ROLE_USER', 'ROLE_TRANSLATOR', 'ROLE_EDITOR', 'ROLE_ADMIN', 'ROLE_SUPER_ADMIN'] %}
 {% set roles = roles|merge({(role): UCfirst(('roles.' ~ role)|trans)}) %}
 {% endfor %}
-<div class="dd master-nestable-menu" id="{{ idnest }}" data-maxDepth="{{ menu.maxDepth|default(3) }}" data-bundle="{{ bundle }}" data-name="{{ name }}" data-url="{{ path('siteadmin_ajax_modify', {bundle: bundle, name: name}) }}" data-info-roles="{{ roles|json_encode }}">
-	{{ self.menuL1(menu.menu, idnest) }}
+
+<div class="dd master-nestable-menu" id="{{ idnest }}" data-maxDepth="{{ menu.maxDepth|default(3) }}" data-bundle="{{ bundle }}" data-name="{{ name }}" data-url="{{ path('siteadmin_ajax_modify', {bundle: bundle, name: name}) }}">
+	<span class="hidden" data-info-roles="{{ roles|json_encode }}"></span>
+	<span class="hidden" data-info-pagewebs="{{ arraySlugNom(pagewebs)|json_encode }}"></span>
+	<span class="hidden" data-language="{{ app.request.locale }}" data-info-messages="{{ translates.catalogue[app.request.locale]|json_encode }}"></span>
+	{{ self.menuL1(menu.menu, bundle, name, pagewebs) }}
 </div>
 {% endmacro %}
 
-{% macro menuL1(menu, idnest) %}
+{% macro menuL1(menu, bundle, name, pagewebs) %}
+{% set idnest = bundle ~ name %}
 {% import _self as self %}
 <ol class="dd-list">
-	{% for items in menu %}
-	{% for nom,item in items if nom != 'children' %}
-	<li id="li-{{ idnest ~ nom }}" class="dd-item" data-{{ nom }}="{{ item|json_encode }}">
-		<div class="dd-handle" data-toggle="#nest-options-{{ idnest }}{{ nom }}">
-			<span class="pull-right"><small>{{- UCfirst(('roles.' ~ item.role|default('IS_AUTHENTICATED_ANONYMOUSLY'))|trans) -}}</small></span>
-			{%- if item.icon is defined -%}
-			<span class="label label-primary m-r-xs"><i class="fa {{ item.icon }}"></i></span>
-			{%- else -%}
-			<span class="label label-default m-r-xs"><i class="fa fa-times"></i></span>
-			{%- endif -%}
+	{% for key,item in menu %}
+	<li id="li-{{ idnest }}-{{ item.item.id }}" class="dd-item dd3-item" data-item="{{ item.item|json_encode }}">
+		<div class="dd-handle dd3-handle">"Drag"</div>
+		<div class="dd3-content" data-id="{{ idnest }}" data-toggle="#nest-options-{{ idnest }}{{ item.item.id }}">
+			<span class="pull-right"><small>{{- UCfirst(('roles.' ~ item.item.role|default('IS_AUTHENTICATED_ANONYMOUSLY'))|trans) -}}</small> <a href="{{ path('siteadmin_menus_action', {action: 'delete', bundle: bundle, name: name, id: item.item.id}) }}" class="btn btn-xs btn-white need-confirmation" data-message="{{ UCfirst('menu.supprimerligne'|trans) }}{% if item.children is defined %} {{ UCfirst('menu.attentionchildren'|trans) }}{% endif %}" data-title="{{ 'menu.supprimer'|trans }}"><i class="fa fa-times icon-wait-on-click"></i></a></span>
+			<i class="fa {{ item.item.icon|default('fa-question') }}"></i>&nbsp;
 			<span class="text">
-			{{- (item.name|default('<i>Sans texte</i>'))|trans({}, item.trans_domain|default(null))|raw }}
+			{{- (item.item.name|default('<i>Sans texte</i>'))|trans({}, item.item.trans_domain|default(null))|raw -}}
 			</span>
+			<em><i class="pageweb text-muted">
+			{{- arraySlugNom(pagewebs)[item.item.path.params.pageweb]|default('?') -}}
+			</i></em>
 		</div>
-		{% if items.children is defined %}
-			{{ self.menuL1(items.children, idnest) }}
+		{% if item.children is defined %}
+			{{ self.menuL1(item.children, bundle, name, pagewebs) }}
 		{% endif %}
 	</li>
-	{% endfor %}
 	{% endfor %}
 </ol>
 {% endmacro %}
 
 
-{% macro params(menu, bundle, name) %}
+{% macro params(menu, bundle, name, pagewebs) %}
 {% import _self as self %}
 {% set idnest = bundle ~ name %}
+
 <div style="margin-bottom:60px;">
-	<h4>Niveaux max. <span id="majDS{{ idnest }}">{{ menu.maxDepth|default(3) }}</span></h4>
+	<h4>{{ UCfirst('menu.niveaumax'|trans) }} <span id="majDS{{ idnest }}">{{ menu.maxDepth|default(3) }}</span></h4>
 	<div class="depthSlider" data-maj-target="#majDS{{ idnest }}" data-idnest="{{ idnest }}" data-steps="{{ menu.maxDepth|default(3) }}" data-url="{{ path('siteadmin_ajax_maxDepth', {bundle: bundle, name: name, value: '###value###'}) }}"></div>
 </div>
 <hr class="m-b-sm m-t-sm">
 <div class="menu-params row">
-	{{ self.paramsL1(menu.menu, idnest) }}
+	{{ self.paramsL1(menu.menu, bundle, name, pagewebs) }}
 </div>
 {% endmacro %}
 
-{% macro paramsL1(menu, idnest) %}
+{% macro paramsL1(menu, bundle, name, pagewebs) %}
 {% import _self as self %}
-	{% for items in menu %}
-	{% for nom,item in items %}
-	{% if nom != 'children' %}
-	<div id="nest-options-{{ idnest }}{{ nom }}" class='menu-params-item col-xs-12'>
-		<label for="#{{ idnest }}{{ nom }}-name">Nom</label>
-		<input id="{{ idnest }}{{ nom }}-name" class='name form-control' value='{{ item.name|default('?') }}' data-idnest="{{ idnest }}" data-nom="{{ nom }}">
-		<hr>
-		<label for="#{{ idnest }}{{ nom }}-role">Visibilité</label>
-		<select name="role" class='role form-control' data-idnest="{{ idnest }}" data-nom="{{ nom }}">
-			{% for role in ['IS_AUTHENTICATED_ANONYMOUSLY', 'ROLE_USER', 'ROLE_TRANSLATOR', 'ROLE_EDITOR', 'ROLE_ADMIN', 'ROLE_SUPER_ADMIN'] if is_granted(role) %}
-			<option{% if item.role|default('IS_AUTHENTICATED_ANONYMOUSLY') == role %} selected{% endif %} value="{{ role }}">{{ UCfirst(('roles.' ~ role)|trans) }}</option>
+{% set idnest = bundle ~ name %}
+	{% for key,item in menu %}
+	<div id="nest-options-{{ idnest }}{{ item.item.id }}" class='menu-params-item col-xs-12'>
+		<label for="#{{ idnest }}{{ item.item.id }}-name">
+			{{ UCfirst('menu.nom'|trans) }}
+			{% if app.environment in ['dev', 'test'] or is_granted('ROLE_SUPER_ADMIN') %}
+			<small class="text-muted">{{ item.item.id }}</small>
+			{% endif %}
+		</label>
+		<input id="{{ idnest }}{{ item.item.id }}-name" class='name form-control m-b-xs' value='{{ item.item.name|default('?') }}' data-idnest="{{ idnest }}" data-id="{{ item.item.id }}">
+		<label for="#{{ idnest }}{{ item.item.id }}-pageweb">{{ UCfirst('pageweb.name'|trans) }}</label>
+		<select id="{{ idnest }}{{ item.item.id }}-pageweb" name="pageweb" class='pageweb form-control m-b-xs' data-idnest="{{ idnest }}" data-id="{{ item.item.id }}">
+			<option{% if not item.item.path.params.pageweb|default(null) in arraySlugNom(pagewebs) %} selected{% endif %} value="">{{ UCfirst('menu.aucunepageweb'|trans) }}</option>
+			{% for pageweb in pagewebs %}
+			<option{% if item.item.path.params.pageweb|default(null) == pageweb.slug %} selected{% endif %} value="{{ pageweb.slug }}">{{ pageweb }}</option>
 			{% endfor %}
 		</select>
-		<hr>
+		<label for="#{{ idnest }}{{ item.item.id }}-role">Visibilité</label>
+		<select id="{{ idnest }}{{ item.item.id }}-role" name="role" class='role form-control m-b-xs' data-idnest="{{ idnest }}" data-id="{{ item.item.id }}">
+			{% for role in ['IS_AUTHENTICATED_ANONYMOUSLY', 'ROLE_USER', 'ROLE_TRANSLATOR', 'ROLE_EDITOR', 'ROLE_ADMIN', 'ROLE_SUPER_ADMIN'] if is_granted(role) %}
+			<option{% if item.item.role|default('IS_AUTHENTICATED_ANONYMOUSLY') == role %} selected{% endif %} value="{{ role }}">{{ UCfirst(('roles.' ~ role)|trans) }}</option>
+			{% endfor %}
+		</select>
+		<a type="button" href="{{ path('siteadmin_menus_action', {action: 'delete', bundle: bundle, name: name, id: item.item.id}) }}" class="btn btn-danger btn-xs need-confirmation" data-message="{{ UCfirst('menu.supprimerligne'|trans) }}{% if item.children is defined %} {{ UCfirst('menu.attentionchildren'|trans) }}{% endif %}" data-title="{{ 'menu.supprimer'|trans }}"><i class="fa fa-times icon-wait-on-click"></i> {{ 'menu.supprimer'|trans }}</a>
 	</div>
-	{% else %}
-		{{ self.paramsL1(item, idnest) }}
+	{% if item.children is defined %}
+		{{ self.paramsL1(item.children, bundle, name, pagewebs) }}
 	{% endif %}
-	{% endfor %}
 	{% endfor %}
 {% endmacro %}
 
@@ -78,12 +92,11 @@
 
 {% macro options(bundle, name) %}
 {% set idnest = bundle ~ name %}
-{#
-<span class="nest-menu" data-idnest="#{{ idnest }}">
-	<button type="button" data-action="expandAll" class="btn btn-white btn-xs"><i class="fa fa-plus"></i></button>
-	<button type="button" data-action="collapseAll" class="btn btn-white btn-xs"><i class="fa fa-minus"></i></button>
+<span class="nest-menu">
+	<a type="button" href="{{ path('siteadmin_menus_action', {action: 'add', bundle: bundle, name: name}) }}" class="btn btn-warning btn-xs need-confirmation" data-message="{{ UCfirst('menu.ajouterlignetexte'|trans) }}" data-title="{{ UCfirst('menu.ajouterligne'|trans) }}"><i class="fa fa-plus icon-wait-on-click"></i> {{ UCfirst('menu.ajouterligne'|trans) }}</a>
+	<!-- <button type="button" data-idnest="#{{ idnest }}" data-action="expandAll" class="btn btn-white btn-xs"><i class="fa fa-plus"></i></button> -->
+	<!-- <button type="button" data-idnest="#{{ idnest }}" data-action="collapseAll" class="btn btn-white btn-xs"><i class="fa fa-minus"></i></button> -->
 </span>
-#}
 {% endmacro %}
 
 

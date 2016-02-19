@@ -46,19 +46,21 @@
 			</div>
 		</div>
 	</div>
+	{% for entite in ['article', 'pageweb'] %}
 	<div class="col-sm-12 col-md-6 col-lg-4">
 		<div class="ibox float-e-margins">
 			<div class="ibox-content">
-				<h2><i class="fa fa-shopping-cart"></i> {{ UCfirst('article.name_s'|trans) }}</h2>
+				<h2>{% if info_entites[entite].icon is defined %}<i class="fa {{ info_entites[entite].icon }}"></i> {% endif %}{{ UCfirst((entite ~ '.name_s')|trans) }}</h2>
 				<hr class="m-t-md m-b-sm">
 				<!-- Liste -->
-				<a href="{{ path('siteadmin_entite', {entite: 'article', action:'list'}) }}" class="btn btn-primary btn-lg full-width"><i class="fa fa-eye fa-2x pull-left"></i> <strong class="m-t-xs pull-right">Liste</strong></a>
+				<a href="{{ path('siteadmin_entite', {entite: entite, action:'list'}) }}" class="btn btn-primary btn-lg full-width"><i class="fa fa-eye fa-2x pull-left"></i> <strong class="m-t-xs pull-right">Liste</strong></a>
 				<!-- Ajouter -->
-				<a href="{{ path('siteadmin_entite', {entite: 'article', action:'create'}) }}" class="btn btn-info btn-lg full-width"><i class="fa fa-plus fa-2x pull-left"></i> <strong class="m-t-xs pull-right">Ajouter</strong></a>
+				<a href="{{ path('siteadmin_entite', {entite: entite, action:'create'}) }}" class="btn btn-info btn-lg full-width"><i class="fa fa-plus fa-2x pull-left"></i> <strong class="m-t-xs pull-right">Ajouter</strong></a>
 				<!-- Statistiques -->
-				<a href="{{ path('siteadmin_entite', {entite: 'article', action:'list'}) }}" class="btn btn-warning btn-lg full-width{% if marketplace.statistiques == false %} disabled{% endif %}"><i class="fa fa-area-chart fa-2x pull-left"></i> <strong class="m-t-xs pull-right">Analyse</strong></a>
+				<a href="{{ path('siteadmin_entite', {entite: entite, action:'list'}) }}" class="btn btn-warning btn-lg full-width{% if marketplace.statistiques == false %} disabled{% endif %}"><i class="fa fa-area-chart fa-2x pull-left"></i> <strong class="m-t-xs pull-right">Analyse</strong></a>
 			</div>
 		</div>
 	</div>
+	{% endfor %}
 </div>
 {% endblock content %}

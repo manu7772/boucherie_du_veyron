@@ -10,18 +10,29 @@ bundles:
     User:
         name: utilisateurs
 menu:
+    nom: nom
     name: menu
     name_s : menus
     not_found: aucun menu trouvé
     create_btn: nouveau menu
-    accueil: accueil
-    realisations: réalisations
-    videos: vidéos
-    login: connexion
-    contact: contact
-    comment: commander
-    metier: notre métier
-    fetes: fêtes
+    supprimer: supprimer
+    supprimerligne: 'supprimer cette ligne de menu ?'
+    attentionchildren: 'attention : toutes les lignes enfants de cette ligne seront supprimées également !'
+    aucunepageweb: aucune
+    niveaumax: Niveaux max.
+    options: options
+    ajouterligne: ajouter une ligne
+    ajouterlignetexte: ajouter une nouvelle ligne ?
+    catalogue:
+        new: nouveau
+        accueil: accueil
+        realisations: réalisations
+        videos: vidéos
+        login: connexion
+        contact: contact
+        comment: commander
+        metier: notre métier
+        fetes: fêtes
 search:
     name: rechercher…
 footer:

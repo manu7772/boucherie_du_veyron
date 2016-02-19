@@ -20,25 +20,31 @@ class menusController extends Controller {
 		return $this->render('siteadminBundle:menus:index.html.twig', $data);
 	}
 
-	public function actionAction($action, $bundle, $name = null) {
+	public function actionAction($action, $bundle, $name = null, $id = null) {
 		$data = array();
 		$data['action'] = $action;
 		$data['bundle'] = $bundle;
 		$data['name'] = $name;
 		$aeMenus = $this->get('aeMenus');
+		$data['translates'] = $aeMenus->getLanguagesInfo(); // "languages" - "catalogue"
 		$data['bundles'] = $aeMenus->getBundles();
 		switch ($action) {
+			case 'add':
+				$aeMenus->addNewItem($bundle, $name);
+				return $this->redirect($this->generateUrl('siteadmin_menus_action', array('action' => 'edit', 'bundle' => $bundle, 'name' => $name)));
+				break;
+
 			case 'create':
 				# code...
 				break;
 
 			case 'edit':
 				$data['menu'] = $aeMenus->getInfoMenu($bundle, $name);
-				# code...
 				break;
 
 			case 'delete':
-				# code...
+				$aeMenus->deleteItem($bundle, $name, $id);
+				return $this->redirect($this->generateUrl('siteadmin_menus_action', array('action' => 'edit', 'bundle' => $bundle, 'name' => $name)));
 				break;
 
 			case 'copy':
@@ -50,6 +56,8 @@ class menusController extends Controller {
 				$data['menu'] = $aeMenus->getInfoMenu($bundle, $name);
 				break;
 		}
+		// $data['models'] = $this->get('aetools.aePageweb')->getModels();
+		$data['pagewebs'] = $this->get('aetools.aePageweb')->getRepository()->findAll();
 		return $this->render('siteadminBundle:menus:menu_action.html.twig', $data);
 	}
 

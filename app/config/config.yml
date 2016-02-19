@@ -68,6 +68,11 @@ parameters:
             extendedTimeOut: 1000
             closeHtml: '<button type="button">&times;</button>'
             newestOnTop: false
+    info_entites:
+        article:
+            icon: fa-shopping-cart
+        pageweb:
+            icon: fa-desktop
     marketplace:
         active: true
         paiement: true
@@ -114,6 +119,7 @@ twig:
         formFormatDate:  %formFormatDate%
         default_locales: %default_locales%
         list_locales: %list_locales%
+        info_entites: %info_entites%
         marketplace: %marketplace%
     form:
         resources:

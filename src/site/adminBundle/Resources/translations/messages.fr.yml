@@ -409,6 +409,8 @@ superadmin:
     entites: entités Doctrine
 savoirplus: 'en savoir plus'
 copyright: copyright
+titre: titre
+message: message
 non: non
 oui: oui
 close: fermer

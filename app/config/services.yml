@@ -63,6 +63,15 @@ services:
         arguments: [@service_container]
 
     #######################
+    ### TIER            ###
+    #######################
+
+    # fonctionnalités de tier
+    aetools.aeTier:
+        class: %ae_services%aeTier
+        arguments: [@service_container]
+
+    #######################
     ### MEDIA           ###
     #######################
 

@@ -15,7 +15,7 @@ use site\services\aetools;
  */
 class aeTranslate {
 
-	const ARRAY_GLUE = '___';
+	const ARRAY_GLUE = '.';
 	const SOURCE_FILES = 'src/';
 	const FOLD_RESOURCES = 'Resources';
 	const FOLD_TRANSLATIONS = 'translations';
@@ -501,13 +501,34 @@ class aeTranslate {
 
 	/**
 	 * Renvoie les données d'un fichier (bundle/domaine/langue) de translation sous forme d'array à 1 niveau
-	 * @param string $file
+	 * @param string $bundle
+	 * @param string $domain
+	 * @param string $language
 	 * @return array
 	 */
 	public function getSingleArray($bundle, $domain, $language) {
 		$r =  $this->toSingleArray(
 			$this->parse_yaml($bundle, $domain, $language)
 			);
+		if(count($r) == 1 && reset($r) == false && key($r) == '') $r = array();
+		return $r;
+	}
+
+	/**
+	 * Renvoie les données d'un fichier (bundle/domaine/langue) de translation sous forme d'array à 1 niveau
+	 * @param string $bundle
+	 * @param string $domain
+	 * @param string $language
+	 * @param mixed $items
+	 * @return array
+	 */
+	public function getSingleArrayOfItem($bundle, $domain, $language, $items) {
+		$messages = $this->parse_yaml($bundle, $domain, $language);
+		if(is_string($items)) $items = array($items);
+		if(is_array($items)) foreach ($items as $item) {
+			if(array_key_exists($item, $messages)) $messages = $messages[$item];
+		}
+		$r = $this->toSingleArray($messages);
 		if(count($r) == 1 && reset($r) == false && key($r) == '') $r = array();
 		return $r;
 	}

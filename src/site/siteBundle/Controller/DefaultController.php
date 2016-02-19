@@ -15,9 +15,7 @@ use site\adminBundle\Entity\pageweb;
 class DefaultController extends Controller {
 
 	public function indexAction() {
-		$this->em = $this->getDoctrine()->getManager();
-		$this->repo = $this->em->getRepository('site\adminBundle\Entity\pageweb');
-		$data['pageweb'] = $this->repo->findOneByDefault(1);
+		$data['pageweb'] = $this->get('aetools.aePageweb')->getDefaultPage();
 		if(is_object($data['pageweb'])) {
 			$this->pagewebactions($data);
 			// chargement de la pageweb
@@ -35,13 +33,8 @@ class DefaultController extends Controller {
 	}
 
 	public function pagewebAction($pageweb, $params = null) {
-		$this->em = $this->getDoctrine()->getManager();
-		// if($params == null) $params = array();
 		$data = $this->get('tools_json')->JSonExtract($params);
-		$data['pageweb'] = $pageweb;
-		// find $pageweb
-		$this->repo = $this->em->getRepository('site\adminBundle\Entity\pageweb');
-		$data['pageweb'] = $this->repo->findOneBySlug($pageweb);
+		$data['pageweb'] = $this->get('aetools.aePageweb')->getRepository()->findOneBySlug($pageweb);
 		if(is_object($data['pageweb'])) {
 			$this->pagewebactions($data);
 			// chargement de la pageweb

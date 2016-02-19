@@ -21,7 +21,6 @@ class aePageweb extends aeItem {
     const MAX_YAML_LEVEL = 10;
 
     protected $container;           // container
-    protected $aetools;             // aetools
     protected $rootPath;            // Dossier root du site
 
     protected $bundles_list;
@@ -29,10 +28,9 @@ class aePageweb extends aeItem {
 
     public function __construct(ContainerInterface $container) {
         parent::__construct($container);
-        $this->repo = $this->em->getRepository('siteadminBundle:pageweb');
-        $this->aetools = $this->container->get('aetools.aetools');
+        $this->repo = $this->_em->getRepository('siteadminBundle:pageweb');
         $this->rootPath = __DIR__.self::GO_TO_ROOT;
-        $this->aetools->setRootPath("/");
+        $this->setRootPath("/");
         // récupération de fichiers et check
         $this->initFiles();
     }
@@ -45,6 +43,14 @@ class aePageweb extends aeItem {
         parent::checkAfterChange($entity);
     }
 
+    public function getRepository() {
+        return $this->repo;
+    }
+
+    public function getDefaultPage() {
+        return $this->repo->findOneByDefault(1);
+    }
+
     protected function initFiles() {
         // initialisation
         $this->bundles_list = array();
@@ -52,11 +58,11 @@ class aePageweb extends aeItem {
         // récupération des bundles
         $bundles = $this->getBundles();
         foreach ($bundles as $bundle) {
-            $folders[$bundle['sitepath'].$bundle['nom']] = $this->aetools->exploreDir($bundle['sitepath'].$bundle['nom'], self::FOLD_PAGEWEB, "dossiers", true);
+            $folders[$bundle['sitepath'].$bundle['nom']] = $this->exploreDir($bundle['sitepath'].$bundle['nom'], self::FOLD_PAGEWEB, "dossiers", true);
             foreach ($folders as $key => $folder) if(count($folder) > 0) {
                 foreach ($folder as $pw_folder) {
                     $path = $pw_folder['sitepath'].$pw_folder['nom'];
-                    $files = $this->aetools->exploreDir($path, '\.html\.twig$', true);
+                    $files = $this->exploreDir($path, '\.html\.twig$', true);
                     if(count($files) > 0) foreach ($files as $file) {
                         $name = preg_replace('#\.html\.twig$#i', '', $file['nom']);
                         $this->files_list[$file['sitepath'].$file['nom']] = $name;
@@ -76,11 +82,15 @@ class aePageweb extends aeItem {
     }
 
     protected function getBundles() {
-        $bundles = $this->aetools->exploreDir(self::SOURCE_FILES, self::BUNDLE_EXTENSION.'$', "dossiers");
+        $bundles = $this->exploreDir(self::SOURCE_FILES, self::BUNDLE_EXTENSION.'$', "dossiers");
         foreach ($bundles as $key => $bundle) {
             $bundles[$key]['bundlename'] = str_replace('/', '', (preg_replace('#^'.self::SOURCE_FILES.'#', '', $bundle['sitepath']))).$bundle['nom'];
         }
         return $bundles;
+    }
+
+    public function getModels() {
+        return $this->files_list;
     }
 
     public function getPagewebChoices() {

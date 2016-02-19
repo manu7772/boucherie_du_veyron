@@ -45,8 +45,8 @@ siteadmin_menus:
     defaults: { _controller: siteadminBundle:menus:index, name: 'all' }
 
 siteadmin_menus_action:
-    path:     /menus/action/{action}/{bundle}/{name}
-    defaults: { _controller: siteadminBundle:menus:action, name: null }
+    path:     /menus/action/{action}/{bundle}/{name}/{id}
+    defaults: { _controller: siteadminBundle:menus:action, name: null, id: null }
 
 siteadmin_ajax_modify:
     path:     /menus/ajax-modify/{bundle}/{name}

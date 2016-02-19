@@ -15,6 +15,7 @@
 					<li>{{ bundle }}@{{ name|default('') }}</li>
 				</ol>
 			</div>
+			{% if DEVMODE %}
 			<div class="col-md-3 m-t-lg">
 				<div class="dropdown">
 					<button class="btn btn-xs btn-warning dropdown-toggle pull-right" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
@@ -28,6 +29,7 @@
 					</ul>
 				</div>
 			</div>
+			{% endif %}
 		</div>
 	</div>
 </div>
@@ -43,17 +45,34 @@
 					<h5>{{ 'menu.name'|trans|capitalize }} <strong>{{ bundle }}@{{ name|default('') }}</strong></h5>
 				</div>
 				<div class="ibox-content">
-					{{ nestmenu.menu(menu, bundle, name) }}
+					{{ nestmenu.menu(menu, bundle, name, pagewebs, translates) }}
 				</div>
 			</div>
 		</div>
 		<div class="col-md-4">
 			<div class="ibox ">
 				<div class="ibox-title">
-					<h5><i class="fa fa-cog"></i> Options</h5>
+					<h5><i class="fa fa-cog"></i> {{ UCfirst('menu.options'|trans) }}</h5>
 				</div>
 				<div class="ibox-content">
-					{{ nestmenu.params(menu, bundle, name) }}
+					{{ nestmenu.params(menu, bundle, name, pagewebs) }}
+				</div>
+			</div>
+		</div>
+
+
+		<div class="col-md-4">
+			<div class="ibox ">
+				<div class="ibox-title">
+					<h5><i class="fa fa-cog"></i> {{ UCfirst('languages'|trans) }}</h5>
+				</div>
+				<div class="ibox-content">
+					{% for language in translates.languages %}
+					<p>{{ language }}</p>
+					{% for key,catalogu in translates.catalogue[language] %}
+					<p>{{ key }} : {{ catalogu }}</p>
+					{% endfor %}
+					{% endfor %}
 				</div>
 			</div>
 		</div>

@@ -15,7 +15,6 @@ use site\services\aetools;
  */
 class aeMenus {
 
-	const ARRAY_GLUE = '___';
 	const SOURCE_FILES = 'src/';
 	const WEB_SOURCE_FILES = 'web/';
 	const FOLD_RESOURCES = 'Resources';
@@ -37,6 +36,7 @@ class aeMenus {
 	protected $files_list;			// array des fichiers, classés par bundles
 	protected $rootPath;			// Dossier root du site
 	protected $menusPath;			// Dossier web/menus du site
+	protected $defaultPageweb;		// Page web default
 
 	public function __construct(ContainerInterface $container) {
 		$this->container = $container;
@@ -44,6 +44,7 @@ class aeMenus {
 		$this->rootPath = __DIR__.self::GO_TO_ROOT;
 		$this->menusPath = $this->rootPath.self::WEB_SOURCE_FILES.self::WEB_FOLD_PUBLIC;
 		$this->aetools->setRootPath(aetools::SLASH);
+		$this->defaultPageweb = $this->container->get('aetools.aePageweb')->getDefaultPage();
 		// récupération de fichiers et check
 		$check = false;
 		$check = true;
@@ -157,6 +158,20 @@ class aeMenus {
 	}
 
 	/**
+	 * Renvoie la liste des "name" pour les items de menus
+	 * @return array
+	 */
+	public function getLanguagesInfo($bundle = "sitesite", $domain = "messages") {
+		$data = array();
+		$aeTrans = $this->container->get('aetools.translate');
+		$data['languages'] = $aeTrans->getLanguages();
+		foreach ($data['languages'] as $language) {
+			$data['catalogue'][$language] = array_flip($aeTrans->getSingleArrayOfItem($bundle, $domain, $language, array('menu', 'catalogue')));
+		}
+		return $data;
+	}
+
+	/**
 	 * Renvoie le menu défini dans les paramètres du site (config.yml -> menus:)
 	 * @param string $path
 	 * @return array
@@ -208,9 +223,113 @@ class aeMenus {
 	public function getInfoMenu($bundle, $name) {
 		if(isset($this->files_list[$bundle][$name])) {
 			$this->files_list[$bundle][$name] = $this->parse_yaml_fromFile($this->files_list[$bundle][$name]['full']);
+			// echo('<pre>');
+			// $test = array(0 => 'A', 1 => 'B', 2 => 'C');
+			// foreach ($test as $key => $value) {
+			// 	$test[$key] .= '-OK';
+			// }
+			// $key = 1;
+			// $test[$key] = 'B-BIS';
+			// $test2 = array(2 => 'C-BIS');
+			// $test3 = array_merge($test, $test2);
+			// var_dump($test3);
+			// $test4 = $test + $test2;
+			// var_dump($test4);
+			// echo('<h2 style="color:red;">MENU</h2>');
+			// var_dump($this->files_list[$bundle][$name]['menu']);
+			// echo('<h2 style="color:red;">FLAT</h2>');
+			// $flat = $this->getFlatItemsOfMenu($this->files_list[$bundle][$name]['menu']);
+			// var_dump($flat);
+			// $expand = $this->restoreMenuByFlatItems($flat);
+			// echo('<h2 style="color:red;">EXPAND</h2>');
+			// var_dump($expand);
+			// echo('<h2 style="color:red;">CONTACT</h2>');
+			// $item = $this->findItemById($this->files_list[$bundle][$name]['menu'], 'contact');
+			// var_dump($item);
+			// echo('<h2 style="color:red;">ITEM</h2>');
+			// $item = $this->findItemById($this->files_list[$bundle][$name]['menu'], 'item');
+			// var_dump($item);
+			// echo('<h2 style="color:red;">ITEM 2</h2>');
+			// $item = $this->findItemById($this->files_list[$bundle][$name]['menu'], 'item2');
+			// var_dump($item);
+			// echo('<h2 style="color:red;">ITEM 3</h2>');
+			// $item = $this->findItemById($this->files_list[$bundle][$name]['menu'], 'item3');
+			// var_dump($item);
+			// echo('<h2 style="color:red;">ITEM 4</h2>');
+			// $item = $this->findItemById($this->files_list[$bundle][$name]['menu'], 'item4');
+			// var_dump($item);
+			// die('</pre>');
 			return $this->files_list[$bundle][$name];
 		}
 		return false;
+	}
+
+	/**
+	 * Ajoute un item et renvoie les informations sur le menu $bundle/$name
+	 * @param string $bundle
+	 * @param string $name
+	 * @param boolean $atTheEnd
+	 * @return array
+	 */
+	public function addNewItem($bundle, $name, $atTheEnd = false) {
+		$info = false;
+		if(isset($this->files_list[$bundle][$name])) {
+			$info = $this->parse_yaml_fromFile($this->files_list[$bundle][$name]['full']);
+		}
+		if($info != false) {
+			if($atTheEnd == true) array_push($info['menu'], $this->getNewItem($info['menu']));
+				else array_unshift($info['menu'], $this->getNewItem($info['menu']));
+			$result = $this->setMenu($bundle, $name, $info['menu']);
+			if($result == false) $info = false;
+		}
+		return $info;
+	}
+
+	/**
+	 * Supprime un item et renvoie les informations sur le menu $bundle/$name
+	 * @param string $bundle
+	 * @param string $name
+	 * @return array
+	 */
+	public function deleteItem($bundle, $name, $id) {
+		$menu = $this->parse_yaml_fromFile($this->files_list[$bundle][$name]['full']);
+		if($menu != false) {
+			$flat = $this->getFlatItemsOfMenu($menu['menu']);
+			unset($flat[$id]);
+			$menu['menu'] = $this->restoreMenuByFlatItems($flat);
+			$result = $this->dump_yaml_toFile($this->files_list[$bundle][$name]['full'], $menu, false);
+			if($result == false) $menu = false;
+		}
+		return $menu;
+	}
+
+	protected function getNewItem($menu) {
+		$idlist = array();
+		foreach ($menu as $ssmenu) {
+			$idlist = array_merge($idlist, array_keys($ssmenu));
+		}
+		return array(
+			'item' => array(
+				'id' => $this->getNewId($menu),
+				'name' => 'menu.catalogue.new',
+				'role' => 'IS_AUTHENTICATED_ANONYMOUSLY',
+				'path' => array(
+					'route' => 'site_pageweb',
+					'params' => array(
+						'pageweb' => $this->defaultPageweb->getSlug(),
+						),
+					),
+				),
+			);
+	}
+
+	/**
+	 * Renvoie un nouvel id unique pour un item
+	 * @return string
+	 */
+	protected function getNewId() {
+		$id = str_replace(array(".", "_", " "), "-", microtime().'-'.$this->container->get('security.context')->getToken()->getUser());
+		return $id;
 	}
 
 	/**
@@ -387,41 +506,120 @@ class aeMenus {
 		return $result ? $menu['maxDepth'] : $oldvalue;
 	}
 
+	// /**
+	//  * Change l'ordre des éléments dans un menu et enregistre
+	//  * @param string $bundle
+	//  * @param string $name
+	//  * @param array $data
+	//  * @return string
+	//  */
+	// public function changeOrderInFile($bundle, $name, $data) {
+	// 	if(!is_array($data)) return false;
+	// 	$menu = $this->parse_yaml_fromFile($this->files_list[$bundle][$name]['full']);
+	// 	$menu['menu'] = $this->reorder($this->getFlatItemsOfMenu($menu['menu']), $data);
+	// 	$result = $this->dump_yaml_toFile($this->files_list[$bundle][$name]['full'], $menu, false);
+	// 	return $result ? $menu['menu'] : $result;
+	// }
+
+	// protected function reorder($flatmenu, $data) {
+	// 	$recursmenu = array();
+	// 	// $flatmenu = $this->getFlatItemsOfMenu($menu);
+	// 	foreach ($data as $key => $item) {
+	// 		$recursmenu[$item['id']] = $flatmenu[$item['id']];
+	// 		if(isset($item['children'])) $recursmenu[$item['id']]['children'] = $this->reorder($flatmenu, $item['children']);
+	// 	}
+	// 	return $recursmenu;
+	// }
+
 	/**
-	 * Change l'ordre des éléments dans un menu et enregistre
-	 * @param string $bundle
-	 * @param string $name
-	 * @param array $data
-	 * @return string
+	 * Renvoie un array à 1 niveau du menu
+	 * @param array $menu
+	 * @param string $parent_id
+	 * @return array
 	 */
-	public function changeOrderInFile($bundle, $name, $data) {
-		if(!is_array($data)) return false;
-		$menu = $this->parse_yaml_fromFile($this->files_list[$bundle][$name]['full']);
-		$menu['menu'] = $this->reorder($this->getFlatItemsOfMenu($menu['menu']), $data);
-		$result = $this->dump_yaml_toFile($this->files_list[$bundle][$name]['full'], $menu, false);
-		return $result ? $menu['menu'] : $result;
-	}
-
-	protected function reorder($flatmenu, $data) {
-		$recursmenu = array();
-		// $flatmenu = $this->getFlatItemsOfMenu($menu);
-		foreach ($data as $key => $item) {
-			$recursmenu[$item['id']] = $flatmenu[$item['id']];
-			if(isset($item['children'])) $recursmenu[$item['id']]['children'] = $this->reorder($flatmenu, $item['children']);
-		}
-		return $recursmenu;
-	}
-
-	protected function getFlatItemsOfMenu($menu) {
+	protected function getFlatItemsOfMenu($menu, $parent_id = null) {
 		$items = array();
-		foreach ($menu as $id => $item) {
+		foreach ($menu as $item) {
+			$id = $item['item']['id'];
 			$items[$id] = $item;
+			if($parent_id !== null) $items[$id]['parent'] = $parent_id;
 			if(isset($item['children'])) {
-				$items += $this->getFlatItemsOfMenu($item['children']);
+				$items += $this->getFlatItemsOfMenu($item['children'], $id);
 				unset($items[$id]['children']);
 			}
 		}
 		return $items;
+	}
+
+	/**
+	 * Renvoie le menu à plusieurs niveaux d'après un flat array généré par getFlatItemsOfMenu()
+	 * @param array $flatmenu
+	 * @return array
+	 */
+	protected function restoreMenuByFlatItems($flatmenu) {
+		$menu = array();
+		$level = 0;
+		while (count($flatmenu) > 0 && $level < 100) {
+			foreach($flatmenu as $id => $item) {
+				if($level == 0 && !isset($item['parent'])) {
+					// première passe…
+					$menu[] = $item;
+					unset($flatmenu[$id]);
+				}
+				if($level > 0 && isset($item['parent'])) {
+					// enfants…
+					// echo('<h2 style="color:green;">Premier niveau complet :</h2>');
+					// var_dump($menu);
+					$menu = $this->putItemInMenu($menu, $item['item'], $item['parent']);
+					unset($flatmenu[$id]);
+				}
+			}
+			$level++;
+		}
+		return $menu;
+	}
+
+	/**
+	 * Renvoie l'item correspondant à l'$id (!!! renvoie le CONTENU de 'item')
+	 * @param array $menu
+	 * @param string $id
+	 * @return array / null
+	 */
+	protected function findItemById($menu, $id) {
+		$found = null;
+		foreach ($menu as $key => $item) {
+			if($item['item']['id'] == $id) {
+				$found = $item['item'];
+			} else if(isset($item['children'])) {
+				$found = $this->findItemById($item['children'], $id);
+			}
+			if($found !== null) break 1;
+		}
+		return $found;
+	}
+
+	/**
+	 * Ajoute les informations de l'$item au bon endroit dans le $menu selon son id
+	 * @param array $menu
+	 * @param array $item (contenu de 'item')
+	 * @param string $parent_id
+	 * @return boolean
+	 */
+	protected function putItemInMenu($menu, $item, $parent_id = null) {
+		if(is_array($item)) {
+			foreach ($menu as $key => $itemmenu) {
+				if($menu[$key]['item']['id'] == $item['id']) {
+					$menu[$key]['item'] = $item;
+				} else if($parent_id !== null && $menu[$key]['item']['id'] == $parent_id) {
+					// par parent_id
+					if(!isset($menu[$key]['children'])) $menu[$key]['children'] = array();
+					$menu[$key]['children'][] = array('item' => $item);
+				} else if(isset($menu[$key]['children'])) {
+					$menu[$key]['children'] = $this->putItemInMenu($menu[$key]['children'], $item, $parent_id);
+				}
+			}
+		}
+		return $menu;
 	}
 
 

@@ -409,6 +409,8 @@ superadmin:
     entites: Doctrine entities
 savoirplus: 'view more'
 copyright: copyright
+titre: title
+message: message
 non: 'no'
 oui: 'yes'
 close: close

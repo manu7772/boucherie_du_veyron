@@ -4,11 +4,11 @@ namespace site\services;
 use site\services\aeEntities;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
-use site\adminBundle\Entity\item;
-use site\adminBundle\Entity\itemRepository;
+use site\adminBundle\Entity\tier;
+use site\adminBundle\Entity\tierRepository;
 
-// call in controller with $this->get('aetools.aeItem');
-class aeItem extends aeEntities {
+// call in controller with $this->get('aetools.aeTier');
+class aeTier extends aeEntities {
 
 	protected $container;		// container
 	protected $em;				// entity manager
@@ -16,14 +16,14 @@ class aeItem extends aeEntities {
 
 	public function __construct(ContainerInterface $container) {
 		parent::__construct($container);
-		$this->repo = $this->_em->getRepository('siteadminBundle:item');
+		$this->repo = $this->_em->getRepository('siteadminBundle:tier');
 	}
 
     /**
      * Check entity after change (edit…)
-     * @param item $entity
+     * @param tier $entity
      */
-    public function checkAfterChange(item &$entity) {
+    public function checkAfterChange(tier &$entity) {
 	    // check image
 		if($entity->getImage() !== null) {
 			$image = $entity->getImage();
@@ -35,11 +35,11 @@ class aeItem extends aeEntities {
 	}
 
 	/**
-	 * Persist en flush a item
-	 * @param item $entity
-	 * @return aeItem
+	 * Persist en flush a tier
+	 * @param tier $entity
+	 * @return aeTier
 	 */
-	public function save(item &$entity) {
+	public function save(tier &$entity) {
 		$this->em->persist($entity);
 		$this->em->flush();
 		return $this;

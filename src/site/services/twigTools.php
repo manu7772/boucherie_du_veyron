@@ -69,6 +69,8 @@ class twigTools extends Twig_Extension {
 			new Twig_SimpleFunction('ThumbMedia', array($this, 'ThumbMedia')),
 			new Twig_SimpleFunction('fileSizeDisplay', array($this, 'fileSizeDisplay')),
 			new Twig_SimpleFunction('fromNow', array($this, 'fromNow')),
+			new Twig_SimpleFunction('arrayNomSlug', array($this, 'arrayNomSlug')),
+			new Twig_SimpleFunction('arraySlugNom', array($this, 'arraySlugNom')),
 			);
 	}
 
@@ -1046,5 +1048,20 @@ class twigTools extends Twig_Extension {
 		return $reponse;
 	}
 
+	public function arrayNomSlug($array) {
+		$ret = array();
+		foreach ($array as $entite) {
+			$ret[$entite->getNom()] = $entite->getSlug();
+		}
+		return $ret;
+	}
+
+	public function arraySlugNom($array) {
+		$ret = array();
+		foreach ($array as $entite) {
+			$ret[$entite->getSlug()] = $entite->getNom();
+		}
+		return $ret;
+	}
 
 }

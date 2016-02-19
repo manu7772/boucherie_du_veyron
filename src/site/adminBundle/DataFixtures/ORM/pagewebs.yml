@@ -13,8 +13,16 @@ pageweb:
         -
             nom: 'contact'
             code: '<p>Contactez-nous</p>'
-            title: 'Boucherie du Veyron'
+            title: 'Boucherie du Veyron - nos coordonnées'
             titreh1: 'Contact Boucherie du Veyron'
             keywords: 'boucherie, boucher, traiteur'
             metadescription: 'Contact Boucherie du Veyron'
             modele: 'src/site/siteBundle/Resources/views/pages_web/contact.html.twig'
+        -
+            nom: 'commander'
+            code: '<h3>Pour commander</h3><p>Commencez déjà pour vous inscrire !</p>'
+            title: 'Boucherie du Veyron - Comment commander en ligne'
+            titreh1: 'Contact Boucherie du Veyron'
+            keywords: 'boucherie, boucher, traiteur, commander, en ligne'
+            metadescription: 'Contact Boucherie du Veyron'
+            modele: 'src/site/siteBundle/Resources/views/pages_web/simple_1col.html.twig'

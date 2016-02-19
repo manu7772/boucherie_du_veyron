@@ -1,14 +1,14 @@
-name: boucherie
+name: boucherie2
 roles:
     view: IS_AUTHENTICATED_ANONYMOUSLY
     edit: ROLE_ADMIN
     delete: ROLE_SUPER_ADMIN
-maxDepth: 1
+maxDepth: 3
 menu:
     -
         item:
-            id: accueil
-            name: menu.catalogue.accueil
+            nom: fetes
+            name: menu.catalogue.fetes
             role: IS_AUTHENTICATED_ANONYMOUSLY
             path:
                 route: site_pageweb
@@ -16,16 +16,7 @@ menu:
                     pageweb: homepage
     -
         item:
-            id: contact
-            name: menu.catalogue.contact
-            role: IS_AUTHENTICATED_ANONYMOUSLY
-            path:
-                route: site_pageweb
-                params:
-                    pageweb: contact
-    -
-        item:
-            id: comment
+            nom: comment
             name: menu.catalogue.comment
             role: IS_AUTHENTICATED_ANONYMOUSLY
             path:
@@ -34,7 +25,16 @@ menu:
                     pageweb: commander
     -
         item:
-            id: metier
+            nom: accueil
+            name: menu.catalogue.accueil
+            role: IS_AUTHENTICATED_ANONYMOUSLY
+            path:
+                route: site_pageweb
+                params:
+                    pageweb: homepage
+    -
+        item:
+            nom: metier
             name: menu.catalogue.metier
             role: IS_AUTHENTICATED_ANONYMOUSLY
             path:
@@ -43,8 +43,8 @@ menu:
                     pageweb: rame-la-galere
     -
         item:
-            id: fetes
-            name: menu.catalogue.fetes
+            nom: contact
+            name: menu.catalogue.contact
             role: IS_AUTHENTICATED_ANONYMOUSLY
             path:
                 route: site_pageweb

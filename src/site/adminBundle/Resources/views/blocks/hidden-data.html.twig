@@ -20,15 +20,15 @@
 		<div class="modal-dialog modal-sm">
 			<div class="modal-content">
 				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Fermer</span></button>
-					<h4 id="modal-title" class="modal-title"><i class="fa fa-exclamation-triangle"></i> Titre</h4>
+					<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">{{ UCfirst('close'|trans) }}</span></button>
+					<h4 id="modal-title" class="modal-title"><i class="fa fa-exclamation-triangle"></i> {{ UCfirst('titre'|trans) }}</h4>
 				</div>
 				<div class="modal-body">
-					<p id="modal-message">Message…</p>
+					<p id="modal-message">{{ UCfirst('message'|trans) }}</p>
 				</div>
 				<div class="modal-footer">
-					<button id="modal-cancel" type="button" class="btn btn-white cancel-all-icon-wait-on-click" data-dismiss="modal"><i class="fa fa-times"></i> Non</button>
-					<a href="#" id="modal-href" type="button" class="btn btn-danger"><i class="fa fa-check icon-wait-on-click"></i> Oui</a>
+					<button id="modal-cancel" type="button" class="btn btn-white cancel-all-icon-wait-on-click" data-dismiss="modal"><i class="fa fa-times"></i> {{ UCfirst('non'|trans) }}</button>
+					<a href="#" id="modal-href" type="button" class="btn btn-danger"><i class="fa fa-check icon-wait-on-click"></i> {{ UCfirst('oui'|trans) }}</a>
 				</div>
 			</div>
 		</div>

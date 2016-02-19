@@ -122,149 +122,191 @@ jQuery(document).ready(function($) {
 	/* Sortable / Nested                   */
 	/***************************************/
 
-	var infoRoles = $.parseJSON($('.master-nestable-menu').first().attr('data-info-roles'));
-	// console.log(window.JSON.stringify(infoRoles));
+	if($('.master-nestable-menu').length) {
+		// https://github.com/dbushell/Nestable/issues/77
+		// https://github.com/dbushell/Nestable
+		// http://dbushell.github.io/Nestable/
+		$('.master-nestable-menu').each(function(e) {
+			var idnest = $(this).attr('id');
+			console.log("New nestable : ", idnest);
 
-	// https://github.com/dbushell/Nestable/issues/77
-	$('.master-nestable-menu').each(function(e) {
-		var $parent = $(this);
-		var bundle = $(this).attr('data-bundle');
-		var name = $(this).attr('data-name');
-		var maxDepth = parseInt($(this).attr('data-maxDepth'));
-		var url = $(this).attr('data-url');
-		var idnest = $(this).attr('id');
+			var infoRoles = $.parseJSON($('[data-info-roles]', this).first().attr('data-info-roles'));
+			var pwebs = $.parseJSON($('[data-info-pagewebs]', this).first().attr('data-info-pagewebs'));
+			var messages = $.parseJSON($('[data-info-messages]', this).first().attr('data-info-messages'));
+			// console.log("Roles : ", window.JSON.stringify(infoRoles));
+			// console.log("Pagewebs : ", window.JSON.stringify(pwebs));
+			// console.log("Messages : ", window.JSON.stringify(messages));
+			var $parent = $(this);
+			var bundle = $(this).attr('data-bundle');
+			var name = $(this).attr('data-name');
+			var maxDepth = parseInt($(this).attr('data-maxDepth'));
+			var url = $(this).attr('data-url');
 
-		console.log("New nestable : ", idnest);
-
-		$(this).nestable({
-			group: idnest,
-			maxDepth: maxDepth,
-		}).on('change', function() {
-			$.ajax({
-				url: url,
-				method: "POST",
-				data: {tree: $parent.nestable('serialize')},
+			$(this).nestable({
+				group: idnest,
+				maxDepth: maxDepth,
+			}).on('change', function() {
+				$.ajax({
+					url: url,
+					method: "POST",
+					data: {tree: $parent.nestable('serialize')},
+				});
 			});
+
+			// get data of item
+			var getDataOfItem = function(idnest, id) {
+				var $target = $('div#' + idnest + ' li#li-' + idnest + "-" + id);
+				data = $target.attr('data-item');
+				return $.parseJSON(data);
+			}
+
+			// set data of item
+			var setDataOfItem = function(idnest, id, data, valueReplace) {
+				if(valueReplace != undefined) var value = valueReplace;
+				else var value = data.role;
+				var $target = $('div#' + idnest + ' li#li-' + idnest + "-" + id);
+				// change id
+				$('.dd3-content > span.text', $target).first().text(data.name);
+				$('.dd3-content .pageweb', $target).first().text(pwebs[data.path.params.pageweb]);
+				$('.dd3-content > span > small', $target).first().text(infoRoles[data.role]);
+				$target.attr('data-item', window.JSON.stringify(data));
+			}
+
+			// change name
+			$('body').on('change', 'input.name', function(e) {
+				var idnest = $(this).attr('data-idnest');
+				var id = $(this).attr('data-id');
+				var data = getDataOfItem(idnest, id);
+				data.name = $(this).val();
+				setDataOfItem(idnest, id, data);
+				$.ajax({
+					url: url,
+					method: "POST",
+					data: {tree: $parent.nestable('serialize')},
+				}).complete(function() {
+					console.log('Back change name : ' + data.name + ' => ' + nameTranslated);
+					// console.log('Back change name : \n', window.JSON.stringify(data));
+				});
+			});
+
+			// change pageweb
+			// $('body').on('change', 'select.pageweb', function() { alert($(this).val() + " = " + $(this).text()); });
+			$('body').on('change', 'select.pageweb', function(e) {
+				$(this).trigger("chosen:updated");
+				var idnest = $(this).attr('data-idnest');
+				var id = $(this).attr('data-id');
+				var data = getDataOfItem(idnest, id);
+				data.path.params.pageweb = $(this).val();
+				// var newpageweb = $("select.pageweb").first().children("option").filter(":selected").text();
+				setDataOfItem(idnest, id, data);
+				$.ajax({
+					url: url,
+					method: "POST",
+					data: {tree: $parent.nestable('serialize')},
+				}).complete(function() {
+					// console.log('Back change pageweb : ' + newpageweb);
+				});
+			});
+
+			// change role
+			// $('body').on('change', 'select.role', function() { alert($(this).val() + " = " + $(this).text()); });
+			$('body').on('change', 'select.role', function(e) {
+				$(this).trigger("chosen:updated");
+				var idnest = $(this).attr('data-idnest');
+				var id = $(this).attr('data-id');
+				var data = getDataOfItem(idnest, id);
+				data.role = $(this).val();
+				// var newrole = $("select.role").first().children("option").filter(":selected").text();
+				setDataOfItem(idnest, id, data);
+				$.ajax({
+					url: url,
+					method: "POST",
+					data: {tree: $parent.nestable('serialize')},
+				}).complete(function() {
+					// console.log('Back change role : ' + newrole);
+				});
+			});
+
+
+
 		});
 
-		// get data of item
-		var getDataOfItem = function(idnest, nom) {
-			var target = 'div#' + idnest + ' li#li-' + idnest + nom;
-			data = $(target).attr('data-' + nom);
-			return $.parseJSON(data);
-		}
 
-		// set data of item
-		var setDataOfItem = function(idnest, nom, data, valueReplace) {
-			if(valueReplace != undefined) var value = valueReplace;
-			else var value = data.role;
-			var $target = $('div#' + idnest + ' li#li-' + idnest + nom);
-			// change nom
-			$('.dd-handle > span.text', $target).first().text(data.name);
-			$('.dd-handle > span > small', $target).first().text(infoRoles[data.role]);
-			$target.attr('data-' + nom, window.JSON.stringify(data));
-		}
-
-		// change name
-		$('body').on('change', 'input.name', function(e) {
-			var idnest = $(this).attr('data-idnest');
-			var nom = $(this).attr('data-nom');
-			var data = getDataOfItem(idnest, nom);
-			data.name = $(this).val();
-			setDataOfItem(idnest, nom, data);
-			$.ajax({
-				url: url,
-				method: "POST",
-				data: {tree: $parent.nestable('serialize')},
-			}).complete(function() {
-				console.log('Back change name : ' + data.name);
-				// console.log('Back change name : \n', window.JSON.stringify(data));
-			});
+		/**
+		 * Actions sur nestables
+		 */
+		$('body').on('click', '.nest-menu button', function (e) {
+			switch($(this).attr('data-action')) {
+				case 'add':
+					idnest = $(this).attr('data-idnest');
+					alert('Ajouter un nouvel item ' + idnest);
+					$newil = $($('<ol class="dd-list bis">')).prepend($('<li class="dd-item bis">').prepend($('<div class="dd-handle bis">')));
+					$(idnest).prepend($newil);
+					break;
+				default:
+					$($(this).attr('data-idnest')).nestable($(this).attr('data-action'));
+			}
 		});
 
-		// change role
-		// $('body').on('change', 'select.role', function() { alert($(this).val() + " = " + $(this).text()); });
-		$('body').on('change', 'select.role', function(e) {
-			$(this).trigger("chosen:updated");
-			var idnest = $(this).attr('data-idnest');
-			var nom = $(this).attr('data-nom');
-			var data = getDataOfItem(idnest, nom);
-			data.role = $(this).val();
-			// var newrole = $("select.role").first().children("option").filter(":selected").text();
-			setDataOfItem(idnest, nom, data);
-			$.ajax({
-				url: url,
-				method: "POST",
-				data: {tree: $parent.nestable('serialize')},
-			}).complete(function() {
-				// console.log('Back change role : ' + newrole);
-			});
-		});
-
-
-
-	});
-
-
-	$('body').on('click', '#nest-menu button', function (e) {
-		$($(this).attr('data-idnest')).nestable($(this).attr('data-action'));
-	});
-
-	// params
-	$('.menu-params-item').hide();
-	$('.menu-params-item').first().show();
-	$('body').on('mouseenter', 'div.dd li.dd-item', function(e) {
-		var target = $('div.dd-handle', this).attr('data-toggle');
+		// params
 		$('.menu-params-item').hide();
-		$(target).show();
-	});
+		$('.menu-params-item').first().show();
+		$('body').on('mouseenter', 'div.dd div.dd3-content', function(e) {
+			var target = $(this).first().attr('data-toggle');
+			var master = "#"+$(this).first().attr('data-id');
+			$(master + ' div.dd3-content').css('background-color', "#fff;");
+			$(this).first().css('background-color', "#ddd;");
+			$('.menu-params-item').hide();
+			$(target).show();
+		});
 
-	// http://refreshless.com/nouislider/
-	$(".depthSlider").each(function() {
-		var $parent = $(this);
-		var majtarget = $($(this).attr('data-maj-target'));
-		var idnest = $(this).attr('data-idnest');
-		noUiSlider.create($(this).get(0), {
-			start: parseInt($(this).attr('data-steps')),
-			behaviour: 'tap',
-			connect: 'upper',
-			animate: true,
-			// tooltips: true,
-			step: 1,
-			range: {
-				'min': 1,
-				'max': 6,
-			},
-			direction: 'ltr',
-			pips: { // Show a scale with the slider
-				mode: 'steps',
-				density: 20,
-			},
-		}).on('change', function() {
-			var parent = this;
-			var value = parseInt(this.get());
-			parent.set(value);
-			majtarget.text(value);
-			var url = $parent.attr('data-url').replace('%23%23%23value%23%23%23', value);
-			$.ajax({
-				url: url,
-				method: "GET",
-			}).complete(function(data) {
-				// data = $.parseJSON(data);
-				// data = window.JSON.stringify(data);
-				// alert(data.responseJSON.value);
-				newvalue = parseInt(data.responseJSON.value);
-				parent.set(newvalue);
-				majtarget.text(newvalue);
-				$("#"+idnest).nestable({
-					group: idnest,
-					maxDepth: newvalue,
-				}).trigger('change');
+		// http://refreshless.com/nouislider/
+		$(".depthSlider").each(function() {
+			var $parent = $(this);
+			var majtarget = $($(this).attr('data-maj-target'));
+			var idnest = $(this).attr('data-idnest');
+			noUiSlider.create($(this).get(0), {
+				start: parseInt($(this).attr('data-steps')),
+				behaviour: 'tap',
+				connect: 'upper',
+				animate: true,
+				// tooltips: true,
+				step: 1,
+				range: {
+					'min': 1,
+					'max': 6,
+				},
+				direction: 'ltr',
+				pips: { // Show a scale with the slider
+					mode: 'steps',
+					density: 20,
+				},
+			}).on('change', function() {
+				var parent = this;
+				var value = parseInt(this.get());
+				parent.set(value);
+				majtarget.text(value);
+				var url = $parent.attr('data-url').replace('%23%23%23value%23%23%23', value);
+				$.ajax({
+					url: url,
+					method: "GET",
+				}).complete(function(data) {
+					// data = $.parseJSON(data);
+					// data = window.JSON.stringify(data);
+					// alert(data.responseJSON.value);
+					newvalue = parseInt(data.responseJSON.value);
+					parent.set(newvalue);
+					majtarget.text(newvalue);
+					// actualisation…
+					$("#"+idnest).nestable({
+						group: idnest,
+						maxDepth: newvalue,
+					}).trigger('change');
+				});
 			});
 		});
-	});
 
-
+	}
 
 
 

@@ -10,18 +10,29 @@ bundles:
     User:
         name: users
 menu:
+    nom: name
     name: menu
     name_s: menus
-    not_found: 'no menu found'
-    create_btn: 'new menu'
-    accueil: home
-    realisations: realisations
-    videos: videos
-    login: login
-    contact: contact
-    comment: 'order'
-    metier: 'our job'
-    fetes: celebrations
+    not_found: no menu found
+    create_btn: new menu
+    supprimer: delete
+    supprimerligne: delete this menu line?
+    attentionchildren: 'Beware : all children lines of this menu line will be deleted too!'
+    aucunepageweb: no element
+    niveaumax: max levels
+    options: options
+    ajouterligne: add a new line
+    ajouterlignetexte: Do you want to add a new line?
+    catalogue:
+        new: new
+        accueil: home
+        realisations: realisations
+        videos: videos
+        login: login
+        contact: contact
+        comment: order
+        metier: our job
+        fetes: celebrations
 search:
     name: search…
 footer:
