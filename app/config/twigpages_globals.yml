@@ -82,6 +82,7 @@ twig:
                     item1:
                         role: %restrict_admin%
                         nom: 'menu.name_s'
+                        trans_domain: menus
                         path: 
                             path: 'siteadmin_menus'
                             params:

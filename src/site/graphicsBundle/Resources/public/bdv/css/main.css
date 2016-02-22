@@ -1900,30 +1900,49 @@ textarea {
 /*************************
 *******Page CSS******
 **************************/
-.content-page-right {
-  margin-bottom: 15px;
+.content-page-right{
+  margin-bottom:15px;
 }
-.content-page-right .single-section a img,
-.content-page-right .single-section img {
+
+.content-page-right .single-section a img, .content-page-right .single-section img{
   border: 1px solid #dcc9ae;
   width: auto;
-  height: auto;
+  height:auto;
   margin-bottom: 10px;
 }
-.content-page-right .single-section p {
-  color: #363432;
+.single-section img.img-responsive{
+  margin: 0 auto 10px;
 }
-.content-page-right .post-meta {
+.single-section a img.pull-left, .single-section img.pull-left{
+  margin: auto 10px 0px auto;
+}
+.single-section a img.pull-right, .single-section img.pull-right{
+  margin: auto auto 0px 10px;
+}
+.single-section a img.pull-left, .single-section img.pull-left, .single-section a img.pull-right, .single-section img.pull-right{
+  max-width: 580px;
+}
+.content-page-right  
+.single-section p {
+  color: #363432
+}
+
+.content-page-right 
+.post-meta {
   display: block;
   margin-bottom: 25px;
   overflow: hidden;
 }
-.content-page-right .post-meta ul {
-  padding: 0;
+
+.content-page-right 
+.post-meta ul {
+  padding:0;
   display: inline;
 }
-.content-page-right .post-meta ul li {
-  background: #f0f0e9;
+
+.content-page-right 
+.post-meta ul li {
+  background:#F0F0E9;
   float: left;
   margin-right: 10px;
   padding: 0 5px;
@@ -1931,58 +1950,77 @@ textarea {
   color: #393b3b;
   position: relative;
 }
-.content-page-right .post-meta ul li i {
-  background: #fb923b;
-  color: #ffffff;
+
+.content-page-right 
+.post-meta ul li i {
+  background:#fb923b;
+  color: #FFFFFF;
   margin-left: -4px;
   margin-right: 7px;
   padding: 4px 7px;
 }
+
 .sinlge-post-meta li i:after,
-.content-page-right .post-meta ul li i:after {
+.content-page-right 
+.post-meta ul li i:after {
   content: "";
   position: absolute;
   width: auto;
   height: auto;
-  border-color: transparent transparent transparent #fb923b;
-  border-width: 4px;
+  border-color:transparent transparent transparent #fb923b;
+  border-width:4px;
   border-style: solid;
-  top: 6px;
-  left: 24px;
+  top:6px;
+  left:24px
 }
-.content-page-right .post-meta ul span {
+
+.content-page-right 
+.post-meta ul span {
   float: right;
-  color: #fb923b;
+  color: #fb923b
 }
-.post-meta span {
-  float: right;
+
+.post-meta span{
+    float: right;
 }
-.post-meta span i {
-  color: #fb923b;
+
+.post-meta span i{
+  color: #fb923b
 }
-.content-page-right .single-section .btn-primary {
-  background: #fb923b;
+
+
+.content-page-right  
+.single-section 
+.btn-primary {
+  background:#fb923b;
   border: medium none;
   border-radius: 0;
-  color: #ffffff;
+  color: #FFFFFF;
   margin-top: 17px;
 }
+
+
 .pagination-area {
-  margin-bottom: 45px;
-  margin-top: 45px;
+  margin-bottom:45px;
+  margin-top:45px
 }
-.pagination-area .pagination li a {
-  background: #f0f0e9;
+
+.pagination-area 
+.pagination li a {
+  background:#F0F0E9;
   border: 0 none;
   border-radius: 0;
   color: #696763;
   margin-right: 5px;
   padding: 4px 12px;
 }
-.pagination-area .pagination li a:hover,
-.pagination-area .pagination li .active {
-  background: #fb923b;
-  color: #ffffff;
+
+.pagination-area 
+.pagination li a:hover,
+.pagination-area 
+.pagination li .active {
+  background:#fb923b;
+  color: #fff
 }
 /*************************
 *******Blog Single CSS******

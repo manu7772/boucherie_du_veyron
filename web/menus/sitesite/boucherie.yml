@@ -3,26 +3,18 @@ roles:
     view: IS_AUTHENTICATED_ANONYMOUSLY
     edit: ROLE_ADMIN
     delete: ROLE_SUPER_ADMIN
-maxDepth: 1
+maxDepth: 2
 menu:
     -
         item:
             id: accueil
+            icon: fa-home
             name: menu.catalogue.accueil
             role: IS_AUTHENTICATED_ANONYMOUSLY
             path:
                 route: site_pageweb
                 params:
-                    pageweb: homepage
-    -
-        item:
-            id: contact
-            name: menu.catalogue.contact
-            role: IS_AUTHENTICATED_ANONYMOUSLY
-            path:
-                route: site_pageweb
-                params:
-                    pageweb: contact
+                    pageweb: commander
     -
         item:
             id: comment
@@ -32,6 +24,7 @@ menu:
                 route: site_pageweb
                 params:
                     pageweb: commander
+            icon: fa-question
     -
         item:
             id: metier
@@ -41,10 +34,22 @@ menu:
                 route: site_pageweb
                 params:
                     pageweb: rame-la-galere
+            icon: fa-question
     -
         item:
             id: fetes
             name: menu.catalogue.fetes
+            role: IS_AUTHENTICATED_ANONYMOUSLY
+            path:
+                route: site_pageweb
+                params:
+                    pageweb: contact
+            icon: fa-question
+    -
+        item:
+            id: contact
+            icon: fa-user
+            name: menu.catalogue.connexion
             role: IS_AUTHENTICATED_ANONYMOUSLY
             path:
                 route: site_pageweb

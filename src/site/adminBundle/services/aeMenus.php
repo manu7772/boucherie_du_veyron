@@ -26,6 +26,9 @@ class aeMenus {
 	const MAX_YAML_LEVEL = 32;
 	const YML_PREG_MOTIF = '\.yml$';
 
+	const MENUS_NAME = "menus";
+	const BUNDLE_NAME = "siteadmin";
+
 	protected $container; 			// container
 	protected $aetools; 			// aetools
 	protected $languages; 			// array des langues disponibles --> config.yml --> default_locales: "fr|en|en_US|es|it|de"
@@ -37,6 +40,7 @@ class aeMenus {
 	protected $rootPath;			// Dossier root du site
 	protected $menusPath;			// Dossier web/menus du site
 	protected $defaultPageweb;		// Page web default
+	protected $translateItems;		// Niveau de récupération des translations pour menus
 
 	public function __construct(ContainerInterface $container) {
 		$this->container = $container;
@@ -45,6 +49,7 @@ class aeMenus {
 		$this->menusPath = $this->rootPath.self::WEB_SOURCE_FILES.self::WEB_FOLD_PUBLIC;
 		$this->aetools->setRootPath(aetools::SLASH);
 		$this->defaultPageweb = $this->container->get('aetools.aePageweb')->getDefaultPage();
+		$this->translateItems = array('menu', 'catalogue');
 		// récupération de fichiers et check
 		$check = false;
 		$check = true;
@@ -56,16 +61,9 @@ class aeMenus {
 		$this->verifWebFiles();
 		// Vérification…
 		if($verif === true) {
-			// echo('<h2>CHECK !</h2>');
 			$this->verifFiles($this->web_files_list);
 			$this->verifWebFiles();
 		}
-		// echo('<pre>');
-		// echo('<h2>fold_menu</h2>');
-		// var_dump($this->fold_menu);
-		// echo('<h2>bundles_list</h2>');
-		// var_dump($this->bundles_list);
-		// die();
 		return $this->files_list;
 	}
 
@@ -75,7 +73,6 @@ class aeMenus {
 		$this->files_list = array();
 		// Création du dossier web/menus s'il n'existe pas
 		$pathname = self::WEB_SOURCE_FILES.self::WEB_FOLD_PUBLIC;
-		// echo('<h3>création web/menus : '.$pathname.'</h3>');
 		$this->aetools->verifDossierAndCreate($pathname);
 		// récupération des menus web/menus
 		$this->web_files_list = array();
@@ -96,15 +93,6 @@ class aeMenus {
 				$this->files_list[$bundlename][$name]['roles'] = $this->getRightsOfMenu($bundlename, $name);
 			}
 		}
-
-		// echo('<pre style="color:green;">');
-		// 	// echo('<h2>fold_web_bundles</h2>');
-		// 	// var_dump($fold_web_bundles);
-		// 	echo('<h2>bundles_list</h2>');
-		// 	var_dump($this->bundles_list);
-		// 	echo('<h2>files_list</h2>');
-		// 	var_dump($this->files_list);
-		// echo('</pre>');
 	}
 
 	public function verifFiles($webfiles) {
@@ -138,7 +126,6 @@ class aeMenus {
 		// crée les dossiers dans web/menus/…
 		foreach ($bundles_list as $name => $path) {
 			$pathname = self::WEB_SOURCE_FILES.self::WEB_FOLD_PUBLIC.aetools::SLASH.$name;
-			// echo('<h3>création web/menus/… ->'.$pathname.'</h3>');
 			$this->aetools->verifDossierAndCreate($pathname);
 		}
 		// copie les fichiers si non présents
@@ -149,24 +136,20 @@ class aeMenus {
 					copy($oneFile['full'], $fichierNew);
 			}
 		}
-		// echo('<pre style="color:orange;">');
-		// 	echo('<h2>files_list</h2>');
-		// 	var_dump($files_list);
-		// 	echo('<h2>bundles_list</h2>');
-		// 	var_dump($bundles_list);
-		// echo('</pre>');
 	}
 
 	/**
 	 * Renvoie la liste des "name" pour les items de menus
 	 * @return array
 	 */
-	public function getLanguagesInfo($bundle = "sitesite", $domain = "messages") {
+	public function getLanguagesInfo($bundle = null, $domain = null) {
+		if($bundle == null) $bundle = self::BUNDLE_NAME;
+		if($domain == null) $domain = self::MENUS_NAME;
 		$data = array();
 		$aeTrans = $this->container->get('aetools.translate');
 		$data['languages'] = $aeTrans->getLanguages();
 		foreach ($data['languages'] as $language) {
-			$data['catalogue'][$language] = array_flip($aeTrans->getSingleArrayOfItem($bundle, $domain, $language, array('menu', 'catalogue')));
+			$data['catalogue'][$language] = array_flip($aeTrans->getSingleArrayOfItem($bundle, $domain, $language, $this->translateItems));
 		}
 		return $data;
 	}
@@ -223,42 +206,6 @@ class aeMenus {
 	public function getInfoMenu($bundle, $name) {
 		if(isset($this->files_list[$bundle][$name])) {
 			$this->files_list[$bundle][$name] = $this->parse_yaml_fromFile($this->files_list[$bundle][$name]['full']);
-			// echo('<pre>');
-			// $test = array(0 => 'A', 1 => 'B', 2 => 'C');
-			// foreach ($test as $key => $value) {
-			// 	$test[$key] .= '-OK';
-			// }
-			// $key = 1;
-			// $test[$key] = 'B-BIS';
-			// $test2 = array(2 => 'C-BIS');
-			// $test3 = array_merge($test, $test2);
-			// var_dump($test3);
-			// $test4 = $test + $test2;
-			// var_dump($test4);
-			// echo('<h2 style="color:red;">MENU</h2>');
-			// var_dump($this->files_list[$bundle][$name]['menu']);
-			// echo('<h2 style="color:red;">FLAT</h2>');
-			// $flat = $this->getFlatItemsOfMenu($this->files_list[$bundle][$name]['menu']);
-			// var_dump($flat);
-			// $expand = $this->restoreMenuByFlatItems($flat);
-			// echo('<h2 style="color:red;">EXPAND</h2>');
-			// var_dump($expand);
-			// echo('<h2 style="color:red;">CONTACT</h2>');
-			// $item = $this->findItemById($this->files_list[$bundle][$name]['menu'], 'contact');
-			// var_dump($item);
-			// echo('<h2 style="color:red;">ITEM</h2>');
-			// $item = $this->findItemById($this->files_list[$bundle][$name]['menu'], 'item');
-			// var_dump($item);
-			// echo('<h2 style="color:red;">ITEM 2</h2>');
-			// $item = $this->findItemById($this->files_list[$bundle][$name]['menu'], 'item2');
-			// var_dump($item);
-			// echo('<h2 style="color:red;">ITEM 3</h2>');
-			// $item = $this->findItemById($this->files_list[$bundle][$name]['menu'], 'item3');
-			// var_dump($item);
-			// echo('<h2 style="color:red;">ITEM 4</h2>');
-			// $item = $this->findItemById($this->files_list[$bundle][$name]['menu'], 'item4');
-			// var_dump($item);
-			// die('</pre>');
 			return $this->files_list[$bundle][$name];
 		}
 		return false;
@@ -340,7 +287,7 @@ class aeMenus {
 	 */
 	public function getRightsOfMenu($bundle, $name) {
 		$default_roles = array(
-			'view' => 'ROLE_TRANSLATOR',
+			'view' => 'IS_AUTHENTICATED_ANONYMOUSLY',
 			'edit' => 'ROLE_EDITOR',
 			'delete' => 'ROLE_ADMIN',
 			);
@@ -482,9 +429,62 @@ class aeMenus {
 	public function setMenu($bundle, $name, $data) {
 		if(!is_array($data)) return false;
 		$menu = $this->parse_yaml_fromFile($this->files_list[$bundle][$name]['full']);
+		$this->verifTranslations($data);
 		$menu['menu'] = $data;
 		$result = $this->dump_yaml_toFile($this->files_list[$bundle][$name]['full'], $menu, false);
 		return $result ? $menu['menu'] : $result;
+	}
+
+	/**
+	 * Vérifie les champs sujets à translation dans $data
+	 * @param array &$data
+	 * @return array
+	 */
+	public function verifTranslations(&$data) {
+		$aeTrans = $this->container->get('aetools.translate');
+		$glue = $aeTrans->getGlue(true);
+		$data = $this->getFlatItemsOfMenu($data);
+		// echo('<pre>');
+		// echo('<p>Glue : '.$glue.'</p>');
+		// var_dump($data);
+		$names = array();
+		foreach ($data as $id => $item) {
+			$name = $item['item']['name'];
+			foreach ($this->translateItems as $index) {
+				$name = preg_replace('#^'.$index.$glue.'#', '', $name);
+			}
+			$names[$this->aetools->slugify($name)] = $name;
+		}
+		$names['hop-hop-hop'] = $name.'HOP******!ZAdqsdfqsdfqsdfqsdqsdfqsdfqsdfqsdf qsdfqsd fqsdf qsdfq';
+		// echo('<p style="color:orange;">menus</p>');
+		$menus = $this->getArrayOfDescription($this->translateItems, $names);
+		// var_dump($menus);
+		$languages = $aeTrans->getLanguages();
+		foreach ($languages as $language) {
+			$file = array_replace_recursive($menus, $aeTrans->parse_yaml(self::BUNDLE_NAME, self::MENUS_NAME, $language));
+			// echo('<p style="color:orange;">File '.$language.'</p>');
+			// var_dump($file);
+			$aeTrans->dump_yaml(self::BUNDLE_NAME, self::MENUS_NAME, $language, $file);
+		}
+		// echo('<p style="color:red;">This is the END.</p>');
+		// die('<pre>');
+		$data = $this->restoreMenuByFlatItems($data);
+		return $data;
+	} // getDefaultLocale()
+
+	/**
+	 * Crée un tableau récursif à partir d'une description de type array
+	 * Ajoute la valeur $addAtTheEnd dans le dernier élément du tableau
+	 * Ex. : array("niveau1", "niveau2", "niveau3"), "bonjour" donne :
+	 * 
+	 * @param 
+	 * @param mixed $addAtTheEnd
+	 * @return array 
+	 */
+	protected function getArrayOfDescription($array, $addAtTheEnd = null) {
+		if(count($array) > 0 && $array != null) $join = array_shift($array);
+			else return $addAtTheEnd;
+		return array($join => $this->getArrayOfDescription($array, $addAtTheEnd));
 	}
 
 	/**
@@ -568,8 +568,6 @@ class aeMenus {
 				}
 				if($level > 0 && isset($item['parent'])) {
 					// enfants…
-					// echo('<h2 style="color:green;">Premier niveau complet :</h2>');
-					// var_dump($menu);
 					$menu = $this->putItemInMenu($menu, $item['item'], $item['parent']);
 					unset($flatmenu[$id]);
 				}

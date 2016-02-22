@@ -36,7 +36,7 @@
 {% endif %}
 {% if level1path == app.request.baseUrl ~ app.request.pathInfo %}{% set active = ' class="active"' %}{% endif %}
 <li{{ active|raw }}>
-	<a href="{{ level1path }}"><i class="fa {{ level1.icon|default(default_icon)|raw }}"></i> <span class="nav-label">{{ level1.nom|default('menu…')|trans|capitalize }}</span>{{ down|raw }}</a>
+	<a href="{{ level1path }}"><i class="fa {{ level1.icon|default(default_icon)|raw }}"></i> <span class="nav-label">{{ level1.nom|default('item')|trans({}, level1.trans_domain|default('messages'))|capitalize }}</span>{{ down|raw }}</a>
 	{% if level1.level2|default('') is iterable %}
 	<ul class="nav nav-second-level">
 		{% for itemL2 in level1.level2 %}
@@ -58,7 +58,7 @@
 	{% set path = path(item.path, item.params|default({})) %}
 	{% endif %}
 	{% if path == app.request.baseUrl ~ app.request.pathInfo %}{% set active = ' class="active"' %}{% endif %}
-	<li{{ active|raw }}><a href="{{ path }}">{{ item.nom|default('item')|trans|capitalize }}</a></li>
+	<li{{ active|raw }}><a href="{{ path }}">{{ item.nom|default('item')|trans({}, item.trans_domain|default('messages'))|capitalize }}</a></li>
 	{% endif %}
 {% endmacro %}
 

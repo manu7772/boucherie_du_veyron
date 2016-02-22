@@ -72,7 +72,7 @@ jQuery(document).ready(function($) {
 	/***************************************/
 	/* fonctionnalités data-mask           */
 	/***************************************/
-	$('body .input-group.mask >input[class^=mask-]').each(function(e) {
+	$('body .input-group.mask >input[class^=mask-]').each(function (e) {
 		var parenthis = this;
 		var parent = $(this).parent();
 		var index = e;
@@ -103,7 +103,7 @@ jQuery(document).ready(function($) {
 		$(this).mask($(parent).data('format'), $(parent).data('params'));
 		$(parent).data('data-mask-switch', true);
 		// évènements
-		$(addon).on('click', function(e) {
+		$(addon).on('click', function (e) {
 			// alert($(e).attr('class')+"/"+$(e).attr('id'));
 			if($(parent).data('data-mask-switch') == false) {
 				$(parent).data('data-mask-switch', true);
@@ -126,7 +126,7 @@ jQuery(document).ready(function($) {
 		// https://github.com/dbushell/Nestable/issues/77
 		// https://github.com/dbushell/Nestable
 		// http://dbushell.github.io/Nestable/
-		$('.master-nestable-menu').each(function(e) {
+		$('.master-nestable-menu').each(function (e) {
 			var idnest = $(this).attr('id');
 			console.log("New nestable : ", idnest);
 
@@ -135,12 +135,14 @@ jQuery(document).ready(function($) {
 			var messages = $.parseJSON($('[data-info-messages]', this).first().attr('data-info-messages'));
 			// console.log("Roles : ", window.JSON.stringify(infoRoles));
 			// console.log("Pagewebs : ", window.JSON.stringify(pwebs));
-			// console.log("Messages : ", window.JSON.stringify(messages));
+			console.log("Messages : ", window.JSON.stringify(messages));
 			var $parent = $(this);
 			var bundle = $(this).attr('data-bundle');
 			var name = $(this).attr('data-name');
 			var maxDepth = parseInt($(this).attr('data-maxDepth'));
 			var url = $(this).attr('data-url');
+
+			$('div.dd3-content', this).first().css('background-color', "#ddd;");
 
 			$(this).nestable({
 				group: idnest,
@@ -161,44 +163,57 @@ jQuery(document).ready(function($) {
 			}
 
 			// set data of item
-			var setDataOfItem = function(idnest, id, data, valueReplace) {
-				if(valueReplace != undefined) var value = valueReplace;
-				else var value = data.role;
+			var setDataOfItem = function(idnest, id, champ, data) {
 				var $target = $('div#' + idnest + ' li#li-' + idnest + "-" + id);
 				// change id
-				$('.dd3-content > span.text', $target).first().text(data.name);
-				$('.dd3-content .pageweb', $target).first().text(pwebs[data.path.params.pageweb]);
-				$('.dd3-content > span > small', $target).first().text(infoRoles[data.role]);
+				switch(champ) {
+					case 'name':
+						$('.dd3-content > span.text', $target).first().text(data.name);
+						if(messages.hasOwnProperty(data.name) == true) data.name = messages[data.name];
+						break;
+					case 'pageweb':
+						$('.dd3-content .pageweb', $target).first().text(pwebs[data.path.params.pageweb]);
+						break;
+					case 'role':
+						$('.dd3-content > span > small', $target).first().text(infoRoles[data.role]);
+						break;
+					case 'icon':
+						$elem = $('.dd3-content > i.fa', $target).first();
+						icon = $elem.attr('data-fa');
+						$elem.removeClass(icon);
+						$elem.attr('data-fa', data.icon);
+						$elem.addClass(data.icon);
+						break;
+				}
 				$target.attr('data-item', window.JSON.stringify(data));
 			}
 
 			// change name
-			$('body').on('change', 'input.name', function(e) {
+			$('body').on('change', 'input.name', function (e) {
 				var idnest = $(this).attr('data-idnest');
 				var id = $(this).attr('data-id');
 				var data = getDataOfItem(idnest, id);
 				data.name = $(this).val();
-				setDataOfItem(idnest, id, data);
+				setDataOfItem(idnest, id, 'name', data);
 				$.ajax({
 					url: url,
 					method: "POST",
 					data: {tree: $parent.nestable('serialize')},
 				}).complete(function() {
-					console.log('Back change name : ' + data.name + ' => ' + nameTranslated);
 					// console.log('Back change name : \n', window.JSON.stringify(data));
 				});
 			});
 
 			// change pageweb
 			// $('body').on('change', 'select.pageweb', function() { alert($(this).val() + " = " + $(this).text()); });
-			$('body').on('change', 'select.pageweb', function(e) {
+			$('body').on('change', 'select.pageweb', function (e) {
 				$(this).trigger("chosen:updated");
 				var idnest = $(this).attr('data-idnest');
 				var id = $(this).attr('data-id');
 				var data = getDataOfItem(idnest, id);
 				data.path.params.pageweb = $(this).val();
 				// var newpageweb = $("select.pageweb").first().children("option").filter(":selected").text();
-				setDataOfItem(idnest, id, data);
+				setDataOfItem(idnest, id, 'pageweb', data);
 				$.ajax({
 					url: url,
 					method: "POST",
@@ -210,14 +225,14 @@ jQuery(document).ready(function($) {
 
 			// change role
 			// $('body').on('change', 'select.role', function() { alert($(this).val() + " = " + $(this).text()); });
-			$('body').on('change', 'select.role', function(e) {
+			$('body').on('change', 'select.role', function (e) {
 				$(this).trigger("chosen:updated");
 				var idnest = $(this).attr('data-idnest');
 				var id = $(this).attr('data-id');
 				var data = getDataOfItem(idnest, id);
 				data.role = $(this).val();
 				// var newrole = $("select.role").first().children("option").filter(":selected").text();
-				setDataOfItem(idnest, id, data);
+				setDataOfItem(idnest, id, 'role', data);
 				$.ajax({
 					url: url,
 					method: "POST",
@@ -227,6 +242,27 @@ jQuery(document).ready(function($) {
 				});
 			});
 
+			// change icon
+			$('body').on('click', 'button.icon', function (e) {
+				$('button.icon', $(this).parent()).removeClass('btn-primary').addClass('btn-white');
+				$(this).toggleClass('btn-white').toggleClass('btn-primary');
+				var icon = $('>i.fa', this).first().attr('data-fa');
+				var $big = $('div.well >i.fa', $(this).parent().parent()).first();
+				var oldicon = $big.attr('data-fa');
+				$big.removeClass(oldicon).addClass(icon).attr('data-fa', icon);
+				var idnest = $(this).attr('data-idnest');
+				var id = $(this).attr('data-id');
+				var data = getDataOfItem(idnest, id);
+				data.icon = icon;
+				setDataOfItem(idnest, id, 'icon', data);
+				$.ajax({
+					url: url,
+					method: "POST",
+					data: {tree: $parent.nestable('serialize')},
+				}).complete(function() {
+					// console.log('Back change role : ' + newrole);
+				});
+			});
 
 
 		});
@@ -248,16 +284,21 @@ jQuery(document).ready(function($) {
 			}
 		});
 
+		// icons
+		$('.menu-icons-item').hide();
+		$('.menu-icons-item').first().show();
 		// params
 		$('.menu-params-item').hide();
 		$('.menu-params-item').first().show();
-		$('body').on('mouseenter', 'div.dd div.dd3-content', function(e) {
+		$('body').on('mouseenter', 'div.dd div.dd3-content', function (e) {
 			var target = $(this).first().attr('data-toggle');
 			var master = "#"+$(this).first().attr('data-id');
 			$(master + ' div.dd3-content').css('background-color', "#fff;");
-			$(this).first().css('background-color', "#ddd;");
+			$(this).css('background-color', "#ddd;");
 			$('.menu-params-item').hide();
-			$(target).show();
+			$('.menu-icons-item').hide();
+			$(target+'-param').show();
+			$(target+'-icon').show();
 		});
 
 		// http://refreshless.com/nouislider/
@@ -567,31 +608,31 @@ jQuery(document).ready(function($) {
 		// fillArray();
 
 		// changement de sous-formulaire en cliquant sur une ligne du tableau
-		$tab_prototype.on('click', 'tbody > tr > td.change_item', function(e) {
+		$tab_prototype.on('click', 'tbody > tr > td.change_item', function (e) {
 			// alert($(this).index());
 			showSubformItem($(this).parent().index());
 		});
 
 		// modification dans l'un des sous-formulaires
 		// INPUT
-		$ul_list_form.on('keyup', 'input', function(e) {
+		$ul_list_form.on('keyup', 'input', function (e) {
 			data = getIndexAndCol_inForm(this);
 			if(cols.indexOf(data.col+"") != -1) fillArray();
 		});
 		// SELECT
-		$ul_list_form.on('change', 'select', function(e) {
+		$ul_list_form.on('change', 'select', function (e) {
 			data = getIndexAndCol_inForm(this);
 			if(cols.indexOf(data.col+"") != -1) fillArray();
 		});
 
 		// Ajout d'une ligne
-		$addMultiFormLink.on('click', function(e) {
+		$addMultiFormLink.on('click', function (e) {
 			e.preventDefault();
 			addTagForm();
 		});
 
 		// Suppression d'une ligne
-		$('body').on('click', '[id^='+deletename+']', function(e) {
+		$('body').on('click', '[id^='+deletename+']', function (e) {
 			e.preventDefault();
 			var data = getIndex_inTab(this);
 			// modale de confirmation

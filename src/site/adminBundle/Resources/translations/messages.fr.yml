@@ -170,6 +170,7 @@ User:
     backlist_btn: 'retour liste'
     dontexist: 'cet utilisateur n''existe pas'
     moredetails: 'plus de détails sur %name%'
+    suppression: 'l''utilisateur %name% a été supprimé'
     existe: cet utilisateur existe déjà
 reseau:
     name_s: réseaux
@@ -237,11 +238,11 @@ panier:
     name_s: paniers
     name: panier
     not_found: 'aucun panier trouvé'
-    x_found: '{0} aucun panier trouvé|{1} 1 panier trouvé|[2,+Inf] %count% tags trouvés'
+    x_found: '{0} aucun panier trouvé|{1} 1 panier trouvé|[2,+Inf] %count% paniers trouvés'
     create: 'créer un nouveau panier'
     create_btn: 'nouveau panier'
     created: '{0} Aucun panier créé|{1} %count% panier a été créé : %list%|[2,+Inf] %count% panier ont été créés : %list%'
-    new: '{0,1} nouveau panier|[2,+Inf] %count% nouveaux tags'
+    new: '{0,1} nouveau panier|[2,+Inf] %count% nouveaux paniers'
     backlist: 'retour à la liste des paniers'
     backlist_btn: 'retour liste'
     dontexist: 'ce panier n''existe pas'
@@ -252,11 +253,11 @@ user:
     name_s: utilisateurs
     name: utilisateur
     not_found: 'aucun utilisateur trouvé'
-    x_found: '{0} aucun utilisateur trouvé|{1} 1 utilisateur trouvé|[2,+Inf] %count% tags trouvés'
+    x_found: '{0} aucun utilisateur trouvé|{1} 1 utilisateur trouvé|[2,+Inf] %count% utilisateurs trouvés'
     create: 'créer un nouveau utilisateur'
     create_btn: 'nouveau utilisateur'
     created: '{0} Aucun utilisateur créé|{1} %count% utilisateur a été créé : %list%|[2,+Inf] %count% utilisateur ont été créés : %list%'
-    new: '{0,1} nouveau utilisateur|[2,+Inf] %count% nouveaux tags'
+    new: '{0,1} nouveau utilisateur|[2,+Inf] %count% nouveaux utilisateurs'
     backlist: 'retour à la liste des utilisateurs'
     backlist_btn: 'retour liste'
     dontexist: 'ce utilisateur n''existe pas'

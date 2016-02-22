@@ -107,6 +107,11 @@ class aeTranslate {
 		return $this->files_list;
 	}
 
+	public function getGlue($preg = false) {
+		if(!$preg) return self::ARRAY_GLUE;
+		return str_replace(array('.','|','*','+','?'), array('\\.','\\|','\\*','\\+','\\?'), self::ARRAY_GLUE);
+	}
+
 	/**
 	 * Renvoie le domaine du fichier
 	 * @param string $filename
@@ -522,11 +527,23 @@ class aeTranslate {
 	 * @param mixed $items
 	 * @return array
 	 */
-	public function getSingleArrayOfItem($bundle, $domain, $language, $items) {
+	public function getSingleArrayOfItem($bundle, $domain, $language, $items = null) {
 		$messages = $this->parse_yaml($bundle, $domain, $language);
 		if(is_string($items)) $items = array($items);
-		if(is_array($items)) foreach ($items as $item) {
-			if(array_key_exists($item, $messages)) $messages = $messages[$item];
+		if(is_array($items)) {
+			$tmpMessages = array();
+			$prefix = '';
+			foreach ($items as $item) {
+				if(array_key_exists($item, $messages)) {
+					$messages = $messages[$item];
+					$prefix .= $item.'.';
+				}
+			}
+			foreach ($messages as $key => $message) {
+				$tmpMessages[$prefix.$key] = $message;
+			}
+			$messages = $tmpMessages;
+			unset($tmpMessages);
 		}
 		$r = $this->toSingleArray($messages);
 		if(count($r) == 1 && reset($r) == false && key($r) == '') $r = array();

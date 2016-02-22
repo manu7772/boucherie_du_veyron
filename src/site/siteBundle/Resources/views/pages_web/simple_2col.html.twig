@@ -13,7 +13,7 @@
 					<h2 class="title">{{ pageweb.titreh1|raw }}</h2>
 					<div class="single-section">
 						{% if pageweb.mainMedia|default(null) != null %}
-						<img src="{{ pageweb.mainMedia.imgThumbnail(280,null,'in')|raw }}" alt="{{ pageweb.mainMedia.nom|default('image') }}">                
+						<img class="pull-left" src="{{ pageweb.mainMedia.imgThumbnail(280,null,'in')|raw }}" alt="{{ pageweb.mainMedia.nom|default('image') }}">                
 						{% endif %}
 						<p>{{ pageweb.code|raw }}</p>
 					</div>

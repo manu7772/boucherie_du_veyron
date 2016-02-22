@@ -17,16 +17,17 @@
 
 {% macro menuL1(menu, bundle, name, pagewebs) %}
 {% set idnest = bundle ~ name %}
+{% set sanstexte = '<i>Sans texte</i>' %}
 {% import _self as self %}
 <ol class="dd-list">
 	{% for key,item in menu %}
 	<li id="li-{{ idnest }}-{{ item.item.id }}" class="dd-item dd3-item" data-item="{{ item.item|json_encode }}">
 		<div class="dd-handle dd3-handle">"Drag"</div>
 		<div class="dd3-content" data-id="{{ idnest }}" data-toggle="#nest-options-{{ idnest }}{{ item.item.id }}">
-			<span class="pull-right"><small>{{- UCfirst(('roles.' ~ item.item.role|default('IS_AUTHENTICATED_ANONYMOUSLY'))|trans) -}}</small> <a href="{{ path('siteadmin_menus_action', {action: 'delete', bundle: bundle, name: name, id: item.item.id}) }}" class="btn btn-xs btn-white need-confirmation" data-message="{{ UCfirst('menu.supprimerligne'|trans) }}{% if item.children is defined %} {{ UCfirst('menu.attentionchildren'|trans) }}{% endif %}" data-title="{{ 'menu.supprimer'|trans }}"><i class="fa fa-times icon-wait-on-click"></i></a></span>
-			<i class="fa {{ item.item.icon|default('fa-question') }}"></i>&nbsp;
+			<span class="pull-right"><small>{{- UCfirst(('roles.' ~ item.item.role|default('IS_AUTHENTICATED_ANONYMOUSLY'))|trans) -}}</small> <a href="{{ path('siteadmin_menus_action', {action: 'delete', bundle: bundle, name: name, id: item.item.id}) }}" class="btn btn-xs btn-white need-confirmation" data-message="{{ UCfirst('menu.supprimerligne'|trans({}, 'menus')) }}{% if item.children is defined %} {{ UCfirst('menu.attentionchildren'|trans({}, 'menus')) }}{% endif %}" data-title="{{ UCfirst('menu.supprimer'|trans({}, 'menus')) }}"><i class="fa fa-times icon-wait-on-click"></i></a></span>
+			<i class="fa {{ item.item.icon|default('fa-question') }} fa-fw" data-fa="{{ item.item.icon|default('fa-question') }}"></i>&nbsp;
 			<span class="text">
-			{{- (item.item.name|default('<i>Sans texte</i>'))|trans({}, item.item.trans_domain|default(null))|raw -}}
+			{{- (item.item.name|default(sanstexte))|trans({}, item.item.trans_domain|default(trans_domain|default('menus')))|raw -}}
 			</span>
 			<em><i class="pageweb text-muted">
 			{{- arraySlugNom(pagewebs)[item.item.path.params.pageweb]|default('?') -}}
@@ -44,9 +45,8 @@
 {% macro params(menu, bundle, name, pagewebs) %}
 {% import _self as self %}
 {% set idnest = bundle ~ name %}
-
 <div style="margin-bottom:60px;">
-	<h4>{{ UCfirst('menu.niveaumax'|trans) }} <span id="majDS{{ idnest }}">{{ menu.maxDepth|default(3) }}</span></h4>
+	<h4>{{ UCfirst('menu.niveaumax'|trans({}, 'menus')) }} <span id="majDS{{ idnest }}">{{ menu.maxDepth|default(3) }}</span></h4>
 	<div class="depthSlider" data-maj-target="#majDS{{ idnest }}" data-idnest="{{ idnest }}" data-steps="{{ menu.maxDepth|default(3) }}" data-url="{{ path('siteadmin_ajax_maxDepth', {bundle: bundle, name: name, value: '###value###'}) }}"></div>
 </div>
 <hr class="m-b-sm m-t-sm">
@@ -58,29 +58,41 @@
 {% macro paramsL1(menu, bundle, name, pagewebs) %}
 {% import _self as self %}
 {% set idnest = bundle ~ name %}
+{% set sanstexte = '<i>Sans texte</i>' %}
 	{% for key,item in menu %}
-	<div id="nest-options-{{ idnest }}{{ item.item.id }}" class='menu-params-item col-xs-12'>
+	<div id="nest-options-{{ idnest }}{{ item.item.id }}-param" class='menu-params-item col-xs-12'>
+		<!-- name -->
 		<label for="#{{ idnest }}{{ item.item.id }}-name">
-			{{ UCfirst('menu.nom'|trans) }}
+			{{ UCfirst('menu.nom'|trans({}, 'menus')) }}
 			{% if app.environment in ['dev', 'test'] or is_granted('ROLE_SUPER_ADMIN') %}
 			<small class="text-muted">{{ item.item.id }}</small>
 			{% endif %}
 		</label>
-		<input id="{{ idnest }}{{ item.item.id }}-name" class='name form-control m-b-xs' value='{{ item.item.name|default('?') }}' data-idnest="{{ idnest }}" data-id="{{ item.item.id }}">
+		<input id="{{ idnest }}{{ item.item.id }}-name" class='name form-control m-b-xs' value='{{- (item.item.name|default(sanstexte))|trans({}, item.item.trans_domain|default(trans_domain|default('menus')))|raw -}}' data-idnest="{{ idnest }}" data-id="{{ item.item.id }}">
+		<!-- pageweb -->
 		<label for="#{{ idnest }}{{ item.item.id }}-pageweb">{{ UCfirst('pageweb.name'|trans) }}</label>
 		<select id="{{ idnest }}{{ item.item.id }}-pageweb" name="pageweb" class='pageweb form-control m-b-xs' data-idnest="{{ idnest }}" data-id="{{ item.item.id }}">
-			<option{% if not item.item.path.params.pageweb|default(null) in arraySlugNom(pagewebs) %} selected{% endif %} value="">{{ UCfirst('menu.aucunepageweb'|trans) }}</option>
+			<optgroup label="nopage" style="border-bottom: #dddddd solid 1px;">
+				<option{% if not item.item.path.params.pageweb|default(null) in arraySlugNom(pagewebs) %} selected{% endif %} value="">{{ UCfirst('menu.aucunepageweb'|trans({}, 'menus')) }}</option>
+			</optgroup>
+			<optgroup label="pageweb" style="border-bottom: #dddddd solid 1px;">
 			{% for pageweb in pagewebs %}
-			<option{% if item.item.path.params.pageweb|default(null) == pageweb.slug %} selected{% endif %} value="{{ pageweb.slug }}">{{ pageweb }}</option>
+				<option{% if item.item.path.params.pageweb|default(null) == pageweb.slug %} selected{% endif %} value="{{ pageweb.slug }}">{{ pageweb }}</option>
 			{% endfor %}
+			</optgroup>
+			<optgroup label="special" style="border-bottom: #dddddd solid 1px;">
+				<option>Login</option>
+				<option>Logout</option>
+			</optgroup>
 		</select>
+		<!-- role -->
 		<label for="#{{ idnest }}{{ item.item.id }}-role">Visibilité</label>
 		<select id="{{ idnest }}{{ item.item.id }}-role" name="role" class='role form-control m-b-xs' data-idnest="{{ idnest }}" data-id="{{ item.item.id }}">
 			{% for role in ['IS_AUTHENTICATED_ANONYMOUSLY', 'ROLE_USER', 'ROLE_TRANSLATOR', 'ROLE_EDITOR', 'ROLE_ADMIN', 'ROLE_SUPER_ADMIN'] if is_granted(role) %}
 			<option{% if item.item.role|default('IS_AUTHENTICATED_ANONYMOUSLY') == role %} selected{% endif %} value="{{ role }}">{{ UCfirst(('roles.' ~ role)|trans) }}</option>
 			{% endfor %}
 		</select>
-		<a type="button" href="{{ path('siteadmin_menus_action', {action: 'delete', bundle: bundle, name: name, id: item.item.id}) }}" class="btn btn-danger btn-xs need-confirmation" data-message="{{ UCfirst('menu.supprimerligne'|trans) }}{% if item.children is defined %} {{ UCfirst('menu.attentionchildren'|trans) }}{% endif %}" data-title="{{ 'menu.supprimer'|trans }}"><i class="fa fa-times icon-wait-on-click"></i> {{ 'menu.supprimer'|trans }}</a>
+		<a type="button" href="{{ path('siteadmin_menus_action', {action: 'delete', bundle: bundle, name: name, id: item.item.id}) }}" class="btn btn-danger btn-xs need-confirmation" data-message="{{ UCfirst('menu.supprimerligne'|trans({}, 'menus')) }}{% if item.children is defined %} {{ UCfirst('menu.attentionchildren'|trans({}, 'menus')) }}{% endif %}" data-title="{{ UCfirst('menu.supprimer'|trans({}, 'menus')) }}"><i class="fa fa-times icon-wait-on-click"></i> {{ UCfirst('menu.supprimer'|trans({}, 'menus')) }}</a>
 	</div>
 	{% if item.children is defined %}
 		{{ self.paramsL1(item.children, bundle, name, pagewebs) }}
@@ -89,13 +101,49 @@
 {% endmacro %}
 
 
+{% macro icons(menu, bundle, name, pagewebs) %}
+{% import _self as self %}
+{% set idnest = bundle ~ name %}
+{% set sanstexte = '<i>Aucun</i>' %}
+<div class="menu-icons row">
+	{{ self.iconsL1(menu.menu, bundle, name, pagewebs) }}
+</div>
+{% endmacro %}
+
+
+{% macro iconsL1(menu, bundle, name, pagewebs) %}
+{% import _self as self %}
+{% set deficon = 'fa-question' %}
+{% set idnest = bundle ~ name %}
+{% set sanstexte = '<i>Aucun</i>' %}
+	{% for key,item in menu %}
+	<div id="nest-options-{{ idnest }}{{ item.item.id }}-icon" class='menu-icons-item col-xs-12'>
+		<div class="row">
+			<div class="col-sm-3 text-center well">
+				<i class="fa {{ item.item.icon|default(deficon) }} fa-5x" data-fa="{{ item.item.icon|default(deficon) }}"></i>
+			</div>
+			<div class="col-sm-9">
+				<!-- icons -->
+				{% for icon in ['fa-question', 'fa-home', 'fa-user', 'fa-angellist', 'fa-area-chart', 'fa-at', 'fa-bell-slash', 'fa-bell-slash-o', 'fa-bicycle', 'fa-binoculars', 'fa-birthday-cake', 'fa-bus', 'fa-calculator', 'fa-cc', 'fa-cc-amex', 'fa-cc-discover', 'fa-cc-mastercard', 'fa-cc-paypal', 'fa-cc-stripe', 'fa-cc-visa', 'fa-copyright', 'fa-eyedropper', 'fa-futbol-o', 'fa-google-wallet', 'fa-ils', 'fa-ioxhost', 'fa-lastfm', 'fa-lastfm-square', 'fa-line-chart', 'fa-meanpath', 'fa-newspaper-o', 'fa-paint-brush', 'fa-paypal', 'fa-pie-chart', 'fa-plug', 'fa-shekel'] %}
+				{% set statut = 'btn-white' %}
+				{% if icon == item.item.icon|default(deficon) %}{% set statut = 'btn-primary' %}{% endif %}
+				<button class="btn btn-sm {{ statut }} m-b-xs icon" data-idnest="{{ idnest }}" data-id="{{ item.item.id }}"><i class="fa {{ icon }} fa-fw" data-fa="{{ icon }}"></i></button>
+				{% endfor %}
+			</div>
+		</div>
+	</div>
+	{% if item.children is defined %}
+		{{ self.iconsL1(item.children, bundle, name, pagewebs) }}
+	{% endif %}
+	{% endfor %}
+{% endmacro %}
 
 {% macro options(bundle, name) %}
 {% set idnest = bundle ~ name %}
 <span class="nest-menu">
-	<a type="button" href="{{ path('siteadmin_menus_action', {action: 'add', bundle: bundle, name: name}) }}" class="btn btn-warning btn-xs need-confirmation" data-message="{{ UCfirst('menu.ajouterlignetexte'|trans) }}" data-title="{{ UCfirst('menu.ajouterligne'|trans) }}"><i class="fa fa-plus icon-wait-on-click"></i> {{ UCfirst('menu.ajouterligne'|trans) }}</a>
-	<!-- <button type="button" data-idnest="#{{ idnest }}" data-action="expandAll" class="btn btn-white btn-xs"><i class="fa fa-plus"></i></button> -->
-	<!-- <button type="button" data-idnest="#{{ idnest }}" data-action="collapseAll" class="btn btn-white btn-xs"><i class="fa fa-minus"></i></button> -->
+	<a type="button" href="{{ path('siteadmin_menus_action', {action: 'add', bundle: bundle, name: name}) }}" class="btn btn-warning btn-xs need-confirmation" data-message="{{ UCfirst('menu.ajouterlignetexte'|trans({}, 'menus')) }}" data-title="{{ UCfirst('menu.ajouterligne'|trans({}, 'menus')) }}"><i class="fa fa-plus icon-wait-on-click"></i> {{ UCfirst('menu.ajouterligne'|trans({}, 'menus')) }}</a>
+	<button type="button" data-idnest="#{{ idnest }}" data-action="expandAll" class="btn btn-white btn-xs"><i class="fa fa-plus"></i></button>
+	<button type="button" data-idnest="#{{ idnest }}" data-action="collapseAll" class="btn btn-white btn-xs"><i class="fa fa-minus"></i></button>
 </span>
 {% endmacro %}
 

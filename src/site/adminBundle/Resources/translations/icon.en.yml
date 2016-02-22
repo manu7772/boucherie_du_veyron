@@ -1,0 +1,15 @@
+icon:
+    name_s: icons
+    name: icon
+    not_found: 'no icon found'
+    x_found: '{0} no icon found|{1} 1 icon found|[2,+Inf] %count% icons found'
+    create: 'create new icon'
+    create_btn: 'new icon'
+    created: '{0} no icon created|{1} %count% icon have been created : %list%|[2,+Inf] %count% icons have been created : %list%'
+    new: '{0,1}new icon|[2,+Inf] %count% new icons'
+    backlist: 'back to list of icons'
+    backlist_btn: 'back to list'
+    dontexist: 'this icon does not exist'
+    existe: 'this icon already exists'
+    suppression: 'icon %name% have been deleted'
+    moredetails: 'more details on %name%'
