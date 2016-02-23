@@ -47,6 +47,7 @@ class AppKernel extends Kernel
     // initialisation du scope 'request'
     // --> sinon, erreur : You cannot create a service ("request") of an inactive scope ("request") !!!
     protected function initializeContainer() {
+        date_default_timezone_set( 'Europe/Paris' );
         parent::initializeContainer();
         if (PHP_SAPI == 'cli') {
             $this->getContainer()->enterScope('request');
