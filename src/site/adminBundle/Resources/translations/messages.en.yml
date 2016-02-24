@@ -71,18 +71,6 @@ marque:
     dontexist: 'this brand does not exist'
     moredetails: 'more details on %name%'
     existe: this brand already exists
-boutique:
-    name_s: stores
-    name: store
-    not_found: 'no store found'
-    x_found: '{0} no store found|{1} 1 store found|[2,+Inf] %count% stores found'
-    create: 'create new store'
-    create_btn: 'new store'
-    backlist: 'back to list of stores'
-    backlist_btn: 'back to list'
-    dontexist: 'this store does not exist'
-    moredetails: 'more details on %name%'
-    existe: this store already exists
 image:
     name_s: images
     name: image
@@ -221,21 +209,6 @@ tauxTva:
     existe: 'this TVA rate already exists'
     suppression: 'TVA rate %name% have been deleted'
     moredetails: 'more details on %name%'
-article:
-    name_s: articles
-    name: article
-    not_found: 'no article found'
-    x_found: '{0} no article found|{1} 1 article found|[2,+Inf] %count% articles found'
-    create: 'create new article'
-    create_btn: 'new article'
-    created: '{0} no article created|{1} %count% article have been created : %list%|[2,+Inf] %count% articles have been created : %list%'
-    new: '{0,1}new article|[2,+Inf] %count% new articles'
-    backlist: 'back to list of articles'
-    backlist_btn: 'back to list'
-    dontexist: 'this article does not exist'
-    existe: 'this article already exists'
-    suppression: 'article %name% have been deleted'
-    moredetails: 'more details on %name%'
 panier:
     name_s: baskets
     name: basket
@@ -251,19 +224,6 @@ panier:
     existe: 'this basket already exists'
     suppression: 'basket %name% have been deleted'
     moredetails: 'more details on %name%'
-all:
-    name_s: all
-    name: all
-    not_found: 'no element found'
-    x_found: '{0} no element found|{1} 1 element found|[2,+Inf] %count% elements found'
-    create: 'create new element'
-    create_btn: 'new element'
-    backlist: 'back to list of elements'
-    backlist_btn: 'back to list'
-    dontexist: 'this element does not exist'
-    moredetails: 'more details on %name%'
-    suppression: 'element %name% has been deleted'
-    existe: this element already exists
 actions:
     name: actions
     voir: view

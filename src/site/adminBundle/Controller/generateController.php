@@ -13,6 +13,7 @@ class generateController extends Controller {
 	protected $classnames = null;
 
 	public function indexAction($action = null, $entite = null) {
+		$this->get('aetools.aetools')->updateBundlesInConfig();
 		$data = array();
 		$data['action'] = $action;
 		$data['entite'] = $entite;

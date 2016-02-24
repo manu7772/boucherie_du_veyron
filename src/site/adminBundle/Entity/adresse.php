@@ -108,6 +108,7 @@ class adresse extends baseEntity {
 
 
 	public function __construct() {
+		parent::__construct();
 		$this->defineNom();
 		$this->url = null;
 		$this->type = null;

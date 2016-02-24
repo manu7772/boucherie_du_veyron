@@ -26,8 +26,8 @@
 						</tr>
 					</thead>
 					<tbody>
-						{% for entite in entites %}
-						<tr>
+						{% for entite in entites if(is_granted(entite.statut.niveau|default('ROLE_USER')) or DEVMODE) %}
+						<tr style="background-color:{{ entite.statut.couleur|default('transparent') }}">
 							{% if DEVMODE %}<td class="text-center">{{ entite.id }}</td>{% endif %}
 							<td>
 								{% if type.type_values|default(null) != null %}

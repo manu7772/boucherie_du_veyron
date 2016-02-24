@@ -3,6 +3,8 @@ namespace site\services;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
+use Symfony\Component\Yaml\Parser;
+use Symfony\Component\Yaml\Dumper;
 
 use \Exception;
 use \DateTime;
@@ -33,6 +35,8 @@ class aetools {
 	const FORMAT_DATETIME_SQL	= "Y-m-d H:i:s";
 	const DATE_ZERO				= "0000-00-00";
 	const TIME_ZERO				= "0:0:0";
+	// YAML
+	const MAX_YAML_LEVEL = 100;
 
 	protected $ctrlDefined 		= null;				// boolean : controller dénini ?
 	protected $container;							// container
@@ -897,7 +901,49 @@ class aetools {
 	 * @return array
 	 */
 	public function getBundlesList() {
-		return $this->isContainerPresent() ? $this->container->getParameter('kernel.bundles') : false;
+		if($this->isContainerPresent()) {
+			$bundles = $this->container->getParameter('kernel.bundles');
+			$this->selectBundles($bundles);
+			return $bundles;
+		} else {
+			$pathToConfig = $this->gotoroot.'web/params/bundles.yml';
+			if(!@file_exists($pathToConfig)) return array();
+			$yaml = new Parser();
+			$config = $yaml->parse(@file_get_contents($pathToConfig));
+			return $config;
+		}
+	}
+
+	/**
+	 * Enregistre la liste des bundles disponibles dans un fichier YAML
+	 * dans : web/params/bundles.yml
+	 * @return boolean
+	 */
+	public function updateBundlesInConfig() {
+		$r = false;
+		if($this->isContainerPresent()) {
+			$bundles = $this->container->getParameter('kernel.bundles');
+			$this->selectBundles($bundles);
+			$pathToConfig = $this->gotoroot.'web/params/bundles.yml';
+			$dumper = new Dumper();
+			$r = @file_put_contents($pathToConfig, $dumper->dump($bundles, self::MAX_YAML_LEVEL));
+		}
+		if($r == false) throw new Exception("Mise à jour des bundles dans web/params/bundles.yml : impossible d'écrire dans le fichier.", 1);
+		return $r;
+	}
+
+	/**
+	 * Sélectionne uniquement les bundles du dossier src/
+	 * @param array &$bundles
+	 */
+	protected function selectBundles(&$bundles) {
+		$grps = array();
+		$bnds = array();
+		$groupes = $this->exploreDir('/src', null, 'dossiers', false);
+		foreach ($groupes as $groupe) $grps[] = $groupe['nom'];
+		$motif = '#^('.implode('|', $grps).')#';
+		foreach($bundles as $key => $bundle) if(preg_match($motif, $bundle)) $bnds[$key] = $bundle;
+		$bundles = $bnds;
 	}
 
 	/**
@@ -1014,17 +1060,37 @@ class aetools {
 	public function loadCurrentUser() {
 		$this->user = false;
 		if($this->isControllerPresent()) {
-			$roles = array(
-				"ROLE_USER" 		=> "utilisateur",
-				"ROLE_EDITOR" 		=> "éditeur",
-				"ROLE_ADMIN" 		=> "Administrateur",
-				"ROLE_SUPER_ADMIN" 	=> "super adminstrateur"
-				);
 			if($this->container->get('security.context')->isGranted('ROLE_USER')) {
 				$this->user = $this->container->get('security.context')->getToken()->getUser();
 			}
 		}
 		return $this->user;
+	}
+
+	/**
+	 * Renvoie roles hierarchy
+	 * @return array
+	 */
+	public function getRolesHierarchy() {
+		$hierarchy = false;
+		if($this->isControllerPresent()) {
+			$hierarchy = $this->container->getParameter('security.role_hierarchy');
+		} else {
+			$pathToSecurity = $this->gotoroot.'app/config/security.yml';
+			$yaml = new Parser();
+			$rolesArray = $yaml->parse(file_get_contents($pathToSecurity));
+			$hierarchy = $rolesArray['security']['role_hierarchy'];
+		}
+		return $hierarchy;
+	}
+
+	public function getListOfRoles() {
+		$r = array();
+		$roles = array_keys($this->getRolesHierarchy());
+		foreach ($roles as $role) {
+			$r[$role] = $role;
+		}
+		return $r;
 	}
 
 	/**

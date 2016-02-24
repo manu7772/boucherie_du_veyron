@@ -7,6 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Yaml\Parser;
 
 use site\adminBundle\Entity\media;
 use site\adminBundle\Entity\message;
@@ -425,6 +426,17 @@ class User extends BaseUser {
 		}
 		if($best_role === null) $best_role = reset($this->validRoles);
 		return $best_role;
+	}
+
+	/**
+	 * Renvoie les granted de User
+	 * @return array
+	 */
+	public function getGrants() {
+		$pathToSecurity = __DIR__.'/../../../../app/config/security.yml';
+		$yaml = new Parser();
+		$rolesArray = $yaml->parse(file_get_contents($pathToSecurity));
+		return array_merge(array($this->getBestRole()), $rolesArray['security']['role_hierarchy'][$this->getBestRole()]);
 	}
 
 	/**

@@ -9,6 +9,8 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
+use site\UserBundle\Entity\User;
+
 use DateTime;
 
 /**
@@ -41,56 +43,77 @@ class EntityBaseRepository extends EntityRepository {
 	* @param $defaults = liste des éléments par défaut
 	*/
 	public function defaultVal() {
+		return $this->defaultValAsClosure()->getQuery()->getResult();
+	}
+
+
+
+	/********************************/
+	/*** CLOSURES                 ***/
+	/********************************/
+
+	public function defaultValAsClosure() {
 		$qb = $this->createQueryBuilder(self::ELEMENT);
 		$qb->where(self::ELEMENT.'.default = :def')
 			->setParameter('def', 1)
 			;
-		return $qb->getQuery()->getResult();
+		return $qb;		
 	}
+
+	public function defaultValsListClosure(User $user = null) {
+		$qb = $this->findAllClosure();
+		return $qb;
+	}
+
+	public function findAllClosure() {
+		$qb = $this->createQueryBuilder(self::ELEMENT);
+		return $qb;
+	}
+
 
 	/**
 	 * Détermine le niveau de séléction des éléments sensibles du site selon User / bundle / etc.
 	 * @param ContainerInterface $container
 	 * @return integer
 	 */
-	public function declareMode(ContainerInterface $container) {
-		$this->user = $container->get('security.context')->getToken()->getUser();
-		$controller = $container->get('request')->attributes->get('_controller');
-		$this->bundle = str_replace('\\', '', explode('Bundle', $controller)[0]);
+	// public function declareMode(ContainerInterface $container) {
+	// 	$this->user = $container->get('security.context')->getToken()->getUser();
+	// 	$controller = $container->get('request')->attributes->get('_controller');
+	// 	$this->bundle = str_replace('\\', '', explode('Bundle', $controller)[0]);
 
-		// récupération des éléments de config
-		$this->modeParameters = $container->getParameter('repository-admin-mode');
-		$this->adminMode = $this->modeParameters['default'];
-		if(isset($this->modeParameters['bundles']) && is_object($this->user)) {
-			$userRole = $this->user->getBestRole();
-			if(array_key_exists($this->bundle, $this->modeParameters['bundles'])) {
-				if(isset($this->modeParameters['bundles'][$this->bundle]['default'])) $this->adminMode = $this->modeParameters['bundles'][$this->bundle]['default'];
-				if(isset($this->modeParameters['bundles'][$this->bundle][$userRole])) $this->adminMode = $this->modeParameters['bundles'][$this->bundle][$userRole];
-			}
-		}
-		// is_object($this->user) ? $user = $this->user.' / '.$userRole : $user = "anon." ;
-		// echo('<h4>User / role : '.$user.'</h4>');
-		// echo('<h4>Bundlename : '.$this->bundle.'</h4>');
-		// echo('<h4 style="color:red;">Niveau : '.$this->adminMode.'</h4>');
-	}
+	// 	// récupération des éléments de config
+	// 	$this->modeParameters = $container->getParameter('repository-admin-mode');
+	// 	$this->adminMode = $this->modeParameters['default'];
+	// 	if(isset($this->modeParameters['bundles']) && is_object($this->user)) {
+	// 		$userRole = $this->user->getBestRole();
+	// 		if(array_key_exists($this->bundle, $this->modeParameters['bundles'])) {
+	// 			if(isset($this->modeParameters['bundles'][$this->bundle]['default'])) $this->adminMode = $this->modeParameters['bundles'][$this->bundle]['default'];
+	// 			if(isset($this->modeParameters['bundles'][$this->bundle][$userRole])) $this->adminMode = $this->modeParameters['bundles'][$this->bundle][$userRole];
+	// 		}
+	// 	}
+	// 	// is_object($this->user) ? $user = $this->user.' / '.$userRole : $user = "anon." ;
+	// 	// echo('<h4>User / role : '.$user.'</h4>');
+	// 	// echo('<h4>Bundlename : '.$this->bundle.'</h4>');
+	// 	// echo('<h4 style="color:red;">Niveau : '.$this->adminMode.'</h4>');
+	// }
 
-	public function compileForMode(QueryBuilder &$qb) {
-		// mode normal : suppression des éléments périmés, sadmin, etc.
-		switch ($this->adminMode) {
-			case 2: // + haut niveau d'accès
-				break;
-			case 1: // niveau ADMIN
-				$this->defaultStatut($qb, array("Actif", "Inactif", "Expired"));
-				// $this->excludeExpired($qb);
-				// $this->excludeNotPublished($qb);
-				break;
-			default: // niveau USER
-				$this->defaultStatut($qb);
-				$this->excludeExpired($qb);
-				$this->excludeNotPublished($qb);
-				break;
-		}
-	}
+	// public function compileForMode(QueryBuilder &$qb) {
+	// 	// mode normal : suppression des éléments périmés, sadmin, etc.
+	// 	switch ($this->adminMode) {
+	// 		case 2: // + haut niveau d'accès
+	// 			break;
+	// 		case 1: // niveau ADMIN
+	// 			$this->defaultStatut($qb, array("Actif", "Inactif", "Expired"));
+	// 			// $this->excludeExpired($qb);
+	// 			// $this->excludeNotPublished($qb);
+	// 			break;
+	// 		default: // niveau USER
+	// 			$this->defaultStatut($qb);
+	// 			$this->excludeExpired($qb);
+	// 			$this->excludeNotPublished($qb);
+	// 			break;
+	// 	}
+	// }
 
 	/**
 	 * Recherche des entités selon des valeurs/champ

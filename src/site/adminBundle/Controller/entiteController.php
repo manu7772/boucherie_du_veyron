@@ -106,26 +106,18 @@ class entiteController extends Controller {
 						$data['entite'] = $this->repo->find($id);
 						if(!is_object($data['entite'])) {
 							$message = $this->get('flash_messages')->send(array(
-								'title'		=> 'Message introuvable',
+								'title'		=> 'Élément introuvable',
 								'type'		=> flashMessage::MESSAGES_ERROR,
-								'text'		=> 'Le message est introuvable et ne peut être supprimé.',
+								'text'		=> 'L\'élément est introuvable et ne peut être supprimé.',
 							));
 							$data['action'] = null;
 							$data['id'] = null;
 						} else {
-							if(method_exists($data['entite'], 'setStatut')) {
-								// si un champ statut existe
-								$inactif = $this->em->getRepository('site\adminBundle\Entity\statut')->findInactif();
-								$data['entite']->setStatut($inactif);
-							} else {
-								// sinon on la supprime
-								$this->em->remove($data['entite']);
-							}
-							$this->em->flush();
+							$this->get('aetools.aeEntities')->softDeleteEntity($data['entite']);
 							$message = $this->get('flash_messages')->send(array(
-								'title'		=> 'Message supprimé',
+								'title'		=> 'Élément supprimé',
 								'type'		=> flashMessage::MESSAGES_WARNING,
-								'text'		=> 'Le message a été supprimé.',
+								'text'		=> 'L\'élément a été supprimé.',
 							));
 							$data['action'] = null;
 							$data['id'] = null;
@@ -136,9 +128,9 @@ class entiteController extends Controller {
 						$data['entite'] = $this->repo->find($id);
 						if(!is_object($data['entite'])) {
 							$message = $this->get('flash_messages')->send(array(
-								'title'		=> 'Message introuvable',
+								'title'		=> 'Élément introuvable',
 								'type'		=> flashMessage::MESSAGES_ERROR,
-								'text'		=> 'Le message est introuvable et ne peut être supprimé.',
+								'text'		=> 'L\'élément est introuvable et ne peut être modifié.',
 							));
 							$data['action'] = null;
 							$data['id'] = null;
@@ -150,9 +142,9 @@ class entiteController extends Controller {
 							}
 							$this->em->flush();
 							$message = $this->get('flash_messages')->send(array(
-								'title'		=> 'Message activé',
+								'title'		=> 'Élément activé',
 								'type'		=> flashMessage::MESSAGES_SUCCESS,
-								'text'		=> 'Le message a été activé.',
+								'text'		=> 'L\'élément a été activé.',
 							));
 							$data['action'] = 'show';
 						}
@@ -474,19 +466,19 @@ class entiteController extends Controller {
 
 	protected function getNewEntity($classname) {
 		$newEntity = new $classname();
-		$this->em = $this->getDoctrine()->getManager();
-		if(method_exists($newEntity, 'setStatut')) {
-			// si un champ statut existe
-			$defaultStatut = $this->em->getRepository('site\adminBundle\Entity\statut')->defaultVal();
-			if(is_array($defaultStatut)) $defaultStatut = reset($defaultStatut);
-			if(is_object($defaultStatut)) $newEntity->setStatut($defaultStatut);
-		}
-		if(method_exists($newEntity, 'setTauxTva')) {
-			// si un champ statut existe
-			$defaultTauxTva = $this->em->getRepository('site\adminBundle\Entity\tauxTva')->defaultVal();
-			if(is_array($defaultTauxTva)) $defaultTauxTva = reset($defaultTauxTva);
-			if(is_object($defaultTauxTva)) $newEntity->setTauxTva($defaultTauxTva);
-		}
+		// $this->em = $this->getDoctrine()->getManager();
+		// if(method_exists($newEntity, 'setStatut')) {
+		// 	// si un champ statut existe
+		// 	$defaultStatut = $this->em->getRepository('site\adminBundle\Entity\statut')->defaultVal();
+		// 	if(is_array($defaultStatut)) $defaultStatut = reset($defaultStatut);
+		// 	if(is_object($defaultStatut)) $newEntity->setStatut($defaultStatut);
+		// }
+		// if(method_exists($newEntity, 'setTauxTva')) {
+		// 	// si un champ statut existe
+		// 	$defaultTauxTva = $this->em->getRepository('site\adminBundle\Entity\tauxTva')->defaultVal();
+		// 	if(is_array($defaultTauxTva)) $defaultTauxTva = reset($defaultTauxTva);
+		// 	if(is_object($defaultTauxTva)) $newEntity->setTauxTva($defaultTauxTva);
+		// }
 		return $newEntity;
 	}
 

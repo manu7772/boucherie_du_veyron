@@ -26,8 +26,8 @@
 						</tr>
 					</thead>
 					<tbody>
-						{% for entite in entites if(entite.statut.nom|default('Actif') == 'Actif' or DEVMODE) %}
-						<tr{% if entite.statut.nom|default('Actif') != 'Actif' %} class="danger"{% endif %}>
+						{% for entite in entites if(is_granted(entite.statut.niveau|default('ROLE_USER')) or DEVMODE) %}
+						<tr style="background-color:{{ entite.statut.couleur|default('transparent') }}">
 							<td class="text-center">
 								{% if type.type_values|default(null) != null %}
 								<a href="{{ path('siteadmin_entite_type', {entite: entite_name, type_related: type.type_related, type_field: type.type_field, type_values: type.type_values|join(type_value_joiner)|url_encode, id: entite.id, action: 'show'}) }}" title="{{ (entite_name ~ '.moredetails')|trans({'%name%': entite.nom|default('#' ~ entite.id)})|capitalize }}"><strong>{{ entite.id }}</strong></a>

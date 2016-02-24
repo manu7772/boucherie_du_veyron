@@ -13,6 +13,7 @@ use \Exception;
 class superadminController extends Controller {
 
 	public function indexAction() {
+		$this->get('aetools.aetools')->updateBundlesInConfig();
 		$data = array();
 		$repo = $this->get('aetools.aeEntities')->getEm()->getRepository('site\adminBundle\Entity\article');
 		$data['articles'] = $repo->findAll();

@@ -24,6 +24,7 @@ class DefaultController extends Controller {
 	const TYPE_VALUE_JOINER 	= '___';
 
 	public function indexAction() {
+		$this->get('aetools.aetools')->updateBundlesInConfig();
 		$data = array();
 		$data['messages'] = $this->get('aetools.aeMessage')->getRepo()->findNotRead();
 		return $this->render('siteadminBundle:Default:index.html.twig', $data);

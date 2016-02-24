@@ -94,7 +94,7 @@ class reseau extends tier {
 	/**
 	 * Set couleur
 	 * @param string $couleur
-	 * @return version
+	 * @return reseau
 	 */
 	public function setCouleur($couleur) {
 		$this->couleur = $couleur;

@@ -1196,6 +1196,7 @@ class aeEntities extends aetools {
 		$fields = $this->getInverseSideFields($classname);
 		// flush…
 		if($flush == true) $r = $this->getEm()->flush();
+		throw new Exception("checkLosts non encore programmé !", 1);
 		return $r;
 	}
 
@@ -1214,16 +1215,6 @@ class aeEntities extends aetools {
 			}
 		}
 		return $list;
-	}
-
-	public function checkStatuts(&$entity, $flush = true) {
-		if(method_exists($entity, 'getStatut')) {
-			if($entity->getStatut() == null) {
-				$statut = $this->getEm()->getRepository('site\adminBundle\Entity\statut')->defaultVal();
-				if(is_array($statut)) $statut = reset($statut);
-				if(is_object($statut)) $entity->setStatut($statut);
-			}
-		}
 	}
 
 	/**
@@ -1318,15 +1309,23 @@ class aeEntities extends aetools {
 
 	// DELETIONS
 
-	public function softDelete(&$entite) {
+	/**
+	 * Supprime une entité sans la retirer de la base (sauf si 'deleted')
+	 * 4 États : actif => inactif => deleted => et enfin, suppression de la base
+	 * @param baseEntity &$entity
+	 */
+	public function softDeleteEntity(&$entite) {
 		if(method_exists($entite, 'setStatut')) {
 			// si un champ statut existe : Règle :
 			// actif ---> inactif
 			// inactif ou expired ---> deleted (uniquement visible du SUPER ADMIN)
-			if($entite->getStatut()->getSlug() == 'actif') {
+			$stade = $entite->getStatut()->getSlug();
+			if(in_array($stade, array('actif'))) {
 				$statut = $this->getEm()->getRepository('site\adminBundle\Entity\statut')->findInactif();
-			} else {
+			} else if(in_array($stade, array('inactif', 'expired'))) {
 				$statut = $this->getEm()->getRepository('site\adminBundle\Entity\statut')->findDeleted();
+			} else {
+				$statut = 'delete';
 			}
 			if(is_array($statut)) $statut = reset($statut);
 			if(is_object($statut)) $entite->setStatut($statut);
@@ -1337,6 +1336,16 @@ class aeEntities extends aetools {
 		}
 		$this->getEm()->flush();
 	}
+
+	// public function checkStatuts(&$entity, $flush = true) {
+	// 	if(method_exists($entity, 'getStatut')) {
+	// 		if($entity->getStatut() == null) {
+	// 			$statut = $this->getEm()->getRepository('site\adminBundle\Entity\statut')->defaultVal();
+	// 			if(is_array($statut)) $statut = reset($statut);
+	// 			if(is_object($statut)) $entity->setStatut($statut);
+	// 		}
+	// 	}
+	// }
 
 
 	// ENTITY MANAGER ET REPOSITORY

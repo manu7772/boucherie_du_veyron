@@ -71,18 +71,6 @@ marque:
     dontexist: 'cette marque n''existe pas'
     moredetails: 'plus de détails sur %name%'
     existe: cette marque existe déjà
-boutique:
-    name_s: boutiques
-    name: boutique
-    not_found: 'aucune boutique trouvée'
-    x_found: '{0} aucune boutique trouvée|{1} 1 boutique trouvée|[2,+Inf] %count% boutiques trouvées'
-    create: 'créer une nouvelle boutique'
-    create_btn: 'nouvelle boutique'
-    backlist: 'retour à la liste des boutiques'
-    backlist_btn: 'retour liste'
-    dontexist: 'cette boutique n''existe pas'
-    moredetails: 'plus de détails sur %name%'
-    existe: cette boutique existe déjà
 image:
     name_s: images
     name: image
@@ -219,21 +207,6 @@ tauxTva:
     existe: 'ce taux TVA existe déjà'
     suppression: 'le taux TVA %name% a été supprimé'
     moredetails: 'plus de détails sur %name%'
-article:
-    name_s: articles
-    name: article
-    not_found: 'aucun article trouvé'
-    x_found: '{0} aucun article trouvé|{1} 1 article trouvé|[2,+Inf] %count% articles trouvés'
-    create: 'créer un nouvel article'
-    create_btn: 'nouvel article'
-    created: '{0} Aucun article créé|{1} %count% article a été créé : %list%|[2,+Inf] %count% articles ont été créés : %list%'
-    new: '{0,1} nouvel article|[2,+Inf] %count% nouveaux articles'
-    backlist: 'retour à la liste des articles'
-    backlist_btn: 'retour liste'
-    dontexist: 'cet article n''existe pas'
-    existe: 'cet article existe déjà'
-    suppression: 'l''article %name% a été supprimé'
-    moredetails: 'plus de détails sur %name%'
 panier:
     name_s: paniers
     name: panier
@@ -264,19 +237,6 @@ user:
     existe: 'ce utilisateur existe déjà'
     suppression: 'le utilisateur %name% a été supprimé'
     moredetails: 'plus de détails sur %name%'
-all:
-    name_s: tous
-    name: tous
-    not_found: 'aucun élément trouvé'
-    x_found: '{0} aucun élément trouvé|{1} 1 élément trouvé|[2,+Inf] %count% éléments trouvés'
-    create: 'créer un nouvel élément'
-    create_btn: 'nouveau éléments'
-    backlist: 'retour à la liste des éléments'
-    backlist_btn: 'retour liste'
-    dontexist: 'ce élément n''existe pas'
-    suppression: 'l''élément %name% a été supprimé'
-    moredetails: 'plus de détails sur %name%'
-    existe: cet élément existe déjà
 actions:
     name: actions
     voir: voir

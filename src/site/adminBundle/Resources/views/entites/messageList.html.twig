@@ -13,7 +13,7 @@
 	<div class="fh-column">
 		<div class="full-height-scroll">
 			<ul class="list-group elements-list">
-				{% for entite in entites if(entite.statut.nom == 'Actif' or DEVMODE) %}
+				{% for entite in entites if(is_granted(entite.statut.niveau|default('ROLE_USER')) or DEVMODE) %}
 				<li class="list-group-item{% if loop.first %} active{% endif %}">
 					<a data-toggle="tab" href="#tab-{{ loop.index }}">
 						<small class="pull-right text-muted"> {{ entite.creation|localizeddate('medium', 'none') }}</small>
@@ -39,7 +39,7 @@
 		<div class="full-height-scroll white-bg border-left">
 			<div class="element-detail-box">
 				<div class="tab-content">
-					{% for entite in entites if(entite.statut.nom == 'Actif' or DEVMODE) %}
+					{% for entite in entites if(is_granted(entite.statut.niveau|default('ROLE_USER')) or DEVMODE) %}
 					<div id="tab-{{ loop.index }}" class="tab-pane{% if loop.first %} active{% endif %}">
 						<div class="pull-right">
 							<div class="tooltip-demo">

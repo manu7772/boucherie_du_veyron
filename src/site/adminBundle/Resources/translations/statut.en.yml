@@ -1,0 +1,22 @@
+name_s: articles
+name: article
+not_found: 'no article found'
+x_found: '{0} no article found|{1} 1 article found|[2,+Inf] %count% articles found'
+create: 'create new article'
+create_btn: 'new article'
+created: '{0} no article created|{1} %count% article have been created : %list%|[2,+Inf] %count% articles have been created : %list%'
+new: '{0,1}new article|[2,+Inf] %count% new articles'
+backlist: 'back to list of articles'
+backlist_btn: 'back to list'
+dontexist: 'this article does not exist'
+existe: 'this article already exists'
+suppression: 'article %name% have been deleted'
+moredetails: 'more details on %name%'
+grants:
+    no_access: You are not granted to access to the article<br>"%name%"
+fields:
+    nom: name
+    descriptif: description
+    couleur: color
+    niveau: level
+    bundles: bundles

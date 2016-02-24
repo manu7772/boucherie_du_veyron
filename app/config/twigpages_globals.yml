@@ -33,7 +33,8 @@ twig:
                 level2: 
                     article:
                         role: 'ROLE_ADMIN'
-                        nom: 'article.name_s'
+                        nom: 'name_s'
+                        trans_domain: article
                         path: 
                             path: 'siteadmin_entite'
                             params:
@@ -47,7 +48,8 @@ twig:
                                 entite: marque
                     boutiques:
                         role: 'ROLE_ADMIN'
-                        nom: 'boutique.name_s'
+                        nom: 'name_s'
+                        trans_domain: boutique
                         path: 
                             path: 'siteadmin_entite'
                             params:
@@ -81,7 +83,7 @@ twig:
                                 entite: pageweb
                     item1:
                         role: %restrict_admin%
-                        nom: 'menu.name_s'
+                        nom: 'name_s'
                         trans_domain: menus
                         path: 
                             path: 'siteadmin_menus'
@@ -183,6 +185,14 @@ twig:
                             path: 'siteadmin_entite'
                             params:
                                 entite: fileFormat
+                    statut:
+                        role: 'ROLE_SUPER_ADMIN'
+                        nom: 'name_s'
+                        trans_domain: statut
+                        path: 
+                            path: 'siteadmin_entite'
+                            params:
+                                entite: statut
             help:
                 nom: 'help'
                 path: siteadmin_support

@@ -8,6 +8,8 @@ use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\ClassMetadata;
 
+use site\UserBundle\Entity\User;
+
 /**
  * statutRepository
  *
@@ -16,14 +18,16 @@ use Doctrine\ORM\Mapping\ClassMetadata;
  */
 class statutRepository extends EntityBaseRepository {
 
-	/** Renvoie la(les) valeur(s) par défaut --> ATTENTION : dans un array()
-	* @param $defaults = liste des éléments par défaut
-	*/
-	// public function defaultVal($defaults = null) {
+	/**
+	 * Renvoie la(les) valeur(s) par défaut --> ATTENTION : dans un array()
+	 * @param $defaults = liste des éléments par défaut
+	 * @return QueryBuilder
+	 */
+	// public function defaultValAsClosure($defaults = null) {
 	// 	if($defaults === null) $defaults = array("actif");
 	// 	$qb = $this->createQueryBuilder(self::ELEMENT);
 	// 	$qb->where($qb->expr()->in(self::ELEMENT.'.slug', $defaults));
-	// 	return $qb->getQuery()->getOneOrNullResult();
+	// 	return $qb;
 	// }
 
 	public function findActif() {
@@ -54,27 +58,16 @@ class statutRepository extends EntityBaseRepository {
 		return $qb->getQuery()->getOneOrNullResult();
 	}
 
-	public function defaultValClosure($role = "ROLE_USER") {
-		$list = null;
-		switch($role) {
-			case "ROLE_EDITOR":
-				$list = array("actif", "inactif", "expired");
-				break;
-			case "ROLE_USER":
-				$list = array("actif", "inactif", "expired");
-				break;
-			case "ROLE_ADMIN":
-				$list = array("actif", "inactif", "expired");
-				break;
-			case "ROLE_SUPER_ADMIN":
-				// all
-				break;
-			default:
-				$list = array("actif", "inactif", "expired");
-				break;
-		}
-		$qb = $this->createQueryBuilder(self::ELEMENT);
-		if(is_array($list)) $qb->where($qb->expr()->in(self::ELEMENT.'.slug', $list));
+
+	/********************************/
+	/*** CLOSURES                 ***/
+	/********************************/
+
+	public function defaultValsListClosure(User $user = null) {
+		$qb = $this->findAllClosure();
+		$list = array('ROLE_USER');
+		if(is_object($user)) $list = $user->getGrants();
+		$qb->where($qb->expr()->in(self::ELEMENT.'.niveau', $list));
 		return $qb;
 	}
 

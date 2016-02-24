@@ -17,14 +17,15 @@ use Doctrine\ORM\Mapping\ClassMetadata;
 class tauxTvaRepository extends EntityBaseRepository {
 
 	/**
-	* defaultVal
-	* Renvoie le taux de TVA par défaut (ou null)
-	*/
-	// public function defaultVal() {
+	 * defaultValAsClosure
+	 * Renvoie le taux de TVA par défaut (ou null)
+	 * @return QueryBuilder
+	 */
+	// public function defaultValAsClosure() {
 	// 	$qb = $this->createQueryBuilder(self::ELEMENT)
 	// 		->where(self::ELEMENT.'.nom = :n')
 	// 		->setParameter('n', "normal");
-	// 	return $qb->getQuery()->getOneOrNullResult();
+	// 	return $qb;
 	// }
 
 }

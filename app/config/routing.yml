@@ -32,6 +32,7 @@ site_user:
 site_admin:
     resource: "@siteadminBundle/Resources/config/routing.yml"
     prefix:   /{_locale}/admin
+    host: admin.boucherie-du-veyron.fr
     requirements:
         _locale: %default_locales%
 

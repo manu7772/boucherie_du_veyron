@@ -13,8 +13,9 @@ use Symfony\Component\Security\Core\SecurityContext;
 // Paramétrage de formulaire
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormEvent;
+use site\adminBundle\Entity\statut;
 
-class boutiqueType extends baseType {
+class statutType extends baseType {
 
 	/**
 	 * @param FormBuilderInterface $builder
@@ -23,33 +24,38 @@ class boutiqueType extends baseType {
 	public function buildForm(FormBuilderInterface $builder, array $options) {
 		// ajout de action si défini
 		$this->initBuilder($builder);
+		$statut = new statut();
 		// Builder…
 		$builder
 			->add('nom', 'text', array(
-				'label' => 'form.nom',
-				'translation_domain' => 'messages',
+				'label' => 'fields.nom',
+				'translation_domain' => 'statut',
 				'required' => true,
 				))
-			->add('adresse', new adresseType($this->controller), array(
-				'label' => 'table.col.adresse',
-				'translation_domain' => 'messages',
-				'required' => false,
-				))
-			->add('image', new imageType($this->controller), array(
-				'label' => 'table.col.vitrine',
-				'translation_domain' => 'messages',
-				'required' => false,
-				))
-			->add('logo', new imageType($this->controller), array(
-				'label' => 'table.col.logo',
-				'translation_domain' => 'messages',
-				'required' => false,
-				))
 			->add('descriptif', 'insRichtext', array(
-				'label' => 'form.descriptif',
-				'translation_domain' => 'messages',
+				'label' => 'fields.descriptif',
+				'translation_domain' => 'statut',
 				'required' => false,
 				))
+            ->add('couleur', 'insColorpicker', array(
+            	'label' => 'fields.couleur',
+            	'translation_domain' => 'statut',
+                'required'  => true,
+            	))
+            ->add('niveau', 'choice', array(
+            	'label' => 'fields.niveau',
+            	'translation_domain' => 'statut',
+            	'required'	=> true,
+            	'multiple'	=> false,
+            	"choices"   => $statut->getRoleChoices(),
+            	))
+            ->add('bundles', 'choice', array(
+            	'label' => 'fields.bundles',
+            	'translation_domain' => 'statut',
+            	'required'	=> true,
+            	'multiple'	=> true,
+            	"choices"   => $statut->getBundleChoices(),
+            	))
 		;
 		// ajoute les valeurs hidden, passés en paramètre
 		$this->addHiddenValues($builder, true);
@@ -60,7 +66,7 @@ class boutiqueType extends baseType {
 	 */
 	public function setDefaultOptions(OptionsResolverInterface $resolver) {
 		$resolver->setDefaults(array(
-			'data_class' => 'site\adminBundle\Entity\boutique'
+			'data_class' => 'site\adminBundle\Entity\statut'
 		));
 	}
 
@@ -68,6 +74,6 @@ class boutiqueType extends baseType {
 	 * @return string
 	 */
 	public function getName() {
-		return 'site_adminbundle_boutique';
+		return 'site_adminbundle_statut';
 	}
 }
