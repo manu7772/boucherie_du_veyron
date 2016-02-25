@@ -1,0 +1,14 @@
+name_s: baskets
+name: basket
+not_found: 'no basket found'
+x_found: '{0} no basket found|{1} 1 basket found|[2,+Inf] %count% baskets found'
+create: 'create new basket'
+create_btn: 'new basket'
+created: '{0} no basket created|{1} %count% basket have been created : %list%|[2,+Inf] %count% baskets have been created : %list%'
+new: '{0,1}new basket|[2,+Inf] %count% new baskets'
+backlist: 'back to list of baskets'
+backlist_btn: 'back to list'
+dontexist: 'this basket does not exist'
+existe: 'this basket already exists'
+suppression: 'basket %name% have been deleted'
+moredetails: 'more details on %name%'

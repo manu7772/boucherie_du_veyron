@@ -14,3 +14,6 @@ suppression: 'l''article %name% a été supprimé'
 moredetails: 'plus de détails sur %name%'
 grants:
     no_access: Vous n'avez pas les droits pour accéder à l'article<br>"%name%"
+fields:
+    id: id
+    nom: nom

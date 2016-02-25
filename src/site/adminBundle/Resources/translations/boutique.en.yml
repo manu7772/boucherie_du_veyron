@@ -11,3 +11,6 @@ moredetails: 'more details on %name%'
 existe: this store already exists
 grants:
     no_access: You are not granted to access to the store<br>"%name%"
+fields:
+    id: id
+    nom: name

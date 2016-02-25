@@ -1,0 +1,25 @@
+name_s: web pages
+name: web page
+not_found: 'no web page found'
+x_found: '{0} no web page found|{1} 1 web page found|[2,+Inf] %count% web pages found'
+create: 'create new web page'
+create_btn: 'new web page'
+backlist: 'back to list of web pages'
+backlist_btn: 'back to list'
+dontexist: 'this web page does not exist'
+moredetails: 'more details on %name%'
+bydefault: 'set as default homepage'
+existe: this web page already exists
+grants:
+    no_access: You are not granted to access to the web page<br>"%name%"
+fields:
+    id: id
+    nom: name
+    code: text
+    title: title
+    titreh1: title of page
+    metadescription: description
+    keywords: keywords
+    modele: model
+    image: background
+    tags: tags

@@ -29,50 +29,50 @@ class pagewebType extends baseType {
 		// Builder…
 		$builder
 			->add('nom', 'text', array(
-				'label' => 'form.nom',
-				'translation_domain' => 'messages',
+				'label' => 'fields.nom',
+				'translation_domain' => 'pageweb',
 				'required' => true,
 				))
 			->add('code', 'insRichtext', array(
-				'label' => 'form.code',
-				'translation_domain' => 'messages',
+				'label' => 'fields.code',
+				'translation_domain' => 'pageweb',
 				'required' => false,
 				))
 			->add('title', 'text', array(
-				'label' => 'table.col.title',
-				'translation_domain' => 'messages',
+				'label' => 'fields.title',
+				'translation_domain' => 'pageweb',
 				'required' => true,
 				))
 			->add('titreh1', 'text', array(
-				'label' => 'table.col.titreh1',
-				'translation_domain' => 'messages',
+				'label' => 'fields.titreh1',
+				'translation_domain' => 'pageweb',
 				'required' => true,
 				))
 			// ->add('keywords', 'text', array(
-			// 	'label' => 'table.col.keywords',
-			//	'translation_domain' => 'messages',
+			// 	'label' => 'fields.keywords',
+			//	'translation_domain' => 'pageweb',
 			// 	'required' => false,
 			// 	))
 			->add('metadescription', 'text', array(
-				'label' => 'table.col.metadescription',
-				'translation_domain' => 'messages',
+				'label' => 'fields.metadescription',
+				'translation_domain' => 'pageweb',
 				'required' => false,
 				))
 			->add('modele', 'choice', array(
-				'label' => 'table.col.modele',
-				'translation_domain' => 'messages',
+				'label' => 'fields.modele',
+				'translation_domain' => 'pageweb',
 				'required' => true,
 				'choice_list' => $this->pageweb->getPagewebChoices(),
 				))
 			// 1 image :
 			->add('image', new imageType($this->controller), array(
-				'label' => 'form.background',
-				'translation_domain' => 'messages',
+				'label' => 'fields.image',
+				'translation_domain' => 'pageweb',
 				'required' => false,
 				))
 			->add('tags', 'entity', array(
-				'label' => 'tag.name_s',
-				'translation_domain' => 'messages',
+				'label' => 'fields.tags',
+				'translation_domain' => 'pageweb',
 				'property' => 'nom',
 				'class' => 'site\adminBundle\Entity\tag',
 				'multiple' => true,

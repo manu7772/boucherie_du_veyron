@@ -12,3 +12,6 @@ moredetails: 'plus de détails sur %name%'
 existe: cet élément existe déjà
 grants:
     no_access: Vous n'avez pas les droits pour accéder à<br>"%name%"
+fields:
+    id: id
+    nom: nom

@@ -70,13 +70,15 @@ twig:
                                 entite: tauxTva
             pageweb:
                 role: 'ROLE_EDITOR'
-                nom: 'pageweb.name_s'
+                nom: 'name_s'
+                trans_domain: pageweb
                 path: 'siteadmin_homepage'
                 icon: 'fa-desktop'
                 level2: 
                     item0:
                         role: 'ROLE_EDITOR'
-                        nom: 'pageweb.name_s'
+                        nom: 'name_s'
+                        trans_domain: pageweb
                         path: 
                             path: 'siteadmin_entite'
                             params:

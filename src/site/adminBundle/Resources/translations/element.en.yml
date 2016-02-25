@@ -12,3 +12,6 @@ suppression: 'element %name% has been deleted'
 existe: this element already exists
 grants:
     no_access: You are not granted to access to<br>"%name%"
+fields:
+    id: id
+    nom: name

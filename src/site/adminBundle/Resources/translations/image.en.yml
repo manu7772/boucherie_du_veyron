@@ -1,0 +1,11 @@
+name_s: images
+name: image
+not_found: 'no image found'
+x_found: '{0} no image found|{1} 1 image found|[2,+Inf] %count% images found'
+create: 'create new image'
+create_btn: 'new image'
+backlist: 'back to list of images'
+backlist_btn: 'back to list'
+dontexist: 'this image does not exist'
+moredetails: 'more details on %name%'
+existe: this image already exists

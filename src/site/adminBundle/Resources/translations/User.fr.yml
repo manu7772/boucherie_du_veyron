@@ -1,0 +1,14 @@
+name_s: utilisateurs
+name: utilisateur
+not_found: 'aucun utilisateur trouvé'
+x_found: '{0} aucun utilisateur trouvé|{1} 1 utilisateur trouvé|[2,+Inf] %count% utilisateurs trouvés'
+create: 'créer un nouveau utilisateur'
+create_btn: 'nouveau utilisateur'
+created: '{0} Aucun utilisateur créé|{1} %count% utilisateur a été créé : %list%|[2,+Inf] %count% utilisateur ont été créés : %list%'
+new: '{0,1} nouveau utilisateur|[2,+Inf] %count% nouveaux utilisateurs'
+backlist: 'retour à la liste des utilisateurs'
+backlist_btn: 'retour liste'
+dontexist: 'ce utilisateur n''existe pas'
+existe: 'ce utilisateur existe déjà'
+suppression: 'le utilisateur %name% a été supprimé'
+moredetails: 'plus de détails sur %name%'

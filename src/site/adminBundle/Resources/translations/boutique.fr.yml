@@ -11,3 +11,6 @@ moredetails: 'plus de détails sur %name%'
 existe: cette boutique existe déjà
 grants:
     no_access: Vous n'avez pas les droits pour accéder à la boutique<br>"%name%"
+fields:
+    id: id
+    nom: nom

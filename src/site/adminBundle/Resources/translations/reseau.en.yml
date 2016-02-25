@@ -1,0 +1,14 @@
+name_s: outlets
+name: outlet
+not_found: 'no outlet found'
+x_found: '{0} no outlet found|{1} 1 outlet found|[2,+Inf] %count% outlets found'
+create: 'create new outlet'
+create_btn: 'new outlet'
+created: '{0} no outlet created|{1} %count% outlet have been created : %list%|[2,+Inf] %count% outlets have been created : %list%'
+new: '{0,1}new outlet|[2,+Inf] %count% new outlets'
+backlist: 'back to list of outlets'
+backlist_btn: 'back to list'
+dontexist: 'this outlet does not exist'
+existe: 'this outlet already exists'
+suppression: 'outlet %name% have been deleted'
+moredetails: 'more details on %name%'

@@ -13,8 +13,9 @@ existe: 'cet statut existe déjà'
 suppression: 'le statut %name% a été supprimé'
 moredetails: 'plus de détails sur %name%'
 grants:
-    no_access: Vous n'avez pas les droits pour accéder ce statut<br>"%name%"
+    no_access: Vous n'avez pas les droits pour accéder au statut<br>"%name%"
 fields:
+    id: id
     nom: nom
     descriptif: descriptif
     couleur: couleur

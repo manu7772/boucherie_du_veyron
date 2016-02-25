@@ -14,3 +14,6 @@ suppression: 'article %name% have been deleted'
 moredetails: 'more details on %name%'
 grants:
     no_access: You are not granted to access to the article<br>"%name%"
+fields:
+    id: id
+    nom: name

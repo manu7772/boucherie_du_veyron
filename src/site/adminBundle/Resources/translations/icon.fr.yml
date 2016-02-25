@@ -13,3 +13,8 @@ icon:
     existe: 'cet icône existe déjà'
     suppression: 'l''icône %name% a été supprimé'
     moredetails: 'plus de détails sur %name%'
+grants:
+    no_access: Vous n'avez pas les droits pour accéder à l'icône<br>"%name%"
+fields:
+    id: id
+    nom: nom

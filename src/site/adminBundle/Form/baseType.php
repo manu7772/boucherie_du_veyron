@@ -91,20 +91,20 @@ abstract class baseType extends AbstractType {
                         if(is_array($default)) $default = reset($default);
                         if(is_object($default)) $entity->$set($default);
                     }
-                    $builder
-                        // ->add('statut', 'hidden', array(
-                        ->add($shortname, 'entity', array(
-                            'class'     => $classname,
-                            'property'  => 'nom',
-                            'multiple'  => false,
-                            "label"     => $shortname.'.name',
-                            "translation_domain" => $shortname,
-                            "query_builder" => function($repo) {
-                                if(method_exists($repo, 'defaultValsListClosure'))
-                                    return $repo->defaultValsListClosure($this->user);
-                                    else return $repo->findAllClosure();
-                                },
-                            ));
+                    // $builder
+                    //     // ->add('statut', 'hidden', array(
+                    //     ->add($shortname, 'entity', array(
+                    //         'class'     => $classname,
+                    //         'property'  => 'nom',
+                    //         'multiple'  => false,
+                    //         "label"     => $shortname.'.name',
+                    //         "translation_domain" => $shortname,
+                    //         "query_builder" => function($repo) {
+                    //             if(method_exists($repo, 'defaultValsListClosure'))
+                    //                 return $repo->defaultValsListClosure($this->user);
+                    //                 else return $repo->findAllClosure();
+                    //             },
+                    //         ));
                 }
             }
         }
