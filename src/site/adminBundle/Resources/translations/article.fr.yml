@@ -17,3 +17,20 @@ grants:
 fields:
     id: id
     nom: nom
+    accroche: accroche
+    keywords: mots clés
+    descriptif: description
+    categories: catégories
+    artlink: articles liés
+    image: image
+    prix: prix
+    TTC: TTC
+    prixTTC: prix TTC
+    HT: HT
+    prixHT: prix HT
+    TVA: TVA
+    montantTVA: montant TVA
+    refFabricant: référence fabricant
+    created: création
+    updated: mis à jour
+    autres: autres informations

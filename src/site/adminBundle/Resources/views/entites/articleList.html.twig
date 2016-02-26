@@ -15,19 +15,20 @@
 				<table class="table table-striped table-bordered table-hover dataTables dataTable dtr-inline" id="DataTables_Table_0" role="grid" aria-describedby="DataTables_Table_0_info">
 					<thead>
 						<tr>
-							{% if DEVMODE %}<th class="text-center" style="width:1%;">{{ UCfirst('table.col.id'|trans) }}</th>{% endif %}
-							<th class="text-center" style="width:1%;">{{ UCfirst('table.col.visuel'|trans) }}</th>
-							<th>{{ UCfirst('table.col.nom'|trans) }}</th>
-							<th>Actions</th>
-							<th>{{ UCfirst('form.accroche'|trans) }}</th>
-							<th>{{ UCfirst('table.col.prix'|trans) }}</th>
+							{% if DEVMODE %}<th class="text-center" style="width:1%;">{{ UCfirst('fields.id'|trans({}, entite_name)) }}</th>{% endif %}
+							<th class="text-center" style="width:1%;">{{ UCfirst('fields.image'|trans({}, entite_name)) }}</th>
+							<th>{{ UCfirst('fields.nom'|trans({}, entite_name)) }}</th>
+							<th>{{ UCfirst('actions.name'|trans) }}</th>
+							<th>{{ UCfirst('fields.accroche'|trans({}, entite_name)) }}</th>
+							<th>{{ UCfirst('fields.prix'|trans({}, entite_name)) }}</th>
 						</tr>
 					</thead>
 					<tbody>
 						{% for entite in entites if(is_granted(entite.statut.niveau|default('ROLE_USER')) or DEVMODE) %}
-						<tr style="background-color:{{ entite.statut.couleur|default('transparent') }}">
-							{% if DEVMODE %}<td class="text-center">{{ entite.id }}</td>{% endif %}
-							<td class="text-center">
+						<tr>
+							{% set bgcolor = ' style="background-color:' ~ entite.statut.couleur|default('transparent') ~ ';"' %}
+							{% if DEVMODE %}<td class="text-center"{{ bgcolor|raw }}>{{ entite.id }}</td>{% endif %}
+							<td class="text-center"{{ bgcolor|raw }}>
 								{% if entite.mainMedia|default(null) != null %}
 								<a href="{{ path('siteadmin_entite', {entite: entite.mainMedia.className, id: entite.mainMedia.id, action: 'show'}) }}" class="docs-tooltip" data-toggle="tooltip" title="{{ UCfirst('moredetails'|trans({'%name%': entite.mainMedia.nom}, entite.className)) }}">
 									<img src="{{ entite.mainMedia.imgThumbnail(64, 64, 'cut')|raw }}" class="img-responsive img-thumbnail">
@@ -36,43 +37,33 @@
 								<i class="fa fa-ban fa-3x text-muted fa-border"></i>
 								{% endif %}
 							</td>
-							<td>
+							<td{{ bgcolor|raw }}>
 								{% if type.type_values|default(null) != null %}
-								<a href="{{ path('siteadmin_entite_type', {entite: entite_name, type_related: type.type_related, type_field: type.type_field, type_values: type.type_values|join(type_value_joiner)|url_encode, id: entite.id, action: 'show'}) }}" title="{{ UCfirst('moredetails'|trans({'%name%': entite.nom}, entite.className)) }}"><strong>{{ entite.nom }}</strong></a>
+								<a href="{{ path('siteadmin_entite_type', {entite: entite.className, type_related: type.type_related, type_field: type.type_field, type_values: type.type_values|join(type_value_joiner)|url_encode, id: entite.id, action: 'show'}) }}" title="{{ UCfirst('moredetails'|trans({'%name%': entite.nom}, entite.className)) }}"><strong>{{ entite.nom }}</strong></a>
 								{% else %}
-								<a href="{{ path('siteadmin_entite', {entite: entite_name, id: entite.id, action: 'show'}) }}" title="{{ UCfirst('moredetails'|trans({'%name%': entite.nom})) }}"><strong>{{ entite.nom }}</strong></a>
+								<a href="{{ path('siteadmin_entite', {entite: entite.className, id: entite.id, action: 'show'}) }}" title="{{ UCfirst('moredetails'|trans({'%name%': entite.nom})) }}"><strong>{{ entite.nom }}</strong></a>
 								{% endif %}
 								{% if entite.statut is defined %}
 								{% if entite.statut.id > 1 %}<br><small><i>({{ entite.statut.nom }})</i></small>{% endif %}
 								{% endif %}
 							</td>
-							<td>
-								<div class="btn-group">
-									{% if type.type_values|default(null) != null %}
-									<a href="{{ path('siteadmin_entite_type', {entite: entite_name, type_related: type.type_related, type_field: type.type_field, type_values: type.type_values|join(type_value_joiner)|url_encode, id: entite.id, action: 'show'}) }}" type="button" class="btn btn-white btn-xs" title="{{ UCfirst('moredetails'|trans({'%name%': entite.nom}, entite.className)) }}"><i class="fa fa-eye"></i></a>
-									<a href="{{ path('siteadmin_entite_type', {entite: entite_name, type_related: type.type_related, type_field: type.type_field, type_values: type.type_values|join(type_value_joiner)|url_encode, id: entite.id, action: 'edit'}) }}" type="button" class="btn btn-white btn-xs" title="{{ UCfirst('actions.modifier'|trans) }}"><i class="fa fa-pencil"></i></a>
-									<a href="{{ path('siteadmin_entite_type', {entite: entite_name, type_related: type.type_related, type_field: type.type_field, type_values: type.type_values|join(type_value_joiner)|url_encode, id: entite.id, action: 'delete'}) }}" type="button" class="btn btn-white btn-xs" title="{{ UCfirst('actions.supprimer'|trans) }}"><i class="fa fa-times"></i></a>
-									{% else %}
-									<a href="{{ path('siteadmin_entite', {entite: entite_name, id: entite.id, action: 'show'}) }}" type="button" class="btn btn-white btn-xs" title="{{ UCfirst('moredetails'|trans({'%name%': entite.nom}, entite.className)) }}"><i class="fa fa-eye"></i></a>
-									<a href="{{ path('siteadmin_entite', {entite: entite_name, id: entite.id, action: 'edit'}) }}" type="button" class="btn btn-white btn-xs" title="{{ UCfirst('actions.modifier'|trans) }}"><i class="fa fa-pencil"></i></a>
-									<a href="{{ path('siteadmin_entite', {entite: entite_name, id: entite.id, action: 'delete'}) }}" type="button" class="btn btn-white btn-xs" title="{{ UCfirst('actions.supprimer'|trans) }}"><i class="fa fa-times"></i></a>
-									{% endif %}
-								</div>
+							<td{{ bgcolor|raw }}>
+								{{ actions.entiteButtons(entite, ['show','edit','delete','active'], type) }}
 								{# - OFF ----------------------
 								{% if DEVMODE %}
 								<hr class="m-b-xs m-t-xs">
 								<div class="btn-group">
 									{% if type.type_values|default(null) != null %}
-									<a href="{{ path('siteadmin_entite_type', {entite: entite_name, type_related: type.type_related, type_field: type.type_field, type_values: type.type_values|join(type_value_joiner)|url_encode, id: entite.id, action: 'check'}) }}" type="button" class="btn btn-danger btn-xs" title="Checker article {{ entite.nom }}"><i class="fa fa-check"></i></a>
+									<a href="{{ path('siteadmin_entite_type', {entite: entite.className, type_related: type.type_related, type_field: type.type_field, type_values: type.type_values|join(type_value_joiner)|url_encode, id: entite.id, action: 'check'}) }}" type="button" class="btn btn-danger btn-xs" title="Checker article {{ entite.nom }}"><i class="fa fa-check"></i></a>
 									{% else %}
-									<a href="{{ path('siteadmin_entite', {entite: entite_name, id: entite.id, action: 'check'}) }}" type="button" class="btn btn-danger btn-xs" title="Checker article {{ entite.nom }}"><i class="fa fa-check"></i></a>
+									<a href="{{ path('siteadmin_entite', {entite: entite.className, id: entite.id, action: 'check'}) }}" type="button" class="btn btn-danger btn-xs" title="Checker article {{ entite.nom }}"><i class="fa fa-check"></i></a>
 									{% endif %}
 								</div>
 								{% endif %}
 								- OFF ---------------------- #}
 							</td>
-							<td>{{ entite.accroche }}</td>
-							<td><strong>{{ UCfirst('table.col.TTC'|trans) }} {{ entite.prix }}{{ marketplace.devise.symb|raw }}</strong><br>{{ UCfirst('table.col.HT'|trans) }} {{ entite.prixHT }}{{ marketplace.devise.symb|raw }}<br>{{ UCfirst('table.col.TVA'|trans) }} {{ entite.tauxTva.taux|number_format(2, ',', ' ') }}%</td>
+							<td{{ bgcolor|raw }}>{{ entite.accroche }}</td>
+							<td{{ bgcolor|raw }}><strong>{{ UCfirst('fields.TTC'|trans({}, entite.className)) }} {{ entite.prix }}{{ marketplace.devise.symb|raw }}</strong><br>{{ UCfirst('fields.HT'|trans({}, entite.className)) }} {{ entite.prixHT }}{{ marketplace.devise.symb|raw }}<br>{{ UCfirst('fields.TVA'|trans({}, entite.className)) }} {{ entite.tauxTva.taux|number_format(2, ',', ' ') }}%</td>
 						</tr>
 						{% endfor %}
 					</tbody>

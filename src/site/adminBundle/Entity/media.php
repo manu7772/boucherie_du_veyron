@@ -158,8 +158,9 @@ abstract class media extends baseSubEntity {
 	/**
 	 * @Assert\True(message="Le type de fichier n'est pas conforme.")
 	 */
-	public function isAuthorizedFileFormat() {
-		return $this->format->getEnabled();
+	public function isValid() {
+		// return $this->format->getEnabled();
+		return true;
 	}
 
 	public function getShemaBase($format = null) {

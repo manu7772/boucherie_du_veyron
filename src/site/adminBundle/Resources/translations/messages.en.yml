@@ -71,6 +71,7 @@ actions:
     desactiver: disable
     forbidden: actions are forbidden
     repondre: answer
+    analyse: analyse
 table:
     col:
         id: id
@@ -86,7 +87,6 @@ table:
         descriptif: summary
         metadescription: description
         attribut: attribute
-        valeur: value
         creation: created
         maj: updated
         jamais: not modified
@@ -113,11 +113,6 @@ table:
         logo: logotype
         vitrine: store photo
         adresse: adress
-        prix: price
-        TTC: TTC
-        HT: HT
-        TVA: VAT
-        montantTVA: part TVA
 msg:
     supp: 'do you want to delete this element?'
     suppression: deleting

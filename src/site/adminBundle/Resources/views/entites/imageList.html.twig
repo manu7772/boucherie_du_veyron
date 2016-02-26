@@ -7,20 +7,20 @@
 	<div class="col-lg-12 m-t-xs">
 		<div class="row">
 			<div class="col-md-9">
-				<h2>{{ (entite_name ~ '.name_s')|trans|capitalize }}{% if type.type_values|default(null) != null %} - {{ type.type_values|join('/') }}{% endif %}</h2>
+				<h2>{{ UCfirst('name_s'|trans({}, entite_name)) }}{% if type.type_values|default(null) != null %} - {{ type.type_values|join('/') }}{% endif %}</h2>
 				<ol class="breadcrumb">
-					<li><a href="{{ path('siteadmin_homepage') }}"><strong>{{ 'administration'|trans|capitalize }}</strong></a></li>
+					<li><a href="{{ path('siteadmin_homepage') }}"><strong>{{ UCfirst('administration'|trans) }}</strong></a></li>
 					{% if type.type_values|default(null) != null %}
-					<li><a href="{{ path('siteadmin_entite', {entite: entite_name}) }}"><strong>{{ (entite_name ~ '.name_s')|trans|capitalize }}</strong></a></li>
+					<li><a href="{{ path('siteadmin_entite', {entite: entite_name}) }}"><strong>{{ UCfirst('name_s'|trans({}, entite_name)) }}</strong></a></li>
 					<li>{{ type.type_values|join('/') }}</li>
 					{% else %}
-					<li>{{ (entite_name ~ '.name_s')|trans|capitalize }}</li>
+					<li>{{ UCfirst('name_s'|trans({}, entite_name)) }}</li>
 					{% endif %}
 				</ol>
 			</div>
 			<div class="col-md-3 m-t-lg">
 				{% block buttons %}
-				<!-- <a href="{{ path('siteadmin_entite', {entite: entite_name, action: 'create'}) }}" type="button" class="btn btn-xs btn-warning pull-right"><i class="fa fa-plus icon-wait-on-click"></i> {{ (entite_name ~ '.create_btn')|trans|capitalize }}</a> -->
+				<!-- <a href="{{ path('siteadmin_entite', {entite: entite_name, action: 'create'}) }}" type="button" class="btn btn-xs btn-warning pull-right"><i class="fa fa-plus icon-wait-on-click"></i> {{ 'create_btn'|trans }}</a> -->
 				{% endblock buttons %}
 			</div>
 		</div>
@@ -37,33 +37,24 @@
 				<table class="table table-striped table-bordered table-hover dataTables dataTable dtr-inline" id="DataTables_Table_0" role="grid" aria-describedby="DataTables_Table_0_info">
 					<thead>
 						<tr>
-							{% if DEVMODE %}<th style="width:1%;" class="text-center">{{ 'table.col.id'|trans|capitalize }}</th>{% endif %}
-							<th>{{ 'table.col.visuel'|trans|capitalize }}</th>
-							<th style="width:1%;">Actions</th>
-							<th>{{ 'table.col.nom'|trans|capitalize }}</th>
-							{# <th>{{ 'table.col.originalnom'|trans|capitalize }}</th> #}
-							{% if DEVMODE %}<th>{{ 'table.col.admin'|trans|capitalize }}</th>{% endif %}
+							{% if DEVMODE %}<th style="width:1%;" class="text-center">{{ UCfirst('fields.id'|trans({}, entite_name)) }}</th>{% endif %}
+							<th>{{ 'table.col.visuel'|trans }}</th>
+							<th style="width:1%;">{{ UCfirst('actions.name'|trans) }}</th>
+							<th>{{ UCfirst('fields.nom'|trans({}, entite_name)) }}</th>
+							{# <th>{{ 'table.col.originalnom'|trans }}</th> #}
+							{% if DEVMODE %}<th>{{ 'table.col.admin'|trans }}</th>{% endif %}
 						</tr>
 					</thead>
 					<tbody>
 						{% for entite in entites if(is_granted(entite.statut.niveau|default('ROLE_USER')) or DEVMODE) %}
-						<tr style="background-color:{{ entite.statut.couleur|default('transparent') }}">
-							{% if DEVMODE %}<td class="text-center">{{ entite.id }}</td>{% endif %}
-							<td>
+						{% set bgcolor = ' style="background-color:' ~ entite.statut.couleur|default('transparent') ~ ';"' %}
+						<tr>
+							{% if DEVMODE %}<td class="text-center"{{ bgcolor|raw }}>{{ entite.id }}</td>{% endif %}
+							<td{{ bgcolor|raw }}>
 								<img src="{{ entite.imgThumbnail(80, 80, 'cut')|raw }}" class="img-responsive img-thumbnail">
 							</td>
-							<td>
-								<div class="btn-group">
-									{% if type.type_values|default(null) != null %}
-									<a href="{{ path('siteadmin_entite_type', {entite: entite_name, type_related: type.type_related, type_field: type.type_field, type_values: type.type_values|join(type_value_joiner)|url_encode, id: entite.id, action: 'show'}) }}" type="button" class="btn btn-white btn-xs" title="{{ (entite_name ~ '.moredetails')|trans({'%name%': entite.nom})|capitalize }}"><i class="fa fa-eye icon-wait-on-click"></i></a>
-									<!-- <a href="{{ path('siteadmin_entite_type', {entite: entite_name, type_related: type.type_related, type_field: type.type_field, type_values: type.type_values|join(type_value_joiner)|url_encode, id: entite.id, action: 'edit'}) }}" type="button" class="btn btn-white btn-xs" title="{{ 'actions.modifier'|trans|capitalize }}"><i class="fa fa-pencil icon-wait-on-click"></i></a> -->
-									<a href="{{ path('siteadmin_entite_type', {entite: entite_name, type_related: type.type_related, type_field: type.type_field, type_values: type.type_values|join(type_value_joiner)|url_encode, id: entite.id, action: 'delete'}) }}" type="button" class="btn btn-white btn-xs need-confirmation" title="{{ 'actions.supprimer'|trans|capitalize }}" data-message="{{ 'actions.suppQuestion'|trans({'%name%': entite.nom})|capitalize }}"><i class="fa fa-times icon-wait-on-click"></i></a>
-									{% else %}
-									<a href="{{ path('siteadmin_entite', {entite: entite_name, id: entite.id, action: 'show'}) }}" type="button" class="btn btn-white btn-xs" title="{{ (entite_name ~ '.moredetails')|trans({'%name%': entite.nom})|capitalize }}"><i class="fa fa-eye icon-wait-on-click"></i></a>
-									<!-- <a href="{{ path('siteadmin_entite', {entite: entite_name, id: entite.id, action: 'edit'}) }}" type="button" class="btn btn-white btn-xs" title="{{ 'actions.modifier'|trans|capitalize }}"><i class="fa fa-pencil icon-wait-on-click"></i></a> -->
-									<a href="{{ path('siteadmin_entite', {entite: entite_name, id: entite.id, action: 'delete'}) }}" type="button" class="btn btn-white btn-xs need-confirmation" title="{{ 'actions.supprimer'|trans|capitalize }}" data-message="{{ 'actions.suppQuestion'|trans({'%name%': entite.nom})|capitalize }}"><i class="fa fa-times icon-wait-on-click"></i></a>
-									{% endif %}
-								</div>
+							<td{{ bgcolor|raw }}>
+								{{ actions.entiteButtons(entite, ['show','delete'], type) }}
 								{# - OFF ----------------------
 								{% if DEVMODE %}
 								<hr class="m-b-xs m-t-xs">
@@ -77,11 +68,11 @@
 								{% endif %}
 								- OFF ---------------------- #}
 							</td>
-							<td>
+							<td{{ bgcolor|raw }}>
 								{% if type.type_values|default(null) != null %}
-								<a href="{{ path('siteadmin_entite_type', {entite: entite_name, type_related: type.type_related, type_field: type.type_field, type_values: type.type_values|join(type_value_joiner)|url_encode, id: entite.id, action: 'show'}) }}" title="{{ (entite_name ~ '.moredetails')|trans({'%name%': entite.nom})|capitalize }}"><strong>{{ entite.nom }}</strong></a>
+								<a href="{{ path('siteadmin_entite_type', {entite: entite_name, type_related: type.type_related, type_field: type.type_field, type_values: type.type_values|join(type_value_joiner)|url_encode, id: entite.id, action: 'show'}) }}" title="{{ 'moredetails'|trans({'%name%': entite.nom}) }}"><strong>{{ entite.nom }}</strong></a>
 								{% else %}
-								<a href="{{ path('siteadmin_entite', {entite: entite_name, id: entite.id, action: 'show'}) }}" title="{{ (entite_name ~ '.moredetails')|trans({'%name%': entite.nom})|capitalize }}"><strong>{{ entite.nom }}</strong></a>
+								<a href="{{ path('siteadmin_entite', {entite: entite_name, id: entite.id, action: 'show'}) }}" title="{{ 'moredetails'|trans({'%name%': entite.nom}) }}"><strong>{{ entite.nom }}</strong></a>
 								{% endif %}
 								{% if entite.statut.id|default(0) > 1 %}<br><small><i>({{ entite.statut.nom }})</i></small>{% endif %}
 								<br>
@@ -89,16 +80,16 @@
 								<br>
 								<small><em><i class="text-muted">{{ entite.originalnom }}</i></em></small>
 							</td>
-							{# <td>{{ entite.originalnom }}</td> #}
+							{# <td{{ bgcolor|raw }}>{{ entite.originalnom }}</td> #}
 							{% if DEVMODE %}
-							<td>
+							<td{{ bgcolor|raw }}>
 								• {{ entite.format }}<br>
 								• {{ entite.stockage }}<br>
 								• {{ entite.created|date(formatDateHeure) }}<br>
 								{% if entite.updated|default(null) != null %}
 								• {{ entite.updated|date(formatDateHeure) }}
 								{% else %}
-								• <small><i class='text-muted'>({{ 'table.col.jamais'|trans|capitalize }})</i></small>
+								• <small><i class='text-muted'>({{ 'table.col.jamais'|trans }})</i></small>
 								{% endif %}
 							</td>
 							{% endif %}
@@ -107,7 +98,7 @@
 					</tbody>
 				</table>
 				{% else %}
-				<h3><i class="fa fa-ban"></i> {{ (entite_name ~ '.not_found')|trans|capitalize }}</h3>
+				<h3><i class="fa fa-ban"></i> {{ 'not_found'|trans }}</h3>
 				{% endif %}
 			</div>
 		</div>

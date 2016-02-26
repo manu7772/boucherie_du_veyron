@@ -15,3 +15,8 @@ reset: réinitialiser tout
 reset_question: voulez-vous vraiment réinitialiser les types de fichiers ?
 contentType:
     existe: ce type existe déjà
+fields:
+    id: id
+    nom: nom
+    created: création
+    updated: mis à jour

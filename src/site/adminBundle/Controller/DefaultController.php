@@ -5,6 +5,7 @@ namespace site\adminBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
 use AcmeGroup\LaboBundle\Entity\magasin;
 use AcmeGroup\LaboBundle\Form\magasinType;
@@ -17,12 +18,20 @@ use AcmeGroup\laboInspiniaBundle\services\flashMessage;
 
 use \Exception;
 
+/**
+ * DefaultController
+ * @Security("has_role('ROLE_TRANSLATOR')")
+ */
 class DefaultController extends Controller {
 
 	const TYPE_SELF 			= '_self';
 	const DEFAULT_ACTION 		= 'list';
 	const TYPE_VALUE_JOINER 	= '___';
 
+	/**
+	 * Page d'accueil adminstration
+	 * @return Response
+	 */
 	public function indexAction() {
 		$this->get('aetools.aetools')->updateBundlesInConfig();
 		$data = array();
@@ -30,6 +39,10 @@ class DefaultController extends Controller {
 		return $this->render('siteadminBundle:Default:index.html.twig', $data);
 	}
 
+	/**
+	 * Page de support (help)
+	 * @return Response
+	 */
 	public function supportAction() {
 		$data = array();
 		return $this->render('siteadminBundle:Default:support.html.twig', $data);

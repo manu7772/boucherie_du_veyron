@@ -16,7 +16,7 @@
 						<tr>
 							{% if DEVMODE %}<th class="text-center">{{ 'table.col.id'|trans|capitalize }}</th>{% endif %}
 							<th>{{ 'table.col.nom'|trans|capitalize }}</th>
-							<th>Actions</th>
+							<th>{{ UCfirst('actions.name'|trans) }}</th>
 							<th>{{ 'table.col.email'|trans|capitalize }}</th>
 							<th>{{ 'table.col.objet'|trans|capitalize }} - {{ 'table.col.message'|trans|capitalize }}</th>
 						</tr>

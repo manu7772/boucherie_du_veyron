@@ -17,16 +17,17 @@
 						<tr>
 							{% if DEVMODE %}<th class="text-center">{{ 'table.col.id'|trans|capitalize }}</th>{% endif %}
 							<th>{{ 'table.col.nom'|trans|capitalize }}</th>
-							<th>Actions</th>
+							<th>{{ UCfirst('actions.name'|trans) }}</th>
 							<th>{{ 'table.col.taux'|trans|capitalize }}</th>
 							<th>{{ 'table.col.descriptif'|trans|capitalize }}</th>
 						</tr>
 					</thead>
 					<tbody>
 						{% for entite in entites if(is_granted(entite.statut.niveau|default('ROLE_USER')) or DEVMODE) %}
-						<tr style="background-color:{{ entite.statut.couleur|default('transparent') }}">
-							{% if DEVMODE %}<td class="text-center">{{ entite.id }}</td>{% endif %}
-							<td>
+						{% set bgcolor = ' style="background-color:' ~ entite.statut.couleur|default('transparent') ~ ';"' %}
+						<tr>
+							{% if DEVMODE %}<td{{ bgcolor|raw }} class="text-center">{{ entite.id }}</td>{% endif %}
+							<td{{ bgcolor|raw }}>
 								{% if type.type_values|default(null) != null %}
 								<a href="{{ path('siteadmin_entite_type', {entite: entite_name, type_related: type.type_related, type_field: type.type_field, type_values: type.type_values|join(type_value_joiner)|url_encode, id: entite.id, action: 'show'}) }}" title="{{ (entite_name ~ '.moredetails')|trans({'%name%': entite.nom})|capitalize }}"><strong>{{ entite.nom }}</strong></a>
 								{% else %}
@@ -37,18 +38,8 @@
 								{% if entite.statut.id > 1 %}<br><small><i>({{ entite.statut.nom }})</i></small>{% endif %}
 								{% endif %}
 							</td>
-							<td>
-								<div class="btn-group">
-									{% if type.type_values|default(null) != null %}
-									<a href="{{ path('siteadmin_entite_type', {entite: entite_name, type_related: type.type_related, type_field: type.type_field, type_values: type.type_values|join(type_value_joiner)|url_encode, id: entite.id, action: 'show'}) }}" type="button" class="btn btn-white btn-xs" title="{{ (entite_name ~ '.moredetails')|trans({'%name%': entite.nom})|capitalize }}"><i class="fa fa-eye"></i></a>
-									<a href="{{ path('siteadmin_entite_type', {entite: entite_name, type_related: type.type_related, type_field: type.type_field, type_values: type.type_values|join(type_value_joiner)|url_encode, id: entite.id, action: 'edit'}) }}" type="button" class="btn btn-white btn-xs" title="{{ 'actions.modifier'|trans|capitalize }}"><i class="fa fa-pencil"></i></a>
-									<a href="{{ path('siteadmin_entite_type', {entite: entite_name, type_related: type.type_related, type_field: type.type_field, type_values: type.type_values|join(type_value_joiner)|url_encode, id: entite.id, action: 'delete'}) }}" type="button" class="btn btn-white btn-xs" title="{{ 'actions.supprimer'|trans|capitalize }}"><i class="fa fa-times"></i></a>
-									{% else %}
-									<a href="{{ path('siteadmin_entite', {entite: entite_name, id: entite.id, action: 'show'}) }}" type="button" class="btn btn-white btn-xs" title="{{ (entite_name ~ '.moredetails')|trans({'%name%': entite.nom})|capitalize }}"><i class="fa fa-eye"></i></a>
-									<a href="{{ path('siteadmin_entite', {entite: entite_name, id: entite.id, action: 'edit'}) }}" type="button" class="btn btn-white btn-xs" title="{{ 'actions.modifier'|trans|capitalize }}"><i class="fa fa-pencil"></i></a>
-									<a href="{{ path('siteadmin_entite', {entite: entite_name, id: entite.id, action: 'delete'}) }}" type="button" class="btn btn-white btn-xs" title="{{ 'actions.supprimer'|trans|capitalize }}"><i class="fa fa-times"></i></a>
-									{% endif %}
-								</div>
+							<td{{ bgcolor|raw }}>
+								{{ actions.entiteButtons(entite, ['show','edit','delete','default'], type) }}
 								{# - OFF ----------------------
 								{% if DEVMODE %}
 								<hr class="m-b-xs m-t-xs">
@@ -62,8 +53,8 @@
 								{% endif %}
 								- OFF ---------------------- #}
 							</td>
-							<td><strong>{{ entite.taux|number_format(0, ',', ' ') }} %</strong> <i>( {{ (entite.taux / 100)|number_format(2, ',', ' ') }} )</i></td>
-							<td>{{ entite.descriptif }}</td>
+							<td{{ bgcolor|raw }}><strong>{{ entite.taux|number_format(0, ',', ' ') }} %</strong> <i>( {{ (entite.taux / 100)|number_format(2, ',', ' ') }} )</i></td>
+							<td{{ bgcolor|raw }}>{{ entite.descriptif }}</td>
 						</tr>
 						{% endfor %}
 					</tbody>

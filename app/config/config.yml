@@ -7,19 +7,19 @@ imports:
 # Put parameters here that don't need to change on each machine where the app is deployed
 # http://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
-    repository-admin-mode:
-        default: 0
-        bundles:
-            sitesite:
-                default: 0
-            siteadmin:
-                default: 1
-                ROLE_ADMIN: 1
-                ROLE_SUPER_ADMIN: 2
+    # repository-admin-mode:
+    #     default: 0
+    #     bundles:
+    #         sitesite:
+    #             default: 0
+    #         siteadmin:
+    #             default: 1
+    #             ROLE_ADMIN: 1
+    #             ROLE_SUPER_ADMIN: 2
     menus:
         site-menu:
             bundle: sitesite
-            name: boucherie
+            name: publicmenu
         admin-sidemenu:
             bundle: siteadmin
             name: sidemenu

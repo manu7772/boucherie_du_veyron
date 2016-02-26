@@ -15,3 +15,8 @@ reset: reset all file types
 reset_question: do you really want to reset all file types?
 contentType:
     existe: this type already exists
+fields:
+    id: id
+    nom: name
+    created: created
+    updated: updated

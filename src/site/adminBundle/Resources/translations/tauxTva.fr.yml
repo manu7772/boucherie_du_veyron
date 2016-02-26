@@ -12,3 +12,8 @@ dontexist: 'ce taux TVA n''existe pas'
 existe: 'ce taux TVA existe déjà'
 suppression: 'le taux TVA %name% a été supprimé'
 moredetails: 'plus de détails sur %name%'
+fields:
+    id: id
+    nom: nom
+    created: création
+    updated: mis à jour

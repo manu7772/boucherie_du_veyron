@@ -14,7 +14,7 @@ class aeImage extends aeMedia {
 
 	public function __construct(ContainerInterface $container) {
 		parent::__construct($container);
-		$this->repo = $this->em->getRepository('siteadminBundle:image');
+		$this->repo = $this->_em->getRepository('siteadminBundle:image');
 	}
 
 	/**

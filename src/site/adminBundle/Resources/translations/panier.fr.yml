@@ -12,3 +12,8 @@ dontexist: 'ce panier n''existe pas'
 existe: 'ce panier existe déjà'
 suppression: 'le panier %name% a été supprimé'
 moredetails: 'plus de détails sur %name%'
+fields:
+    id: id
+    nom: nom
+    created: création
+    updated: mis à jour

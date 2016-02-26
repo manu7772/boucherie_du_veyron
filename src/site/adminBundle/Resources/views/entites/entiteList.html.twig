@@ -1,6 +1,7 @@
 {% extends 'siteadminBundle::page_admin_generic.html.twig' %}
 {% set cssjsloads = 'TAB' %}
 {% set DEVMODE = (app.environment in ['DEV', 'TEST']) or (is_granted('ROLE_SUPER_ADMIN')) %}
+{% import 'siteadminBundle:blocks:actions.html.twig' as actions %}
 
 {% block page_heading %}
 <div class="row wrapper border-bottom white-bg page-heading">
@@ -49,8 +50,9 @@
 					</thead>
 					<tbody>
 						{% for entite in entites if(is_granted(entite.statut.niveau|default('ROLE_USER')) or DEVMODE) %}
-						<tr style="background-color:{{ entite.statut.couleur|default('transparent') }}">
-							<td class="text-center">
+						{% set bgcolor = ' style="background-color:' ~ entite.statut.couleur|default('transparent') ~ ';"' %}
+						<tr>
+							<td class="text-center"{{ bgcolor|raw }}>
 								{% if type.type_values|default(null) != null %}
 								<a href="{{ path('siteadmin_entite_type', {entite: entite_name, type_related: type.type_related, type_field: type.type_field, type_values: type.type_values|join(type_value_joiner)|url_encode, id: entite.id, action: 'show'}) }}" title="{{ UCfirst('moredetails'|trans({'%name%': entite.nom|default('#' ~ entite.id)}, entite.className)) }}"><strong>{{ entite.id }}</strong></a>
 								{% else %}
@@ -58,7 +60,7 @@
 								{% endif %}
 							</td>
 							{% if entite.nom is defined %}
-							<td>
+							<td{{ bgcolor|raw }}>
 								{% if type.type_values|default(null) != null %}
 								<a href="{{ path('siteadmin_entite_type', {entite: entite_name, type_related: type.type_related, type_field: type.type_field, type_values: type.type_values|join(type_value_joiner)|url_encode, id: entite.id, action: 'show'}) }}" title="{{ UCfirst('moredetails'|trans({'%name%': entite.nom}, entite.className)) }}"><strong>{{ entite.nom }}</strong></a>
 								{% else %}
@@ -69,24 +71,8 @@
 								{% endif %}
 							</td>
 							{% endif %}
-							<td>
-								<div class="btn-group">
-									{% if type.type_values|default(null) != null %}
-									<a href="{{ path('siteadmin_entite_type', {entite: entite_name, type_related: type.type_related, type_field: type.type_field, type_values: type.type_values|join(type_value_joiner)|url_encode, id: entite.id, action: 'show'}) }}" type="button" class="btn btn-white btn-xs" title="{{ UCfirst('moredetails'|trans({'%name%': entite.nom|default('#' ~ entite.id)}, entite.className)) }}"><i class="fa fa-eye"></i></a>
-									<a href="{{ path('siteadmin_entite_type', {entite: entite_name, type_related: type.type_related, type_field: type.type_field, type_values: type.type_values|join(type_value_joiner)|url_encode, id: entite.id, action: 'edit'}) }}" type="button" class="btn btn-white btn-xs" title="{{ UCfirst('actions.modifier'|trans) }}"><i class="fa fa-pencil"></i></a>
-									<a href="{{ path('siteadmin_entite_type', {entite: entite_name, type_related: type.type_related, type_field: type.type_field, type_values: type.type_values|join(type_value_joiner)|url_encode, id: entite.id, action: 'delete'}) }}" type="button" class="btn btn-white btn-xs" title="{{ UCfirst('actions.supprimer'|trans) }}"><i class="fa fa-times"></i></a>
-									{% if(entite.statut.nom|default('Actif') != 'Actif') %}
-									<a href="{{ path('siteadmin_entite_type', {entite: entite_name, type_related: type.type_related, type_field: type.type_field, type_values: type.type_values|join(type_value_joiner)|url_encode, id: entite.id, action: 'active'}) }}" type="button" class="btn btn-danger btn-xs" title="{{ UCfirst('actions.activer'|trans) }}"><i class="fa fa-star"></i></a>
-									{% endif %}
-									{% else %}
-									<a href="{{ path('siteadmin_entite', {entite: entite_name, id: entite.id, action: 'show'}) }}" type="button" class="btn btn-white btn-xs" title="{{ UCfirst('moredetails'|trans({'%name%': entite.nom|default('#' ~ entite.id)}, entite.className)) }}"><i class="fa fa-eye"></i></a>
-									<a href="{{ path('siteadmin_entite', {entite: entite_name, id: entite.id, action: 'edit'}) }}" type="button" class="btn btn-white btn-xs" title="{{ UCfirst('actions.modifier'|trans) }}"><i class="fa fa-pencil"></i></a>
-									<a href="{{ path('siteadmin_entite', {entite: entite_name, id: entite.id, action: 'delete'}) }}" type="button" class="btn btn-white btn-xs" title="{{ UCfirst('actions.supprimer'|trans) }}"><i class="fa fa-times"></i></a>
-									{% if(entite.statut.nom|default('Actif') != 'Actif') %}
-									<a href="{{ path('siteadmin_entite', {entite: entite_name, id: entite.id, action: 'active'}) }}" type="button" class="btn btn-danger btn-xs" title="{{ UCfirst('actions.activer'|trans) }}"><i class="fa fa-star"></i></a>
-									{% endif %}
-									{% endif %}
-								</div>
+							<td{{ bgcolor|raw }}>
+								{{ actions.entiteButtons(entite, ['show','edit','delete', 'default','active'], type) }}
 								{# - OFF ----------------------
 								{% if DEVMODE %}
 								<hr class="m-b-xs m-t-xs">
@@ -101,7 +87,7 @@
 								- OFF ---------------------- #}
 							</td>
 							{% if entite.slug is defined %}
-							<td>{{ entite.slug }}</td>
+							<td{{ bgcolor|raw }}>{{ entite.slug }}</td>
 							{% endif %}
 						</tr>
 						{% endfor %}

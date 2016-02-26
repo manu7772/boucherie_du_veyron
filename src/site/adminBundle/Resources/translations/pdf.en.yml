@@ -10,3 +10,8 @@ backlist_btn: 'back to list'
 dontexist: 'this pdf file does not exist'
 moredetails: 'more details on %name%'
 existe: 'this pdf file already exists'
+fields:
+    id: id
+    nom: name
+    created: created
+    updated: updated

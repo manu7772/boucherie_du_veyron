@@ -76,37 +76,9 @@ abstract class baseType extends AbstractType {
                 'mapped' => false,
             ));
             // entités liées par défaut
-            $entity = $builder->getData();
+            // $entity = $builder->getData();
             // $this->aeEntities->fillWithDefaultLinked($entity);
-
-
-            $entities = $this->aeEntities->getAssociationNamesOfEntity($entity);
-            foreach($entities as $shortname) if($shortname == 'statut') {
-                $classname = $this->aeEntities->getEntityClassName($shortname);
-                $set = $this->aeEntities->getMethodNameWith($shortname, 'set');
-                $get = $this->aeEntities->getMethodNameWith($shortname, 'get');
-                if(method_exists($entity, $set) && method_exists($entity, $get)) {
-                    if($entity->$get() == null || (is_array($entity->$get()) && count($entity->$get()) == 0)) {
-                        $default = $this->_em->getRepository($classname)->defaultVal();
-                        if(is_array($default)) $default = reset($default);
-                        if(is_object($default)) $entity->$set($default);
-                    }
-                    // $builder
-                    //     // ->add('statut', 'hidden', array(
-                    //     ->add($shortname, 'entity', array(
-                    //         'class'     => $classname,
-                    //         'property'  => 'nom',
-                    //         'multiple'  => false,
-                    //         "label"     => $shortname.'.name',
-                    //         "translation_domain" => $shortname,
-                    //         "query_builder" => function($repo) {
-                    //             if(method_exists($repo, 'defaultValsListClosure'))
-                    //                 return $repo->defaultValsListClosure($this->user);
-                    //                 else return $repo->findAllClosure();
-                    //             },
-                    //         ));
-                }
-            }
+            // $this->aeEntities->fillAllAssociatedFields($entity);
         }
         // return
         return $builder;

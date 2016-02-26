@@ -12,6 +12,7 @@ dontexist: 'this statut does not exist'
 existe: 'this statut already exists'
 suppression: 'statut %name% have been deleted'
 moredetails: 'more details on %name%'
+bydefault: 'set as default statut'
 grants:
     no_access: You are not granted to access to the statut<br>"%name%"
 fields:
@@ -21,3 +22,5 @@ fields:
     couleur: color
     niveau: level
     bundles: bundles
+    created: created
+    updated: updated

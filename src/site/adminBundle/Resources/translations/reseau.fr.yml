@@ -12,3 +12,8 @@ dontexist: 'ce réseau n''existe pas'
 existe: 'ce réseau existe déjà'
 suppression: 'le réseau %name% a été supprimé'
 moredetails: 'plus de détails sur %name%'
+fields:
+    id: id
+    nom: nom
+    created: création
+    updated: mis à jour

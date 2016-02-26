@@ -5,9 +5,14 @@ namespace site\adminBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
 use \Exception;
 
+/**
+ * generateController
+ * @Security("has_role('ROLE_SUPER_ADMIN')")
+ */
 class generateController extends Controller {
 
 	protected $classnames = null;

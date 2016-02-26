@@ -26,24 +26,25 @@ class marqueType extends baseType {
 		// Builder…
 		$builder
 			->add('nom', 'text', array(
-				'label' => 'marque.name',
-				'translation_domain' => 'messages',
+				'label' => 'fields.nom',
+				'translation_domain' => 'marque',
 				'required' => true,
 				))
 			->add('descriptif', 'insRichtext', array(
-				'label' => 'form.descriptif',
-				'translation_domain' => 'messages',
+				'label' => 'fields.descriptif',
+				'translation_domain' => 'marque',
 				'required' => false,
 				))
-			->add('statut', 'entity', array(
-				'class'     => 'siteadminBundle:statut',
-				'property'  => 'nom',
-				'multiple'  => false,
-				"label"     => 'Statut'
-				))
-			->add('logo', new mediaType($this->controller), array(
-				'label' => 'table.col.visuel',
-				'translation_domain' => 'messages',
+			// ->add('statut', 'entity', array(
+			// 	'class'     => 'siteadminBundle:statut',
+			// 	'property'  => 'nom',
+			// 	'multiple'  => false,
+			// 	"label"     => 'name'
+			// 	'translation_domain' => 'statut',
+			// 	))
+			->add('logo', new imageType($this->controller), array(
+				'label' => 'fields.logo',
+				'translation_domain' => 'marque',
 				'required' => false,
 				))
 		;

@@ -5,3 +5,4 @@ marque:
             nom: 'Charollais'
         -
             nom: 'de Bresse'
+            descriptif: '<p>Comme le vrai poulet de Bresse !</p>'

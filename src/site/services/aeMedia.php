@@ -12,7 +12,7 @@ use site\adminBundle\Entity\mediaRepository;
 class aeMedia extends aeImages {
 
 	protected $container;		// container
-	protected $em;				// entity manager
+	protected $_em;				// entity manager
 	protected $repo;			// repository
 	protected $entitiesService;	// service entities
 
@@ -23,8 +23,8 @@ class aeMedia extends aeImages {
 
 	public function init() {
 		$this->entitiesService = $this->container->get('aetools.aeEntities');
-		$this->em = $this->container->get('doctrine')->getManager();
-		$this->repo = $this->em->getRepository('siteadminBundle:media');
+		$this->_em = $this->container->get('doctrine')->getManager();
+		$this->repo = $this->_em->getRepository('siteadminBundle:media');
 	}
 
 	/**
@@ -43,8 +43,8 @@ class aeMedia extends aeImages {
 	 * @return aeMedia
 	 */
 	public function saveMedia(media &$entity) {
-		$this->em->persist($entity);
-		$this->em->flush();
+		$this->_em->persist($entity);
+		$this->_em->flush();
 		return $this;
 	}
 

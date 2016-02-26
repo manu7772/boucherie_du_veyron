@@ -26,30 +26,33 @@ class adresseType extends baseType {
         // Builder…
         $builder
             // ->add('nom', 'text', array(
-            //     'label' => 'table.col.nom',
-            //     'translation_domain' => 'messages',
+            //     'label' => 'fields.nom',
+            //     'translation_domain' => 'adresse',
             //     'required' => true,
             //     ))
             ->add('adresse', 'textarea', array(
-                'label' => 'table.col.adresse',
-                'translation_domain' => 'messages',
+                'label' => 'fields.adresse',
+                'translation_domain' => 'adresse',
                 'required' => true,
                 ))
             ->add('cp', 'insCpostal', array(
                 "required"  => true,
-                "label"     => 'form.cp',
-                'attr'      => array(
-                    "placeholder" => "00000",
-                    "data-mask" => "99999",
-                    ),
+                "label"     => 'fields.cp',
+                'translation_domain' => 'adresse',
+                // 'attr'      => array(
+                //     "placeholder" => "00000",
+                //     "data-mask" => "99999",
+                //     ),
                 ))
             ->add('ville', 'text', array(
                 "required"  => true,
-                "label"     => 'form.ville'
+                "label"     => 'fields.ville',
+                'translation_domain' => 'adresse',
                 ))
             ->add('commentaire', 'textarea', array(
                 "required"  => false,
-                "label"     => 'form.commentaire'
+                "label"     => 'fields.commentaire',
+                'translation_domain' => 'adresse',
                 ))
         ;
         // ajoute les valeurs hidden, passés en paramètre

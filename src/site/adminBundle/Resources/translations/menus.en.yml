@@ -4,8 +4,9 @@ menu:
         comment: order
         metier: 'our job'
         fetes: celebrations
-        connexion: connexion
+        contact: contact
         hop-hop-hop: 'connéxionHOP******!ZAdqsdfqsdfqsdfqsdqsdfqsdfqsdfqsdf qsdfqsd fqsdf qsdfq'
+        connexion: connexion
         login: login
         la-connexion-du-jour: 'the login of the day'
         connexion-dsd-2: connéxion-dsd-2
@@ -15,7 +16,6 @@ menu:
         connexion3: connexion3
         new: new
         nouveauté: nouveauté
-        contact: contact
         realisations: realisations
         videos: videos
     nom: name

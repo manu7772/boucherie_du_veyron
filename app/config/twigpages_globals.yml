@@ -41,7 +41,8 @@ twig:
                                 entite: article
                     marques:
                         role: 'ROLE_ADMIN'
-                        nom: 'marque.name_s'
+                        nom: 'name_s'
+                        trans_domain: marque
                         path: 
                             path: 'siteadmin_entite'
                             params:
@@ -56,14 +57,16 @@ twig:
                                 entite: boutique
                     reseaux:
                         role: 'ROLE_ADMIN'
-                        nom: 'reseau.name_s'
+                        nom: 'name_s'
+                        trans_domain: reseau
                         path: 
                             path: 'siteadmin_entite'
                             params:
                                 entite: reseau
                     tauxTva:
                         role: 'ROLE_ADMIN'
-                        nom: 'tauxTva.name_s'
+                        nom: 'name_s'
+                        trans_domain: tauxTva
                         path: 
                             path: 'siteadmin_entite'
                             params:
@@ -85,7 +88,7 @@ twig:
                                 entite: pageweb
                     item1:
                         role: %restrict_admin%
-                        nom: 'name_s'
+                        nom: 'menu.name_s'
                         trans_domain: menus
                         path: 
                             path: 'siteadmin_menus'
@@ -93,12 +96,14 @@ twig:
                                 name: all
             media:
                 role: 'ROLE_EDITOR'
-                nom: 'media.name_s'
+                nom: 'name_s'
+                trans_domain: media
                 path: 'siteadmin_homepage'
                 icon: 'fa-film'
                 level2: 
                     images:
-                        nom: 'image.name_s'
+                        nom: 'name_s'
+                        trans_domain: image
                         path: 
                             path: 'siteadmin_entite'
                             params:
@@ -107,7 +112,8 @@ twig:
                                 # type_field: mediaType
                                 # type_values: image
                     pdf:
-                        nom: 'pdf.name_s'
+                        nom: 'name_s'
+                        trans_domain: pdf
                         path: 
                             path: 'siteadmin_entite'
                             params:
@@ -116,59 +122,75 @@ twig:
                                 # type_field: mediaType
                                 # type_values: pdf
                     fiches:
-                        nom: 'fiche.name_s'
+                        nom: 'name_s'
+                        trans_domain: fiche
                         path: 
                             path: 'siteadmin_entite'
                             params:
                                 entite: fiche
                     tags:
-                        nom: 'tag.name_s'
+                        nom: 'name_s'
+                        trans_domain: tag
                         path: 
                             path: 'siteadmin_entite'
                             params:
                                 entite: tag
             utilisateurs:
                 role: %restrict_admin%
-                nom: 'User.name_s'
+                nom: 'name_s'
+                trans_domain: User
                 path: 'site_user_homepage'
                 icon: 'fa-users'
                 level2: 
                     Tous:
-                        nom: 'Tous'
+                        nom: 'roles.ALL'
+                        trans_domain: User
                         path: 
                             path: 'siteUser_users'
                     Public:
-                        nom: 'Public'
+                        nom: 'roles.ROLE_USER'
+                        trans_domain: User
                         path: 
                             path: 'siteUser_users'
                             params:
                                 type: ROLE_USER
                     Traducteur:
-                        nom: 'Traducteur'
+                        nom: 'roles.ROLE_TRANSLATOR'
+                        trans_domain: User
                         path: 
                             path: 'siteUser_users'
                             params:
                                 type: ROLE_TRANSLATOR
                     Editeur:
-                        nom: 'Editeur'
+                        nom: 'roles.ROLE_EDITOR'
+                        trans_domain: User
                         path: 
                             path: 'siteUser_users'
                             params:
                                 type: ROLE_EDITOR
                     Administrateur:
-                        nom: 'Administrateur'
+                        nom: 'roles.ROLE_ADMIN'
+                        trans_domain: User
                         path: 
                             path: 'siteUser_users'
                             params:
                                 type: ROLE_ADMIN
                     SuperAdmin:
-                        nom: 'Super admin'
+                        nom: 'roles.ROLE_SUPER_ADMIN'
+                        trans_domain: User
                         path: 
                             path: 'siteUser_users'
                             params:
                                 type: ROLE_SUPER_ADMIN
+                    Adresses:
+                        nom: 'name_s'
+                        trans_domain: adresse
+                        path: 
+                            path: siteadmin_entite
+                            params:
+                                entite: adresse
             messages:
-                role: ROLE_EDITOR
+                role: %restrict_admin%
                 nom: message.name_s
                 icon: fa-paper-plane
                 path:
@@ -182,7 +204,8 @@ twig:
                 icon: 'fa-gear'
                 level2: 
                     fileFormat:
-                        nom: 'fileFormat.name_s'
+                        nom: 'name_s'
+                        trans_domain: fileFormat
                         path: 
                             path: 'siteadmin_entite'
                             params:
@@ -199,14 +222,16 @@ twig:
                 nom: 'help'
                 path: siteadmin_support
                 icon: 'fa-support'
-            ROLE_SUPER_ADMIN:
+            webmaster:
                 role: 'ROLE_SUPER_ADMIN'
-                nom: 'superadmin.name'
+                nom: 'roles.ROLE_SUPER_ADMIN'
+                trans_domain: User
                 path: 'siteadmin_sadmin_index'
                 icon: 'fa-cogs'
                 level2: 
                     sadminHome:
-                        nom: 'superadmin.name'
+                        nom: 'roles.ROLE_SUPER_ADMIN'
+                        trans_domain: User
                         path: 'siteadmin_sadmin_index'
                     generate:
                         nom: 'install.name'

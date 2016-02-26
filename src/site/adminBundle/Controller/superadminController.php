@@ -5,11 +5,16 @@ namespace site\adminBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
 use site\adminBundle\Entity\article;
 
 use \Exception;
 
+/**
+ * superadminController
+ * @Security("has_role('ROLE_SUPER_ADMIN')")
+ */
 class superadminController extends Controller {
 
 	public function indexAction() {

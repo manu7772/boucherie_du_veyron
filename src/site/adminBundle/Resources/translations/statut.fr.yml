@@ -12,6 +12,7 @@ dontexist: 'cet statut n''existe pas'
 existe: 'cet statut existe déjà'
 suppression: 'le statut %name% a été supprimé'
 moredetails: 'plus de détails sur %name%'
+bydefault: 'définir comme statut par défaut'
 grants:
     no_access: Vous n'avez pas les droits pour accéder au statut<br>"%name%"
 fields:
@@ -21,3 +22,5 @@ fields:
     couleur: couleur
     niveau: niveau
     bundles: bundles
+    created: création
+    updated: mis à jour

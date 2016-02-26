@@ -9,3 +9,8 @@ backlist_btn: 'back to list'
 dontexist: 'this notice does not exist'
 moredetails: 'more details on %name%'
 existe: this notice already exists
+fields:
+    id: id
+    nom: name
+    created: created
+    updated: updated

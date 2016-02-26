@@ -4,8 +4,9 @@ menu:
         comment: commander
         metier: 'notre métier'
         fetes: fêtes
-        connexion: connexion
+        contact: contact
         hop-hop-hop: 'connéxionHOP******!ZAdqsdfqsdfqsdfqsdqsdfqsdfqsdfqsdf qsdfqsd fqsdf qsdfq'
+        connexion: connexion
         login: connexion
         la-connexion-du-jour: 'la connexion du jour'
         connexion-dsd-2: connéxion-dsd-2
@@ -15,7 +16,6 @@ menu:
         connexion3: connexion3
         new: nouveau
         nouveauté: nouveauté
-        contact: contact
         realisations: réalisations
         videos: vidéos
     nom: nom

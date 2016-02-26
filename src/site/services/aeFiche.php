@@ -14,7 +14,7 @@ class aeFiche extends aeItem {
 
     public function __construct(ContainerInterface $container) {
         parent::__construct($container);
-        $this->repo = $this->em->getRepository('siteadminBundle:fiche');
+        $this->repo = $this->_em->getRepository('siteadminBundle:fiche');
     }
 
     /**

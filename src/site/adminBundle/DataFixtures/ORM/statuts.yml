@@ -6,34 +6,34 @@ statut:
             descriptif: 'Statut actif'
             niveau: 'ROLE_USER'
             default: 1
-            couleur: transparent
+            couleur: 'rgba(255, 255, 255, 0)'
         -
             nom: 'Inactif'
             descriptif: 'Statut inactif'
             niveau: 'ROLE_ADMIN'
             default: 0
-            couleur: '#ffc2af'
+            couleur: 'rgba(255, 68, 68, 0.33)'
         -
             nom: 'Expired'
             descriptif: 'Statut expiré'
             niveau: 'ROLE_ADMIN'
             default: 0
-            couleur: '#f2977b'
+            couleur: 'rgba(255, 182, 68, 0.33)'
         -
             nom: 'Deleted'
             descriptif: 'Effacé pour tous, sauf ROLE_SUPER_ADMIN'
             niveau: 'ROLE_SUPER_ADMIN'
             default: 0
-            couleur: '#d45f3b'
+            couleur: 'rgba(255, 68, 68, 0.5)'
         -
             nom: 'Dev'
             descriptif: 'Statut pour dev uniquement'
             niveau: 'ROLE_SUPER_ADMIN'
             default: 0
-            couleur: '#a6a6a6'
+            couleur: 'rgba(255, 68, 68, 0.75)'
         -
             nom: 'Test'
             descriptif: 'Statut pour tests uniquement'
             niveau: 'ROLE_SUPER_ADMIN'
             default: 0
-            couleur: '#858585'
+            couleur: 'rgba(255, 68, 68, 0.75)'

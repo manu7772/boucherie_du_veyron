@@ -14,7 +14,7 @@ class aePdf extends aeMedia {
 
 	public function __construct(ContainerInterface $container) {
 		parent::__construct($container);
-		$this->repo = $this->em->getRepository('siteadminBundle:pdf');
+		$this->repo = $this->_em->getRepository('siteadminBundle:pdf');
 	}
 
 	/**

@@ -27,8 +27,12 @@ jQuery(document).ready(function($) {
 	/***************************************/
 	/* initialisation COLORPICKER          */
 	/***************************************/
-	$('.colorpickers').colorpicker({
-		// options…
+	$('.colorpickers').each(function(e) {
+		// var picker = $('>input', this).first();
+		$(this).colorpicker({
+			// horizontal: true,
+			format: 'rgba',
+		});
 	});
 
 	/***************************************/

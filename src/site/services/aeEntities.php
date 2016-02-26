@@ -25,7 +25,7 @@ class aeEntities extends aetools {
 	const CURRENT_ADDED			= 'current';		// paramètre pour new object : ajouter la version courante
 	const DEFAULT_ADDED			= 'defaultVersion';	// paramètre pour new object : ajouter la version par défaut (champ : 'defaultVersion' = 1)
 	const CHAMP_SUBSTVERSION	= 'slug';			// nom du champ substitutif pour version d'une entité (pour éviter une requête supplémentaire lors de la recherche de la version de l'entité)
-	const VALUE_DEFAULT			= "defaultsForFix";
+	const VALUE_DEFAULT			= "defaultVal";
 
 	const COLLECTION_ASSOC_NAME	= "collection";		// nom pour le type collection
 	const SINGLE_ASSOC_NAME		= "single";			// nom pour le type single
@@ -499,7 +499,9 @@ class aeEntities extends aetools {
 		if($this->isVersionActive() !== true) $testVersions = false;
 		if($this->entityClassExists($object) !== false && is_object($object)) {
 			$this->writeConsole('Remplissage de l\'entité '.get_class($object), 'succes');
+			// echo('<h2>'.$object->getClassName().'</h2>');
 			foreach($this->getAssociationNamesOfEntity($object) as $field) {
+				// echo('- '.$field.' :');
 				$whatFor = $what;
 				if(is_array($what)) {
 					if(isset($what[$field])) $whatFor = $what[$field];
@@ -507,7 +509,8 @@ class aeEntities extends aetools {
 				$testVersionsFor = $testVersions;
 				if(is_array($testVersions)) {
 					if(isset($testVersions[$field])) if(is_bool($testVersions[$field])) $testVersionsFor = $testVersions[$field];
-				} 
+				}
+				// echo(' '.$whatFor.'<br>');
 				$this->fillAssociatedField($field, $object, $whatFor, $testVersionsFor);
 			}
 		} else $this->writeConsole(self::TAB1."L'entité ".get_class($object)." n'existe pas. (".$this->getName()."::fillAllAssociatedFields() / Ligne ".__LINE__.")", 'error');
@@ -607,6 +610,13 @@ class aeEntities extends aetools {
 					if(is_object($associates)) $associates = array($associates);
 				}
 				if(!is_array($associates)) $associates = array();
+				// echo('<pre>');
+				// var_dump($associates);
+				// echo('</pre>');
+				// foreach ($associates as $key => $value) {
+				// 	echo('<p> - '.$value->getNom().'</p>');
+				// }
+				//
 				if(is_object($what)) $what = array($what);
 				if(is_array($what)) {
 					// + valeurs précisées (strings et/ou objets…)
@@ -633,9 +643,10 @@ class aeEntities extends aetools {
 					foreach($associates as $key => $value) if($value instanceOf $targetClass) {
 						// $this->writeConsole("Self entity : ".gettype($object)." / Target entity : ".gettype($value), 'error');
 						if($this->attachEachSides($field, $object, $value, $testVersions)) {
+							// echo('<p> - Attachement : '.$field.' -> '.$value->getNom().'</p>');
 							// l'association a eu lieu avec succès
 							$compte++;
-							if($object->isSingleValuedAssociation($field)) break;
+							if($this->isSingleValuedAssociation($field)) break;
 						}
 					} else $this->writeConsole('Association incompatible : '.get_class($value).' < = > '.$targetClass, 'error');
 					if($compte != count($associates)) { $style = 'error';$add = ' ('.(count($associates) - $compte).' manquants)'; } else { $style = 'normal';$add = ''; }
@@ -800,13 +811,16 @@ class aeEntities extends aetools {
 	 * @return boolean (true = association réussie)
 	 */
 	public function attachEachSides($field, &$entity1, &$entity2, $testVersions = true) {
-		if($this->isVersionActive() !== true) return true;
+		// if($this->isVersionActive() !== true) return true;
 		if($this->isVersionComptatible($entity1, $entity2)) {
 			if($this->hasAssociation($field, $entity1)) {
 				$obj_SET = $this->getMethodOfSetting($field, $entity1);
+				// echo('<p>setter : '.$obj_SET.'</p>');
+				$obj_GET = $this->getMethodOfGetting($field, $entity1);
 				if(is_string($obj_SET)) {
 					// setting pour $entity1
 					$entity1->$obj_SET($entity2);
+					// echo('<p style="color:orange;">- Attached '.$field.' : '.$entity1->$obj_GET().'</p>');
 					$this->writeConsole('     • Association ok : '.$this->getEntityShortName($entity1).'->'.$obj_SET.'('.$entity2->getSlug().')', 'succes');
 					if($this->isBidirectional($field, $entity1)) {
 						// oui, bidirectionnelle
@@ -1139,30 +1153,30 @@ class aeEntities extends aetools {
 		// $this->getEm()->flush(); // flush : sinon on obtient de objets Doctrine\ORM\PersistentCollection
 		$classname = get_class($entity);
 		$shortname = $this->getEntityShortName($classname);
-		echo('<p><strong>Classe entité : '.$classname.' / '.$shortname.'</strong></p>');
+		// echo('<p><strong>Classe entité : '.$classname.' / '.$shortname.'</strong></p>');
 		$fields = $this->getInverseSideFields($classname);
 		foreach ($fields as $field) {
 			// uniquement si "mappedBy"…
-			echo('<p>- field : '.$field.'</p>');
+			// echo('<p>- field : '.$field.'</p>');
 			$otherSideSource = $this->get_OtherSide_sourceField($field, $classname);
 			if(is_string($otherSideSource)) {
-				echo('<p>--> field mapped : '.$otherSideSource.'</p>');
+				// echo('<p>--> field mapped : '.$otherSideSource.'</p>');
 				// il faut rattacher…
 				$target = $this->getEntityClassName($this->getTargetEntity($field, $classname));
 				// $targetRepo = $this->getEm()->getRepository($target);
 				$get = $this->getMethodOfGetting($field, $classname);
-				echo('<p>--> target : '.$target.' -> '.$get.'()</p>');
+				// echo('<p>--> target : '.$target.' -> '.$get.'()</p>');
 				// return Doctrine\ORM\PersistentCollection->getValues()
 				$data = $entity->$get()->getValues();
 				// if(get_class($data) == $target) $data = array($data);
 				// if(gettype($data) == Type::TARRAY) $data = 
 				if(is_array($data)) {
-					echo('<p>--> éléments : '.count($data).'</p>');
+					// echo('<p>--> éléments : '.count($data).'</p>');
 					foreach ($data as $item) if($target != $classname) {
 						$targetClass = get_class($item);
 						$nom = $item->getId();
 						if(method_exists($item, 'getNom')) $nom .= '/'.$item->getNom();
-						echo('<p style="color:green;">--> vérif : '.$target.' = '.$targetClass.' => '.$nom.'</p>');
+						// echo('<p style="color:green;">--> vérif : '.$target.' = '.$targetClass.' => '.$nom.'</p>');
 						$dataSet = $this->getMethodOfSetting($otherSideSource, $targetClass);
 						$dataGet = $this->getMethodOfGetting($otherSideSource, $targetClass);
 						$entities = $item->$dataGet()->getValues();
@@ -1196,7 +1210,7 @@ class aeEntities extends aetools {
 		$fields = $this->getInverseSideFields($classname);
 		// flush…
 		if($flush == true) $r = $this->getEm()->flush();
-		throw new Exception("checkLosts non encore programmé !", 1);
+		// throw new Exception("checkLosts non encore programmé !", 1);
 		return $r;
 	}
 
@@ -1312,7 +1326,7 @@ class aeEntities extends aetools {
 	/**
 	 * Supprime une entité sans la retirer de la base (sauf si 'deleted')
 	 * 4 États : actif => inactif => deleted => et enfin, suppression de la base
-	 * @param baseEntity &$entity
+	 * @param baseEntity &$entite
 	 */
 	public function softDeleteEntity(&$entite) {
 		if(method_exists($entite, 'setStatut')) {
@@ -1335,6 +1349,19 @@ class aeEntities extends aetools {
 			$this->getEm()->remove($entite);
 		}
 		$this->getEm()->flush();
+	}
+
+	/**
+	 * Rétablit une entité inactive
+	 * @param baseEntity &$entite
+	 */
+	public function softActivateEntity(&$entite) {
+		if(method_exists($entite, 'setStatut')) {
+			// si un champ statut existe
+			$actif = $this->getEm()->getRepository('site\adminBundle\Entity\statut')->findActif();
+			$entite->setStatut($actif);
+			$this->getEm()->flush();
+		}
 	}
 
 	// public function checkStatuts(&$entity, $flush = true) {

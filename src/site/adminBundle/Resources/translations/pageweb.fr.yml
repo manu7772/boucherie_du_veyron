@@ -23,3 +23,5 @@ fields:
     modele: modèle
     image: fond
     tags: tags
+    created: création
+    updated: mise à jour

@@ -9,3 +9,10 @@ backlist_btn: 'back to list'
 dontexist: 'this brand does not exist'
 moredetails: 'more details on %name%'
 existe: this brand already exists
+fields:
+    id: id
+    nom: name
+    descriptif: description
+    logo: logotype
+    created: created
+    updated: updated

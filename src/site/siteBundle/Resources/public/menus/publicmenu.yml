@@ -1,4 +1,4 @@
-name: boucherie
+name: publicmenu
 roles:
     view: null
     edit: ROLE_ADMIN

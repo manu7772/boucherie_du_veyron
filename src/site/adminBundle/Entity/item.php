@@ -64,6 +64,12 @@ abstract class item extends baseSubEntity {
 		$this->categories = new ArrayCollection();
 	}
 
+	/**
+	 * @Assert\True(message="L'item n'est pas conforme.")
+	 */
+	public function isValid() {
+		return ($this->image == null) || $this->image->isValid();
+	}
 
 	/**
 	 * Get keywords

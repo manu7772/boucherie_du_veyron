@@ -71,6 +71,7 @@ actions:
     desactiver: mode inactif
     forbidden: actions interdites
     repondre: répondre
+    analyse: analyse
 table:
     col:
         id: id
@@ -86,7 +87,6 @@ table:
         descriptif: descriptif
         metadescription: description
         attribut: attribut
-        valeur: valeur
         creation: création
         maj: 'mise à jour'
         jamais: non modifié
@@ -113,11 +113,6 @@ table:
         logo: logotype
         vitrine: vitrine
         adresse: adresse
-        prix: prix
-        TTC: TTC
-        HT: HT
-        TVA: TVA
-        montantTVA: montant TVA
 msg:
     supp: 'souhaitez-vous supprimer cet élément ?'
     suppression: suppression

@@ -28,62 +28,91 @@ class articleType extends baseType {
 		// Builder…
 		$builder
 			->add('nom', 'text', array(
-				'label' => 'form.nom',
-				'translation_domain' => 'messages',
+				'label' => 'fields.nom',
+				'translation_domain' => 'article',
 				'required' => true,
 				))
 			->add('accroche', 'text', array(
-				'label' => 'form.accroche',
-				'translation_domain' => 'messages',
+				'label' => 'fields.accroche',
+				'translation_domain' => 'article',
 				'required' => false,
 				))
 			->add('descriptif', 'insRichtext', array(
-				'label' => 'form.descriptif',
-				'translation_domain' => 'messages',
+				'label' => 'fields.descriptif',
+				'translation_domain' => 'article',
 				'required' => false,
 				))
 			// ->add('dateCreation')
 			// ->add('dateMaj')
 			->add('refFabricant', 'text', array(
-				'label' => 'form.refFabricant',
-				'translation_domain' => 'messages',
+				'label' => 'fields.refFabricant',
+				'translation_domain' => 'article',
 				'required' => false,
 				))
 			->add('prix', 'money', array(
+				'label'		=> 'fields.prixTTC',
+				'translation_domain' => 'article',
 				"required"  => false,
 				))
 			->add('prixHT', 'money', array(
+				'label'		=> 'fields.prixHT',
+				'translation_domain' => 'article',
 				"required"  => false,
 				))
 			->add('tauxTva', 'entity', array(
-				"label"     => 'form.taux',
+				"label"     => 'name',
+				'translation_domain' => 'tauxTva',
 				'class'     => 'siteadminBundle:tauxTva',
 				'property'  => 'nomlong',
 				'multiple'  => false,
+				"query_builder" => function($repo) {
+				    if(method_exists($repo, 'defaultValsListClosure'))
+				        return $repo->defaultValsListClosure($this->user);
+				        else return $repo->findAllClosure();
+				    },
 				))
 			->add('statut', 'entity', array(
+				"label"     => 'name',
+				'translation_domain' => 'statut',
 				'class'     => 'siteadminBundle:statut',
 				'property'  => 'nom',
 				'multiple'  => false,
-				"label"     => 'Statut'
 				))
 			->add('marque', 'entity', array(
+				"label"     => 'name',
+				'translation_domain' => 'marque',
 				'class'     => 'siteadminBundle:marque',
 				'property'  => 'nom',
 				'multiple'  => false,
-				"label"     => 'Marque',
 				'required' => false,
+				))
+			->add('reseaus', 'entity', array(
+				"label"     => 'name_s',
+				'translation_domain' => 'reseau',
+				'class'     => 'siteadminBundle:reseau',
+				'property'  => 'nom',
+				'multiple'  => true,
+				'required' => false,
+				"query_builder" => function($repo) {
+				    if(method_exists($repo, 'defaultValsListClosure'))
+				        return $repo->defaultValsListClosure($this->user);
+				        else return $repo->findAllClosure();
+				    },
+				'attr'		=> array(
+					'class'			=> 'chosen-select chosen-select-width chosen-select-no-results',
+					'placeholder'	=> 'form.select',
+					),
 				))
 			// 1 image :
 			->add('image', new imageType($this->controller), array(
-				'label' => 'table.col.visuel',
-				'translation_domain' => 'messages',
+				'label' => 'fields.image',
+				'translation_domain' => 'article',
 				'required' => false,
 				))
 			// Images collection :
 			// ->add('images', 'multiCollection', array(
 			// 	'label' => 'table.col.visuel',
-			// 	'translation_domain' => 'messages',
+			// 	'translation_domain' => 'article',
 			// 	'required' => false,
 			// 	'type' => new imageType($this->controller),
 			// 	'allow_add' => true,
@@ -98,8 +127,8 @@ class articleType extends baseType {
 			// ->add('categories')
 			// ->add('fiches')
 			->add('fiches', 'entity', array(
-				"label"		=> 'fiche.name_s',
-				'translation_domain' => 'messages',
+				"label"		=> 'name_s',
+				'translation_domain' => 'fiche',
 				'property'	=> 'nom',
 				'class'		=> 'siteadminBundle:fiche',
 				'multiple'	=> true,
@@ -111,8 +140,8 @@ class articleType extends baseType {
 					),
 				))
 			->add('tags', 'entity', array(
-				'label'		=> 'tag.name_s',
-				'translation_domain' => 'messages',
+				'label'		=> 'name_s',
+				'translation_domain' => 'tag',
 				'property'	=> 'nom',
 				'class'		=> 'siteadminBundle:tag',
 				'multiple'	=> true,
@@ -123,8 +152,8 @@ class articleType extends baseType {
 					),
 				))
 			// ->add('tags', 'multiCollection', array(
-			// 	'label' => 'tag.name_s',
-			// 	'translation_domain' => 'messages',
+			// 	'label' => 'name_s',
+			// 	'translation_domain' => 'tag',
 			// 	'required' => false,
 			// 	'type' => new tagType($this->controller),
 			// 	'allow_add' => true,
@@ -136,8 +165,8 @@ class articleType extends baseType {
 			// 	))
 			// ->add('articlesParents')
 			->add('articlesLies', 'entity', array(
-				"label"		=> 'Articles liés',
-				'translation_domain' => 'messages',
+				"label"		=> 'fields.artlink',
+				'translation_domain' => 'article',
 				'property'	=> 'nom',
 				'class'		=> 'siteadminBundle:article',
 				'multiple'	=> true,

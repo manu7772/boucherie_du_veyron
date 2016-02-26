@@ -12,3 +12,15 @@ dontexist: 'this user does not exist'
 existe: 'this user already exists'
 suppression: 'user %name% have been deleted'
 moredetails: 'more details on %name%'
+roles:
+    ALL: all
+    ROLE_USER: user
+    ROLE_TRANSLATOR: translator
+    ROLE_EDITOR: editor
+    ROLE_ADMIN: administrator
+    ROLE_SUPER_ADMIN: webmaster
+fields:
+    id: id
+    nom: name
+    created: created
+    updated: updated

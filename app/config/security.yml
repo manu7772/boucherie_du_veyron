@@ -51,12 +51,12 @@ security:
 
     access_control:
         - { path: ^/login$, role: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { host: 'admin.boucherie-du-veyron.fr', roles: ROLE_TRANSLATOR }
-        - { path: ^/(.*/)?translate, roles: ROLE_TRANSLATOR }
-        - { path: ^/(.*/)?edition, roles: ROLE_EDITOR }
-        - { path: ^/(.*/)?user, roles: ROLE_ADMIN }
-        - { path: ^/(.*/)?admin, roles: ROLE_ADMIN }
-        - { path: ^/(.*/)?admin\/superadmin, roles: ROLE_SUPER_ADMIN }
+        # - { host: 'admin.boucherie-du-veyron.fr', roles: ROLE_TRANSLATOR }
+        # - { path: ^/(.*/)?translate, roles: ROLE_TRANSLATOR }
+        # - { path: ^/(.*/)?edition, roles: ROLE_EDITOR }
+        # - { path: ^/(.*/)?user, roles: ROLE_ADMIN }
+        # - { path: ^/(.*/)?admin, roles: ROLE_ADMIN }
+        # - { path: ^/(.*/)?admin\/superadmin, roles: ROLE_SUPER_ADMIN }
 
     # ROLE_ALLOWED_TO_SWITCH :
     # ?_switch_user=username

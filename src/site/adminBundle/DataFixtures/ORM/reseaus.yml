@@ -1,0 +1,10 @@
+reseau:
+    order: 7
+    data:
+        -
+            nom: 'Internet'
+            default: 1
+        -
+            nom: 'Professionnels'
+        -
+            nom: 'Grande distribution'

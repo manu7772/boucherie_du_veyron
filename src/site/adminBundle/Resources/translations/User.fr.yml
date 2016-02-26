@@ -12,3 +12,15 @@ dontexist: 'ce utilisateur n''existe pas'
 existe: 'ce utilisateur existe déjà'
 suppression: 'le utilisateur %name% a été supprimé'
 moredetails: 'plus de détails sur %name%'
+roles:
+    ALL: tous
+    ROLE_USER: utilisateur
+    ROLE_TRANSLATOR: traducteur
+    ROLE_EDITOR: éditeur
+    ROLE_ADMIN: administrateur
+    ROLE_SUPER_ADMIN: webmaster
+fields:
+    id: id
+    nom: nom
+    created: création
+    updated: mis à jour

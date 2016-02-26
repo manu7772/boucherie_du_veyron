@@ -5,11 +5,16 @@ namespace site\adminBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
 use site\adminBundle\services\flashMessage;
 
 use \Exception;
 
+/**
+ * entiteController
+ * @Security("has_role('ROLE_EDITOR')")
+ */
 class entiteController extends Controller {
 
 	const TYPE_SELF 			= '_self';
@@ -135,18 +140,13 @@ class entiteController extends Controller {
 							$data['action'] = null;
 							$data['id'] = null;
 						} else {
-							if(method_exists($data['entite'], 'setStatut')) {
-								// si un champ statut existe
-								$actif = $this->em->getRepository('site\adminBundle\Entity\statut')->findActif();
-								$data['entite']->setStatut($actif);
-							}
-							$this->em->flush();
+							$this->get('aetools.aeEntities')->softActivateEntity($data['entite']);
 							$message = $this->get('flash_messages')->send(array(
 								'title'		=> 'Élément activé',
 								'type'		=> flashMessage::MESSAGES_SUCCESS,
 								'text'		=> 'L\'élément a été activé.',
 							));
-							$data['action'] = 'show';
+							$data['action'] = 'list';
 						}
 						return $this->redirect($this->generateEntityUrl($data));
 						break;
@@ -219,7 +219,7 @@ class entiteController extends Controller {
 		if($data['action'] == "create") {
 			// create
 			$imsg = '';
-			$data['entite'] = $this->getNewEntity($classname);
+			$data['entite'] = new $classname();
 		} else {
 			// edit / delete
 			$imsg = ' (id:'.$data['id'].')';
@@ -245,10 +245,10 @@ class entiteController extends Controller {
 					$form->bind($request);
 					if($form->isValid()) {
 						// formulaire valide -> enregistrement -> renvoi à l'url de success
-						$this->checkEntityBeforePersist($data);
 						// 
 						$this->em->persist($data['entite']);
 						$this->em->flush();
+						$this->checkEntityAfterPersist($data);
 						if($data['action'] == "create") {
 							$data['id'] = $data['entite']->getId();
 							unset($data['onSuccess']);
@@ -296,7 +296,7 @@ class entiteController extends Controller {
 	/**
 	 * Check d'une entite avant de la persister
 	 */
-	protected function checkEntityBeforePersist(&$data) {
+	protected function checkEntityAfterPersist(&$data) {
 		$launchInverse = true;
 		// lance le checkAfterChange
 		$serviceName = 'aetools.ae'.ucfirst($data['entite_name']);
@@ -311,7 +311,7 @@ class entiteController extends Controller {
 		}
 		// !!! vérifie les liens inverses !!! (si le service n'a pu être lancé)
 		if($launchInverse == true) {
-			$this->get('aetools.aeEntities')->checkInversedLinks($data['entite'], false);
+			$this->get('aetools.aeEntities')->checkInversedLinks($data['entite'], true);
 		}
 	}
 
@@ -466,6 +466,7 @@ class entiteController extends Controller {
 
 	protected function getNewEntity($classname) {
 		$newEntity = new $classname();
+		$this->get('aetools.aeEntities')->fillAllAssociatedFields($newEntity);
 		// $this->em = $this->getDoctrine()->getManager();
 		// if(method_exists($newEntity, 'setStatut')) {
 		// 	// si un champ statut existe
@@ -483,35 +484,35 @@ class entiteController extends Controller {
 	}
 
 	/**
-	 * Désigne la pageweb comme homepage par défaut
+	 * Désigne l'entite' comme entite par défaut
 	 * @param integer $id
 	 * @param string $redir
 	 * @return redirectResponse
 	 */
-	public function pageweb_as_defaultAction($id, $redir) {
+	public function entite_as_defaultAction($id, $entite, $redir) {
 		$this->em = $this->getDoctrine()->getManager();
-		$this->repo = $this->em->getRepository('site\adminBundle\Entity\pageweb');
+		$this->repo = $this->em->getRepository('site\adminBundle\Entity\\'.$entite);
 		// entité à mettre en page web par défaut
-		$page = $this->repo->find($id);
-		if(!is_object($page)) {
+		$item = $this->repo->find($id);
+		if(!is_object($item)) {
 			$message = $this->get('flash_messages')->send(array(
-				'title'		=> 'Page web introuvable',
+				'title'		=> 'Elément introuvable',
 				'type'		=> flashMessage::MESSAGES_ERROR,
 				'text'		=> 'Cette page <strong>#"'.$id.'"</strong> n\'a pu être touvée',
 			));
 		} else {
-			$page->setDefault(true);
+			$item->setDefault(true);
 			// $this->em->persist($page);
-			// on passe les autres pages en false s'il en existe
-			$pages = $this->repo->findByDefault(true);
-			if(count($pages) > 0) foreach ($pages as $onepage) {
-				$onepage->setDefault(false);
+			// on passe les autres entites en false s'il en existe
+			$items = $this->repo->findByDefault(true);
+			if(count($items) > 0) foreach ($items as $oneItem) {
+				$oneItem->setDefault(false);
 			}
 			$this->em->flush();
 			$message = $this->get('flash_messages')->send(array(
-				'title'		=> 'Homepage',
+				'title'		=> 'Par défaut',
 				'type'		=> flashMessage::MESSAGES_SUCCESS,
-				'text'		=> 'La page "'.$page->getNom().'" a été définie comme page d\'accueil par défaut.',
+				'text'		=> 'L\'élément "'.$item->getNom().'" a été défini comme élément par défaut.',
 			));
 		}
 		return $this->redirect(urldecode($redir));

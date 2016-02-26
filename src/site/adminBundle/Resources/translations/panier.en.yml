@@ -12,3 +12,8 @@ dontexist: 'this basket does not exist'
 existe: 'this basket already exists'
 suppression: 'basket %name% have been deleted'
 moredetails: 'more details on %name%'
+fields:
+    id: id
+    nom: name
+    created: created
+    updated: updated

@@ -14,7 +14,7 @@ class aeArticle extends aeItem {
 
     public function __construct(ContainerInterface $container) {
         parent::__construct($container);
-        $this->repo = $this->em->getRepository('siteadminBundle:article');
+        $this->repo = $this->_em->getRepository('siteadminBundle:article');
     }
 
     /**

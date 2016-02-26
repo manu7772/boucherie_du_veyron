@@ -14,3 +14,8 @@ suppression: 'le tag %name% a été supprimé'
 moredetails: 'plus de détails sur %name%'
 index:
     addSpeech: 'Pour ajouter plusieurs tags en une fois, séparez-les par des virgules'
+fields:
+    id: id
+    nom: nom
+    created: création
+    updated: mis à jour

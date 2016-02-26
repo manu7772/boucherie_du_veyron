@@ -34,9 +34,9 @@ siteadmin_form_action:
     defaults: { _controller: siteadminBundle:entite:entitePostFormPage }
     requirements:
 
-siteadmin_pageweb_set_default:
-    path:     /pageweb/set-as-default/{id}/{redir}
-    defaults: { _controller: siteadminBundle:entite:pageweb_as_default, redir: 'siteadmin_homepage' }
+siteadmin_set_default:
+    path:     /entite-set/as-default/{id}/{entite}/{redir}
+    defaults: { _controller: siteadminBundle:entite:entite_as_default, redir: 'siteadmin_homepage' }
 
 
 # MENUS

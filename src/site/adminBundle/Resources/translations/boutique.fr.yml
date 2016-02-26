@@ -14,3 +14,5 @@ grants:
 fields:
     id: id
     nom: nom
+    created: création
+    updated: mise à jour

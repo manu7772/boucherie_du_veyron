@@ -11,7 +11,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 use site\UserBundle\Entity\User;
 
-use DateTime;
+use \DateTime;
 
 /**
  * EntityBaseRepository

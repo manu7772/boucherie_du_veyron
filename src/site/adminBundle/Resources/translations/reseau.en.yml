@@ -12,3 +12,8 @@ dontexist: 'this outlet does not exist'
 existe: 'this outlet already exists'
 suppression: 'outlet %name% have been deleted'
 moredetails: 'more details on %name%'
+fields:
+    id: id
+    nom: name
+    created: created
+    updated: updated

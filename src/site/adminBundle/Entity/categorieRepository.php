@@ -28,15 +28,15 @@ use Doctrine\ORM\Mapping\ClassMetadata;
 class categorieRepository extends EntityBaseRepository {
 
 	// https://github.com/Atlantic18/DoctrineExtensions/blob/master/doc/tree.md
-	use NestedSetEntity;
-	// use NestedTreeRepository;
+	// use NestedSetEntity;
+	// use \Gedmo\Tree\Entity\Repository\NestedTreeRepository;
 	// use MaterializedPathRepository;
 	// use ClosureTreeRepository;
 	// use AbstractTreeRepository;
 
 	public function __construct(EntityManager $em, ClassMetadata $class) {
 		parent::__construct($em, $class);
-		$this->initializeTreeRepository($em, $class);
+		// $this->initializeTreeRepository($em, $class);
 	}
 
 
