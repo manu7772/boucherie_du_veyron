@@ -25,14 +25,14 @@ services:
         class: %adminBundleservices%\toolsJson
         arguments: []
 
-    aeMenus:
+    aetools.aeMenus:
         class: %adminBundleservices%\aeMenus
         arguments: [@service_container]
 
     # fonctionnalités de messages (flashbag) & Exceptions
-    # aetools.aeMessages:
-    #     class: %adminBundleservices%\aeMessages
-    #     arguments: [@service_container]
+    aetools.aeExceptions:
+        class: %adminBundleservices%\aeMessages
+        arguments: [@service_container]
 
     flash_messages:
         class: %adminBundleservices%\flashMessages

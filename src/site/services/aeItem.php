@@ -1,48 +1,48 @@
 <?php
 namespace site\services;
 
-use site\services\aeEntities;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use site\services\aeEntities;
 
 use site\adminBundle\Entity\item;
-use site\adminBundle\Entity\itemRepository;
+use site\adminBundle\Entity\baseEntity;
 
 // call in controller with $this->get('aetools.aeItem');
 class aeItem extends aeEntities {
 
-	protected $container;		// container
-	protected $em;				// entity manager
-	protected $repo;			// repository
-
 	public function __construct(ContainerInterface $container) {
 		parent::__construct($container);
-		$this->repo = $this->_em->getRepository('siteadminBundle:item');
+		$this->defineEntity('site\adminBundle\Entity\item');
 	}
 
     /**
      * Check entity after change (edit…)
-     * @param item $entity
+     * @param baseEntity $entity
+	 * @return aeItem
      */
-    public function checkAfterChange(item &$entity) {
+    public function checkAfterChange(baseEntity &$entity) {
 	    // check image
-		if($entity->getImage() !== null) {
-			$image = $entity->getImage();
-			$this->checkStatuts($image, false);
+	    $image = $entity->getImage();
+	    // if($image->getInfoForPersist() == null) $entity->setImage(null);
+		if($image !== null) {
+	    	$infoForPersist = $image->getInfoForPersist();
+	    	$this->container->get('aetools.aeImage')->checkAfterChange($image);
+	    	if($infoForPersist['delete'] == true) {
+	    		// Supression de l'image
+	    		$entity->setImage(null);
+	    	}
 		}
-	    // check entity
-	    $this->checkStatuts($entity, false);
-	    $this->checkInversedLinks($entity, false);
+    	parent::checkAfterChange($entity);
+		return $this;
 	}
 
 	/**
-	 * Persist en flush a item
-	 * @param item $entity
-	 * @return aeItem
+	 * Persist and flush a item
+	 * @param baseEntity $entity
+	 * @return aeReponse
 	 */
-	public function save(item &$entity) {
-		$this->em->persist($entity);
-		$this->em->flush();
-		return $this;
+	public function save(baseEntity &$entity) {
+        return parent::save($entity);
 	}
 
 }

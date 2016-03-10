@@ -19,7 +19,7 @@ use \DateTime;
  *
  * @ORM\Entity
  * @ORM\Table(name="categorie")
- * @ORM\HasLifecycleCallbacks()
+ * @ORM\HasLifecycleCallbacks
  * @ORM\Entity(repositoryClass="site\adminBundle\Entity\categorieRepository")
  * @Gedmo\Tree(type="nested")
  */

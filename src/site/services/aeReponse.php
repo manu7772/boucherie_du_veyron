@@ -1,15 +1,21 @@
 <?php
-
 namespace site\services;
+
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class aeReponse {
 
 	private $data = array();
 
-	public function __construct($result, $data = null, $message = "") {
-		$this->data["result"] 	= $result;
-		$this->data["message"] 	= $message;
-		$this->data["data"] 	= $data;
+	public function __construct($result = true, $data = null, $message = "") {
+		$this->initAeReponse($result, $data, $message);
+	}
+
+	public function initAeReponse($result = true, $data = null, $message = "") {
+		$this->setResult($result);
+		$this->setData($data);
+		$this->setMessage($message);
+		return $this;
 	}
 
 	// GETTERS
@@ -30,8 +36,10 @@ class aeReponse {
 		return gettype($this->data["data"]);
 	}
 
-	public function getJSONreponse() {
-		return json_encode($this->data);
+	public function getJSONreponse($reset = true) {
+		$r = new JsonResponse(json_encode($this->data));
+		if($reset) $this->initAeReponse();
+		return $r;
 	}
 
 	// SETTERS
@@ -51,7 +59,6 @@ class aeReponse {
 		$this->data["data"] = $data;
 		return $this;
 	}
-
 
 
 }

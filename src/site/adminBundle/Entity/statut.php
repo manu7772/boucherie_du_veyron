@@ -12,7 +12,8 @@ use JMS\Serializer\Annotation\Expose;
 use Gedmo\Mapping\Annotation as Gedmo;
 use site\adminBundle\Entity\baseEntity;
 
-// use site\adminBundle\Entity\item;
+use site\UserBundle\Entity\User;
+
 use site\services\aetools;
 use \DateTime;
 
@@ -22,7 +23,7 @@ use \DateTime;
  * @ORM\Entity
  * @ORM\Table(name="statut")
  * @ORM\Entity(repositoryClass="site\adminBundle\Entity\statutRepository")
- * @ORM\HasLifecycleCallbacks()
+ * @ORM\HasLifecycleCallbacks
  * @UniqueEntity(fields={"nom"}, message="statut.existe")
  */
 class statut extends baseEntity {
@@ -79,8 +80,8 @@ class statut extends baseEntity {
 	public function __construct() {
 		parent::__construct();
 		$aetools = new aetools();
-		$this->role_choices = $aetools->getListOfRoles();
-		$this->bundle_choices = array_flip($aetools->getBundlesList());
+		$this->role_choices = $aetools->getListOfRolesForSelect();
+		$this->bundle_choices = $aetools->getBundlesList();
 		$this->niveau = reset($this->role_choices);
 		$this->couleur = "transparent";
 		$this->bundles = array();
@@ -215,8 +216,15 @@ class statut extends baseEntity {
 	 * Get role choices
 	 * @return array 
 	 */
-	public function getRoleChoices() {
-		return $this->role_choices;
+	public function getRoleChoices(User $user = null) {
+		if($user != null) {
+			$grants = $user->getGrants();
+		} else $grants = array('IS_AUTHENTICATED_ANONYMOUSLY', 'ROLE_USER');
+		$grantedRoles = array();
+		foreach ($this->role_choices as $role => $item) {
+			if(in_array($role, $grants)) $grantedRoles[$role] = $item;
+		}
+		return $grantedRoles;
 	}
 
 	/**

@@ -34,7 +34,7 @@ abstract class baseSubEntity extends baseEntity {
 	protected $statut;
 
 	/**
-	 * @var array - PROPRIÉTAIRE
+	 * @var array
 	 * @ORM\ManyToMany(targetEntity="site\adminBundle\Entity\tag", cascade={"persist"})
 	 * @ORM\JoinColumn(nullable=true, unique=false, onDelete="SET NULL")
 	 */
@@ -85,7 +85,7 @@ abstract class baseSubEntity extends baseEntity {
 	}
 
 	/**
-	 * Add tag - PROPRIÉTAIRE
+	 * Add tag
 	 * @param tag $tag
 	 * @return baseSubEntity
 	 */
@@ -95,7 +95,7 @@ abstract class baseSubEntity extends baseEntity {
 	}
 
 	/**
-	 * Remove tag - PROPRIÉTAIRE
+	 * Remove tag
 	 * @param tag $tag
 	 * @return boolean
 	 */
@@ -104,7 +104,7 @@ abstract class baseSubEntity extends baseEntity {
 	}
 
 	/**
-	 * Get tags - PROPRIÉTAIRE
+	 * Get tags
 	 * @return ArrayCollection 
 	 */
 	public function getTags() {

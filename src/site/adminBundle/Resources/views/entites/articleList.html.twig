@@ -62,7 +62,7 @@
 								{% endif %}
 								- OFF ---------------------- #}
 							</td>
-							<td{{ bgcolor|raw }}>{{ entite.accroche }}</td>
+							<td{{ bgcolor|raw }}>{{ entite.accroche|raw }}</td>
 							<td{{ bgcolor|raw }}><strong>{{ UCfirst('fields.TTC'|trans({}, entite.className)) }} {{ entite.prix }}{{ marketplace.devise.symb|raw }}</strong><br>{{ UCfirst('fields.HT'|trans({}, entite.className)) }} {{ entite.prixHT }}{{ marketplace.devise.symb|raw }}<br>{{ UCfirst('fields.TVA'|trans({}, entite.className)) }} {{ entite.tauxTva.taux|number_format(2, ',', ' ') }}%</td>
 						</tr>
 						{% endfor %}

@@ -25,7 +25,7 @@ use \Exception;
  *
  * @ORM\Entity
  * @ORM\Table(name="pdf")
- * @ORM\HasLifecycleCallbacks()
+ * @ORM\HasLifecycleCallbacks
  * @ORM\Entity(repositoryClass="site\adminBundle\Entity\pdfRepository")
  * @ExclusionPolicy("all")
  */

@@ -9,8 +9,19 @@ backlist_btn: 'retour liste'
 dontexist: 'cette fiche n''existe pas'
 moredetails: 'plus de détails sur %name%'
 existe: cette fiche existe déjà
+niveaux:
+    debutant: débutant
+    intermediaire: intermédiaire
+    confirme: confirmé
 fields:
     id: id
     nom: nom
+    accroche: introduction
+    descriptif: recette
+    duree: Temps de réalisation
+    niveau: niveau
     created: création
     updated: mise à jour
+    datePublication: date de publication
+    dateExpiration: date de d'expiration
+    image: visuel

@@ -1,0 +1,47 @@
+parameters:
+    #largeur de l'image pour cropper
+    modelWidth: 800
+    # formats requis pour les champs des différentes entités
+    # si aucun format n'est défini ici, le format cropper sera libre
+    formats:
+        ### ALL DEFAULT
+        default:
+            - null
+            - [1024, 768]
+            - [768, 1024]
+            - [1024, 1024]
+        ### ITEM
+        item:
+            image:
+                - [200, 400]
+        article:
+            image: 
+                - [1000, 700]
+                # - [800, 800]
+                # - [800, 600]
+                # - null # ==> format libre
+        pageweb:
+            image:
+                - [1024, 768]
+                - [768, 1024]
+                - [1024, 1024]
+        fiche:
+            image:
+                - [800, 600]
+                - [800, 800]
+                - [600, 800]
+        ### TIER
+        tier:
+            image:
+                - [800, 600]
+            logo:
+                - [400, 400]
+        marque:
+            logo:
+                - [400, 400]
+        ### USER
+        User:
+            avatar:
+                - [400, 400]
+
+

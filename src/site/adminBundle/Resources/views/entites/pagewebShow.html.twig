@@ -63,7 +63,7 @@
 	<div class="col-md-4">
 		<div class="ibox float-e-margins">
 			<div class="ibox-title">
-				<h3>{{ 'form.background'|trans }}</h3>
+				<h3>{{ 'form.background'|trans }}{% if entite.mainMedia != null %}<a href="{{ path('siteadmin_entite', {entite: entite.className, action: 'delete_linked_image', id: entite.id}) }}" data-title="{{ UCfirst('supprime.nom'|trans({}, 'image')) }}" data-message="{{ UCfirst('supprime.confirm-definitif'|trans({}, 'image')) }}" class="btn btn-xs btn-white pull-right need-confirmation"><i class="fa fa-times icon-wait-on-click"></i></a>{% endif %}</h3>
 			</div>
 			<div class="ibox-content text-center" style='min-height: 180px;'>
 				{% if entite.mainMedia|default(null) != null %}

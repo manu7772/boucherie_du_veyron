@@ -6,10 +6,18 @@ siteadmin_support:
     path:     /support
     defaults: { _controller: siteadminBundle:Default:support }
 
-# SADMIN
+# SUPER ADMIN
 siteadmin_sadmin_index:
     path:     /superadmin
     defaults: { _controller: siteadminBundle:superadmin:index }
+
+siteadmin_sadmin_routes:
+    path:     /superadmin/routes
+    defaults: { _controller: siteadminBundle:superadmin:routes }
+
+siteadmin_sadmin_bundles:
+    path:     /superadmin/bundles
+    defaults: { _controller: siteadminBundle:superadmin:bundles }
 
 siteadmin_sadmin_entities:
     path:     /superadmin/entities/{entity}/{field}
@@ -72,3 +80,14 @@ siteUser_edit:
 siteUser_delete:
     path:     /user/delete/{username}
     defaults: { _controller: siteUserBundle:Default:delete }
+
+# MEDIA / IMAGES / PDF
+siteMedia_saveRawFile:
+    path:     /media/save-raw-file/{entityShortName}
+    defaults: { _controller: siteadminBundle:media:persistRawImage }
+    requirements:
+        entityShortName: image|pdf
+
+# siteMedia_action:
+#     path:     /media/action/{action}
+#     defaults: { _controller: siteadminBundle:media:action }

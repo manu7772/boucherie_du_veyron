@@ -1,6 +1,8 @@
 <?php
 namespace site\services;
 
+use site\services\aeReponse;
+
 class aeImages {
 
     /**
@@ -19,6 +21,7 @@ class aeImages {
         // deform   : déforme l'image pour qu'elle soit exactement à la taille
         // no       : ne modifie pas la taille de l'image
         // calcul…
+        set_time_limit(120);
 
         // if Raw data (string)
         if(is_string($image)) $image = imagecreatefromstring($image);
@@ -35,6 +38,9 @@ class aeImages {
         if($Ysize == null) $Ysize = $Xsize / $ratio;
 
         $Dratio = $Xsize / $Ysize;
+
+        // echo('<p>BEGIN : Size X : '.$Xsize.' px</p>');
+        // echo('<p>BEGIN : Size X : '.$Ysize.' px</p>');
 
         if(($x != $Xsize) || ($y != $Ysize)) {
             switch($mode) {
@@ -87,7 +93,53 @@ class aeImages {
             imagesavealpha($Rimage, true);
             imagecopy($Rimage, $image, 0, 0, 0, 0, $x, $y);
         }
+        imagedestroy($image);
+
+        // $x = imagesx($Rimage);
+        // $y = imagesy($Rimage);
+        // echo('<p>END : Size X : '.$x.' px</p>');
+        // echo('<p>END : Size X : '.$y.' px</p>');
+
         return $Rimage;
     }
 
+    public function getCropped($image, $w, $h, $x, $y, $width, $height, $rotate = 0) {
+        set_time_limit(120);
+        ini_set('memory_limit', '512M');
+        $reponse = new aeReponse();
+        // echo('<p>- w : '.$w.'<br>'); 
+        // echo('- h : '.$h.'<br>');
+        // echo('- x : '.$x.'<br>');
+        // echo('- y : '.$y.'<br>');
+        // echo('- width : '.$width.'<br>');
+        // echo('- height : '.$height.'<br>');
+        // echo('- rotate : '.$rotate.'°</p>');
+        if(is_string($image)) $image = imagecreatefromstring($image);
+        if($rotate != 0) imagerotate($image, $rotate, 0, 0);
+        $Rimage = imagecreatetruecolor($w, $h);
+        imagealphablending($Rimage, false);
+        imagesavealpha($Rimage, true);
+        $reponse->setResult(imagecopyresampled($Rimage, $image, 0, 0, $x, $y, $w, $h, $width, $height));
+        if($reponse->getResult() == true) {
+            // OK
+            $message = 'Génération de l\'image réussie. ';
+            if($width < $x || $height < $y) $message .= 'Attention, l\'image a été agrandie. Sa résolution ne sera suffisante pour une qualité d\'affichage optimale.';
+            $reponse->setMessage($message);
+            $reponse->setData($Rimage);
+        } else {
+            // ERROR
+            $reponse->setMessage('Une erreur s\'est produite pendant la génération. Veuillez recommencer l\'opération.');
+        }
+        return $reponse;
+    }
+
 }
+
+
+
+
+
+
+
+
+

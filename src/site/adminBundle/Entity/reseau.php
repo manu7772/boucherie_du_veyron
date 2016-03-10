@@ -22,7 +22,7 @@ use \DateTime;
  *
  * @ORM\Entity
  * @ORM\Table(name="reseau")
- * @ORM\HasLifecycleCallbacks()
+ * @ORM\HasLifecycleCallbacks
  * @ORM\Entity(repositoryClass="site\adminBundle\Entity\reseauRepository")
  * @UniqueEntity(fields={"nom"}, message="Cette reseau est déjà enregistrée")
  * @ExclusionPolicy("all")
@@ -63,6 +63,14 @@ class reseau extends tier {
 		$this->couleur = "#FFFFFF";
 	}
 
+
+	/**
+	 * Un élément par défaut dans la table est-il obligatoire ?
+	 * @return boolean
+	 */
+	public function isDefaultNullable() {
+		return true;
+	}
 
 	/**
 	 * Get articles - INVERSE

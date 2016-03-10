@@ -26,34 +26,42 @@ class ficheType extends baseType {
 	public function buildForm(FormBuilderInterface $builder, array $options) {
 		// ajout de action si défini
 		$this->initBuilder($builder);
+		// $this->imagesData = array(
+		// 	'image' => array(
+		// 		'owner' => 'fiche:image'
+		// 		),
+		// 	)
+		// ;
 		// Builder…
 		$fiche = new fiche();
 		$builder
 			->add('nom', 'text', array(
-				'label' => 'form.nom',
-				'translation_domain' => 'messages',
+				'label' => 'fields.nom',
+				'translation_domain' => 'fiche',
 				'required' => true,
 				))
 			->add('accroche', 'text', array(
-				'label' => 'form.accroche',
-				'translation_domain' => 'messages',
+				'label' => 'fields.accroche',
+				'translation_domain' => 'fiche',
 				'required' => false,
 				))
 			->add('descriptif', 'insRichtext', array(
-				'label' => 'form.descriptif',
-				'translation_domain' => 'messages',
+				'label' => 'fields.descriptif',
+				'translation_domain' => 'fiche',
 				'required' => false,
 				))
 			->add('niveau', 'choice', array(
 				"required"  => true,
-				"label"     => 'Niveau',
+				"label"     => 'fields.niveau',
+				'translation_domain' => 'fiche',
 				'multiple'  => false,
-				'expanded'  => true,
+				// 'expanded'  => true,
 				"choices"   => $fiche->getListeNiveaux(),
 				))
 			->add('duree', 'choice', array(
 				"required"  => true,
-				"label"     => 'Temps de réalisation',
+				"label"     => 'fields.duree',
+				'translation_domain' => 'fiche',
 				'multiple'  => false,
 				'expanded'  => false,
 				"choices"   => $fiche->getDurees(),
@@ -65,16 +73,22 @@ class ficheType extends baseType {
 				'class'     => 'siteadminBundle:statut',
 				'property'  => 'nom',
 				'multiple'  => false,
-				"label"     => 'Statut'
+				"label"     => 'name',
+				'translation_domain' => 'statut',
+				"query_builder" => function($repo) {
+					if(method_exists($repo, 'defaultValsListClosure'))
+						return $repo->defaultValsListClosure($this->aeEntities);
+						else return $repo->findAllClosure();
+					},
 				))
-			->add('image', new imageType($this->controller), array(
-				'label' => 'table.col.visuel',
-				'translation_domain' => 'messages',
+			->add('image', new cropperType($this->controller, array('image' => array('owner' => 'fiche:image'))), array(
+				'label' => 'fields.image',
+				'translation_domain' => 'fiche',
 				'required' => false,
 				))
 			->add('tags', 'entity', array(
-				'label'		=> 'tag.name_s',
-				'translation_domain' => 'messages',
+				'label'		=> 'name_s',
+				'translation_domain' => 'tag',
 				'property'	=> 'nom',
 				'class'		=> 'siteadminBundle:tag',
 				'multiple'	=> true,
@@ -85,8 +99,8 @@ class ficheType extends baseType {
 					),
 				))
 			->add('articles', 'entity', array(
-				'label'		=> 'article.name_s',
-				'translation_domain' => 'messages',
+				'label'		=> 'name_s',
+				'translation_domain' => 'article',
 				'property'	=> 'nom',
 				'class'		=> 'siteadminBundle:article',
 				'multiple'	=> true,
@@ -97,9 +111,13 @@ class ficheType extends baseType {
 					),
 				))
 			->add('datePublication', 'insDatepicker', array(
+				'label'		=> 'fields.datePublication',
+				'translation_domain' => 'fiche',
 				"required"  => false,
 				))
 			->add('dateExpiration', 'insDatepicker', array(
+				'label'		=> 'fields.dateExpiration',
+				'translation_domain' => 'fiche',
 				"required"  => false,
 				))
 		;

@@ -3,37 +3,98 @@ statut:
     data:
         -
             nom: 'Actif'
-            descriptif: 'Statut actif'
-            niveau: 'ROLE_USER'
+            descriptif: '<p>Statut actif</p>'
+            niveau: 'IS_AUTHENTICATED_ANONYMOUSLY'
             default: 1
             couleur: 'rgba(255, 255, 255, 0)'
+            bundles:
+                - 'sitesiteBundle'
+                - 'sitegraphicsBundle'
+                - 'siteUserBundle'
+                - 'sitetranslateBundle'
+                - 'siteeditionBundle'
+                - 'siteadminBundle'
         -
             nom: 'Inactif'
-            descriptif: 'Statut inactif'
-            niveau: 'ROLE_ADMIN'
+            descriptif: '<p>Statut inactif</p>'
+            niveau: 'ROLE_EDITOR'
             default: 0
             couleur: 'rgba(255, 68, 68, 0.33)'
+            bundles:
+                - 'sitegraphicsBundle'
+                - 'siteUserBundle'
+                - 'sitetranslateBundle'
+                - 'siteeditionBundle'
+                - 'siteadminBundle'
         -
             nom: 'Expired'
-            descriptif: 'Statut expiré'
+            descriptif: '<p>Statut expiré</p>'
             niveau: 'ROLE_ADMIN'
             default: 0
             couleur: 'rgba(255, 182, 68, 0.33)'
+            bundles:
+                - 'sitegraphicsBundle'
+                - 'siteUserBundle'
+                - 'sitetranslateBundle'
+                - 'siteeditionBundle'
+                - 'siteadminBundle'
+        -
+            nom: 'Webmaster'
+            descriptif: '<p>Élément pour la gestion du site, visibles uniquement par le webmaster (ROLE_SUPER_ADMIN)</p>'
+            niveau: 'ROLE_SUPER_ADMIN'
+            default: 0
+            couleur: 'rgba(161,63,207,0.75)'
+            bundles:
+                - 'sitegraphicsBundle'
+                - 'siteUserBundle'
+                - 'sitetranslateBundle'
+                - 'siteeditionBundle'
+                - 'siteadminBundle'
         -
             nom: 'Deleted'
-            descriptif: 'Effacé pour tous, sauf ROLE_SUPER_ADMIN'
+            descriptif: '<p>Effacé pour tous, sauf ROLE_SUPER_ADMIN</p>'
             niveau: 'ROLE_SUPER_ADMIN'
             default: 0
             couleur: 'rgba(255, 68, 68, 0.5)'
+            bundles:
+                - 'sitegraphicsBundle'
+                - 'siteUserBundle'
+                - 'sitetranslateBundle'
+                - 'siteeditionBundle'
+                - 'siteadminBundle'
+        -
+            nom: 'Temp'
+            descriptif: '<p>Éléments temporaires <small>Doivent pouvoir être supprimés à tout moment</small></p>'
+            niveau: 'ROLE_SUPER_ADMIN'
+            default: 0
+            couleur: 'rgba(174,201,242,0.5)'
+            bundles:
+                - 'sitegraphicsBundle'
+                - 'siteUserBundle'
+                - 'sitetranslateBundle'
+                - 'siteeditionBundle'
+                - 'siteadminBundle'
         -
             nom: 'Dev'
-            descriptif: 'Statut pour dev uniquement'
+            descriptif: '<p>Statut pour dev uniquement</p>'
             niveau: 'ROLE_SUPER_ADMIN'
             default: 0
             couleur: 'rgba(255, 68, 68, 0.75)'
+            bundles:
+                - 'sitegraphicsBundle'
+                - 'siteUserBundle'
+                - 'sitetranslateBundle'
+                - 'siteeditionBundle'
+                - 'siteadminBundle'
         -
             nom: 'Test'
-            descriptif: 'Statut pour tests uniquement'
+            descriptif: '<p>Statut pour tests uniquement</p>'
             niveau: 'ROLE_SUPER_ADMIN'
             default: 0
             couleur: 'rgba(255, 68, 68, 0.75)'
+            bundles:
+                - 'sitegraphicsBundle'
+                - 'siteUserBundle'
+                - 'sitetranslateBundle'
+                - 'siteeditionBundle'
+                - 'siteadminBundle'

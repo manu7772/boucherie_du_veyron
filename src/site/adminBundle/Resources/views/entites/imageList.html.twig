@@ -54,7 +54,7 @@
 								<img src="{{ entite.imgThumbnail(80, 80, 'cut')|raw }}" class="img-responsive img-thumbnail">
 							</td>
 							<td{{ bgcolor|raw }}>
-								{{ actions.entiteButtons(entite, ['show','delete'], type) }}
+								{{ actions.entiteButtons(entite, ['show', 'edit','delete'], type) }}
 								{# - OFF ----------------------
 								{% if DEVMODE %}
 								<hr class="m-b-xs m-t-xs">
@@ -98,7 +98,7 @@
 					</tbody>
 				</table>
 				{% else %}
-				<h3><i class="fa fa-ban"></i> {{ 'not_found'|trans }}</h3>
+				<h3><i class="fa fa-ban"></i> {{ 'not_found'|trans({}, entite_name) }}</h3>
 				{% endif %}
 			</div>
 		</div>

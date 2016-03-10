@@ -329,7 +329,7 @@ class aeMenus {
 		$r = file_put_contents(
 			$path,
 			$dumper->dump($array, self::MAX_YAML_LEVEL)
-			);
+		);
 		if($init) $this->initFiles();
 		return $r;
 	}

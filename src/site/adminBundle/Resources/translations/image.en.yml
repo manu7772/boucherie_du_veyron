@@ -9,8 +9,14 @@ backlist_btn: 'back to list'
 dontexist: 'this image does not exist'
 moredetails: 'more details on %name%'
 existe: this image already exists
+supprime:
+    nom: delete image
+    confirm: 'Do you realy want to delete this image?'
+    confirm-definitif: 'Do you realy want to delete this image? Beware : it will be finally deleted.'
 fields:
     id: id
     nom: name
+    originalnom: original name
+    binaryFile: picture
     created: created
     updated: updated

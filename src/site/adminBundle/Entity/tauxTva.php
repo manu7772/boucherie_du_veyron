@@ -17,7 +17,7 @@ use \DateTime;
  *
  * @ORM\Entity
  * @ORM\Table(name="tauxTva")
- * @ORM\HasLifecycleCallbacks()
+ * @ORM\HasLifecycleCallbacks
  * @ORM\Entity(repositoryClass="site\adminBundle\Entity\tauxTvaRepository")
  * @UniqueEntity(fields={"nom"}, message="Ce taux de tva existe déjà")
  */

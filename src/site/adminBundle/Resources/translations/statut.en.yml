@@ -24,3 +24,10 @@ fields:
     bundles: bundles
     created: created
     updated: updated
+roles:
+    IS_AUTHENTICATED_ANONYMOUSLY: public
+    ROLE_USER: connected
+    ROLE_TRANSLATOR: translator
+    ROLE_EDITOR: éditor
+    ROLE_ADMIN: administrator
+    ROLE_SUPER_ADMIN: webmaster

@@ -23,7 +23,7 @@ use \Exception;
  *
  * @ORM\Entity
  * @ORM\Table(name="adresse")
- * @ORM\HasLifecycleCallbacks()
+ * @ORM\HasLifecycleCallbacks
  * @ORM\Entity(repositoryClass="site\adminBundle\Entity\adresseRepository")
  */
 class adresse extends baseEntity {

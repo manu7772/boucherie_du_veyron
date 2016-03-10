@@ -43,7 +43,13 @@ class reseauType extends baseType {
 				'class'     => 'siteadminBundle:statut',
 				'property'  => 'nom',
 				'multiple'  => false,
-				"label"     => 'Statut'
+				"label"     => 'name',
+				'translation_domain' => 'marque',
+				"query_builder" => function($repo) {
+					if(method_exists($repo, 'defaultValsListClosure'))
+						return $repo->defaultValsListClosure($this->aeEntities);
+						else return $repo->findAllClosure();
+					},
 				))
 			->add('descriptif', 'insRichtext', array(
 				'label' => 'form.descriptif',

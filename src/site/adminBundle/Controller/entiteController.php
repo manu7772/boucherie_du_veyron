@@ -44,8 +44,6 @@ class entiteController extends Controller {
 		$data['id'] = $id;
 		// EM
 		$this->entityService = $this->get('aetools.aeEntities');
-		$this->em = $this->entityService->getEm();
-		$this->repo = $this->entityService->getRepo($data['classname']);
 		// autres éléments…
 		switch ($data['entite_name']) {
 			case '...':
@@ -75,102 +73,167 @@ class entiteController extends Controller {
 		if($action == null) $action = self::DEFAULT_ACTION;
 		
 		$data = $this->getEntiteData($entite, $type_related, $type_field, $type_values, $action, $id);
-		// EM
-		// $this->em = $this->getDoctrine()->getManager();
-		// $this->repo = $this->em->getRepository($data['classname']);
-		// actions selon entité…
-		switch ($data['entite_name']) {
-			// case 'une entité quelconque à traiter de manière particulière…':
-			// 	break;
+		$entityService = $this->getEntityService($data['entite_name']);
 
-			default:
-				// page générique entités
-				switch ($data['action']) {
-					case 'create' :
-						$data['entite'] = $this->getNewEntity($data['classname']);
-						$data[$data['action'].'_form'] = $this->getEntityFormView($data);
-						break;
-					case 'show' :
-						$data['entite'] = $this->repo->find($id);
-						if(!is_object($data['entite'])) throw new Exception($data['entite_name'].'.not_found', 1);
-						break;
-					case 'edit' :
-						$data['entite'] = $this->repo->find($id);
-						if(!is_object($data['entite'])) throw new Exception($data['entite_name'].'.not_found', 1);
-						$data[$data['action'].'_form'] = $this->getEntityFormView($data);
-						break;
-					case 'check' :
-						// DEFAULT_ACTION
-						if($data['type']['type_values'] != null) {
-							$data['entites'] = $this->repo->findByField($data['type'], self::TYPE_SELF, true);
-						} else {
-							$data['entites'] = $this->repo->findAll();
-						}
-						break;
-					case 'delete' :
-						$data['entite'] = $this->repo->find($id);
-						if(!is_object($data['entite'])) {
-							$message = $this->get('flash_messages')->send(array(
-								'title'		=> 'Élément introuvable',
-								'type'		=> flashMessage::MESSAGES_ERROR,
-								'text'		=> 'L\'élément est introuvable et ne peut être supprimé.',
-							));
-							$data['action'] = null;
-							$data['id'] = null;
-						} else {
-							$this->get('aetools.aeEntities')->softDeleteEntity($data['entite']);
-							$message = $this->get('flash_messages')->send(array(
-								'title'		=> 'Élément supprimé',
-								'type'		=> flashMessage::MESSAGES_WARNING,
-								'text'		=> 'L\'élément a été supprimé.',
-							));
-							$data['action'] = null;
-							$data['id'] = null;
-						}
-						return $this->redirect($this->generateEntityUrl($data));
-						break;
-					case 'active' :
-						$data['entite'] = $this->repo->find($id);
-						if(!is_object($data['entite'])) {
-							$message = $this->get('flash_messages')->send(array(
-								'title'		=> 'Élément introuvable',
-								'type'		=> flashMessage::MESSAGES_ERROR,
-								'text'		=> 'L\'élément est introuvable et ne peut être modifié.',
-							));
-							$data['action'] = null;
-							$data['id'] = null;
-						} else {
-							$this->get('aetools.aeEntities')->softActivateEntity($data['entite']);
-							$message = $this->get('flash_messages')->send(array(
-								'title'		=> 'Élément activé',
-								'type'		=> flashMessage::MESSAGES_SUCCESS,
-								'text'		=> 'L\'élément a été activé.',
-							));
-							$data['action'] = 'list';
-						}
-						return $this->redirect($this->generateEntityUrl($data));
-						break;
-					default:
-						// DEFAULT_ACTION
-						if(isset($data['type']['type_related']) && isset($data['type']['type_field']) && isset($data['type']['type_values'])) {
-							// recherche par type
-							if(method_exists($this->repo, 'findWithField')) {
-								$data['entites'] = $this->repo->findWithField($data['type']);
-							} else throw new Exception("Method \"findWithField\" does not exist in Repository \"".$data['classname']."\"", 1);
-						} else {
-							// recherche globale
-							$data['entites'] = $this->repo->findAll();
-						}
-						break;
+		// page générique entités
+		switch ($data['action']) {
+			case 'create' :
+				$data['entite'] = $entityService->getNewEntity($data['classname']);
+				$data[$data['action'].'_form'] = $this->getEntityFormView($data);
+				if($data[$data['action'].'_form'] == false) {
+					// erreur formulaire
+					$data['action'] = self::DEFAULT_ACTION;
+					$data['id'] = null;
 				}
 				break;
+			case 'show' :
+				$data['entite'] = $entityService->getRepo($data['classname'])->find($id);
+				if(!is_object($data['entite'])) {
+					// $this->get('aetools.aeExceptions')->launchException('not_found', null, $data['entite_name']);
+					$this->get('flash_messages')->send(array(
+						'title'		=> 'Élément introuvable',
+						'type'		=> flashMessage::MESSAGES_ERROR,
+						'text'		=> 'L\'élément est introuvable.',
+					));
+					$data['action'] = self::DEFAULT_ACTION;
+					$data['id'] = null;
+				}
+				break;
+			case 'edit' :
+				$data['entite'] = $entityService->getRepo($data['classname'])->find($id);
+				if(!is_object($data['entite'])) {
+					// $this->get('aetools.aeExceptions')->launchException('not_found', null, $data['entite_name']);
+					$this->get('flash_messages')->send(array(
+						'title'		=> 'Élément introuvable',
+						'type'		=> flashMessage::MESSAGES_ERROR,
+						'text'		=> 'L\'élément est introuvable.',
+					));
+					$data['action'] = self::DEFAULT_ACTION;
+					$data['id'] = null;
+				}
+				$data[$data['action'].'_form'] = $this->getEntityFormView($data);
+				if($data[$data['action'].'_form'] == false) {
+					// erreur formulaire
+					$data['action'] = self::DEFAULT_ACTION;
+					$data['id'] = null;
+				}
+				break;
+			case 'check' :
+				// DEFAULT_ACTION
+				if($data['type']['type_values'] != null) {
+					$data['entites'] = $entityService->getRepo()->findByField($data['type'], self::TYPE_SELF, true);
+				} else {
+					$data['entites'] = $entityService->getRepo()->findAll();
+				}
+				break;
+			case 'delete' :
+				$data['entite'] = $entityService->getRepo()->find($id);
+				if(!is_object($data['entite'])) {
+					$this->get('flash_messages')->send(array(
+						'title'		=> 'Élément introuvable',
+						'type'		=> flashMessage::MESSAGES_ERROR,
+						'text'		=> 'L\'élément est introuvable et ne peut être supprimé.',
+					));
+					$data['action'] = null;
+					$data['id'] = null;
+				} else {
+					$entityService->softDeleteEntity($data['entite']);
+					$this->get('flash_messages')->send(array(
+						'title'		=> 'Élément supprimé',
+						'type'		=> flashMessage::MESSAGES_WARNING,
+						'text'		=> 'L\'élément a été supprimé.',
+					));
+					$data['action'] = null;
+					$data['id'] = null;
+				}
+				return $this->redirect($this->generateEntityUrl($data));
+				break;
+			case 'deleteAllTemp' :
+				$entityService->deleteAllTemp($data['entite_name']);
+				$this->get('flash_messages')->send(array(
+					'title'		=> 'Éléments supprimés',
+					'type'		=> flashMessage::MESSAGES_WARNING,
+					'text'		=> 'Opération effectuée.',
+				));
+				$data['action'] = null;
+				$data['id'] = null;
+				return $this->redirect($this->generateEntityUrl($data));
+				break;
+			case 'active' :
+				$data['entite'] = $entityService->getRepo()->find($id);
+				if(!is_object($data['entite'])) {
+					$this->get('flash_messages')->send(array(
+						'title'		=> 'Élément introuvable',
+						'type'		=> flashMessage::MESSAGES_ERROR,
+						'text'		=> 'L\'élément est introuvable et ne peut être modifié.',
+					));
+					$data['action'] = null;
+					$data['id'] = null;
+				} else {
+					$entityService->softActivateEntity($data['entite']);
+					$this->get('flash_messages')->send(array(
+						'title'		=> 'Élément activé',
+						'type'		=> flashMessage::MESSAGES_SUCCESS,
+						'text'		=> 'L\'élément a été activé.',
+					));
+					$data['action'] = self::DEFAULT_ACTION;
+				}
+				return $this->redirect($this->generateEntityUrl($data));
+				break;
+			case 'delete_linked_image' :
+				$data['entite'] = $entityService->getRepo()->find($id);
+				$data['entite']->setImage(null);
+				$entityService->save($data['entite']);
+				$this->get('flash_messages')->send(array(
+					'title'		=> 'Image supprimée',
+					'type'		=> flashMessage::MESSAGES_WARNING,
+					'text'		=> 'L\'image de '.$data['entite'].' a été supprimée.',
+				));
+				$data['action'] = 'show';
+				return $this->redirect($this->generateEntityUrl($data));
+				break;
+			default:
+				$data['action'] = self::DEFAULT_ACTION;
+				break;
+		}
+
+		if($data['action'] == self::DEFAULT_ACTION) {
+			// DEFAULT_ACTION
+			if(isset($data['type']['type_related']) && isset($data['type']['type_field']) && isset($data['type']['type_values'])) {
+				// recherche par type
+				if(method_exists($entityService->getRepo(), 'findWithField')) {
+					$data['entites'] = $entityService->getRepo($data['classname'])->findWithField($data['type']);
+				} else throw new Exception("Method \"findWithField\" does not exist in Repository \"".$data['classname']."\"", 1);
+			} else {
+				// recherche globale
+				$data['entites'] = $entityService->getRepo($data['classname'])->findAll();
+			}
 		}
 		
 		$template = 'siteadminBundle:entites:'.$entite.ucfirst($data['action']).'.html.twig';
 		if(!$this->get('templating')->exists($template)) {
 			$template = 'siteadminBundle:entites:'.'entite'.ucfirst($data['action']).'.html.twig';
+			if(!$this->get('templating')->exists($template)) {
+				$this->redirect($this->generateUrl('siteadmin_homepage'));
+			}
 		}
 		return $this->render($template, $data);
+	}
+
+	/**
+	 * Renvoie le service de l'entité - renvoie aeEntities par défaut si non trouvé
+	 * @param string $entityShortName
+	 * @return object
+	 */
+	protected function getEntityService($entityShortName) {
+		$ae = "aetools.ae".ucfirst($entityShortName);
+		if($this->has($ae)) {
+			$service = $this->get($ae);
+		} else {
+			$service = $this->get('aetools.aeEntities');
+			$service->defineEntity($entityShortName);
+		}
+		return $service;
 	}
 
 	/**
@@ -207,14 +270,9 @@ class entiteController extends Controller {
 		// if(!isset($req["hiddenData"])) throw new Exception("entitePostFormPageAction : hiddenData absent ! (".$typeTmp->getName().")", 1);
 		if(isset($req["hiddenData"])) {
 			$data = json_decode(urldecode($req["hiddenData"]), true);
-		} else {
-			// 
-		}
-		// echo('<pre>');
-		// var_dump($req);
-		// EntityManager
-		$this->em = $this->getDoctrine()->getManager();
-		$this->repo = $this->em->getRepository($classname);
+		} 
+		// Entity service
+		$entityService = $this->getEntityService($data['entite_name']);
 
 		if($data['action'] == "create") {
 			// create
@@ -223,11 +281,11 @@ class entiteController extends Controller {
 		} else {
 			// edit / delete
 			$imsg = ' (id:'.$data['id'].')';
-			$data['entite'] = $this->repo->find($data['id']);
+			$data['entite'] = $entityService->getRepo()->find($data['id']);
 		}
 		if(!is_object($data['entite'])) {
 			// entité invalide
-			$message = $this->get('flash_messages')->send(array(
+			$this->get('flash_messages')->send(array(
 				'title'		=> 'Entité introuvable',
 				'type'		=> flashMessage::MESSAGES_ERROR,
 				'text'		=> 'L\'entité "'.$data['entite_name'].'"'.$imsg.' n\'a pas été trouvée.',
@@ -235,84 +293,50 @@ class entiteController extends Controller {
 		} else {
 			switch ($data['action']) {
 				case 'delete':
-					$this->get('aetools.aeEntities')->softDelete($data['entite']);
-					$this->em->flush();
+					$entityService->softDelete($data['entite']);
 					if(isset($data['onSuccess'])) return $this->redirect($data['onSuccess']);
 					break;
-				
 				default:
 					$form = $this->getEntityForm($data);
 					$form->bind($request);
 					if($form->isValid()) {
 						// formulaire valide -> enregistrement -> renvoi à l'url de success
-						// 
-						$this->em->persist($data['entite']);
-						$this->em->flush();
-						$this->checkEntityAfterPersist($data);
-						if($data['action'] == "create") {
-							$data['id'] = $data['entite']->getId();
-							unset($data['onSuccess']);
-							$this->addContextActionsToData($data);
-							$nom = $data['entite']->getId();
-							if(method_exists($data['entite'], 'getName')) $nom = $data['entite']->getName();
-							if(method_exists($data['entite'], 'getNom')) $nom = $data['entite']->getNom();
-							$message = $this->get('flash_messages')->send(array(
-								'title'		=> 'Saisie enregistrée',
-								'type'		=> flashMessage::MESSAGES_SUCCESS,
-								'text'		=> 'Le nouvel élément "'.$nom.'" a bien été enregistré.',
-							));
+						$entityService->checkAfterChange($data['entite']);
+						$save = $entityService->save($data['entite']);
+						if($save->getResult() == true) {
+							$this->getSuccessPersistFlashMessage($data);
+							if(isset($data['onSuccess'])) return $this->redirect($data['onSuccess']);
 						} else {
-							$message = $this->get('flash_messages')->send(array(
-								'title'		=> 'Saisie enregistrée',
-								'type'		=> flashMessage::MESSAGES_SUCCESS,
-								'text'		=> 'Les modification de cet élément ont bien été enregistrées.',
+							// erreur à l'enregistrement
+							$this->get('flash_messages')->send(array(
+								'title'		=> 'Erreurs de saisie',
+								'type'		=> flashMessage::MESSAGES_ERROR,
+								'text'		=> $save->getMessage(),
 							));
+							// if(isset($data['onError'])) return $this->redirect($data['onError']);
 						}
-						if(isset($data['onSuccess'])) return $this->redirect($data['onSuccess']);
-					} else {
-						// formulaire invalide -> url echec
-						$message = $this->get('flash_messages')->send(array(
-							'title'		=> 'Erreurs de saisie',
-							'type'		=> flashMessage::MESSAGES_ERROR,
-							'text'		=> 'La saisie de vos données contient des erreurs. Veuillez les corriger, svp.',
-						));
-						if(isset($data['onError'])) {
-							if(is_string($data['onError'])) return $this->redirect($data['onError']);
-						}
-						// retour au formulaire…
-						$template = 'siteadminBundle:entites:'.$data['entite_name'].ucfirst($data['action']).'.html.twig';
-						if(!$this->get('templating')->exists($template)) {
-							$template = 'siteadminBundle:entites:'.'entite'.ucfirst($data['action']).'.html.twig';
-						}
-						$data[$data['action'].'_form'] = $form->createView();
-						return $this->render($template, $data);
+						// return $this->render('siteadminBundle:blocks:dump.html.twig', array('data' => $data['entite']));
 					}
+					// formulaire invalide -> url echec
+					$this->get('flash_messages')->send(array(
+						'title'		=> 'Erreurs de saisie',
+						'type'		=> flashMessage::MESSAGES_ERROR,
+						'text'		=> 'La saisie de vos données contient des erreurs. Veuillez les corriger, svp.',
+					));
+					// if(isset($data['onError'])) return $this->redirect($data['onError']);
+					// retour au formulaire…
+					$template = 'siteadminBundle:entites:'.$data['entite_name'].ucfirst($data['action']).'.html.twig';
+					if(!$this->get('templating')->exists($template)) {
+						$template = 'siteadminBundle:entites:'.'entite'.ucfirst($data['action']).'.html.twig';
+					}
+					$data[$data['action'].'_form'] = $form->createView();
+					return $this->render($template, $data);
+					// --> http://stackoverflow.com/questions/11227975/symfony-2-redirect-using-post
+					// return $this->redirectToRoute('siteadmin_entite', ['request' => $request], 307);
 					break;
 			}
 		}
 		return $this->redirect($this->generateUrl('siteadmin_entite', $data['entite_name']));
-	}
-
-	/**
-	 * Check d'une entite avant de la persister
-	 */
-	protected function checkEntityAfterPersist(&$data) {
-		$launchInverse = true;
-		// lance le checkAfterChange
-		$serviceName = 'aetools.ae'.ucfirst($data['entite_name']);
-		if($this->has($serviceName)) {
-			// et si la méthode existe…
-			$checkMethod = 'checkAfterChange';
-			$entityService = $this->get($serviceName);
-			if(method_exists($entityService, $checkMethod)) {
-				$entityService->$checkMethod($data['entite']);
-				$launchInverse = false;
-			}
-		}
-		// !!! vérifie les liens inverses !!! (si le service n'a pu être lancé)
-		if($launchInverse == true) {
-			$this->get('aetools.aeEntities')->checkInversedLinks($data['entite'], true);
-		}
 	}
 
 	/**
@@ -322,8 +346,8 @@ class entiteController extends Controller {
 	 * @param array $data
 	 * @return Symfony\Component\Form\FormView
 	 */
-	public function getEntityFormView(&$data) {
-		return $this->getEntityForm($data, true);
+	public function getEntityFormView(&$data, $typeType = null) {
+		return $this->getEntityForm($data, $typeType, true);
 	}
 
 	/**
@@ -333,7 +357,7 @@ class entiteController extends Controller {
 	 * @param array $data
 	 * @return Symfony\Component\Form\Form
 	 */
-	public function getEntityForm(&$data, $getViewNow = false) {
+	public function getEntityForm(&$data, $typeType = null, $getViewNow = false) {
 		if(!is_array($data)) throw new Exception("getEntityForm : data doit être défini !", 1);
 		$types_valid = array('create', 'edit', 'copy', 'delete');
 		if(!in_array($data['action'], $types_valid)) {
@@ -345,33 +369,21 @@ class entiteController extends Controller {
 		$viewForm = false;
 		$form = false;
 		// define Type
-		$entiteType = str_replace('Entity', 'Form', $data['classname'].'Type');
+		if(!is_string($typeType)) $typeType = $data['classname'].'Type';
+		$entiteType = str_replace('Entity', 'Form', $typeType);
 		switch ($data['action']) {
 			case 'create':
-				$form = $this->createForm(new $entiteType($this, $data), $data['entite']);
-				break;
 			case 'edit':
 				$form = $this->createForm(new $entiteType($this, $data), $data['entite']);
 				break;
-			case 'delete':
-				# code...
-				break;
 			case 'copy':
-				if(method_exists($data['entite'], 'getClone')) {
-					$data['entite'] = $data['entite']->getClone();
-				} else {
-					// copie impossible
-					$message = $this->get('flash_messages')->send(array(
-						'title'		=> 'Copie impossible',
-						'type'		=> flashMessage::MESSAGES_ERROR,
-						'text'		=> 'Cet élément <strong>"'.$data['entite']->getNom().'"</strong> ne peut être copié.',
-					));
-				}
-				$form = $this->createForm(new $entiteType($this, $data), $data['entite']);
+				throw new Exception("Ce formulaire ".$data['action']." n'est pas encore supporté.", 1);
 				break;
-			
+			case 'delete':
+				throw new Exception("Ce formulaire ".$data['action']." n'est pas encore supporté.", 1);
+				break;
 			default:
-				$message = $this->get('flash_messages')->send(array(
+				$this->get('flash_messages')->send(array(
 					'title'		=> 'Erreur formulaire',
 					'type'		=> flashMessage::MESSAGES_ERROR,
 					'text'		=> 'Ce type de formulaire <strong>"'.$type.'"</strong> n\'est pas reconnu.',
@@ -379,7 +391,14 @@ class entiteController extends Controller {
 				break;
 		}
 		if($form != false) $viewForm = $form->createView();
-		if($getViewNow) return $viewForm;
+			else {
+				$this->get('flash_messages')->send(array(
+					'title'		=> 'Erreur de génération du formalaire',
+					'type'		=> flashMessage::MESSAGES_ERROR,
+					'text'		=> 'Le formulaire n\'a pas pu être généré. Veuillez contacter le webmaster.',
+				));
+			}
+		if($getViewNow != false) return $viewForm;
 		return $form;
 	}
 
@@ -391,6 +410,7 @@ class entiteController extends Controller {
 	protected function addContextActionsToData(&$data) {
 		if(!is_array($data)) throw new Exception("addContextActionsToData : data doit être défini !", 1);
 		switch ($data['action']) {
+			case 'delete_linked_image':
 			case 'create':
 			case 'edit':
 				if(!isset($data['form_action'])) {
@@ -464,60 +484,53 @@ class entiteController extends Controller {
 		// return $data;
 	}
 
-	protected function getNewEntity($classname) {
-		$newEntity = new $classname();
-		$this->get('aetools.aeEntities')->fillAllAssociatedFields($newEntity);
-		// $this->em = $this->getDoctrine()->getManager();
-		// if(method_exists($newEntity, 'setStatut')) {
-		// 	// si un champ statut existe
-		// 	$defaultStatut = $this->em->getRepository('site\adminBundle\Entity\statut')->defaultVal();
-		// 	if(is_array($defaultStatut)) $defaultStatut = reset($defaultStatut);
-		// 	if(is_object($defaultStatut)) $newEntity->setStatut($defaultStatut);
-		// }
-		// if(method_exists($newEntity, 'setTauxTva')) {
-		// 	// si un champ statut existe
-		// 	$defaultTauxTva = $this->em->getRepository('site\adminBundle\Entity\tauxTva')->defaultVal();
-		// 	if(is_array($defaultTauxTva)) $defaultTauxTva = reset($defaultTauxTva);
-		// 	if(is_object($defaultTauxTva)) $newEntity->setTauxTva($defaultTauxTva);
-		// }
-		return $newEntity;
-	}
-
 	/**
-	 * Désigne l'entite' comme entite par défaut
+	 * Désigne l'entite comme entite par défaut
 	 * @param integer $id
 	 * @param string $redir
 	 * @return redirectResponse
 	 */
 	public function entite_as_defaultAction($id, $entite, $redir) {
-		$this->em = $this->getDoctrine()->getManager();
-		$this->repo = $this->em->getRepository('site\adminBundle\Entity\\'.$entite);
-		// entité à mettre en page web par défaut
-		$item = $this->repo->find($id);
+		$item = $this->get('aetools.aeEntities')->getRepo('site\adminBundle\Entity\\'.$entite)->find($id);
+		// entité à mettre par défaut
 		if(!is_object($item)) {
-			$message = $this->get('flash_messages')->send(array(
+			$this->get('flash_messages')->send(array(
 				'title'		=> 'Elément introuvable',
 				'type'		=> flashMessage::MESSAGES_ERROR,
 				'text'		=> 'Cette page <strong>#"'.$id.'"</strong> n\'a pu être touvée',
 			));
 		} else {
-			$item->setDefault(true);
-			// $this->em->persist($page);
-			// on passe les autres entites en false s'il en existe
-			$items = $this->repo->findByDefault(true);
-			if(count($items) > 0) foreach ($items as $oneItem) {
-				$oneItem->setDefault(false);
-			}
-			$this->em->flush();
-			$message = $this->get('flash_messages')->send(array(
-				'title'		=> 'Par défaut',
-				'type'		=> flashMessage::MESSAGES_SUCCESS,
-				'text'		=> 'L\'élément "'.$item->getNom().'" a été défini comme élément par défaut.',
-			));
+			$this->get('aetools.aeEntities')->setAsDefault($item);
 		}
 		return $this->redirect(urldecode($redir));
 	}
 
+
+	/**
+	 * Envoie un flash message après persist/update d'une entité
+	 * @param array $data
+	 */
+	protected function getSuccessPersistFlashMessage($data) {
+		$data['id'] = $data['entite']->getId();
+		unset($data['onSuccess']);
+		$this->addContextActionsToData($data);
+		$nom = $data['entite']->getId();
+		if(method_exists($data['entite'], 'getName')) $nom = $data['entite']->getName();
+		if(method_exists($data['entite'], 'getNom')) $nom = $data['entite']->getNom();
+		if($data['action'] == "create") {
+			$this->get('flash_messages')->send(array(
+				'title'		=> 'Saisie enregistrée',
+				'type'		=> flashMessage::MESSAGES_SUCCESS,
+				'text'		=> 'Le nouvel élément "'.$nom.'" a bien été enregistré.',
+			));
+		} else {
+			$this->get('flash_messages')->send(array(
+				'title'		=> 'Saisie enregistrée',
+				'type'		=> flashMessage::MESSAGES_SUCCESS,
+				'text'		=> 'Les modification "'.$nom.'" ont bien été enregistrées.',
+			));
+		}
+	}
 
 
 }

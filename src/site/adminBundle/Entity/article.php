@@ -24,7 +24,7 @@ use \DateTime;
  *
  * @ORM\Entity
  * @ORM\Table(name="article")
- * @ORM\HasLifecycleCallbacks()
+ * @ORM\HasLifecycleCallbacks
  * @ORM\Entity(repositoryClass="site\adminBundle\Entity\articleRepository")
  * @ExclusionPolicy("all")
  */
@@ -85,7 +85,7 @@ class article extends item {
 
 	/**
 	 * - PROPRIÉTAIRE
-	 * @ORM\OneToOne(targetEntity="site\adminBundle\Entity\pdf", cascade={"all"}, inversedBy="article")
+	 * @ORM\OneToOne(targetEntity="site\adminBundle\Entity\pdf", cascade={"all"}, inversedBy="article", orphanRemoval=true, cascade={"persist", "remove"})
 	 * @ORM\JoinColumn(nullable=true, unique=false, onDelete="SET NULL")
 	 */
 	protected $pdf;

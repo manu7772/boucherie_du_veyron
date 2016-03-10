@@ -32,24 +32,24 @@
 							{% if DEVMODE %}<td class="text-center"{{ bgcolor|raw }}>{{ entite.id }}</td>{% endif %}
 							<td{{ bgcolor|raw }}>
 								{% if type.type_values|default(null) != null %}
-								<a href="{{ path('siteadmin_entite_type', {entite: entite.className, type_related: type.type_related, type_field: type.type_field, type_values: type.type_values|join(type_value_joiner)|url_encode, id: entite.id, action: 'show'}) }}" title="{{ (entite.className ~ '.moredetails')|trans({'%name%': entite.nom}) }}"><strong>{{ entite.nom }}</strong></a>
+								<a href="{{ path('siteadmin_entite_type', {entite: entite.className, type_related: type.type_related, type_field: type.type_field, type_values: type.type_values|join(type_value_joiner)|url_encode, id: entite.id, action: 'show'}) }}" data-toggle="tooltip" title="{{ ('moredetails')|trans({'%name%': entite.nom}, entite.className) }}"><strong>{{ entite.nom }}</strong></a>
 								{% else %}
-								<a href="{{ path('siteadmin_entite', {entite: entite.className, id: entite.id, action: 'show'}) }}" title="{{ (entite.className ~ '.moredetails')|trans({'%name%': entite.nom}) }}"><strong>{{ entite.nom }}</strong></a>
+								<a href="{{ path('siteadmin_entite', {entite: entite.className, id: entite.id, action: 'show'}) }}" data-toggle="tooltip" title="{{ ('moredetails')|trans({'%name%': entite.nom}, entite.className) }}"><strong>{{ entite.nom }}</strong></a>
 								{% endif %}
 								{% if entite.statut is defined %}
 								{% if entite.statut.id > 1 %}<br><small><i>({{ entite.statut.nom }})</i></small>{% endif %}
 								{% endif %}
 							</td>
 							<td{{ bgcolor|raw }}>
-								{{ actions.entiteButtons(entite, ['show','edit','delete','default'], type) }}
+								{{ actions.entiteButtons(entite, ['show','edit','default'], type) }}
 								{# - OFF ----------------------
 								{% if DEVMODE %}
 								<hr class="m-b-xs m-t-xs">
 								<div class="btn-group">
 									{% if type.type_values|default(null) != null %}
-									<a href="{{ path('siteadmin_entite_type', {entite: entite.className, type_related: type.type_related, type_field: type.type_field, type_values: type.type_values|join(type_value_joiner)|url_encode, id: entite.id, action: 'check'}) }}" type="button" class="btn btn-danger btn-xs" title="Checker article {{ entite.nom }}"><i class="fa fa-check"></i></a>
+									<a href="{{ path('siteadmin_entite_type', {entite: entite.className, type_related: type.type_related, type_field: type.type_field, type_values: type.type_values|join(type_value_joiner)|url_encode, id: entite.id, action: 'check'}) }}" type="button" class="btn btn-danger btn-xs" data-toggle="tooltip" title="Checker article {{ entite.nom }}"><i class="fa fa-check"></i></a>
 									{% else %}
-									<a href="{{ path('siteadmin_entite', {entite: entite.className, id: entite.id, action: 'check'}) }}" type="button" class="btn btn-danger btn-xs" title="Checker article {{ entite.nom }}"><i class="fa fa-check"></i></a>
+									<a href="{{ path('siteadmin_entite', {entite: entite.className, id: entite.id, action: 'check'}) }}" type="button" class="btn btn-danger btn-xs" data-toggle="tooltip" title="Checker article {{ entite.nom }}"><i class="fa fa-check"></i></a>
 									{% endif %}
 								</div>
 								{% endif %}
@@ -57,7 +57,7 @@
 							</td>
 							<td{{ bgcolor|raw }} class="text-center">
 								{% if entite.mainMedia|default(null) != null %}
-								<a href="{{ path('siteadmin_entite', {entite: 'media', id: entite.mainMedia.id, action: 'show'}) }}" class="docs-tooltip" data-toggle="tooltip" title="{{ (entite.className ~ '.moredetails')|trans({'%name%': entite.mainMedia.nom}) }}">
+								<a href="{{ path('siteadmin_entite', {entite: 'media', id: entite.mainMedia.id, action: 'show'}) }}" class="docs-tooltip" data-toggle="tooltip" title="{{ ('moredetails')|trans({'%name%': entite.mainMedia.nom}, entite.className) }}">
 									<img src="{{ entite.mainMedia.imgThumbnail(64, 64, 'cut')|raw }}" class="img-responsive img-thumbnail">
 								</a>
 								{% else %}

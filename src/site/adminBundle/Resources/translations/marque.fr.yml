@@ -8,11 +8,12 @@ backlist: 'retour à la liste des marques'
 backlist_btn: 'retour liste'
 dontexist: 'cette marque n''existe pas'
 moredetails: 'plus de détails sur %name%'
+bydefault: 'définir comme marque par défaut'
 existe: cette marque existe déjà
 fields:
     id: id
     nom: nom
     descriptif: description
     logo: logotype
-    created: création: nom
+    created: création
     updated: mise à jour

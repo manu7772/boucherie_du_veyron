@@ -5,25 +5,35 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use site\services\aeItem;
 
 use site\adminBundle\Entity\article;
-use site\adminBundle\Entity\articleRepository;
-use site\adminBundle\Entity\item;
-use site\adminBundle\Entity\itemRepository;
+use site\adminBundle\Entity\baseEntity;
 
 // call in controller with $this->get('aetools.aeArticle');
 class aeArticle extends aeItem {
 
+    const CLASS_ENTITY = 'site\adminBundle\Entity\article';
+
     public function __construct(ContainerInterface $container) {
         parent::__construct($container);
-        $this->repo = $this->_em->getRepository('siteadminBundle:article');
+        $this->defineEntity(self::CLASS_ENTITY);
     }
 
     /**
      * Check entity after change (edit…)
-     * @param item $entity
+     * @param baseEntity $entity
+     * @return aeArticle
      */
-    public function checkAfterChange(item &$entity) {
+    public function checkAfterChange(baseEntity &$entity) {
         parent::checkAfterChange($entity);
+        return $this;
     }
 
+    /**
+     * Persist and flush a article
+     * @param baseEntity $entity
+     * @return aeReponse
+     */
+    public function save(baseEntity &$entity) {
+        return parent::save($entity);
+    }
 
 }

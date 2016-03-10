@@ -1,0 +1,66 @@
+parameters:
+    mail:
+        address: no-reply@boucherie-du-veyron.fr
+        sender_name: boucherie du veyron
+    menus:
+        site-menu:
+            bundle: sitesite
+            name: publicmenu
+        admin-sidemenu:
+            bundle: siteadmin
+            name: sidemenu
+    homepage:               sitesite_homepage
+    restrict_admin:         ROLE_ADMIN
+    formatDate:             "dd-MM-yyyy" # formulaires
+    formatDateOnly:         "d-m-Y"
+    formatDateHeure:        "d-m-Y H:i:s"
+    formFormatDate:         "dd/mm/yyyy"
+    timezone:               "Europe/Paris"
+    webmaster:
+        nom:        Dujardin
+        prenom:     Emmanuel
+        tel:        06 13 14 35 15
+        email:      emmanuel@aequation-webdesign.fr
+    list_locales:
+        default:            %default_locales%
+        sitesite:           %default_locales%
+        sitetranslate:      %default_locales%
+        siteedition:        %default_locales%
+        siteUser:           %default_locales%
+        siteadmin:          %default_locales%
+    messages:
+        types:
+            success: success
+            info: info
+            warning: warning
+            error: error
+        default_params:
+            texte: "Texte"
+            type: 'success'
+            title: "Titre"
+            showMethod: "slideDown"
+            hideMethod: "fadeOut"
+            showEasing: "swing"
+            hideEasing: "swing"
+            showDuration: 400
+            hideDuration: 1000
+            positionClass: "toast-top-right"
+            closeButton: false
+            progressBar: true
+            debug: false
+            timeOut: 6000
+            extendedTimeOut: 1000
+            closeHtml: '<button type="button">&times;</button>'
+            newestOnTop: false
+    info_entites:
+        article:
+            icon: fa-shopping-cart
+        pageweb:
+            icon: fa-desktop
+    marketplace:
+        active: true
+        paiement: true
+        statistiques: false
+        devise:
+            name: euro
+            symb: €

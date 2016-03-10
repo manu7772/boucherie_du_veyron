@@ -14,7 +14,20 @@
 		<div class="label label-warning">{{ app.environment }}</div>
 		{% endif %}
 		{% if is_granted('ROLE_SUPER_ADMIN') %}
-		<div class="label label-danger">Super Admin</div>
+		<li class="dropdown">
+			<a class="dropdown-toggle" data-toggle="dropdown" href="#">
+				<div class="label label-danger">Super Admin</div>
+			</a>
+			<ul class="dropdown-menu">
+				<li class="dropdown-header text-muted">Route actuelle</li>
+				<li><a href="#">{{ infoRoute._route }}</a></li>
+				<li role="separator" class='divider'></li>
+				<li class="dropdown-header text-muted">Paramètres de route</li>
+				{% for param,value in infoRoute._route_params %}
+				<li><a href="#">{{ param }} : {{ value|default('<i>null</i>')|raw }}</a></li>
+				{% endfor %}
+			</ul>
+		</li>
 		{% endif %}
 		<li class="dropdown">
 			<a class="dropdown-toggle count-info" data-toggle="dropdown" href="#">

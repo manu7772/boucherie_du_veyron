@@ -24,6 +24,7 @@ use Symfony\Component\Form\FormEvent;
 
 use site\UserBundle\Entity\User;
 use site\adminBundle\Form\imageType;
+use site\adminBundle\Form\cropperType;
 
 use FOS\UserBundle\Form\Type\ProfileFormType as BaseType;
 
@@ -49,6 +50,12 @@ class ProfileFormType extends BaseType {
 		// }
 
 		$this->buildUserForm($builder, $options);
+		$this->imagesData = array(
+			'image' => array(
+				'owner' => 'User:avatar'
+				),
+			)
+		;
 
 		$entity = new User();
 		// $themesList = array_values($entity->getAdminskins());
@@ -88,7 +95,7 @@ class ProfileFormType extends BaseType {
 					'class' => 'input-sm form-control',
 					),
 				))
-			->add('avatar', new imageType(), array(
+			->add('avatar', new cropperType(null, array('image' => $this->imagesData['image'])), array(
 				'translation_domain' => 'siteUserBundle',
 				'label' => 'fields.avatar',
 				'required' => false,

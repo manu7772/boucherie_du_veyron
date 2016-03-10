@@ -7,6 +7,9 @@ use \NotFoundHttpException;
 
 class aeMessages {
 
+	const EXCEPTION = "Exception";
+	const NOT_FOUND_EXCEPTION = "NotFoundHttpException";
+
 	protected $container;			// container
 	protected $flashBag;			// session
 	protected $translator;			// translator
@@ -16,8 +19,8 @@ class aeMessages {
 		$this->container = $container;
 		$this->translator = $this->container->get('translator');
 		$this->exceptionsList = array(
-			"Exception",
-			"NotFoundHttpException",
+			self::EXCEPTION,
+			self::NOT_FOUND_EXCEPTION,
 			);
 	}
 

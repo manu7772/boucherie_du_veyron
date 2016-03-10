@@ -2,50 +2,45 @@
 namespace site\services;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
-
-use site\services\aeImages;
+use site\services\aeEntities;
 
 use site\adminBundle\Entity\media;
-use site\adminBundle\Entity\mediaRepository;
+use site\adminBundle\Entity\baseEntity;
 
 // call in controller with $this->get('aetools.media');
-class aeMedia extends aeImages {
-
-	protected $container;		// container
-	protected $_em;				// entity manager
-	protected $repo;			// repository
-	protected $entitiesService;	// service entities
+class aeMedia extends aeEntities {
 
 	public function __construct(ContainerInterface $container) {
-		$this->container = $container;
-		$this->init();
-	}
-
-	public function init() {
-		$this->entitiesService = $this->container->get('aetools.aeEntities');
-		$this->_em = $this->container->get('doctrine')->getManager();
-		$this->repo = $this->_em->getRepository('siteadminBundle:media');
+		parent::__construct($container);
+		$this->defineEntity('site\adminBundle\Entity\media');
 	}
 
 	/**
 	 * Check entity after change (edit…)
-	 * @param media $entity
+	 * @param baseEntity $entity
+	 * @return aeMedia
 	 */
-	public function checkAfterChange(media &$entity) {
-	    // 
-	    $this->entitiesService->checkStatuts($entity, false);
-	    $this->entitiesService->checkInversedLinks($entity, false);
+	public function checkAfterChange(baseEntity &$entity) {
+        // $item = $entity->getItem();
+        // if($item != null)
+        //     echo('<p>Item : '.$item->getClassName().' / '.$item->getNom().' / '.$item->getId().'</p>');
+        // else echo('<p>Item : null</p>');
+        // echo('<pre>');
+        // var_dump($entity->getInfoForPersist());
+        // die('<pre>');
+
+        // echo('<p>End aeMedia::checkAfterChange()</p>');
+	    parent::checkAfterChange($entity);
+	    return $this;
 	}
 
 	/**
 	 * Persist en flush a media
-	 * @param media $media
-	 * @return aeMedia
+	 * @param baseEntity $entity
+	 * @return aeReponse
 	 */
-	public function saveMedia(media &$entity) {
-		$this->_em->persist($entity);
-		$this->_em->flush();
-		return $this;
+	public function save(baseEntity &$entity) {
+        return parent::save($entity);
 	}
 
 }

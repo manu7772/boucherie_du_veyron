@@ -18,13 +18,17 @@
 	{% if action == "delete" %}
 		<a href="{{ self.entiteLink(entite, action, type) }}" type="button" class="btn btn-white btn-xs" data-toggle="tooltip" data-placement="bottom" title="{{ UCfirst('actions.supprimer'|trans) }}"><i class="fa fa-times icon-wait-on-click"></i></a>
 	{% endif %}
-	{% if action == "default" and entite.default is defined %}
+	{% if action == "default" and entite.default is defined and (entite.statut.niveau|default('IS_AUTHENTICATED_ANONYMOUSLY') in ['IS_AUTHENTICATED_ANONYMOUSLY', 'ROLE_USER']) %}
 		{% set defcol = 'white' %}
-		{% if entite.default %}{% set defcol = 'primary' %}{% endif %}
-		<a href="{{ self.entiteLink(entite, action, type) }}" type="button" class="btn btn-{{ defcol }} btn-xs" data-toggle="tooltip" data-placement="bottom" title="{{ 'bydefault'|trans({}, entite.className) }}"><i class="fa fa-check icon-wait-on-click"></i></a>
+		{% set disabled = '' %}
+		{% if entite.default %}
+			{% set defcol = 'primary' %}
+			{% if entite.isDefaultNullable|default(false) == false %}{% set disabled = ' disabled="disabled"' %}{% endif %}
+		{% endif %}
+		<a href="{{ self.entiteLink(entite, action, type) }}"{{ disabled|raw }} type="button" class="btn btn-{{ defcol }} btn-xs" data-toggle="tooltip" data-placement="bottom" title="{{ 'bydefault'|trans({}, entite.className) }}"><i class="fa fa-star icon-wait-on-click"></i></a>
 	{% endif %}
 	{% if action == "active" and entite.statut.nom|default('Actif') != 'Actif' %}
-		<a href="{{ self.entiteLink(entite, action, type) }}" type="button" class="btn btn-danger btn-xs" title="{{ UCfirst('actions.activer'|trans) }}"><i class="fa fa-star icon-wait-on-click"></i></a>
+		<a href="{{ self.entiteLink(entite, action, type) }}" type="button" class="btn btn-white btn-xs" title="{{ UCfirst('actions.activer'|trans) }}"><i class="fa fa-check icon-wait-on-click"></i></a>
 	{% endif %}
 {% endmacro %}
 

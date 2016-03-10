@@ -6,29 +6,19 @@ use Symfony\Component\Form\Extension\Core\ChoiceList\ChoiceList;
 use site\services\aeItem;
 
 use site\adminBundle\Entity\pageweb;
-use site\adminBundle\Entity\pagewebRepository;
-use site\adminBundle\Entity\item;
-use site\adminBundle\Entity\itemRepository;
+use site\adminBundle\Entity\baseEntity;
 
-// call in controller with $this->get('aetools.aePageweb');
 class aePageweb extends aeItem {
 
-    const ARRAY_GLUE = '___';
-    const SOURCE_FILES = 'src/';
     const FOLD_PAGEWEB = 'pages_web';
-    const BUNDLE_EXTENSION = 'Bundle';
-    const GO_TO_ROOT = '/../../../';
-    const MAX_YAML_LEVEL = 10;
 
-    protected $container;           // container
     protected $rootPath;            // Dossier root du site
-
     protected $bundles_list;
     protected $files_list;
 
     public function __construct(ContainerInterface $container) {
         parent::__construct($container);
-        $this->repo = $this->_em->getRepository('siteadminBundle:pageweb');
+        $this->defineEntity('site\adminBundle\Entity\pageweb');
         $this->rootPath = __DIR__.self::GO_TO_ROOT;
         $this->setRootPath("/");
         // récupération de fichiers et check
@@ -37,18 +27,29 @@ class aePageweb extends aeItem {
 
     /**
      * Check entity after change (edit…)
-     * @param item $entity
+     * @param baseEntity $entity
+     * @return aePageweb
      */
-    public function checkAfterChange(item &$entity) {
+    public function checkAfterChange(baseEntity &$entity) {
         parent::checkAfterChange($entity);
+        return $this;
     }
 
-    public function getRepository() {
-        return $this->repo;
+    /**
+     * Persist and flush a pageweb
+     * @param baseEntity $entity
+     * @return aeReponse
+     */
+    public function save(baseEntity &$entity) {
+        return parent::save($entity);
     }
+
+    // public function getRepository() {
+    //     return $this->getRepo();
+    // }
 
     public function getDefaultPage() {
-        return $this->repo->findOneByDefault(1);
+        return $this->getRepo()->findOneByDefault(1);
     }
 
     protected function initFiles() {

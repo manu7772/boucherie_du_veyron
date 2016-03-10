@@ -47,7 +47,7 @@ class statutType extends baseType {
             	'translation_domain' => 'statut',
             	'required'	=> true,
             	'multiple'	=> false,
-            	"choices"   => $statut->getRoleChoices(),
+            	"choices"   => $statut->getRoleChoices($this->user),
             	))
             ->add('bundles', 'choice', array(
             	'label' => 'fields.bundles',

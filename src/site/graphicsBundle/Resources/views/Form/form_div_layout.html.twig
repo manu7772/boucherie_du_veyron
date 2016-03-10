@@ -57,7 +57,7 @@
     {%- endif -%}
     <select {{ block('widget_attributes') }}{% if multiple %} multiple="multiple"{% endif %}>
         {%- if placeholder is not none -%}
-            <option value=""{% if required and value is empty %} selected="selected"{% endif %}>{{ placeholder|trans({}, translation_domain)|raw }}</option>
+            <option value=""{% if required and value is empty %} selected="selected"{% endif %}>{{ UCfirst(placeholder|trans({}, translation_domain)|raw) }}</option>
         {%- endif -%}
         {%- if preferred_choices|length > 0 -%}
             {% set options = preferred_choices %}
@@ -74,12 +74,12 @@
 {%- block choice_widget_options -%}
     {% for group_label, choice in options %}
         {%- if choice is iterable -%}
-            <optgroup label="{{ group_label|trans({}, translation_domain) }}">
+            <optgroup label="{{ UCfirst(group_label|trans({}, translation_domain)) }}">
                 {% set options = choice %}
                 {{- block('choice_widget_options') -}}
             </optgroup>
         {%- else -%}
-            <option value="{{ choice.value }}"{% if choice is selectedchoice(value) %} selected="selected"{% endif %}>{{ choice.label|trans({}, translation_domain)|raw }}</option>
+            <option value="{{ choice.value }}"{% if choice is selectedchoice(value) %} selected="selected"{% endif %}>{{ UCfirst(choice.label|trans({}, translation_domain)|raw) }}</option>
         {%- endif -%}
     {% endfor %}
 {%- endblock choice_widget_options -%}
@@ -186,7 +186,7 @@
             {% set label = name|humanize %}
         {%- endif -%}
     {%- endif -%}
-    <button type="{{ type|default('button') }}" {{ block('button_attributes') }}>{{ label|trans({}, translation_domain)|raw }}</button>
+    <button type="{{ type|default('button') }}" {{ block('button_attributes') }}>{{ UCfirst(label|trans({}, translation_domain)|raw) }}</button>
 {%- endblock button_widget -%}
 
 {%- block submit_widget -%}
@@ -327,7 +327,7 @@
     {%- for attrname, attrvalue in attr -%}
         {{- " " -}}
         {%- if attrname in ['placeholder', 'title'] -%}
-            {{- attrname }}="{{ attrvalue|trans({}, translation_domain) }}"
+            {{- attrname }}="{{ UCfirst(attrvalue|trans({}, translation_domain)) }}"
         {%- elseif attrvalue is sameas(true) -%}
             {{- attrname }}="{{ attrname }}"
         {%- elseif attrvalue is not sameas(false) -%}
@@ -341,7 +341,7 @@
     {%- for attrname, attrvalue in attr -%}
         {{- " " -}}
         {%- if attrname in ['placeholder', 'title'] -%}
-            {{- attrname }}="{{ attrvalue|trans({}, translation_domain) }}"
+            {{- attrname }}="{{ UCfirst(attrvalue|trans({}, translation_domain)) }}"
         {%- elseif attrvalue is sameas(true) -%}
             {{- attrname }}="{{ attrname }}"
         {%- elseif attrvalue is not sameas(false) -%}
@@ -355,7 +355,7 @@
     {%- for attrname, attrvalue in attr -%}
         {{- " " -}}
         {%- if attrname in ['placeholder', 'title'] -%}
-            {{- attrname }}="{{ attrvalue|trans({}, translation_domain)|raw }}"
+            {{- attrname }}="{{ UCfirst(attrvalue|trans({}, translation_domain)|raw) }}"
         {%- elseif attrvalue is sameas(true) -%}
             {{- attrname }}="{{ attrname|raw }}"
         {%- elseif attrvalue is not sameas(false) -%}

@@ -3,12 +3,15 @@ tag:
     data:
         -
             nom: boucherie
+            default: 1
         -
             nom: boucher
         -
             nom: traiteur
+            default: 1
         -
             nom: charcutier
+            default: 1
         -
             nom: viande
         -
@@ -41,8 +44,10 @@ tag:
             nom: Cerdon
         -
             nom: Veyron
+            default: 1
         -
             nom: Poncin
+            default: 1
         -
             nom: Ain
         -

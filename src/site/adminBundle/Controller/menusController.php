@@ -7,7 +7,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
-use AcmeGroup\laboInspiniaBundle\services\flashMessage;
+use site\adminBundle\services\flashMessage;
 
 use \Exception;
 
@@ -19,7 +19,7 @@ class menusController extends Controller {
 
 	public function indexAction() {
 		$data = array();
-		$aeMenus = $this->get('aeMenus');
+		$aeMenus = $this->get('aetools.aeMenus');
 		$data['menus'] = $aeMenus->getInfoMenus();
 		$data['bundles'] = $aeMenus->getBundles();
 		return $this->render('siteadminBundle:menus:index.html.twig', $data);
@@ -30,7 +30,7 @@ class menusController extends Controller {
 		$data['action'] = $action;
 		$data['bundle'] = $bundle;
 		$data['name'] = $name;
-		$aeMenus = $this->get('aeMenus');
+		$aeMenus = $this->get('aetools.aeMenus');
 		$data['translates'] = $aeMenus->getLanguagesInfo(); // "languages" - "catalogue"
 		$data['bundles'] = $aeMenus->getBundles();
 		switch ($action) {
@@ -62,7 +62,7 @@ class menusController extends Controller {
 				break;
 		}
 		// $data['models'] = $this->get('aetools.aePageweb')->getModels();
-		$data['pagewebs'] = $this->get('aetools.aePageweb')->getRepository()->findAll();
+		$data['pagewebs'] = $this->get('aetools.aePageweb')->getRepo()->findAll();
 		return $this->render('siteadminBundle:menus:menu_action.html.twig', $data);
 	}
 
@@ -73,7 +73,7 @@ class menusController extends Controller {
 	 * @return boolean
 	 */
 	public function modifyAction($bundle, $name) {
-		$aeMenus = $this->get('aeMenus');
+		$aeMenus = $this->get('aetools.aeMenus');
 		$request = $this->getRequest();
 		$tree = $request->request->get('tree');
 		$data = $aeMenus->setMenu($bundle, $name, $tree);
@@ -88,7 +88,7 @@ class menusController extends Controller {
 	 * @return boolean
 	 */
 	public function changeMaxDepthAction($bundle, $name, $value) {
-		$value = $this->get('aeMenus')->setMaxDepth($bundle, $name, $value);
+		$value = $this->get('aetools.aeMenus')->setMaxDepth($bundle, $name, $value);
 		return new JsonResponse(array('value' => $value));
 	}
 

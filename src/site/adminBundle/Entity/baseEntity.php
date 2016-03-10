@@ -15,7 +15,7 @@ use \Exception;
 
 /**
  * @ORM\MappedSuperclass
- * @ORM\HasLifecycleCallbacks()
+ * @ORM\HasLifecycleCallbacks
  */
 abstract class baseEntity {
 
@@ -98,6 +98,25 @@ abstract class baseEntity {
 				$parents[] = $class->getName();
 		}
 		return $parents;
+	}
+
+	/**
+	 * Un élément par défaut dans la table est-il obligatoire ?
+	 * @return boolean
+	 */
+	public function isDefaultNullable() {
+		return false;
+	}
+
+	/**
+	 * On peut attribuer plusieurs éléments par défaut ?
+	 * true 		= illimité
+	 * integer 		= nombre max. d'éléments par défaut
+	 * false, 0, 1 	= un seul élément
+	 * @return boolean
+	 */
+	public function isDefaultMultiple() {
+		return false;
 	}
 
 	/**

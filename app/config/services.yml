@@ -28,6 +28,11 @@ services:
         class: %ae_services%aeTag
         arguments: [@service_container]
 
+    # fonctionnalités de statut
+    aetools.aeStatut:
+        class: %ae_services%aeStatut
+        arguments: [@service_container]
+
     # fonctionnalités de message
     aetools.aeMessage:
         class: %ae_services%aeMessage
@@ -88,6 +93,11 @@ services:
     # fonctionnalités de pdf
     aetools.aePdf:
         class: %ae_services%aePdf
+        arguments: [@service_container]
+
+    # fonctionnalités de rawfile
+    aetools.aeRawfile:
+        class: %ae_services%aeRawfile
         arguments: [@service_container]
 
 

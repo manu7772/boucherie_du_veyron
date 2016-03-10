@@ -7,14 +7,14 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
-use AcmeGroup\LaboBundle\Entity\magasin;
-use AcmeGroup\LaboBundle\Form\magasinType;
-use AcmeGroup\LaboBundle\Entity\reseau;
-use AcmeGroup\LaboBundle\Form\reseauType;
-use AcmeGroup\LaboBundle\Entity\marque;
-use AcmeGroup\LaboBundle\Form\marqueType;
+use site\adminBundle\Entity\magasin;
+use site\adminBundle\Form\magasinType;
+use site\adminBundle\Entity\reseau;
+use site\adminBundle\Form\reseauType;
+use site\adminBundle\Entity\marque;
+use site\adminBundle\Form\marqueType;
 
-use AcmeGroup\laboInspiniaBundle\services\flashMessage;
+use site\adminBundle\services\flashMessage;
 
 use \Exception;
 

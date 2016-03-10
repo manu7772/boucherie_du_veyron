@@ -7,20 +7,29 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\Form\FormInterface;
 
+use site\services\aetools;
+
 class filecropperType extends AbstractType {
 
 	public function setDefaultOptions(OptionsResolverInterface $resolver) {
+		// $info = $this->getCropperInfo();
+		// $modelWidth = $info['modelWidth'];
 		$resolver->setDefaults(
 			array(
+				'plain_image' => '#',
 				'cropper' => array(
+					'init' => null,
+					// 'modelWidth' => $modelWidth,
+					'ratioIndex' => 0,
 					'options' => array(
-						"flipable" => true,
-						"zoomable" => true,
-						"rotatable" => true,
+						"flipable" => false,
+						"zoomable" => false,
+						"rotatable" => false,
 						),
 					'deletable' => false,
 					'format' => array(),
-					// 'format' => array('x' => 800, 'y' => 600),
+					'accept' => ".jpeg,.jpg,.png,.gif",
+					'filenameCopy' => array(),
 					),
 			)
 		);
@@ -28,10 +37,12 @@ class filecropperType extends AbstractType {
 
 	public function buildView(FormView $view, FormInterface $form, array $options) {
 		$view->vars['cropper'] = $options['cropper'];
+		$view->vars['plain_image'] = $options['plain_image'];
 	}
 
 	public function buildForm(FormBuilderInterface $builder, array $options) {
 		$builder->setAttribute('cropper', $options['cropper']);
+		$builder->setAttribute('plain_image', $options['plain_image']);
 	}
 
 	public function getParent() {
@@ -41,4 +52,11 @@ class filecropperType extends AbstractType {
 	public function getName() {
 		return 'filecropper';
 	}
+
+	// public function getCropperInfo() {
+	// 	$aetools = new aetools();
+	// 	$data = $aetools->getConfigParameters('cropper.yml');
+	// 	return $data;
+	// }
+
 }

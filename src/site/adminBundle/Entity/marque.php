@@ -22,7 +22,7 @@ use \DateTime;
  *
  * @ORM\Entity
  * @ORM\Table(name="marque")
- * @ORM\HasLifecycleCallbacks()
+ * @ORM\HasLifecycleCallbacks
  * @ORM\Entity(repositoryClass="site\adminBundle\Entity\marqueRepository")
  * @UniqueEntity(fields={"nom"}, message="Cette marque est déjà enregistrée")
  * @ExclusionPolicy("all")
@@ -43,14 +43,8 @@ class marque extends tier {
 	protected $nom;
 
 	/**
-	 * @var string
-	 * @ORM\Column(name="descriptif", type="text", nullable=true, unique=false)
-	 */
-	protected $descriptif;
-
-	/**
 	 * - INVERSE
-	 * @ORM\OneToMany(targetEntity="site\adminBundle\Entity\article", mappedBy="marque")
+	 * @ORM\OneToMany(targetEntity="site\adminBundle\Entity\article", mappedBy="marque", cascade={"persist"})
 	 * @ORM\JoinColumn(nullable=true, unique=false, onDelete="SET NULL")
 	 */
 	protected $articles;
@@ -58,8 +52,15 @@ class marque extends tier {
 
 	public function __construct() {
 		parent::__construct();
-		$this->descriptif = null;
 		$this->articles = new ArrayCollection();
+	}
+
+	/**
+	 * Un élément par défaut dans la table est-il obligatoire ?
+	 * @return boolean
+	 */
+	public function isDefaultNullable() {
+		return true;
 	}
 
 	/**
@@ -68,24 +69,6 @@ class marque extends tier {
 	 */
 	public function getMainMedia() {
 		return $this->getLogo();
-	}
-
-	/**
-	 * Set descriptif
-	 * @param string $descriptif
-	 * @return marque
-	 */
-	public function setDescriptif($descriptif = null) {
-		$this->descriptif = $descriptif;
-		return $this;
-	}
-
-	/**
-	 * Get descriptif
-	 * @return string 
-	 */
-	public function getDescriptif() {
-		return $this->descriptif;
 	}
 
 	/**

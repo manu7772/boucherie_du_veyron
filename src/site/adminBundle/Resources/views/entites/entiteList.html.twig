@@ -8,7 +8,7 @@
 	<div class="col-lg-12 m-t-xs">
 		<div class="row">
 			<div class="col-md-9">
-				<h2>{{ UCfirst('name_s'|trans({}, entite_name)) }}{% if type.type_values|default(null) != null %} - {{ type.type_values|join('/') }}{% endif %}</h2>
+				<h2>{{ UCfirst('name_s'|trans({}, entite_name)) }}{% if type.type_values|default(null) != null %} - {{ type.type_values|join('/') }}{% endif %} <small>{{ UCfirst('x_found'|transchoice(entites|length, {}, entite_name)) }}</small></h2>
 				<ol class="breadcrumb">
 					<li><a href="{{ path('siteadmin_homepage') }}"><strong>{{ UCfirst('administration'|trans) }}</strong></a></li>
 					{% if type.type_values|default(null) != null %}

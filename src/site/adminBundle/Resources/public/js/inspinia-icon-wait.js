@@ -17,23 +17,37 @@ $(document).ready(function() {
 
 	$('body').on('click', "a, button, [type='submit']", function(event) {
 		// icon wait on click
-		$(this).find('.icon-wait-on-click').each(function() {
-			$turningIcon = $(this).attr('data-icon-wait');
-			if($turningIcon == undefined) $turningIcon = 'fa-refresh';
-			// annule les autres actions si existantes
+		if($(this).attr('disabled') == undefined) {
+			$(this).find('.icon-wait-on-click').each(function() {
+				$turningIcon = $(this).attr('data-icon-wait');
+				if($turningIcon == undefined) $turningIcon = 'fa-refresh';
+				// annule les autres actions si existantes
+				disableAllIconWait();
+				// mémorise ancien icone
+				$(this).data('oldIcon', $(this).attr('class').toString());
+				if($turningIcon != '_self') {
+					$(this).removeClass().addClass('fa '+$turningIcon+' fa-spin');
+				} else {
+					$(this).addClass('fa-spin');
+				}
+			});
+		} else {
+			event.preventDefault()
 			disableAllIconWait();
-			// mémorise ancien icone
-			$(this).data('oldIcon', $(this).attr('class').toString());
-			if($turningIcon != '_self') {
-				$(this).removeClass().addClass('fa '+$turningIcon+' fa-spin');
-			} else {
-				$(this).addClass('fa-spin');
-			}
-		});
+			return false;
+		}
 	});
 
 	$('body').on('click', '.cancel-all-icon-wait-on-click', function(event) {
 		disableAllIconWait();
 	})
+
+	// $('body').on('click', '[disabled]', function(e) {
+	// 	e.preventDefault();
+	// 	// alert('STOP !');
+	// 	disableAllIconWait();
+	// 	return false;
+	// });
+
 
 });

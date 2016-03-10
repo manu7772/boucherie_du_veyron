@@ -2,53 +2,36 @@
 namespace site\services;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\Form\Extension\Core\ChoiceList\ChoiceList;
+use site\services\aeEntities;
 
-use site\adminBundle\Entity\article;
-use site\UserBundle\Entity\User;
 use site\adminBundle\Entity\tag;
+use site\adminBundle\Entity\baseEntity;
 
-use site\services\aeReponse;
-
-class aeTag {
-
-    protected $container;
-    protected $_em;
-    protected $_repo;
+// call in controller with $this->get('aetools.aeTag');
+class aeTag extends aeEntities {
 
     public function __construct(ContainerInterface $container) {
-        $this->container = $container;
-        $this->_em = $this->container->get('doctrine')->getManager();
-        $this->_repo = $this->_em->getRepository('site\adminBundle\Entity\tag');
-    }
-
-    public function getEm() {
-        return $this->_em;
-    }
-
-    public function getRepo() {
-        return $this->_repo;
+        parent::__construct($container);
+        $this->defineEntity('site\adminBundle\Entity\tag');
     }
 
     /**
-     * Check tag after change (edit…)
-     * @param tag $tag
-     * 
+     * Check entity after change (edit…)
+     * @param baseEntity $entity
+     * @return aeTag
      */
-    public function checkAfterChange($tag) {
-        // inverses
-        // $inverses = array(
-        //     'pagewebs'      => 'addTag',
-        //     'articles'      => 'addTag',
-        //     'categories'    => 'addTag',
-        //     'fiches'        => 'addTag',
-        //     'medias'        => 'addTag',
-        //     );
-        // foreach ($inverses as $inverse => $method) {
-        //     $get = "get".ucfirst($inverse);
-        //     $links = 
-        // }
-        $this->container->get('aetools.aeEntities')->checkInversedLinks($tag, false);
+    public function checkAfterChange(baseEntity &$entity) {
+        parent::checkAfterChange($entity);
+        return $this;
+    }
+
+    /**
+     * Persist and flush a tag
+     * @param baseEntity $entity
+     * @return aeReponse
+     */
+    public function save(baseEntity &$entity) {
+        return parent::save($entity);
     }
 
 }

@@ -9,8 +9,19 @@ backlist_btn: 'back to list'
 dontexist: 'this notice does not exist'
 moredetails: 'more details on %name%'
 existe: this notice already exists
+niveaux:
+    debutant: rookie
+    intermediaire: medium
+    confirme: chief
 fields:
     id: id
     nom: name
+    accroche: introduction
+    descriptif: recipe
+    duree: duration
+    niveau: skill
     created: created
     updated: updated
+    datePublication: publication date
+    dateExpiration: expiration date
+    image: picture

@@ -19,7 +19,7 @@
 		<p class="font-bold ellipsis">…</p>
 		{% endif %}
 		<div class="text-center btn-group btn-block">
-			<a href="{{ path('siteadmin_entite', {entite: item.className, id: item.id, action: 'show'}) }}" class="btn btn-xs btn-white col-xs-6 m-b-none" data-toggle="tooltip" data-placement="bottom" title="{{ UCfirst((item.className ~ '.moredetails')|trans({'%name%': item.nom})) }}"><i class="fa fa-eye icon-wait-on-click"></i></a>
+			<a href="{{ path('siteadmin_entite', {entite: item.className, id: item.id, action: 'show'}) }}" class="btn btn-xs btn-white col-xs-6 m-b-none" data-toggle="tooltip" data-placement="bottom" title="{{ UCfirst('moredetails'|trans({'%name%': item.nom}, item.className)) }}"><i class="fa fa-eye icon-wait-on-click"></i></a>
 			<a href="{{ path('siteadmin_entite', {entite: item.className, id: item.id, action: 'edit'}) }}" class="btn btn-xs btn-white col-xs-6 m-b-none" data-toggle="tooltip" data-placement="bottom" title="{{ UCfirst('actions.modifierName'|trans({'%name%': item.nom})) }}"><i class="fa fa-pencil icon-wait-on-click"></i></a>
 		</div>
 	</div>

@@ -23,6 +23,11 @@ class marqueType extends baseType {
 	public function buildForm(FormBuilderInterface $builder, array $options) {
 		// ajout de action si défini
 		$this->initBuilder($builder);
+		$this->imagesData = array(
+			'image' => array(
+				'owner' => 'marque:logo'
+				),
+			);
 		// Builder…
 		$builder
 			->add('nom', 'text', array(
@@ -35,16 +40,21 @@ class marqueType extends baseType {
 				'translation_domain' => 'marque',
 				'required' => false,
 				))
-			// ->add('statut', 'entity', array(
-			// 	'class'     => 'siteadminBundle:statut',
-			// 	'property'  => 'nom',
-			// 	'multiple'  => false,
-			// 	"label"     => 'name'
-			// 	'translation_domain' => 'statut',
-			// 	))
-			->add('logo', new imageType($this->controller), array(
-				'label' => 'fields.logo',
+			->add('statut', 'entity', array(
+				'class'     => 'siteadminBundle:statut',
+				'property'  => 'nom',
+				'multiple'  => false,
+				"label"     => 'name',
 				'translation_domain' => 'marque',
+				"query_builder" => function($repo) {
+					if(method_exists($repo, 'defaultValsListClosure'))
+						return $repo->defaultValsListClosure($this->aeEntities);
+						else return $repo->findAllClosure();
+					},
+				))
+			->add('logo', new cropperType($this->controller, array('image' => $this->imagesData['image'])), array(
+				'label' => 'fields.logo',
+				'translation_domain' => 'article',
 				'required' => false,
 				))
 		;

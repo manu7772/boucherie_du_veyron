@@ -34,7 +34,8 @@ class DefaultController extends Controller {
 
 	public function pagewebAction($pageweb, $params = null) {
 		$data = $this->get('tools_json')->JSonExtract($params);
-		$data['pageweb'] = $this->get('aetools.aePageweb')->getRepository()->findOneBySlug($pageweb);
+		$data['pageweb'] = $this->get('aetools.aePageweb')->getRepo()->findOneBySlug($pageweb);
+		// $data['marques'] = $this->get('aetools.aeEntities')->getRepo('site\adminBundle\Entity\marque')->findAll();
 		if(is_object($data['pageweb'])) {
 			$this->pagewebactions($data);
 			// chargement de la pageweb
@@ -113,7 +114,7 @@ class DefaultController extends Controller {
 	}
 
 	public function headerMiddleAction() {
-		$data['menu'] = $this->get('aeMenus')->getMenu('site-menu');
+		$data['menu'] = $this->get('aetools.aeMenus')->getMenu('site-menu');
 		// récupération route/params requête MASTER
 		$stack = $this->get('request_stack');
 		$masterRequest = $stack->getMasterRequest();
@@ -125,7 +126,7 @@ class DefaultController extends Controller {
 	public function sidemenuAction() {
 		$user = $this->getUser();
 		if(is_object($user)) {
-			$data['menu'] = $this->get('aeMenus')->getMenu('admin-sidemenu');
+			$data['menu'] = $this->get('aetools.aeMenus')->getMenu('admin-sidemenu');
 			$data['bundles.User.name']['params']['name'] = $user->getUsername();
 			return $this->render('sitesiteBundle:blocks:sidemenu.html.twig', $data);
 		} else {

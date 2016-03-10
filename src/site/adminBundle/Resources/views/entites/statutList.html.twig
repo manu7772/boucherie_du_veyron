@@ -20,6 +20,8 @@
 							<th>{{ UCfirst('actions.name'|trans) }}</th>
 							<th class="text-center">{{ UCfirst('fields.couleur'|trans({}, entite_name)) }}</th>
 							<th>{{ UCfirst('fields.descriptif'|trans({}, entite_name)) }}</th>
+							<th>{{ UCfirst('fields.niveau'|trans({}, entite_name)) }}</th>
+							<th>{{ UCfirst('fields.bundles'|trans({}, entite_name)) }}</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -52,6 +54,8 @@
 							</td>
 							<td{{ bgcolor|raw }} class="text-center"><i class="fa fa-square fa-3x" style="color:{{ entite.couleur|raw }};"></i></td>
 							<td{{ bgcolor|raw }}>{{ entite.descriptif|raw }}</td>
+							<td{{ bgcolor|raw }}>{{ UCfirst(('roles.' ~ entite.niveau)|trans) }}</td>
+							<td{{ bgcolor|raw }}>{{ entite.bundles|join('<br>')|raw }}</td>
 						</tr>
 						{% endfor %}
 					</tbody>

@@ -26,6 +26,11 @@ class pagewebType extends baseType {
 		// ajout de action si défini
 		$this->initBuilder($builder);
 		$this->pageweb = $this->controller->get('aetools.aePageweb');
+		// $this->imagesData = array(
+		// 	'image' => array(
+		// 		'owner' => 'pageweb:image'
+		// 		),
+		// 	);
 		// Builder…
 		$builder
 			->add('nom', 'text', array(
@@ -65,7 +70,7 @@ class pagewebType extends baseType {
 				'choice_list' => $this->pageweb->getPagewebChoices(),
 				))
 			// 1 image :
-			->add('image', new imageType($this->controller), array(
+			->add('image', new cropperType($this->controller, array('image' => array('owner' => 'pageweb:image'))), array(
 				'label' => 'fields.image',
 				'translation_domain' => 'pageweb',
 				'required' => false,
@@ -81,6 +86,11 @@ class pagewebType extends baseType {
 					'class' => 'chosen-select chosen-select-width chosen-select-no-results',
 					'placeholder' => 'form.select',
 					),
+				"query_builder" => function($repo) {
+					if(method_exists($repo, 'defaultValsListClosure'))
+						return $repo->defaultValsListClosure($this->aeEntities);
+						else return $repo->findAllClosure();
+					},
 				))
 		;
 		// ajoute les valeurs hidden, passés en paramètre

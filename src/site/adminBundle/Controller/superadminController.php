@@ -27,6 +27,23 @@ class superadminController extends Controller {
 		return $this->render('siteadminBundle:superadmin:index.html.twig', $data);
 	}
 
+	public function routesAction() {
+		$aetools = $this->get('aetools.aetools');
+		// $data['params'] = $aetools->getRouteParameters();
+		$data['routes'] = $aetools->getAllRoutes();
+		// via stack
+		// $stack = $this->get('request_stack');
+		// $masterRequest = $stack->getMasterRequest();
+		// $data['routes'] = $masterRequest->get('_route');
+		return $this->render('siteadminBundle:superadmin:routes.html.twig', $data);
+	}
+
+	public function bundlesAction() {
+		$data['bundles'] = $this->get('aetools.aetools')->getBundlesList(true);
+		$data['bundle'] = $this->get('aetools.aetools')->getBundleName();
+		return $this->render('siteadminBundle:superadmin:bundles.html.twig', $data);
+	}
+
 	public function entitiesAction($entity = null, $field = null) {
 		$data = array();
 		$aeEntities = $this->get('aetools.aeEntities');

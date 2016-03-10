@@ -44,7 +44,7 @@ abstract class item extends baseSubEntity {
 
     /**
      *  - PROPRIÉTAIRE
-     * @ORM\OneToOne(targetEntity="site\adminBundle\Entity\image", inversedBy="item", cascade={"all"})
+     * @ORM\OneToOne(targetEntity="site\adminBundle\Entity\image", inversedBy="item", orphanRemoval=true, cascade={"persist", "remove"})
 	 * @ORM\JoinColumn(nullable=true, unique=true, onDelete="SET NULL")
      */
     private $image;
@@ -60,7 +60,6 @@ abstract class item extends baseSubEntity {
 	public function __construct() {
 		parent::__construct();
 		$this->image = null;
-		// $this->images = new ArrayCollection();
 		$this->categories = new ArrayCollection();
 	}
 
@@ -101,8 +100,11 @@ abstract class item extends baseSubEntity {
 	 * @return item
 	 */
 	public function setImage(image $image = null) {
-		$image->setItem($this);
+		// if($image == null) {
+		// 	$this->image->setItem(null);
+		// }
 		$this->image = $image;
+		if($this->image != null) $this->image->setItem($this);
 		return $this;
 	}
 

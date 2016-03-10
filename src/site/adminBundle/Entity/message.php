@@ -17,7 +17,7 @@ use \ReflectionClass;
  *
  * @ORM\Table()
  * @ORM\Table(name="message")
- * @ORM\HasLifecycleCallbacks()
+ * @ORM\HasLifecycleCallbacks
  * @ORM\Entity(repositoryClass="site\adminBundle\Entity\messageRepository")
  */
 class message {

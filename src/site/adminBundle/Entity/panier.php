@@ -20,7 +20,7 @@ use \ReflectionClass;
  *
  * @ORM\Entity
  * @ORM\Table(name="panier")
- * @ORM\HasLifecycleCallbacks()
+ * @ORM\HasLifecycleCallbacks
  * @ORM\Entity(repositoryClass="site\adminBundle\Entity\panierRepository")
  */
 class panier {

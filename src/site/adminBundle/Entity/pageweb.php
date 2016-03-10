@@ -22,7 +22,7 @@ use \DateTime;
  * @ORM\Entity
  * @ORM\Table(name="pageweb")
  * @ORM\Entity(repositoryClass="site\adminBundle\Entity\pagewebRepository")
- * @ORM\HasLifecycleCallbacks()
+ * @ORM\HasLifecycleCallbacks
  * @UniqueEntity(fields={"nom"}, message="pageweb.existe")
  * @ExclusionPolicy("all")
  */

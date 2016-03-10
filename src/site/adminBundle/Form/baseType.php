@@ -24,14 +24,14 @@ abstract class baseType extends AbstractType {
     protected $parametres;
     protected $_em;
     
-    public function __construct(Controller $controller = null, $parametres = null) {
+    public function __construct(Controller $controller = null, $parametres = array()) {
         $this->controller = $controller;
-        $this->_em = $this->controller->get('doctrine')->getManager();
-        // $this->aeEntities = new aeEntities($this->controller, $this->_em);
-        $this->aeEntities = $this->controller->get('aetools.aeentities');
-        $this->securityContext = $controller->get('security.context');
-        $this->user = $this->securityContext->getToken()->getUser();
-        if($parametres === null) $parametres = array();
+        if(null !== $this->controller) {
+            $this->_em = $this->controller->get('doctrine')->getManager();
+            $this->aeEntities = $this->controller->get('aetools.aeentities');
+            $this->securityContext = $controller->get('security.context');
+            $this->user = $this->securityContext->getToken()->getUser();
+        }
         $this->parametres = $parametres;
     }
 

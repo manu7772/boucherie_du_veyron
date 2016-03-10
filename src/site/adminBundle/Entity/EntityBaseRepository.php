@@ -9,6 +9,8 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
+use site\services\aetools;
+use site\services\aeEntities;
 use site\UserBundle\Entity\User;
 
 use \DateTime;
@@ -29,15 +31,39 @@ class EntityBaseRepository extends EntityRepository {
 	protected $entity_shortName;
 	protected $entity_className;
 	protected $em;
-	protected $adminMode;
+	// déclare context
+	protected $context = false;
+	protected $aeEntities = null;
+	protected $user = null;
+	protected $roles = null;
+	protected $bundle = null;
+	protected $environment = null;
 
 	public function __construct(EntityManager $em, ClassMetadata $ClassMetadata) {
+		$this->context = false;
+		$this->aeEntities = null;
 		$this->ClassMetadata = $ClassMetadata;
 		parent::__construct($em, $this->ClassMetadata);
 		$this->em = $em;
-		$this->adminMode = 0;
+		$this->initCMD = false;
 		$this->initCMData();
 	}
+
+	public function find($id, $shortCutContext = false) {
+		$qb = $this->createQueryBuilder(self::ELEMENT);
+		$qb->where(self::ELEMENT.'.id = :id')
+			->setParameter('id', $id)
+			;
+		if($shortCutContext == false) $this->contextStatut($qb);
+		return $qb->getQuery()->getOneOrNullresult();
+	}
+
+	public function findAll($shortCutContext = false) {
+		$qb = $this->createQueryBuilder(self::ELEMENT);
+		if($shortCutContext == false) $this->contextStatut($qb);
+		return $qb->getQuery()->getResult();
+	}
+
 
 	/** Renvoie la(les) valeur(s) par défaut --> ATTENTION : dans un array()
 	* @param $defaults = liste des éléments par défaut
@@ -52,50 +78,57 @@ class EntityBaseRepository extends EntityRepository {
 	/*** CLOSURES                 ***/
 	/********************************/
 
-	public function defaultValAsClosure() {
+	public function defaultValAsClosure(aetools $aeEntities = null) {
 		$qb = $this->createQueryBuilder(self::ELEMENT);
 		$qb->where(self::ELEMENT.'.default = :def')
 			->setParameter('def', 1)
 			;
+		if($aeEntities != null) $this->declareContext($aeEntities);
+		$this->contextStatut($qb);
+		// resultat
 		return $qb;		
 	}
 
-	public function defaultValsListClosure(User $user = null) {
-		$qb = $this->findAllClosure();
+	public function defaultValsListClosure(aetools $aeEntities = null) {
+		$qb = $this->findAllClosure($aeEntities);
 		return $qb;
 	}
 
-	public function findAllClosure() {
+	public function findAllClosure(aetools $aeEntities = null) {
 		$qb = $this->createQueryBuilder(self::ELEMENT);
+		if($aeEntities != null) $this->declareContext($aeEntities);
+		$this->contextStatut($qb);
+		// resultat
 		return $qb;
 	}
 
 
 	/**
 	 * Détermine le niveau de séléction des éléments sensibles du site selon User / bundle / etc.
-	 * @param ContainerInterface $container
+	 * @param aetools $aeEntities
 	 * @return integer
 	 */
-	// public function declareMode(ContainerInterface $container) {
-	// 	$this->user = $container->get('security.context')->getToken()->getUser();
-	// 	$controller = $container->get('request')->attributes->get('_controller');
-	// 	$this->bundle = str_replace('\\', '', explode('Bundle', $controller)[0]);
+	public function declareContext(aetools $aeEntities) {
+		$this->context = true;
+		$this->aeEntities = $aeEntities;
+		// ROLE
+		$this->user = $this->aeEntities->getUser();
+		if(is_object($this->user)) {
+			$this->roles = $this->user->getGrants();
+		} else {
+			$this->roles = array('IS_AUTHENTICATED_ANONYMOUSLY');
+		}
+		// BUNDLE
+		$this->bundle = $this->aeEntities->getBundleName();
+		// ENVIRONMENT
+		$this->environment = $this->aeEntities->getEnv();
 
-	// 	// récupération des éléments de config
-	// 	$this->modeParameters = $container->getParameter('repository-admin-mode');
-	// 	$this->adminMode = $this->modeParameters['default'];
-	// 	if(isset($this->modeParameters['bundles']) && is_object($this->user)) {
-	// 		$userRole = $this->user->getBestRole();
-	// 		if(array_key_exists($this->bundle, $this->modeParameters['bundles'])) {
-	// 			if(isset($this->modeParameters['bundles'][$this->bundle]['default'])) $this->adminMode = $this->modeParameters['bundles'][$this->bundle]['default'];
-	// 			if(isset($this->modeParameters['bundles'][$this->bundle][$userRole])) $this->adminMode = $this->modeParameters['bundles'][$this->bundle][$userRole];
-	// 		}
-	// 	}
-	// 	// is_object($this->user) ? $user = $this->user.' / '.$userRole : $user = "anon." ;
-	// 	// echo('<h4>User / role : '.$user.'</h4>');
-	// 	// echo('<h4>Bundlename : '.$this->bundle.'</h4>');
-	// 	// echo('<h4 style="color:red;">Niveau : '.$this->adminMode.'</h4>');
-	// }
+		// is_object($this->user) ? $user = $this->user.' / '.$userRole : $user = "anon." ;
+		// echo('<h4 style="color:red;">Entité : '.$this->entity_shortName.'</h4>');
+		// echo('<h4>- User / roles : '.implode(', ', $this->roles).'</h4>');
+		// echo('<h4>- Bundlename : '.$this->bundle.'</h4>');
+		return $this;
+	}
 
 	// public function compileForMode(QueryBuilder &$qb) {
 	// 	// mode normal : suppression des éléments périmés, sadmin, etc.
@@ -180,6 +213,10 @@ class EntityBaseRepository extends EntityRepository {
 		}
 	}
 
+	protected function getFields() {
+		return $this->fields;
+	}
+
 	/**
 	 * defaultStatut
 	 * Sélect element de statut = actif uniquement
@@ -192,6 +229,29 @@ class EntityBaseRepository extends EntityRepository {
 			if(is_string($statut)) $statut = array($statut);
 			$qb->join(self::ELEMENT.'.statut', 'stat')
 				->andWhere($qb->expr()->in('stat.nom', $statut));
+		}
+		// return $qb;
+	}
+
+	/**
+	 * contextStatut
+	 * Sélect element de statut = actif uniquement
+	 * @param QueryBuilder &$qb
+	 * @param string $elem = '_default'
+	 */
+	protected function contextStatut(QueryBuilder &$qb, $elem = '_default') {
+		if($this->context == true) {
+			if($elem == '_default') $elem = self::ELEMENT;
+			// echo('<pre>');
+			// var_dump($this->getFields());
+			// echo('</pre>');
+			if(array_key_exists("statut", $this->getFields())) {
+				// ROLES
+				$qb->join($elem.'.statut', 'stat')
+					->andWhere($qb->expr()->in('stat.niveau', $this->roles))
+					->andWhere($qb->expr()->orX($qb->expr()->like('stat.bundles', $qb->expr()->literal('%'.$this->bundle.'%'))));
+				;
+			}
 		}
 		// return $qb;
 	}

@@ -1,87 +1,168 @@
 $(document).ready(function(){
 
+	var dev = true;
+	// var dev = false;
+	// loading
+	var loading = false;
+	var croppername = '_cropper';
+
 	$('form .cropper-block').each(function(e) {
 
-		// Format ratio
-		var ratio = 800	/ 600;
-		var ratio = null;
+		/*******************************/
+		/* VARIABLES / INITIALISATION  */
+		/*******************************/
 
+		if(dev) console.log('• Loading :', 'Cropper-image');
+		// load icon
+		var loadicon = $('.load-icon > i', this).first();
+		// fichier en cours
 		var actualFile = null;
 
-		var feedbackData = Array();
-		var cropperId = $(this).attr('data-id');
-		// Copy file name un field
+		// ID
+		var cropperId = "#"+$(this).attr('id').replace(new RegExp("("+croppername+")$", "g"), '');
+		// form name
 		var fieldName = $(this).attr('data-form-name');
-		var fieldForCopyName = $(cropperId).attr('filename-copy');
-		var regFC = new RegExp("(_"+fieldName+")$", "g");
-		var $fieldForCopy = $(cropperId.replace(regFC, '_'+fieldForCopyName));
+		// URL for ajax send
+		var URLrawfile = $('span.cropper-send-rawfile', this).first().attr('data-send');
+		// all other cropper data
+		var cropperData = $.parseJSON($('span.cropper-info', this).first().attr('data-cropper'));
 
-		// info for persist
-		var regFP = new RegExp("(_"+fieldName+")$", "g");
-		// var $infoForPersist = $(cropperId.replace(regFP, '_infoForPersist'));
-		$(cropperId).data('infoForPersist_field', cropperId.replace(regFP, '_infoForPersist'));
+		/**
+		 * Initialise les données de base
+		 */
+		var data = {
+			height: 0,
+			width: 0,
+			ratioIndex: 0,
+			file: {
+				type: null,
+				name: null,
+				size: null,
+			},
+			delete: false,
+			dataType: 'cropper',
+			rawfiles: {
+				actual: null,
+				list: new Array(),
+			},
+		};
+
+		/**
+		 * Met à jour les données data
+		 */
+		var updateBoard = function(e) {
+			$(cropperId).data('infoForPersist', data);
+			if(dev) console.log('infoForPersist', $(cropperId).data('infoForPersist'));
+		}
+
+		// ratio
+		if(cropperData.format.length > 0) {
+			var ratio = new Array();
+			if(cropperData.format.x != undefined && cropperData.format.y != undefined) {
+				// un seul format
+				ratio.push(cropperData.format[0] / cropperData.format[1]);
+			} else {
+				// tableau de formats
+				for (var i = 0; i < cropperData.format.length; i++) {
+					if(parseInt(cropperData.ratioIndex) == i) {
+						data.ratioIndex = parseInt(cropperData.ratioIndex);
+						updateBoard();
+					}
+					if(cropperData.format[i] == null) {
+						ratio.push(null);
+					} else if(cropperData.format[i].length > 1) {
+						ratio.push(cropperData.format[i][0] / cropperData.format[i][1]);
+					}
+				};
+			}
+		}
+		if(ratio == undefined) var ratio = new Array(null);
+
+		// fields for copy name
+		var fieldForCopy = new Array();
+		for(var i = 0; i < cropperData.filenameCopy.length; i++) {
+			copyField = cropperId.replace(new RegExp("(_"+fieldName+")$", "g"), '_'+cropperData.filenameCopy[i]);
+			if($(copyField).length) fieldForCopy.push($(copyField));
+		}
+		// Info for persist
+		var infoForPersist = cropperId.replace(new RegExp("(_"+fieldName+")$", "g"), '_infoForPersist');
+		$(cropperId).data('infoForPersist_field', infoForPersist);
 
 		var $inputImage = $(cropperId+'_fileInput');
 		var $image = $(cropperId+'_image');
 		var $previews = $('.img-preview', this);
 		var $cropButtons = $('.docs-buttons button[data-method]', this);
-		// thereIsPicture
 		var $contImageNotNull = $('.containerImageNull', this);
 		var $suppImage = $('.noImage', this);
 		var $contFile = $('.container-actions', this);
-		// accept / Type de fichier
-		var accept = $(cropperId).attr('cropper-accept');
-		if(accept != undefined) $inputImage.attr('accept', accept); else accept = $inputImage.attr('accept');
-		var deletable = $(cropperId).attr('deletable');
-		if(deletable == undefined) {
-			deletable = false;
+
+
+		/*******************************/
+		/* DEV LOGS                    */
+		/*******************************/
+
+		if(dev) {
+			console.log('cropperId :', cropperId);
+			console.log('fieldName :', fieldName);
+			console.log('URLrawfile :', URLrawfile);
+			console.log('infoForPersist_field :', infoForPersist);
+			console.log('fieldForCopy :', fieldForCopy.length);
+			console.log('format :', ratio);
+			console.log('Accept :', cropperData.accept);
+			console.log('Init :', cropperData.init);
+		}
+
+
+		/*******************************/
+		/* AFFICHAGES                  */
+		/*******************************/
+
+		// Deletable
+		if(cropperData.deletable == undefined) {
+			cropperData.deletable = false;
 			$('.noImage', this).remove();
-		} else deletable = true;
+		}
 
-		console.log("• Loading : ", "file-cropper " + cropperId+' / Accept : '+accept);
+		/**
+		 * Copie le nom du fichier les champs désignés (cropperData.filenameCopy)
+		 * @param string name
+		 */
+		var updateFilenameCopy = function(fields) {
+			if(fields == undefined) fields = fieldForCopy;
+			if(actualFile != null) var name = actualFile.name; else var name = '';
+			for (var i = 0; i < fields.length; i++) fields[i].val(name);
+		}
 
-		var initBoard = function() {
-			var data = $(cropperId).data('infoForPersist');
-			if(data == undefined) {
-				data = {
-					height: null,
-					width: null,
-					file: {
-						type: null,
-						name: null,
-						size: null,
-					},
-					dataType: 'cropper',
-					fileStatus: 'empty',
-				};
+		/**
+		 * Mise à jour des éléments graphiques selon la présence ou non d'une image
+		 * @return boolean
+		 */
+		var deletevalue = null;
+		var updateIfIsPicture = function() {
+			var value = $image.attr('src');
+			if(value == "#" || value == '') { $contImageNotNull.addClass('hidden'); if(deletevalue == null) deletevalue = false; return true; }
+				else { $contImageNotNull.removeClass('hidden'); if(deletevalue == null) deletevalue = true; return false; }
+		}
+		// initialize…
+		// updateIfIsPicture();
+
+		/**
+		 * Affichge on/off du mode "en cours de chargement"
+		 * @param boolean statut
+		 */
+		var setLoading = function(statut) {
+			if(statut == true) {
+				$(loadicon).addClass('fa-spin').removeClass('fa-upload').addClass('fa-refresh');
+			} else {
+				$(loadicon).removeClass('fa-spin').removeClass('fa-refresh').addClass('fa-upload');
 			}
-			return data;
+			loading = statut;
 		}
 
-		var updateBoard = function(e) {
-			data = initBoard();
-			if(e != undefined) {
-				data.height = e.height;
-				data.width = e.width;
-				data.dataType = 'cropper';
-				$(cropperId).data('infoForPersist', data);
-				// $($(cropperId).data('infoForPersist_field')).val(JSON.stringify($(cropperId).data('infoForPersist')));
-			}
-		}
-
-		var updateBoardFile = function(file) {
-			if(file == undefined) var file = actualFile; else var file = file;
-			data = initBoard();
-			data.file = {
-				type: file.type,
-				name: file.name,
-				size: file.size,
-			};
-			data.fileStatus = 'filled';
-			$(cropperId).data('infoForPersist', data);
-			// $($(cropperId).data('infoForPersist_field')).val(JSON.stringify($(cropperId).data('infoForPersist')));
-		}
-
+		/**
+		 * Initialise les vues preview
+		 * @param object elem
+		 */
 		var initPreviews = function(elem) {
 			var elem = elem;
 			elem.css({
@@ -98,50 +179,19 @@ $(document).ready(function(){
 			}).addClass('img-rounded').html(elem);
 		}
 
-		/**
-		 * Mise à jour des éléments graphiques selon la présence ou non d'une image
-		 * @return boolean
-		 */
-		var updateIfIsPicture = function() {
-			var value = $image.attr('src');
-			if(value == "#" || value == '') {
-				$contImageNotNull.addClass('hidden');
-				return true;
-			} else {
-				$contImageNotNull.removeClass('hidden');
-				return false;
-			}
-		}
-		updateIfIsPicture();
 
-		/**
-		 * Copie le nom du fichier dans le champ passé en paramètre
-		 * @param string name
-		 */
-		var updateFilenameCopy = function(name) {
-			if(name != undefined) var name = name;
-				else if(actualFile != null) var name = actualFile.name;
-			if($fieldForCopy.length && name != undefined) {
-				$fieldForCopy.val(name);
-			}
-		}
 
-		/**
-		 * Bouton(s) suppression de l'image
-		 */
-		$suppImage.on('click', function(e) {
-			e.preventDefault();
-			$image.attr('src', '#');
-			updateIfIsPicture();
-		});
+		/*******************************/
+		/* CROPPER                     */
+		/*******************************/
 
-		cropperOptions = {
-			aspectRatio: ratio,
-			preview: cropperId+"_block .img-preview",
-			autoCropArea: 1,
+		var cropperOptions = {
+			aspectRatio: ratio[data.ratioIndex],
+			preview: cropperId+croppername+" .img-preview",
+			autoCropArea: 0.95,
 			responsive: true,
 			restore: true,
-			// viewMode: 3,
+			viewMode: 3,
 			movable: false,
 			// rotatable: false,
 			// scalable: false,
@@ -149,44 +199,49 @@ $(document).ready(function(){
 			zoomOnTouch: false,
 			zoomOnWheel: false,
 			wheelZoomRatio: false,
-			// cropBoxMovable: false,
+			cropBoxMovable: true,
 			// cropBoxResizable: false,
 			toggleDragModeOnDblclick: false,
 			build: function (e) {
 				initPreviews($(this).clone());
-				updateBoard(e);
 			},
 			crop: function (e) {
-				var imageData = $(this).cropper('getImageData');
+				var imageData = $(this).cropper('imageData');
 				var previewAspectRatio = e.width / e.height;
+				console.log('imageData : ', imageData);
+				data.width = imageData.context.naturalWidth;
+				data.height = imageData.context.naturalHeight;
+				updateBoard();
 				$previews.each(function () {
 					var $preview = $(this);
 					var previewWidth = $preview.width();
 					var previewHeight = previewWidth / previewAspectRatio;
 					var imageScaledRatio = e.width / previewWidth;
 					$preview.height(previewHeight).find('img').css({
-						width: imageData.naturalWidth / imageScaledRatio,
-						height: imageData.naturalHeight / imageScaledRatio,
+						width: imageData.context.naturalWidth / imageScaledRatio,
+						height: imageData.context.naturalHeight / imageScaledRatio,
 						marginLeft: -e.x / imageScaledRatio,
 						marginTop: -e.y / imageScaledRatio
 					});
 				});
-				updateBoard(e);
-				// var result = $image.cropper("getCroppedCanvas", null);
-				// $(cropperId).val(result.toDataURL());
-			},
-			done: function(data) {
-				// Output the result data for cropping image.
 			},
 		}
 
-		$image.cropper(cropperOptions);
+		$contImageNotNull.removeClass('hidden');
+		$image.cropper(cropperOptions).one('built.cropper', function () {
+			if(cropperData.init != undefined && cropperData.init != null) {
+				// injecte les dimensions de la cropbox si réédition d'une image déjà enregistrée
+				$image.cropper('setData', cropperData.init);
+			}
+			updateIfIsPicture();
+		});
 
 		// Import image
 		var URL = window.URL || window.webkitURL;
 		var blobURL;
 		if(URL) {
-			$inputImage.change(function () {
+			$inputImage.on('change', function () {
+				
 				var files = this.files;
 				var file;
 				if(!$image.data('cropper')) {
@@ -194,28 +249,86 @@ $(document).ready(function(){
 				}
 				if(files && files.length) {
 					file = files[0];
-					// alert("Fichier : " + files.length + "\nType : " + file.type + "\nTaille : " + file.size + "\nNom : " + file.name);
 					if(/^image\/\w+$/.test(file.type)) {
-						blobURL = URL.createObjectURL(file);
-						$image.one('built.cropper', function () {
-							// Revoke when load complete
-							URL.revokeObjectURL(blobURL);
-						}).cropper('replace', blobURL);
-						actualFile = file;
-						updateBoardFile(actualFile);
-						updateFilenameCopy();
-						$inputImage.val('');
+						// alert("Fichier : " + files.length + "\nType : " + file.type + "\nTaille : " + file.size + "\nNom : " + file.name);
+						if(file.size < (cropperData.maxfilesize * 1000000)) {
+							var olddata = $.extend({}, data);
+							data.file = {
+								type: file.type,
+								name: file.name,
+								size: file.size,
+							};
+							setLoading(true);
+							var charge = new FileReader();
+							charge.readAsDataURL(file);
+							charge.onloadend = function(e){
+								actualFile = file;
+								var send = $.extend({}, data);
+								send.raw = e.target.result;
+								$.ajax({
+									method: "POST",
+									url: URLrawfile,
+									data: {'data': send},
+								}).done(function(returnData) {
+									returnData = $.parseJSON(returnData);
+									if(returnData.result != true) {
+										alert('Une erreur est survenue lors de l\'enregistrement. Veuillez recommencer, SVP.\nAttention : un fichier corrompu, non conforme ou trop lourd (Max. '+cropperData.maxfilesize+'Mo) peut faire échouer l\'opération.');
+										data = olddata;
+										updateBoard();
+									} else {
+										$image.attr('src', returnData.data.image);
+										$contImageNotNull.removeClass('hidden');
+										if(data.rawfiles.actual != null) data.rawfiles.list.push(data.rawfiles.actual);
+										data.rawfiles.actual = returnData.data.id;
+										data.delete = false;
+										updateBoard();
+										updateFilenameCopy();
+										$image.cropper('destroy').cropper(cropperOptions);
+										updateIfIsPicture();
+									}
+								}).fail(function(jqXHR, textStatus) {
+									if(dev) alert('Une erreur est survenue lors de l\'enregistrement. Veuillez recommencer, SVP.\nAttention : un fichier corrompu, non conforme ou trop lourd (Max. '+cropperData.maxfilesize+'Mo) peut faire échouer l\'opération.\nRequest failed: '+textStatus);
+										else alert('Une erreur est survenue lors de l\'enregistrement. Veuillez recommencer, SVP.\nAttention : un fichier corrompu, non conforme ou trop lourd (Max. '+cropperData.maxfilesize+'Mo) peut faire échouer l\'opération.');
+									data = olddata;
+									updateBoard();
+								}).always(function() {
+									setLoading(false);
+									$inputImage.val('');
+									updateIfIsPicture();
+								});
+							}
+						} else {
+							alert('Fichier trop lourd… vous devez choisir un fichier de moins de '+cropperData.maxfilesize+'Mo.');
+						}
 					} else {
 						alert('Vous devez sélectionner un fichier de type image');
 					}
-					updateIfIsPicture();
 				}
 			});
 		} else {
 			$inputImage.prop('disabled', true).parent().addClass('disabled');
 		}
 
-		// Methods for crop buttons
+
+
+		/*******************************/
+		/* EVENTS                      */
+		/*******************************/
+
+		/**
+		 * EVENTS : bouton(s) suppression de l'image
+		 */
+		$suppImage.on('click', function(e) {
+			e.preventDefault();
+			$image.attr('src', '#');
+			data.delete = deletevalue;
+			updateBoard();
+			updateIfIsPicture();
+		});
+
+		/**
+		 * EVENTS : methods for crop buttons
+		 */
 		$cropButtons.on('click', function () {
 			var $this = $(this);
 			var data = $this.data();
@@ -253,24 +366,47 @@ $(document).ready(function(){
 			}
 		});
 
+		/**
+		 * EVENTS : methods for crop toggles
+		 */
+		$('.docs-toggles', this).on('change', 'input', function (e) {
+			// e.preventDefault();
+			// if (!$image.data('cropper')) return;
+			var idx = parseInt($(this).attr('data-ratio-index'));
+			if(idx != undefined) {
+				data.ratioIndex = idx;
+				updateBoard();
+			}
+			// cropperOptions.aspectRatio = ratio[parseInt($(this).val())];
+			cropperOptions.aspectRatio = ratio[idx];
+			if(cropperOptions.aspectRatio == undefined) cropperOptions.aspectRatio = null;
+			$image.cropper('destroy').cropper(cropperOptions);
+			updateIfIsPicture();
+		});
+
+
 	});
+
+
+
+	/*******************************/
+	/* ON SUBMIT                   */
+	/*******************************/
 
 	var updateImageData = function(cropperId) {
 		// var cropperId = cropperId;
 		var $image = $(cropperId + '_image');
-		// options : size
-		var options = $(cropperId + "_sizeRef").attr('data-option');
-		if(options != undefined) options = JSON.parse(options); else options = null;
 		// contenu imagee
-		if($image.attr('src') != "#" ) {
-			var result = $image.cropper("getCroppedCanvas", options);
-			$(cropperId).val(result.toDataURL());
-			// info file/size
-			$($(cropperId).data('infoForPersist_field')).val(JSON.stringify($(cropperId).data('infoForPersist')));
-		} else {
-			$(cropperId).val('');
-		}
-	};
+		var data = $(cropperId).data('infoForPersist');
+		data.getData = $image.cropper("getData");
+		// Math.round
+		data.getData.x = Math.round(data.getData.x);
+		data.getData.y = Math.round(data.getData.y);
+		data.getData.width = Math.round(data.getData.width);
+		data.getData.height = Math.round(data.getData.height);
+		// info file/size
+		$($(cropperId).data('infoForPersist_field')).val(JSON.stringify(data));
+	}
 
 	var sub = false; // site_adminbundle_media
 	// Download new image to crop
@@ -279,15 +415,19 @@ $(document).ready(function(){
 		if($cropperBlock.length) {
 			if(sub == false) {
 				e.preventDefault();
-				sub = true;
-				$cropperBlock.each(function(e) {
-					updateImageData($(this).attr('data-id'));
-				});
-				$(this).submit();
+				if(loading == false) {
+					sub = true;
+					$cropperBlock.each(function(e) {
+						updateImageData("#"+$(this).attr('id').replace(new RegExp("("+croppername+")$", "g"), ''));
+					});
+					$(this).submit();
+				} else {
+					alert('Le chargement est toujours en cours, veuillez patienter, svp.');
+				}
 			}
 		}
 	});
 
-
-
 });
+
+

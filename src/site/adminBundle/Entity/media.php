@@ -33,10 +33,10 @@ use \SplFileInfo;
  */
 abstract class media extends baseSubEntity {
 
-    const CLASS_IMAGE		= "image";
-    const CLASS_PDF			= "pdf";
-    // const CLASS_VIDEO		= "video";
-    // const CLASS_AUDIO		= "audio";
+	const CLASS_IMAGE		= "image";
+	const CLASS_PDF			= "pdf";
+	// const CLASS_VIDEO		= "video";
+	// const CLASS_AUDIO		= "audio";
 
 	/**
 	 * @var integer
@@ -45,7 +45,6 @@ abstract class media extends baseSubEntity {
 	 * @ORM\GeneratedValue(strategy="AUTO")
 	 */
 	protected $id;
-
 
 	/**
 	 * Nom du fichier original du media
@@ -83,6 +82,13 @@ abstract class media extends baseSubEntity {
 	protected $stockage;
 
 	/**
+	 * Informations de recadrage cropper
+	 * @var string
+	 * @ORM\Column(name="croppingInfo", type="text", nullable=true, unique=false)
+	 */
+	protected $croppingInfo;
+
+	/**
 	 * Taille du fichier d'origine du media
 	 * (ou taille du champ "binaryFile" -> à développer)
 	 * @var int
@@ -94,6 +100,19 @@ abstract class media extends baseSubEntity {
 	 * upload file
 	 */
 	public $upload_file;
+
+
+	/****************************/
+	/*** DOING WITH RAW FILE ***/
+	/**************************/
+
+	/**
+	 * @var array
+	 * @ORM\OneToOne(targetEntity="site\adminBundle\Entity\rawfile", orphanRemoval=true, cascade={"persist", "remove"})
+	 * @ORM\JoinColumn(nullable=true, unique=true, onDelete="SET NULL")
+	 */
+	protected $rawfile;
+
 	
 	protected $streamBinaryFile;
 	protected $infoForPersist;
@@ -101,11 +120,13 @@ abstract class media extends baseSubEntity {
 	protected $schemaData;
 	protected $schemaBase;
 	protected $stockageList;
-	
+	protected $mediaType;
+
 	public function __construct() {
 		parent::__construct();
 
 		$this->infoForPersist = null;
+		$this->croppingInfo = null;
 		// $date = new DateTime();
 		// $defaultVersion = $date->format('d-m-Y_H-i-s');
 		// $this->setNom($defaultVersion);
@@ -117,9 +138,9 @@ abstract class media extends baseSubEntity {
 	// 	else return $this->nom.' crée le '.$this->dateCreation->format('d-m-Y H:i:s');
 	// }
 
-    // public function getClassName(){
-    //     return parent::CLASS_MEDIA;
-    // }
+	// public function getClassName(){
+	//     return parent::CLASS_MEDIA;
+	// }
 
 	protected function init() {
 		$this->streamBinaryFile = null;
@@ -137,13 +158,8 @@ abstract class media extends baseSubEntity {
 		$this->setStockage($this->stockageList[0]);
 	}
 
-
-
-
-
-
 	/**
-	 * @ORM\PostLoad()
+	 * @ORM\PostLoad
 	 */
 	public function onLoad($construct = false) {
 		$this->init();
@@ -176,9 +192,13 @@ abstract class media extends baseSubEntity {
 
 	protected function getTypeOf($typeMime) {
 		$exp = explode('/', $typeMime);
-		if($exp[0] == 'image') return 'image';
-		if($exp[1] == 'pdf') return 'pdf';
+		if($exp[0] == self::CLASS_IMAGE) return self::CLASS_IMAGE;
+		if($exp[1] == self::CLASS_PDF) return self::CLASS_PDF;
 		return 'inconnu';
+	}
+
+	protected function getExtByMime($typeMime) {
+		return explode('/', $typeMime)[1];
 	}
 
 	/**
@@ -186,10 +206,11 @@ abstract class media extends baseSubEntity {
 	 * @ORM\PreUpdate()
 	 */
 	public function upLoad(){
-		if($this->getId() != null) {
-			// test only on update…
-			if(null === $this->upload_file && null === $this->binaryFile) return;
-		}
+		$info = $this->getInfoForPersist();
+		// if($this->getId() != null) {
+		// 	// test only on update…
+		// 	if(null === $this->upload_file && null === $this->binaryFile && $info === null) return;
+		// }
 		if(null != $this->upload_file) {
 			// File
 			$stream = fopen($this->upload_file->getRealPath(),'rb');
@@ -199,31 +220,9 @@ abstract class media extends baseSubEntity {
 			$this->setOriginalnom($this->upload_file->getClientOriginalName());
 			$this->setExtension($this->getUploadFile_extension());
 			$this->setFormat($this->getUploadFile_typemime());
-			// $this->setStockage($this->stockageList[1]);
-		} else if(null != $this->binaryFile) {
-			// cropper
-			$info = $this->getInfoForPersist();
-			if(preg_match($this->schemaData, $this->binaryFile)) {
-				// Format non Raw
-				$rotenData = preg_replace($this->schemaData, '', $this->binaryFile);
-				$this->setBinaryFile(base64_decode($rotenData));
-				unset($rotenData);
-			}
-			if($info['fileStatus'] == 'filled') {
-				$this->setFileSize($info['file']['size']);
-				$this->setFormat($info['file']['type']);
-				$this->setMediaType($this->getTypeOf($info['file']['type']));
-				$ext = explode('.', $info['file']['name']);
-				$ext = end($ext);
-				if(!in_array($ext, $this->authorizedFormatsByType)) {
-					// format non trouvé, on prend sur le type mime
-					if(in_array($this->getMediaType(), array('image', 'pdf'))) {
-						$ext = explode('/', $info['file']['type'])[1];
-					} else $ext = 'txt';
-				}
-				$this->setExtension($ext);
-			}
-			// $this->setStockage($this->stockageList[0]);
+			$this->setStockage($this->stockageList[1]);
+		} else {
+			// ???
 		}
 		if($this->getNom() == null) $this->setNom($this->getOriginalnom());
 		// Définit un nom si aucun n'est donné
@@ -234,7 +233,7 @@ abstract class media extends baseSubEntity {
 
 	/**
 	 * set infoForPersist
-	 * @param string $infoForPersist = null
+	 * @param json/array $infoForPersist = null
 	 * @return media
 	 */
 	public function setInfoForPersist($infoForPersist = null) {
@@ -245,9 +244,44 @@ abstract class media extends baseSubEntity {
 
 	/**
 	 * get infoForPersist
+	 * @return array
 	 */
 	public function getInfoForPersist() {
 		return json_decode($this->infoForPersist, true);
+	}
+
+
+
+
+	/**
+	 * set croppingInfo
+	 * Renvoie false si les informations sont différentes des précédentes
+	 * @param json/array $croppingInfo = null
+	 * @return boolean
+	 */
+	public function setCroppingInfo($croppingInfo = null) {
+		$oldcroppingInfo = $this->croppingInfo;
+		if(!is_string($croppingInfo)) {
+			$croppingInfo = json_encode($croppingInfo);
+		}
+		$this->croppingInfo = $croppingInfo;
+		return $this->croppingInfo == $oldcroppingInfo;
+	}
+
+	/**
+	 * get croppingInfo
+	 * @return array
+	 */
+	public function getCroppingInfo() {
+		return json_decode($this->croppingInfo, true);
+	}
+
+	/**
+	 * get croppingInfo in JSON
+	 * @return string
+	 */
+	public function getJsonCroppingInfo() {
+		return $this->croppingInfo;
 	}
 
 
@@ -302,6 +336,26 @@ abstract class media extends baseSubEntity {
 	 */
 	public function getBinaryFile() {
 		return $this->streamBinaryFile;
+	}
+
+	/**
+	 * Set rawfile
+	 * @param rawfile $rawfile
+	 * @return media
+	 */
+	public function setRawfile(rawfile $rawfile = null) {
+		// if(is_object($this->rawfile)) $this->rawfile->setMedia(null);
+		$this->rawfile = $rawfile;
+		// $rawfile->setMedia($this);
+		return $this;
+	}
+
+	/**
+	 * Get rawfile
+	 * @return rawfile 
+	 */
+	public function getRawfile() {
+		return $this->rawfile;
 	}
 
 

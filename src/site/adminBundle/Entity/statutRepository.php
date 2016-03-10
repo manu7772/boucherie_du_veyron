@@ -8,6 +8,8 @@ use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\ClassMetadata;
 
+use site\services\aetools;
+use site\services\aeEntities;
 use site\UserBundle\Entity\User;
 
 /**
@@ -58,16 +60,36 @@ class statutRepository extends EntityBaseRepository {
 		return $qb->getQuery()->getOneOrNullResult();
 	}
 
+	public function findWebmaster() {
+		$qb = $this->createQueryBuilder(self::ELEMENT);
+		$qb->where(self::ELEMENT.'.slug = :slug')
+			->setParameter('slug', 'webmaster');
+		return $qb->getQuery()->getOneOrNullResult();
+	}
+
+	public function findTemp() {
+		$qb = $this->createQueryBuilder(self::ELEMENT);
+		$qb->where(self::ELEMENT.'.slug = :slug')
+			->setParameter('slug', 'temp');
+		return $qb->getQuery()->getOneOrNullResult();
+	}
+
 
 	/********************************/
 	/*** CLOSURES                 ***/
 	/********************************/
 
-	public function defaultValsListClosure(User $user = null) {
-		$qb = $this->findAllClosure();
-		$list = array('ROLE_USER');
-		if(is_object($user)) $list = $user->getGrants();
-		$qb->where($qb->expr()->in(self::ELEMENT.'.niveau', $list));
+	public function defaultValsListClosure(aetools $aeEntities = null) {
+		$qb = $this->findAllClosure($aeEntities);
+		return $qb;
+	}
+
+	public function findAllClosure(aetools $aeEntities = null) {
+		$qb = $this->createQueryBuilder(self::ELEMENT);
+		if($aeEntities != null) {
+			$this->declareContext($aeEntities);
+			$qb->where($qb->expr()->in(self::ELEMENT.'.niveau', $this->roles));
+		}
 		return $qb;
 	}
 

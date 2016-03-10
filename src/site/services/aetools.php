@@ -26,9 +26,12 @@ class aetools {
 	const EOLine				= "\n";				// End of line Terminal
 	const TAB1					= "   - ";
 	const TAB2					= "      - ";
+    const ARRAY_GLUE 			= '___';
 	// Paths
 	const GO_TO_ROOT 			= '/../../../';
+    const SOURCE_FILES 			= 'src/';
 	const WEB_PATH				= 'web/';
+    const BUNDLE_EXTENSION 		= 'Bundle';
 	// Dossiers
 	const DEFAULT_CHMOD			= 0755;
 	// DateTime
@@ -36,7 +39,7 @@ class aetools {
 	const DATE_ZERO				= "0000-00-00";
 	const TIME_ZERO				= "0:0:0";
 	// YAML
-	const MAX_YAML_LEVEL = 100;
+	const MAX_YAML_LEVEL 		= 100;
 
 	protected $ctrlDefined 		= null;				// boolean : controller dénini ?
 	protected $container;							// container
@@ -65,7 +68,7 @@ class aetools {
 
 	protected $labo_parameters = array();			// paramètres du bundle / aetools
 
-
+	protected $user;
 
 	protected $currentPath;
 	protected $aslash;
@@ -224,6 +227,8 @@ class aetools {
 					$this->$nP = $nom;
 				}
 			}
+			$exp = explode('Controller', $this->controllerPath);
+			$this->bundleName = str_replace('\\', '', reset($exp));
 		}
 		return $this->ctrlDefined;
 	}
@@ -784,45 +789,45 @@ class aetools {
 	// SERVICE EVENTS
 	////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	/**
-	 * Initialise le service - attention : cette méthode est appelée en requête principale par EventListener !!!
-	 * @param FilterControllerEvent $event
-	 * @param boolean $reLoad
-	 */
-	public function serviceEventInit(FilterControllerEvent $event, $reLoad = false) {
-		$this->service = array();
-		// paramètres URL et route
-		$this->service['actuelpath'] 		= $this->getURL();
-		$this->service['baseURL'] 			= $this->getBaseUrl();
-		$this->service['URL'] 				= $this->getURLentier();
-		$this->service['route'] 			= $this->getRoute();
-		$this->service['parameters'] 		= $this->getParameters();
-		$this->service['controller'] 		= $this->getController();
-		$this->service['actionName'] 		= $this->getActionName();
-		$this->service['groupeName'] 		= $this->getGroupeName();
-		$this->service['bundleName'] 		= $this->getBundleName();
-		$this->service['controllerName'] 	= $this->getControllerName();
-		$this->service['environnement'] 	= $this->getEnv();
-		$this->service['clientIP'] 			= $this->getIP();
-		$this->siteListener_InSession();
-	}
+	// /**
+	//  * Initialise le service - attention : cette méthode est appelée en requête principale par EventListener !!!
+	//  * @param FilterControllerEvent $event
+	//  * @param boolean $reLoad
+	//  */
+	// public function serviceEventInit(FilterControllerEvent $event, $reLoad = false) {
+	// 	$this->service = array();
+	// 	// paramètres URL et route
+	// 	$this->service['actuelpath'] 		= $this->getURL();
+	// 	$this->service['baseURL'] 			= $this->getBaseUrl();
+	// 	$this->service['URL'] 				= $this->getURLentier();
+	// 	$this->service['route'] 			= $this->getRoute();
+	// 	$this->service['parameters'] 		= $this->getRouteParameters();
+	// 	$this->service['controller'] 		= $this->getController();
+	// 	$this->service['actionName'] 		= $this->getActionName();
+	// 	$this->service['groupeName'] 		= $this->getGroupeName();
+	// 	$this->service['bundleName'] 		= $this->getBundleName();
+	// 	$this->service['controllerName'] 	= $this->getControllerName();
+	// 	$this->service['environnement'] 	= $this->getEnv();
+	// 	$this->service['clientIP'] 			= $this->getIP();
+	// 	$this->siteListener_InSession();
+	// }
 
-	/**
-	* Dépose les informations de l'entité dans la session
-	* @return aetools
-	*/
-	public function siteListener_InSession() {
-		$this->serviceSess->set($this->getShortName(), $this->service);
-		return $this;
-	}
+	// /**
+	// * Dépose les informations de l'entité dans la session
+	// * @return aetools
+	// */
+	// public function siteListener_InSession() {
+	// 	$this->serviceSess->set($this->getShortName(), $this->service);
+	// 	return $this;
+	// }
 
-	/**
-	* Renvoie true si les informations de l'entité sont bien dans la session
-	* @return boolean
-	*/
-	public function isSiteListener_InSession() {
-		return $this->serviceSess->get($this->getShortName()) !== null ? true : false;
-	}
+	// /**
+	// * Renvoie true si les informations de l'entité sont bien dans la session
+	// * @return boolean
+	// */
+	// public function isSiteListener_InSession() {
+	// 	return $this->serviceSess->get($this->getShortName()) !== null ? true : false;
+	// }
 
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -876,20 +881,20 @@ class aetools {
 		return $this->route;
 	}
 
-	/**
-	 * Renvoie un array des paramètres de route
-	 * @return array
-	 */
-	public function getParameters() {
-		if($this->isControllerPresent()) {
-			$r = array();
-			$params = explode($this->aslash, $this->getURL());
-			foreach($params as $nom => $pr) if(strlen($pr) > 0) $r[$nom] = $pr;
-			// return $this->requAttributes->all();
-			// if(count($r) == 0) $r = null;
-			return $r;
-		} else return null;
-	}
+	// /**
+	//  * Renvoie un array des paramètres de route
+	//  * @return array
+	//  */
+	// public function getRouteParameters() {
+	// 	if($this->isControllerPresent()) {
+	// 		$r = array();
+	// 		$params = explode($this->aslash, $this->getURL());
+	// 		foreach($params as $nom => $pr) if(strlen($pr) > 0) $r[$nom] = $pr;
+	// 		// return $this->requAttributes->all();
+	// 		// if(count($r) == 0) $r = null;
+	// 		return $r;
+	// 	} else return null;
+	// }
 
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -898,12 +903,13 @@ class aetools {
 
 	/**
 	 * Renvoie la liste des bundles disponibles
+	 * @param boolean $all = false
 	 * @return array
 	 */
-	public function getBundlesList() {
+	public function getBundlesList($all = false) {
 		if($this->isContainerPresent()) {
 			$bundles = $this->container->getParameter('kernel.bundles');
-			$this->selectBundles($bundles);
+			if($all == false) $this->selectBundles($bundles);
 			return $bundles;
 		} else {
 			$pathToConfig = $this->gotoroot.'web/params/bundles.yml';
@@ -1050,22 +1056,41 @@ class aetools {
 
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////////
+	// YML FILES
+	////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	public function getYmlContent($file) {
+		$pathFile = $this->gotoroot.'app/config/'.$file;
+		if(file_exists($pathFile)) {
+			$yaml = new Parser();
+			return $yaml->parse(file_get_contents($pathFile));
+		}
+		else throw new Exception("Le fichier YML ".$file." n'a pu être trouvé.", 1);
+	}
+
+	public function getConfigParameters($file) {
+		$content = $this->getYmlContent($file);
+		return $content['parameters'];
+	}
+
+
+	////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// USER
 	////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	/**
-	 * Charge l'utilisateur
-	 * @return User
-	 */
-	public function loadCurrentUser() {
-		$this->user = false;
-		if($this->isControllerPresent()) {
-			if($this->container->get('security.context')->isGranted('ROLE_USER')) {
-				$this->user = $this->container->get('security.context')->getToken()->getUser();
-			}
-		}
-		return $this->user;
-	}
+	// /**
+	//  * Charge l'utilisateur
+	//  * @return User
+	//  */
+	// public function loadCurrentUser() {
+	// 	$this->user = false;
+	// 	if($this->isControllerPresent()) {
+	// 		if($this->container->get('security.context')->isGranted('ROLE_USER')) {
+	// 			$this->user = $this->container->get('security.context')->getToken()->getUser();
+	// 		}
+	// 	}
+	// 	return $this->user;
+	// }
 
 	/**
 	 * Renvoie roles hierarchy
@@ -1076,9 +1101,10 @@ class aetools {
 		if($this->isControllerPresent()) {
 			$hierarchy = $this->container->getParameter('security.role_hierarchy');
 		} else {
-			$pathToSecurity = $this->gotoroot.'app/config/security.yml';
-			$yaml = new Parser();
-			$rolesArray = $yaml->parse(file_get_contents($pathToSecurity));
+			// $pathToSecurity = $this->gotoroot.'app/config/security.yml';
+			// $yaml = new Parser();
+			// $rolesArray = $yaml->parse(file_get_contents($pathToSecurity));
+			$rolesArray = $this->getYmlContent('security.yml');
 			$hierarchy = $rolesArray['security']['role_hierarchy'];
 		}
 		return $hierarchy;
@@ -1093,37 +1119,47 @@ class aetools {
 		return $r;
 	}
 
+	public function getListOfRolesForSelect() {
+		$r = array();
+		$roles = array_keys($this->getRolesHierarchy());
+		foreach ($roles as $role) {
+			$r[$role] = 'roles.'.$role;
+		}
+		return $r;
+	}
+
 	/**
 	 * Renvoie l'utilisateur
 	 * @return User
 	 */
 	public function getUser() {
+		$this->user = $this->user = $this->container->get('security.context')->getToken()->getUser();
 		return $this->user;
 	}
 
-	////////////////////////////////////////////////////////////////////////////////////////////////////////
-	// SERIALIZATION
-	////////////////////////////////////////////////////////////////////////////////////////////////////////
+	// ////////////////////////////////////////////////////////////////////////////////////////////////////////
+	// // SERIALIZATION
+	// ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	public function aeSerialize($data) {
-		if(is_array($data)) foreach($data as $key => $value) {
-			if(is_object($value)) {
-				$class = explode(self::ASLASH, get_class($value));
-				switch (end($class)) {
-					case 'ArrayCollection':
-						$data[$key] = $value->toArray();
-						break;
-					case 'DateTime':
-						// $data[$key] = $value->format('Y-m-d H:i:s');
-						break;
-					default:
-						// $data[$key] = $value;
-						break;
-				}
-			}
-		}
-		return $data;
-	}
+	// public function aeSerialize($data) {
+	// 	if(is_array($data)) foreach($data as $key => $value) {
+	// 		if(is_object($value)) {
+	// 			$class = explode(self::ASLASH, get_class($value));
+	// 			switch (end($class)) {
+	// 				case 'ArrayCollection':
+	// 					$data[$key] = $value->toArray();
+	// 					break;
+	// 				case 'DateTime':
+	// 					// $data[$key] = $value->format('Y-m-d H:i:s');
+	// 					break;
+	// 				default:
+	// 					// $data[$key] = $value;
+	// 					break;
+	// 			}
+	// 		}
+	// 	}
+	// 	return $data;
+	// }
 
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////////

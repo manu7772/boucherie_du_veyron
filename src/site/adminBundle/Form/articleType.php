@@ -14,9 +14,12 @@ use Symfony\Component\Security\Core\SecurityContext;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormEvent;
 
+use site\adminBundle\Entity\image;
 use site\adminBundle\Form\imageType;
 
 class articleType extends baseType {
+
+	protected $imagesData;
 
 	/**
 	 * @param FormBuilderInterface $builder
@@ -25,6 +28,11 @@ class articleType extends baseType {
 	public function buildForm(FormBuilderInterface $builder, array $options) {
 		// ajout de action si défini
 		$this->initBuilder($builder);
+		$this->imagesData = array(
+			'image' => array(
+				'owner' => 'article:image'
+				),
+			);
 		// Builder…
 		$builder
 			->add('nom', 'text', array(
@@ -66,10 +74,10 @@ class articleType extends baseType {
 				'property'  => 'nomlong',
 				'multiple'  => false,
 				"query_builder" => function($repo) {
-				    if(method_exists($repo, 'defaultValsListClosure'))
-				        return $repo->defaultValsListClosure($this->user);
-				        else return $repo->findAllClosure();
-				    },
+					if(method_exists($repo, 'defaultValsListClosure'))
+						return $repo->defaultValsListClosure($this->aeEntities);
+						else return $repo->findAllClosure();
+					},
 				))
 			->add('statut', 'entity', array(
 				"label"     => 'name',
@@ -77,6 +85,11 @@ class articleType extends baseType {
 				'class'     => 'siteadminBundle:statut',
 				'property'  => 'nom',
 				'multiple'  => false,
+				"query_builder" => function($repo) {
+					if(method_exists($repo, 'defaultValsListClosure'))
+						return $repo->defaultValsListClosure($this->aeEntities);
+						else return $repo->findAllClosure();
+					},
 				))
 			->add('marque', 'entity', array(
 				"label"     => 'name',
@@ -85,6 +98,11 @@ class articleType extends baseType {
 				'property'  => 'nom',
 				'multiple'  => false,
 				'required' => false,
+				"query_builder" => function($repo) {
+					if(method_exists($repo, 'defaultValsListClosure'))
+						return $repo->defaultValsListClosure($this->aeEntities);
+						else return $repo->findAllClosure();
+					},
 				))
 			->add('reseaus', 'entity', array(
 				"label"     => 'name_s',
@@ -94,17 +112,17 @@ class articleType extends baseType {
 				'multiple'  => true,
 				'required' => false,
 				"query_builder" => function($repo) {
-				    if(method_exists($repo, 'defaultValsListClosure'))
-				        return $repo->defaultValsListClosure($this->user);
-				        else return $repo->findAllClosure();
-				    },
+					if(method_exists($repo, 'defaultValsListClosure'))
+						return $repo->defaultValsListClosure($this->aeEntities);
+						else return $repo->findAllClosure();
+					},
 				'attr'		=> array(
 					'class'			=> 'chosen-select chosen-select-width chosen-select-no-results',
 					'placeholder'	=> 'form.select',
 					),
 				))
 			// 1 image :
-			->add('image', new imageType($this->controller), array(
+			->add('image', new cropperType($this->controller, array('image' => $this->imagesData['image'])), array(
 				'label' => 'fields.image',
 				'translation_domain' => 'article',
 				'required' => false,
@@ -138,6 +156,11 @@ class articleType extends baseType {
 					'class'			=> 'chosen-select chosen-select-width chosen-select-no-results',
 					'placeholder'	=> 'form.select',
 					),
+				"query_builder" => function($repo) {
+					if(method_exists($repo, 'defaultValsListClosure'))
+						return $repo->defaultValsListClosure($this->aeEntities);
+						else return $repo->findAllClosure();
+					},
 				))
 			->add('tags', 'entity', array(
 				'label'		=> 'name_s',
@@ -150,6 +173,11 @@ class articleType extends baseType {
 					'class'			=> 'chosen-select chosen-select-width chosen-select-no-results',
 					'placeholder'	=> 'form.select',
 					),
+				"query_builder" => function($repo) {
+					if(method_exists($repo, 'defaultValsListClosure'))
+						return $repo->defaultValsListClosure($this->aeEntities);
+						else return $repo->findAllClosure();
+					},
 				))
 			// ->add('tags', 'multiCollection', array(
 			// 	'label' => 'name_s',
@@ -176,8 +204,24 @@ class articleType extends baseType {
 					'class'			=> 'chosen-select chosen-select-width chosen-select-no-results',
 					'placeholder'	=> 'form.select',
 					),
+				"query_builder" => function($repo) {
+					if(method_exists($repo, 'defaultValsListClosure'))
+						return $repo->defaultValsListClosure($this->aeEntities);
+						else return $repo->findAllClosure();
+					},
 				))
 		;
+
+		// $builder->addEventListener(
+		// 	FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+		// 		$data = $event->getData();
+		// 		$form = $event->getForm();
+		// 		// à conserver !! ci-dessous
+		// 		if(null === $data) return;
+
+		// 	}
+		// );
+
 		// ajoute les valeurs hidden, passés en paramètre
 		$this->addHiddenValues($builder, true);
 	}

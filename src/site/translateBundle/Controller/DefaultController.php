@@ -3,13 +3,18 @@
 namespace site\translateBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
+/**
+ * DefaultController
+ * @Security("has_role('ROLE_TRANSLATOR')")
+ */
 class DefaultController extends Controller {
 
     const MOTIF_FORM = '93736254F_form_data_';
 
     /**
-     *
+     * 
      */
     public function showtradAction() {
         $data = array();
@@ -29,7 +34,7 @@ class DefaultController extends Controller {
 
 
     /**
-     *
+     * 
      */
     public function mergetradAction($language, $bundle, $domain, $current = null) {
         $aeTrans = $this->get('aetools.translate');
@@ -55,7 +60,7 @@ class DefaultController extends Controller {
 
 
     /**
-     *
+     * 
      */
     public function editradAction($bundle, $domain, $language) {
         $data = array();
@@ -92,7 +97,7 @@ class DefaultController extends Controller {
     }
 
     /**
-     *
+     * 
      */
     public function changeAction() {
         $aeTrans = $this->get('aetools.translate');

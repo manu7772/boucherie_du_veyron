@@ -20,7 +20,7 @@ use \DateTime;
  *
  * @ORM\Entity
  * @ORM\Table(name="fiche")
- * @ORM\HasLifecycleCallbacks()
+ * @ORM\HasLifecycleCallbacks
  * @ORM\Entity(repositoryClass="site\adminBundle\Entity\ficheRepository")
  * @ExclusionPolicy("all")
  */
@@ -81,22 +81,22 @@ class fiche extends item {
 	protected $articles;
 
 	protected $listeNiveaux = array(
-		"débutant" => "débutant",
-		"intermédiaire" => "intermédiaire",
-		"confirmé" => "confirmé",
+		1 => "niveaux.debutant",
+		2 => "niveaux.intermediaire",
+		3 => "niveaux.confirme",
 		);
 
 	protected $durees = array(
-        30    =>  "30 minutes",
-        60    =>  "1 heure",
-        90    =>  "1 heure 30",
-        120   =>  "2 heures",
-        150   =>  "2 heures 30",
-        180   =>  "3 heures",
-        210   =>  "3 heures 30",
-        240   =>  "4 heures",
-        270   =>  "4 heures 30",
-        300   =>  "5 heures"
+        30    =>  "30\"",
+        60    =>  "1 h",
+        90    =>  "1 h 30\"",
+        120   =>  "2 h",
+        150   =>  "2 h 30\"",
+        180   =>  "3 h",
+        210   =>  "3 h 30\"",
+        240   =>  "4 h",
+        270   =>  "4 h 30\"",
+        300   =>  "5 h"
         );
 
 	public function __construct() {
@@ -105,7 +105,7 @@ class fiche extends item {
 		$this->dateExpiration = null;
 		$this->articles = new ArrayCollection();
 		reset($this->listeNiveaux);
-		$this->setNiveau(current($this->listeNiveaux)); // Niveau par défaut
+		$this->setNiveau(reset($this->listeNiveaux)); // Niveau par défaut
 		$this->duree = 30;
 		$this->tags = new ArrayCollection();
 	}
@@ -210,6 +210,14 @@ class fiche extends item {
 	 */
 	public function getNiveau() {
 		return $this->niveau;
+	}
+
+	/**
+	 * Get niveauText
+	 * @return string 
+	 */
+	public function getNiveauText() {
+		return $this->listeNiveaux[$this->niveau];
 	}
 
 	/**

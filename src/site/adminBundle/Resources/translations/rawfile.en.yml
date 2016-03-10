@@ -1,0 +1,26 @@
+name_s: raw-images
+name: raw-image
+not_found: 'no raw-image found'
+x_found: '{0} no raw-image found|{1} 1 raw-image found|[2,+Inf] %count% raw-images found'
+create: 'create new raw-image'
+create_btn: 'new raw-image'
+backlist: 'back to list of raw-images'
+backlist_btn: 'back to list'
+dontexist: 'this raw-image does not exist'
+moredetails: 'more details on %name%'
+existe: this raw-image already exists
+deleteAllTemp: delete Temp
+dimensionInconnue: (undefined dimensions)
+fields:
+    id: id
+    nom: name
+    created: created
+    updated: updated
+    binaryFile: preview
+    originalnom: original name
+    format: format
+    extension: extension
+    width: width
+    height: height
+    fileSize: file size
+    descriptif: description

@@ -135,6 +135,12 @@ twig:
                             path: 'siteadmin_entite'
                             params:
                                 entite: tag
+                    raws:
+                        nom: 'raw files'
+                        path: 
+                            path: 'siteadmin_entite'
+                            params:
+                                entite: rawfile
             utilisateurs:
                 role: %restrict_admin%
                 nom: 'name_s'
@@ -191,7 +197,8 @@ twig:
                                 entite: adresse
             messages:
                 role: %restrict_admin%
-                nom: message.name_s
+                nom: name_s
+                trans_domain: message
                 icon: fa-paper-plane
                 path:
                     path: siteadmin_entite
@@ -236,6 +243,12 @@ twig:
                     generate:
                         nom: 'install.name'
                         path: 'generate'
+                    routes:
+                        nom: 'Routes'
+                        path: 'siteadmin_sadmin_routes'
+                    bundles:
+                        nom: 'Bundles'
+                        path: 'siteadmin_sadmin_bundles'
                     entities:
                         nom: 'superadmin.entites'
                         path: 'siteadmin_sadmin_entities'

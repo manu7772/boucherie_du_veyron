@@ -420,7 +420,11 @@ class User extends BaseUser {
 		if($user === null) $user = $this;
 		$user_roles = $user->getRoles();
 		$best_role = null;
-		$this->validRoles = array(1 => 'ROLE_USER', 2 => 'ROLE_TRANSLATOR', 3 => 'ROLE_EDITOR', 4 => 'ROLE_ADMIN', 5 => 'ROLE_SUPER_ADMIN');
+		// $pathToSecurity = __DIR__.'/../../../../app/config/security.yml';
+		// $yaml = new Parser();
+		// $rolesArray = $yaml->parse(file_get_contents($pathToSecurity));
+		// $this->validRoles = $rolesArray['security']['role_hierarchy'];
+		$this->validRoles = array(0 => 'IS_AUTHENTICATED_ANONYMOUSLY', 1 => 'ROLE_USER', 2 => 'ROLE_TRANSLATOR', 3 => 'ROLE_EDITOR', 4 => 'ROLE_ADMIN', 5 => 'ROLE_SUPER_ADMIN');
 		foreach($this->validRoles as $value => $roleToTest) {
 			if(in_array($roleToTest, $user_roles)) $best_role = $roleToTest;
 		}
