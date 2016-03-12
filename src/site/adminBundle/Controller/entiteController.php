@@ -100,6 +100,9 @@ class entiteController extends Controller {
 				}
 				break;
 			case 'edit' :
+				set_time_limit(300);
+				$memory = $this->get('aetools.aetools')->getConfigParameters('cropper.yml', 'memory_limit');
+				ini_set("memory_limit", $memory);
 				$data['entite'] = $entityService->getRepo($data['classname'])->find($id);
 				if(!is_object($data['entite'])) {
 					// $this->get('aetools.aeExceptions')->launchException('not_found', null, $data['entite_name']);
@@ -221,7 +224,8 @@ class entiteController extends Controller {
 	}
 
 	/**
-	 * Renvoie le service de l'entité - renvoie aeEntities par défaut si non trouvé
+	 * Renvoie le service de l'entité
+	 * Renvoie les services/entités parents dans l'ordre, puis aeEntities par défaut si non trouvé
 	 * @param string $entityShortName
 	 * @return object
 	 */
@@ -259,6 +263,9 @@ class entiteController extends Controller {
 	 * @return Response
 	 */
 	public function entitePostFormPageAction($classname) {
+		set_time_limit(300);
+		$memory = $this->get('aetools.aetools')->getConfigParameters('cropper.yml', 'memory_limit');
+		ini_set("memory_limit", $memory);
 		$data = array();
 		$classname = urldecode($classname);
 		$entiteType = str_replace('Entity', 'Form', $classname.'Type');

@@ -241,8 +241,10 @@ class rawfile extends baseSubEntity {
 	 * @return aeReponse
 	 */
 	public function getCropped($w, $h, $data) {
-        set_time_limit(120);
-		ini_set('memory_limit', '512M');
+        set_time_limit(300);
+        $aetools = new aetools();
+        $memory = $aetools->getConfigParameters('cropper.yml', 'memory_limit');
+        ini_set('memory_limit', $memory);
 		// renvoie l'image traitée selon les données cropper
 		$coef = $this->getWidth() / $this->getModelWidth();
 		$aeImages = new aeImages();

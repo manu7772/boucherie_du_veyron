@@ -35,7 +35,9 @@ class mediaController extends Controller {
 	 * @return aeReponse
 	 */
 	public function persistRawImageAction($entityShortName) {
-		ini_set("memory_limit","512M");
+		set_time_limit(300);
+		$memory = $this->get('aetools.aetools')->getConfigParameters('cropper.yml', 'memory_limit');
+		ini_set("memory_limit", $memory);
 		$aeRawfile = $this->get('aetools.aeRawfile');
 		$data = $this->getRequest()->request->get('data');
 
@@ -92,7 +94,9 @@ class mediaController extends Controller {
 	 * @return aeReponse
 	 */
 	public function ApersistRawImageAction($entityShortName) {
-		ini_set("memory_limit","512M");
+		set_time_limit(300);
+		$memory = $this->get('aetools.aetools')->getConfigParameters('cropper.yml', 'memory_limit');
+		ini_set("memory_limit", $memory);
 		$aeRawfile = $this->get('aetools.aeRawfile');
 		$data = $this->getRequest()->request->get('data');
 

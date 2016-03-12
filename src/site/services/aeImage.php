@@ -22,7 +22,7 @@ class aeImage extends aeMedia {
 	public function checkAfterChange(baseEntity &$entity) {
 		$infoForPersist = $entity->getInfoForPersist();
 		if(isset($infoForPersist['rawfiles']['actual'])) {
-			if($infoForPersist['delete'] == true) {
+			if($infoForPersist['removeImage'] == true) {
 				// DELETE MEDIA
 			} else {
 				$rawfile = $this->container->get('aetools.aeRawfile')->getRepo()->find($infoForPersist['rawfiles']['actual']);

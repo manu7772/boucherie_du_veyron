@@ -109,21 +109,28 @@ class aeEntities extends aetools {
 	 * @param baseEntity $entity
 	 * @return aeReponse
 	 */
-	public function NOsave(baseEntity &$entity) {
+	public function save(baseEntity &$entity) {
 		$aeReponse = $this->container->get('aetools.aeReponse');
 		$response = true;
+		$sadmin = false;
+		$user = $this->container->get('security.context')->getToken()->getUser();
+		if(is_object($user)) if($user->getBestRole() == 'ROLE_SUPER_ADMIN') $sadmin = true;
 		$message = 'Entité enregistrée.';
 		try {
 			$this->_em->persist($entity);
 		} catch (Exception $e) {
 			$response = false;
-			$message = $e->getMessage();
+			if(($this->isDev() && $sadmin) === true)
+				$message = $e->getMessage();
+				else $message = 'Erreur système.';
 		}
 		try {
 			$this->_em->flush();
 		} catch (Exception $e) {
 			$response = false;
-			$message = $e->getMessage();
+			if(($this->isDev() && $sadmin) === true)
+				$message = $e->getMessage();
+				else $message = 'Erreur système.';
 		}
 		return $aeReponse
 			->setResult($response)
@@ -138,7 +145,7 @@ class aeEntities extends aetools {
 	 * @param baseEntity $entity
 	 * @return aeReponse
 	 */
-	public function save(baseEntity &$entity) {
+	public function NOsave(baseEntity &$entity) {
 		$response = true;
 		$message = 'Entité enregistrée.';
 		$this->_em->persist($entity);

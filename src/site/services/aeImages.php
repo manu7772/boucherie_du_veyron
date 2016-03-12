@@ -2,6 +2,7 @@
 namespace site\services;
 
 use site\services\aeReponse;
+use site\services\aetools;
 
 class aeImages {
 
@@ -21,7 +22,10 @@ class aeImages {
         // deform   : déforme l'image pour qu'elle soit exactement à la taille
         // no       : ne modifie pas la taille de l'image
         // calcul…
-        set_time_limit(120);
+        set_time_limit(300);
+        $aetools = new aetools();
+        $memory = $aetools->getConfigParameters('cropper.yml', 'memory_limit');
+        ini_set('memory_limit', $memory);
 
         // if Raw data (string)
         if(is_string($image)) $image = imagecreatefromstring($image);
@@ -104,8 +108,10 @@ class aeImages {
     }
 
     public function getCropped($image, $w, $h, $x, $y, $width, $height, $rotate = 0) {
-        set_time_limit(120);
-        ini_set('memory_limit', '512M');
+        set_time_limit(300);
+        $aetools = new aetools();
+        $memory = $aetools->getConfigParameters('cropper.yml', 'memory_limit');
+        ini_set('memory_limit', $memory);
         $reponse = new aeReponse();
         // echo('<p>- w : '.$w.'<br>'); 
         // echo('- h : '.$h.'<br>');

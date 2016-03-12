@@ -364,16 +364,22 @@
 
 		<!-- Actions -->
 		<div class="col-sm-12 m-t-xs container-actions">
-			<div class="btn-group m-r-sm">
-				<label class="btn btn-sm btn-primary" for="{{ id }}_fileInput">
+			<div class="m-r-xs inline">
+				<label class="btn btn-sm btn-primary loadOff" for="{{ id }}_fileInput">
 					<input type="file" id="{{ id }}_fileInput" class="sr-only" name="file" accept="{{ cropper.accept|default('image/*') }}">
-					<span class="docs-tooltip load-icon" data-toggle="tooltip" title="{{ 'form.uploadNewImage'|trans|capitalize }}">
+					<span class="docs-tooltip" data-toggle="tooltip" title="{{ 'form.uploadNewImage'|trans|capitalize }}">
 						<i class="fa fa-upload m-r-xs"></i>{{ 'form.fichier'|trans|capitalize }}
+					</span>
+				</label>
+				<label class="btn btn-sm btn-danger loadOn hidden" for="{{ id }}_fileInput_loading">
+					<input type="button" id="{{ id }}_fileInput_loading" class="sr-only" name="file_loading">
+					<span>
+						<i class="fa fa-refresh fa-spin m-r-xs"></i>{{ 'form.fichier'|trans|capitalize }}
 					</span>
 				</label>
 			</div>
 			{% if cropper.deletable|default(false) == true %}
-			<div class="btn-group m-r-md containerImageNull">
+			<div class="btn-group m-r-xs containerImageNull">
 				<span class="docs-tooltip" data-toggle="tooltip" title="{{ 'form.supprimer'|trans|capitalize }}">
 					<button class="btn btn-sm btn-primary noImage"><i class="fa fa-ban"></i></button>
 				</span>

@@ -43,10 +43,18 @@
 									<h1>{{ entite.nom|raw }}</h1>
 									<h5>{{ UCfirst('fields.niveau'|trans({}, entite_name)) }} : <strong>{{ entite.niveauText|trans({}, entite.className) }}</strong></h5>
 								</div>
+								<div class="row">
 								{% if entite.mainMedia.isScreenableImage|default(null) != null %}
-								<img alt="image" src="{{ entite.mainMedia.imgThumbnail(256,256,'cut') }}" class="img-responsive pull-left m-r-lg">
+									<div class="col-md-3">
+										<img alt="image" src="{{ entite.mainMedia.img }}" class="img-responsive pull-left m-r-lg">
+									</div>
+									<div class="col-md-9">
+										{{ entite.descriptif|raw }}
+									</div>
+								{% else %}
+									<div class="col-xs-12">{{ entite.descriptif|raw }}</div>
 								{% endif %}
-								<p>{{ entite.descriptif|raw }}</p>
+								</div>
 								<div class="clearfix"></div>
 								<hr>
 								<div class="row">
@@ -81,7 +89,7 @@
 								<hr class="m-t-xs m-b-xs visible-xs">
 								<div class="row">
 									{% if entite.mainMedia|default(null) != null %}
-									<img src="{{ entite.mainMedia.img|raw }}" class="img-responsive center-block img-rounded">
+									<img src="{{ entite.mainMedia.img }}" class="img-responsive center-block img-rounded">
 									{% else %}
 									<i class="fa fa-ban fa-5x text-muted fa-border"></i>
 									{% endif %}

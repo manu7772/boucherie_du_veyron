@@ -62,10 +62,10 @@ abstract class tier extends baseSubEntity {
      * @ORM\OneToOne(targetEntity="site\adminBundle\Entity\image", inversedBy="tier", orphanRemoval=true, cascade={"persist", "remove"})
 	 * @ORM\JoinColumn(nullable=true, unique=true, onDelete="SET NULL")
      */
-    private $image;
+    protected $image;
 
 	/**
-	 * @var integer - PROPRIÉTAIRE
+	 *  - PROPRIÉTAIRE
 	 * @ORM\OneToOne(targetEntity="site\adminBundle\Entity\image", inversedBy="logoTier", orphanRemoval=true, cascade={"persist", "remove"})
 	 * @ORM\JoinColumn(nullable=true, unique=false, onDelete="SET NULL")
 	 */

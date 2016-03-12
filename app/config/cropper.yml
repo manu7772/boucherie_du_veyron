@@ -1,4 +1,6 @@
 parameters:
+    # Mémoire PHP allouée
+    memory_limit: 2048M
     #largeur de l'image pour cropper
     modelWidth: 800
     # formats requis pour les champs des différentes entités

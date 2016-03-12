@@ -1068,8 +1068,12 @@ class aetools {
 		else throw new Exception("Le fichier YML ".$file." n'a pu être trouvé.", 1);
 	}
 
-	public function getConfigParameters($file) {
+	public function getConfigParameters($file, $data = null) {
 		$content = $this->getYmlContent($file);
+		if(is_string($data)) {
+			if(isset($content['parameters'][$data])) return $content['parameters'][$data];
+				else throw new Exception("aetools::getConfigParameters() : le paramètre \"".$data."\" n'existe pas dans le fichier ".$file.".", 1);
+		}
 		return $content['parameters'];
 	}
 

@@ -27,7 +27,7 @@ class aeTier extends aeEntities {
         if($image !== null) {
             $infoForPersist = $image->getInfoForPersist();
             $this->container->get('aetools.aeImage')->checkAfterChange($image);
-            if($infoForPersist['delete'] == true) {
+            if($infoForPersist['removeImage'] == true) {
                 // Supression de l'image
                 $entity->setImage(null);
             }
@@ -38,7 +38,7 @@ class aeTier extends aeEntities {
         if($logo !== null) {
             $infoForPersist = $logo->getInfoForPersist();
             $this->container->get('aetools.aeImage')->checkAfterChange($logo);
-            if($infoForPersist['delete'] == true) {
+            if($infoForPersist['removeImage'] == true) {
                 // Supression de l'image
                 $entity->setLogo(null);
             }

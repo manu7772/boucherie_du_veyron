@@ -109,7 +109,7 @@ abstract class baseEntity {
 	}
 
 	/**
-	 * On peut attribuer plusieurs éléments par défaut ?
+	 * Peut'on attribuer plusieurs éléments par défaut ?
 	 * true 		= illimité
 	 * integer 		= nombre max. d'éléments par défaut
 	 * false, 0, 1 	= un seul élément

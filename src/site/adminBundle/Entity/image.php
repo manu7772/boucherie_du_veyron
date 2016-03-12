@@ -147,7 +147,7 @@ class image extends media {
 						if(!in_array($ext, $this->authorizedFormatsByType)) $this->setExtension($this->getExtByMime($info['file']['type']));
 						$this->setExtension($ext);
 					}
-					if($info['delete'] == true) {
+					if($info['removeImage'] == true) {
 						// opération dans le service…
 					}
 					if($this->getRawfile() == null) {
