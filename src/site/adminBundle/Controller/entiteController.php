@@ -226,17 +226,49 @@ class entiteController extends Controller {
 	/**
 	 * Renvoie le service de l'entité
 	 * Renvoie les services/entités parents dans l'ordre, puis aeEntities par défaut si non trouvé
-	 * @param string $entityShortName
+	 * @param mixed $entityShortName
 	 * @return object
 	 */
-	protected function getEntityService($entityShortName) {
-		$ae = "aetools.ae".ucfirst($entityShortName);
-		if($this->has($ae)) {
-			$service = $this->get($ae);
-		} else {
-			$service = $this->get('aetools.aeEntities');
-			$service->defineEntity($entityShortName);
+	protected function getEntityService($entity) {
+		if(is_object($entity)) {
+			$entityClassName = get_class($entity);
+			$entityShortName = $entity->getClassName();
+		} else if(is_string($entity)) {
+			if(preg_match('#([a-zA-Z_-]+\/)+Entity\/[a-zA-Z_-]{2,}$#', $entity)) {
+				// $entity = nom long
+				$entityClassName = $entity;
+				$entityShortName = $this->get('aetools.aeEntities')->getEntityShortName($entity);
+			} else {
+				// $entity = nom court
+				$entityClassName = $this->get('aetools.aeEntities')->getEntityClassName($entity);
+				$entityShortName = $entity;
+			}
+			$entity = new $entityClassName();
 		}
+		// parent classes
+		if(method_exists($entity, 'getParentsClassNames')) {
+			$parents = $entity->getParentsClassNames(true);
+			// echo('<pre><h3>'.$entityShortName.'</h3>');
+			// var_dump($parents);
+			// echo('</pre>');
+		} else {
+			$parents = array(
+				$entityShortName,
+				'entity',
+			);
+		}
+		// Recherche du service le plus proche de l'entité
+		$service = null;
+		foreach ($parents as $parent) {
+			$aeServiceName = "aetools.ae".ucfirst(preg_replace('#^base#', '', $parent));
+			// echo('<p>- Test '.$aeServiceName.'</p>');
+			if($this->has($aeServiceName)) {
+				$service = $this->get($aeServiceName);
+				if($parent != $entityShortName) $service->defineEntity($entityShortName);
+				break 1;
+			}
+		}
+		// echo('<h1>Service entité trouvé pour '.$entityShortName.' : '.get_class($service).'</h1>');
 		return $service;
 	}
 

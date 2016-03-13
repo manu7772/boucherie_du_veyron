@@ -114,8 +114,8 @@ abstract class tier extends baseSubEntity {
 	 * @return tier
 	 */
 	public function setImage(image $image = null) {
-		$image->setTier($this);
 		$this->image = $image;
+		if($this->image != null) $image->setTier($this);
 		return $this;
 	}
 

@@ -1569,8 +1569,10 @@ class aeEntities extends aetools {
 	 * Vérifie le statut et l'attribue si null
 	 * @param object &$entity
 	 * @param boolean $flush = true
+	 * @return boolean
 	 */
 	public function checkStatuts(&$entity, $flush = true) {
+		$r = false;
 		// echo('<h4>Check statut sur '.get_class($entity).'</h4>');
 		if(method_exists($entity, 'getStatut')) {
 			// echo('<p>getStatut existe</p>');
@@ -1579,11 +1581,16 @@ class aeEntities extends aetools {
 				$statut = $this->getEm()->getRepository('site\adminBundle\Entity\statut')->defaultVal();
 				// var_dump($statut);
 				if(is_array($statut)) $statut = reset($statut);
-				if(is_object($statut)) $entity->setStatut($statut);
+				if(is_object($statut)) {
+					$entity->setStatut($statut);
+					// echo('<p>'.get_class($entity).' = statut ajouté : '.$statut->getNom().'</p>');
+					$r = true;
+				}
 			}
 			// else echo('<p>Statut déjà rempli : ok</p>');
 		}
 		if($flush == true) $this->save($entity);
+		return $r;
 	}
 
 

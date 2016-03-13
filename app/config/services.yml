@@ -23,6 +23,15 @@ services:
         class: %ae_services%aeEntities
         arguments: [@service_container]
 
+    # fonctionnalités d'entités BIS
+    aetools.aeEntity:
+        class: %ae_services%aeEntities
+        arguments: [@service_container]
+
+    aetools.aeSubEntity:
+        class: %ae_services%aeEntities
+        arguments: [@service_container]
+
     # fonctionnalités de tag
     aetools.aeTag:
         class: %ae_services%aeTag
