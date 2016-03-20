@@ -24,6 +24,7 @@ fields:
     bundles: bundles
     created: création
     updated: mis à jour
+    jamais: aucune modification
 roles:
     IS_AUTHENTICATED_ANONYMOUSLY: public
     ROLE_USER: connecté

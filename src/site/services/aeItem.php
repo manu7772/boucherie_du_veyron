@@ -2,13 +2,13 @@
 namespace site\services;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use site\services\aeEntities;
+use site\services\aeSubEntity;
 
 use site\adminBundle\Entity\item;
 use site\adminBundle\Entity\baseEntity;
 
 // call in controller with $this->get('aetools.aeItem');
-class aeItem extends aeEntities {
+class aeItem extends aeSubEntity {
 
 	public function __construct(ContainerInterface $container) {
 		parent::__construct($container);
@@ -21,17 +21,6 @@ class aeItem extends aeEntities {
 	 * @return aeItem
      */
     public function checkAfterChange(baseEntity &$entity) {
-	    // check image
-	    $image = $entity->getImage();
-	    // if($image->getInfoForPersist() == null) $entity->setImage(null);
-		if($image !== null) {
-	    	$infoForPersist = $image->getInfoForPersist();
-	    	$this->container->get('aetools.aeImage')->checkAfterChange($image);
-	    	if($infoForPersist['removeImage'] == true) {
-	    		// Supression de l'image
-	    		$entity->setImage(null);
-	    	}
-		}
     	parent::checkAfterChange($entity);
 		return $this;
 	}

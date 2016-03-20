@@ -57,7 +57,7 @@
 								{% else %}
 								<p><em class='text-muted'>(jamais connecté)</em></p>
 								{% endif %}
-								<p>Panier : {% if user.articlesPanier|default(0) > 0 %}{{ user.articlesPanier }} {{ ('article.name' ~ plurNumber(user.articlesPanier, '_s'))|trans }}{% else %}(vide){% endif %}</p>
+								<p>{{ UCfirst('name'|trans({}, 'panier')) }} : {{ 'x_found'|transchoice(user.articlesPanier, {}, 'article') }}</p>
 							</td>
 							<td class='text-center'>
 								{% if user.avatar.isScreenableImage|default(false) != false %}

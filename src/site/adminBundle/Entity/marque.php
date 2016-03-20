@@ -64,14 +64,6 @@ class marque extends tier {
 	}
 
 	/**
-	 * Renvoie l'image principale
-	 * @return image
-	 */
-	public function getMainMedia() {
-		return $this->getLogo();
-	}
-
-	/**
 	 * Add article - INVERSE
 	 * @param article $article
 	 * @return marque

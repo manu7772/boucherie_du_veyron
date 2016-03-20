@@ -60,7 +60,7 @@ class generateController extends Controller {
 	}
 
 	protected function getEntities() {
-		$this->classnames = array_flip($this->get('aetools.aeEntities')->getListOfEnties());
+		$this->classnames = array_flip($this->get('aetools.aeEntity')->getListOfEnties());
 		return $this->classnames;
 	}
 

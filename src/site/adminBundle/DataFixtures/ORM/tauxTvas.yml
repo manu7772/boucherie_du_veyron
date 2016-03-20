@@ -5,12 +5,12 @@ tauxTva:
             nom: 'réduit'
             descriptif: 'Taux de tva réduit'
             taux: 5.5
-            default: false
+            default: true
         -
             nom: 'normal'
             descriptif: 'Taux de tva normal'
             taux: 20
-            default: true
+            default: false
         -
             nom: 'luxe'
             descriptif: 'Taux de tva de luxe'

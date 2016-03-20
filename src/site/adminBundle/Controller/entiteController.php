@@ -43,7 +43,7 @@ class entiteController extends Controller {
 		$data['entites'] = array();
 		$data['id'] = $id;
 		// EM
-		$this->entityService = $this->get('aetools.aeEntities');
+		$this->entityService = $this->get('aetools.aeEntity');
 		// autres éléments…
 		switch ($data['entite_name']) {
 			case '...':
@@ -73,7 +73,7 @@ class entiteController extends Controller {
 		if($action == null) $action = self::DEFAULT_ACTION;
 		
 		$data = $this->getEntiteData($entite, $type_related, $type_field, $type_values, $action, $id);
-		$entityService = $this->getEntityService($data['entite_name']);
+		$entityService = $this->get('aetools.aeEntity')->getEntityService($data['entite_name']);
 
 		// page générique entités
 		switch ($data['action']) {
@@ -141,6 +141,7 @@ class entiteController extends Controller {
 					$data['id'] = null;
 				} else {
 					$entityService->softDeleteEntity($data['entite']);
+					$entityService->checkAfterChange($data['entite']);
 					$this->get('flash_messages')->send(array(
 						'title'		=> 'Élément supprimé',
 						'type'		=> flashMessage::MESSAGES_WARNING,
@@ -174,18 +175,22 @@ class entiteController extends Controller {
 					$data['id'] = null;
 				} else {
 					$entityService->softActivateEntity($data['entite']);
+					$entityService->checkAfterChange($data['entite']);
 					$this->get('flash_messages')->send(array(
 						'title'		=> 'Élément activé',
 						'type'		=> flashMessage::MESSAGES_SUCCESS,
 						'text'		=> 'L\'élément a été activé.',
 					));
 					$data['action'] = self::DEFAULT_ACTION;
+					$data['id'] = null;
 				}
 				return $this->redirect($this->generateEntityUrl($data));
 				break;
 			case 'delete_linked_image' :
+				// supprime l'image de l'entité
 				$data['entite'] = $entityService->getRepo()->find($id);
 				$data['entite']->setImage(null);
+				$entityService->checkAfterChange($data['entite']);
 				$entityService->save($data['entite']);
 				$this->get('flash_messages')->send(array(
 					'title'		=> 'Image supprimée',
@@ -195,10 +200,26 @@ class entiteController extends Controller {
 				$data['action'] = 'show';
 				return $this->redirect($this->generateEntityUrl($data));
 				break;
+			case 'delete_linked_logo' :
+				// supprime le logo de l'entité
+				$data['entite'] = $entityService->getRepo()->find($id);
+				$data['entite']->setLogo(null);
+				$entityService->checkAfterChange($data['entite']);
+				$entityService->save($data['entite']);
+				$this->get('flash_messages')->send(array(
+					'title'		=> 'Logo supprimé',
+					'type'		=> flashMessage::MESSAGES_WARNING,
+					'text'		=> 'Le logo de '.$data['entite'].' a été supprimé.',
+				));
+				$data['action'] = 'show';
+				return $this->redirect($this->generateEntityUrl($data));
+				break;
 			default:
 				$data['action'] = self::DEFAULT_ACTION;
 				break;
 		}
+
+		// if(isset($data['entite'])) if(is_object($data['entite'])) $entityService->checkAfterChange($data['entite']);
 
 		if($data['action'] == self::DEFAULT_ACTION) {
 			// DEFAULT_ACTION
@@ -209,7 +230,14 @@ class entiteController extends Controller {
 				} else throw new Exception("Method \"findWithField\" does not exist in Repository \"".$data['classname']."\"", 1);
 			} else {
 				// recherche globale
+				// $data = array_merge(
+				// 	$data,
+				// 	$this->get('aeTwigdescriptions')->getCommandesInFile('site/adminBundle/Resources/views/entites/'.$entite.ucfirst($data['action']).'.html.twig')
+				// );
 				$data['entites'] = $entityService->getRepo($data['classname'])->findAll();
+				// echo('<pre>');
+				// var_dump($data['entites']);
+				// die('</pre>');
 			}
 		}
 		
@@ -224,67 +252,19 @@ class entiteController extends Controller {
 	}
 
 	/**
-	 * Renvoie le service de l'entité
-	 * Renvoie les services/entités parents dans l'ordre, puis aeEntities par défaut si non trouvé
-	 * @param mixed $entityShortName
-	 * @return object
-	 */
-	protected function getEntityService($entity) {
-		if(is_object($entity)) {
-			$entityClassName = get_class($entity);
-			$entityShortName = $entity->getClassName();
-		} else if(is_string($entity)) {
-			if(preg_match('#([a-zA-Z_-]+\/)+Entity\/[a-zA-Z_-]{2,}$#', $entity)) {
-				// $entity = nom long
-				$entityClassName = $entity;
-				$entityShortName = $this->get('aetools.aeEntities')->getEntityShortName($entity);
-			} else {
-				// $entity = nom court
-				$entityClassName = $this->get('aetools.aeEntities')->getEntityClassName($entity);
-				$entityShortName = $entity;
-			}
-			$entity = new $entityClassName();
-		}
-		// parent classes
-		if(method_exists($entity, 'getParentsClassNames')) {
-			$parents = $entity->getParentsClassNames(true);
-			// echo('<pre><h3>'.$entityShortName.'</h3>');
-			// var_dump($parents);
-			// echo('</pre>');
-		} else {
-			$parents = array(
-				$entityShortName,
-				'entity',
-			);
-		}
-		// Recherche du service le plus proche de l'entité
-		$service = null;
-		foreach ($parents as $parent) {
-			$aeServiceName = "aetools.ae".ucfirst(preg_replace('#^base#', '', $parent));
-			// echo('<p>- Test '.$aeServiceName.'</p>');
-			if($this->has($aeServiceName)) {
-				$service = $this->get($aeServiceName);
-				if($parent != $entityShortName) $service->defineEntity($entityShortName);
-				break 1;
-			}
-		}
-		// echo('<h1>Service entité trouvé pour '.$entityShortName.' : '.get_class($service).'</h1>');
-		return $service;
-	}
-
-	/**
 	 * Renvoie une URL selon les paramètres de $data
 	 * @param array $data
 	 * @return string
 	 */
 	protected function generateEntityUrl($data) {
-		if($data['type']['type_related'] != null) {
-			// avec type
-			return $this->generateUrl('siteadmin_entite_type', array('entite' => $data['entite_name'], 'type_related' => $data['type_related'], 'type_field' => $data['type_field'], 'type_values' => $this->typeValuesToString($data['type_values']), 'action' => $data['action'], 'id' => $data['id']));
-		} else {
-			// sans type
-			return $this->generateUrl('siteadmin_entite', array('entite' => $data['entite_name'], 'action' => $data['action'], 'id' => $data['id']));
+		if(isset($data['type']['type_related'])) {
+			if($data['type']['type_related'] != null) {
+				// avec type
+				return $this->generateUrl('siteadmin_entite_type', array('entite' => $data['entite_name'], 'type_related' => $data['type']['type_related'], 'type_field' => $data['type']['type_field'], 'type_values' => $this->typeValuesToString($data['type']['type_values']), 'action' => $data['action'], 'id' => $data['id']));
+			}
 		}
+		// sans type
+		return $this->generateUrl('siteadmin_entite', array('entite' => $data['entite_name'], 'action' => $data['action'], 'id' => $data['id']));
 	}
 
 	/**
@@ -311,7 +291,7 @@ class entiteController extends Controller {
 			$data = json_decode(urldecode($req["hiddenData"]), true);
 		} 
 		// Entity service
-		$entityService = $this->getEntityService($data['entite_name']);
+		$entityService = $this->get('aetools.aeEntity')->getEntityService($data['entite_name']);
 
 		if($data['action'] == "create") {
 			// create
@@ -343,6 +323,10 @@ class entiteController extends Controller {
 						$entityService->checkAfterChange($data['entite']);
 						$save = $entityService->save($data['entite']);
 						if($save->getResult() == true) {
+							// ENREGISTREMENT OK
+							$data['id'] = $data['entite']->getId();
+							unset($data['onSuccess']);
+							$this->addContextActionsToData($data);
 							$this->getSuccessPersistFlashMessage($data);
 							if(isset($data['onSuccess'])) return $this->redirect($data['onSuccess']);
 						} else {
@@ -450,8 +434,6 @@ class entiteController extends Controller {
 		if(!is_array($data)) throw new Exception("addContextActionsToData : data doit être défini !", 1);
 		switch ($data['action']) {
 			case 'delete_linked_image':
-			case 'create':
-			case 'edit':
 				if(!isset($data['form_action'])) {
 					$data['form_action'] = $this->generateUrl('siteadmin_form_action', array(
 						'classname'	=> $data['classname'],
@@ -472,6 +454,35 @@ class entiteController extends Controller {
 							'entite'	=> $data['entite_name'],
 							'id'		=> $data['entite']->getId(),
 							'action'	=> 'show',
+							), true);
+					}
+				}
+				if(!isset($data['onError'])) {
+					$data['onError'] = null;
+				}
+				break;
+			case 'create':
+			case 'edit':
+				if(!isset($data['form_action'])) {
+					$data['form_action'] = $this->generateUrl('siteadmin_form_action', array(
+						'classname'	=> $data['classname'],
+						), true);
+				}
+				if(!isset($data['onSuccess'])) {
+					if($data['type']['type_related'] != null) {
+						$data['onSuccess'] = $this->generateUrl('siteadmin_entite_type', array(
+							'entite'		=> $data['entite_name'],
+							'type_related'	=> $data['type']['type_related'],
+							'type_field'	=> $data['type']['type_field'],
+							'type_values'	=> $this->typeValuesToString($data['type']['type_values']),
+							'action'		=> 'list',
+							// 'id'			=> $data['entite']->getId(),
+							), true);
+					} else {
+						$data['onSuccess'] = $this->generateUrl('siteadmin_entite', array(
+							'entite'	=> $data['entite_name'],
+							// 'id'		=> $data['entite']->getId(),
+							'action'	=> 'list',
 							), true);
 					}
 				}
@@ -530,7 +541,7 @@ class entiteController extends Controller {
 	 * @return redirectResponse
 	 */
 	public function entite_as_defaultAction($id, $entite, $redir) {
-		$item = $this->get('aetools.aeEntities')->getRepo('site\adminBundle\Entity\\'.$entite)->find($id);
+		$item = $this->get('aetools.aeEntity')->getRepo('site\adminBundle\Entity\\'.$entite)->find($id);
 		// entité à mettre par défaut
 		if(!is_object($item)) {
 			$this->get('flash_messages')->send(array(
@@ -539,7 +550,7 @@ class entiteController extends Controller {
 				'text'		=> 'Cette page <strong>#"'.$id.'"</strong> n\'a pu être touvée',
 			));
 		} else {
-			$this->get('aetools.aeEntities')->setAsDefault($item);
+			$this->get('aetools.aeEntity')->setAsDefault($item);
 		}
 		return $this->redirect(urldecode($redir));
 	}
@@ -550,9 +561,6 @@ class entiteController extends Controller {
 	 * @param array $data
 	 */
 	protected function getSuccessPersistFlashMessage($data) {
-		$data['id'] = $data['entite']->getId();
-		unset($data['onSuccess']);
-		$this->addContextActionsToData($data);
 		$nom = $data['entite']->getId();
 		if(method_exists($data['entite'], 'getName')) $nom = $data['entite']->getName();
 		if(method_exists($data['entite'], 'getNom')) $nom = $data['entite']->getNom();

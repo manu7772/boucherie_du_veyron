@@ -23,6 +23,14 @@ class marqueType extends baseType {
 	public function buildForm(FormBuilderInterface $builder, array $options) {
 		// ajout de action si défini
 		$this->initBuilder($builder);
+		$this->imagesData = array(
+			'image' => array(
+				'owner' => 'marque:image'
+				),
+			'logo' => array(
+				'owner' => 'marque:logo'
+				),
+			);
 		// Builder…
 		$builder
 			->add('nom', 'text', array(
@@ -30,6 +38,11 @@ class marqueType extends baseType {
 				'translation_domain' => 'marque',
 				'required' => true,
 				))
+            ->add('couleur', 'insColorpicker', array(
+            	'label'		=> 'fields.couleur',
+				'translation_domain' => 'marque',
+                'required'  => true,
+            	))
 			->add('descriptif', 'insRichtext', array(
 				'label' => 'fields.descriptif',
 				'translation_domain' => 'marque',
@@ -47,7 +60,12 @@ class marqueType extends baseType {
 			// 			else return $repo->findAllClosure();
 			// 		},
 			// 	))
-			->add('image', new cropperType($this->controller, array('image' => array('owner' => 'marque:logo'))), array(
+			->add('image', new cropperType($this->controller, array('image' => $this->imagesData['image'])), array(
+				'label' => 'fields.image',
+				'translation_domain' => 'marque',
+				'required' => false,
+				))
+			->add('logo', new cropperType($this->controller, array('image' => $this->imagesData['logo'])), array(
 				'label' => 'fields.logo',
 				'translation_domain' => 'marque',
 				'required' => false,

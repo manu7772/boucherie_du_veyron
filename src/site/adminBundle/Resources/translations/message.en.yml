@@ -1,6 +1,5 @@
 name_s: messages
 name: message
-consulter: consult messages list
 not_found: 'no message found'
 x_found: '{0} no message found|{1} 1 message found|[2,+Inf] %count% messages found'
 create: 'create new message'
@@ -11,6 +10,7 @@ dontexist: 'this message does not exist'
 moredetails: 'more details on %name%'
 existe: 'this message already exists'
 action:
+    consulter: consult messages list
     supprimer: delete
     repondre: answer to the sender of the message
     lu: mark as red
@@ -21,3 +21,4 @@ etat:
 fields:
     id: id
     nom: name
+    jamais: no modification

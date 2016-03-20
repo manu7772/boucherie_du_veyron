@@ -1,6 +1,5 @@
 name_s: messages
 name: message
-consulter: consulter la messagerie
 not_found: 'aucun message trouvé'
 x_found: '{0} aucun message trouvé|{1} 1 message trouvé|[2,+Inf] %count% messages trouvés'
 create: 'créer un nouveau message'
@@ -11,6 +10,7 @@ dontexist: 'ce message n''existe pas'
 moredetails: 'plus de détails sur %name%'
 existe: ce message existe déjà
 action:
+    consulter: consulter la messagerie
     supprimer: supprimer
     repondre: répondre à l'expéditeur
     lu: marquer comme lu
@@ -21,3 +21,4 @@ etat:
 fields:
     id: id
     nom: nom
+    jamais: aucune modification

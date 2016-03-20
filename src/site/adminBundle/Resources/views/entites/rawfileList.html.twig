@@ -81,7 +81,7 @@
 								{% endif %}
 								{% if entite.statut.id|default(0) > 1 %}<br><small><i>({{ entite.statut.nom }})</i></small>{% endif %}
 								<br>
-								<em><i>{{ fileSizeDisplay(entite.fileSize) }} - {{ entite.extension|default('?') }} - {{ UCfirst((entite.dimension|default(''))|trans({}, entite.className)) }}</i></em>
+								<em><i>{{ fileSizeDisplay(entite.fileSize) }} - {{ entite.extension|default('?') }} - {{ UCfirst((entite.dimension|default('dimensionInconnue'))|trans({}, entite.className)) }}</i></em>
 								{% if entite.nom|default(null) != null %}
 								<br>
 								<small><em><i class="text-muted">{{ entite.nom }}</i></em></small>
@@ -104,7 +104,7 @@
 					</tbody>
 				</table>
 				{% else %}
-				<h3><i class="fa fa-ban"></i> {{ 'not_found'|trans({}, entite_name) }}</h3>
+				<h3><i class="fa fa-ban"></i> {{ UCfirst('not_found'|trans({}, entite_name)) }}</h3>
 				{% endif %}
 			</div>
 		</div>

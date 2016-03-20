@@ -50,17 +50,10 @@ class reseau extends tier {
 	 */
 	protected $articles;
 
-	/**
-	 * @var string
-	 * @ORM\Column(name="couleur", type="string", length=24, nullable=false, unique=false)
-	 */
-	protected $couleur;
-
 
 	public function __construct() {
 		parent::__construct();
 		$this->articles = new ArrayCollection();
-		$this->couleur = "#FFFFFF";
 	}
 
 
@@ -97,24 +90,6 @@ class reseau extends tier {
 	 */
 	public function removeArticle(article $article) {
 		return $this->articles->removeElement($article);
-	}
-
-	/**
-	 * Set couleur
-	 * @param string $couleur
-	 * @return reseau
-	 */
-	public function setCouleur($couleur) {
-		$this->couleur = $couleur;
-		return $this;
-	}
-
-	/**
-	 * Get couleur
-	 * @return string 
-	 */
-	public function getCouleur() {
-		return $this->couleur;
 	}
 
 

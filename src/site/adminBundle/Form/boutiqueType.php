@@ -23,31 +23,39 @@ class boutiqueType extends baseType {
 	public function buildForm(FormBuilderInterface $builder, array $options) {
 		// ajout de action si défini
 		$this->initBuilder($builder);
+		$this->imagesData = array(
+			'image' => array(
+				'owner' => 'boutique:image'
+				),
+			'logo' => array(
+				'owner' => 'boutique:logo'
+				),
+			);
 		// Builder…
 		$builder
 			->add('nom', 'text', array(
-				'label' => 'form.nom',
-				'translation_domain' => 'messages',
+				'label' => 'fields.nom',
+				'translation_domain' => 'boutique',
 				'required' => true,
 				))
 			->add('adresse', new adresseType($this->controller), array(
-				'label' => 'table.col.adresse',
-				'translation_domain' => 'messages',
+				'label' => 'fields.adresse',
+				'translation_domain' => 'boutique',
 				'required' => false,
 				))
-			->add('image', new imageType($this->controller), array(
-				'label' => 'table.col.vitrine',
-				'translation_domain' => 'messages',
+			->add('image', new cropperType($this->controller, array('image' => $this->imagesData['image'])), array(
+				'label' => 'fields.image',
+				'translation_domain' => 'boutique',
 				'required' => false,
 				))
-			->add('logo', new imageType($this->controller), array(
-				'label' => 'table.col.logo',
-				'translation_domain' => 'messages',
+			->add('logo', new cropperType($this->controller, array('image' => $this->imagesData['logo'])), array(
+				'label' => 'fields.logo',
+				'translation_domain' => 'boutique',
 				'required' => false,
 				))
 			->add('descriptif', 'insRichtext', array(
-				'label' => 'form.descriptif',
-				'translation_domain' => 'messages',
+				'label' => 'fields.descriptif',
+				'translation_domain' => 'boutique',
 				'required' => false,
 				))
 		;

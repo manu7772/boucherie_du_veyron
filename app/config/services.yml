@@ -19,17 +19,17 @@ services:
         arguments: [@service_container]
 
     # fonctionnalités d'entités
-    aetools.aeEntities:
-        class: %ae_services%aeEntities
-        arguments: [@service_container]
+    # aetools.aeEntities:
+    #     class: %ae_services%aeEntities
+    #     arguments: [@service_container]
 
     # fonctionnalités d'entités BIS
     aetools.aeEntity:
-        class: %ae_services%aeEntities
+        class: %ae_services%aeEntity
         arguments: [@service_container]
 
     aetools.aeSubEntity:
-        class: %ae_services%aeEntities
+        class: %ae_services%aeSubEntity
         arguments: [@service_container]
 
     # fonctionnalités de tag
@@ -109,6 +109,16 @@ services:
         class: %ae_services%aeRawfile
         arguments: [@service_container]
 
+
+
+    #######################
+    ### DEBUG           ###
+    #######################
+
+    # fonctionnalités de fixtures
+    aetools.debug:
+        class: %ae_services%aeDebug
+        arguments: [@service_container]
 
 
     #######################

@@ -9,7 +9,7 @@
 			<div class="col-md-9">
 				<h2><i class="fa fa-home"></i></h2>
 				<ol class="breadcrumb">
-					<li>{{ 'administration'|trans|capitalize }}</li>
+					<li>{{ UCfirst('administration'|trans) }}</li>
 				</ol>
 			</div>
 			{% block buttons %}
@@ -25,7 +25,7 @@
 		<div class="ibox float-e-margins">
 			<div class="ibox-content">
 				<h2><i class="fa fa-envelope"></i> Messages non lus <small><i>({{ messages|length }})</i></small></h2>
-				<small><a href="{{ path('siteadmin_entite', {entite: 'message'}) }}">{{ UCfirst('message.consulter'|trans) }}</a></small>
+				<small><a href="{{ path('siteadmin_entite', {entite: 'message'}) }}">{{ UCfirst('action.consulter'|trans({}, 'message')) }}</a></small>
 				<ul class="todo-list m-t small-list ui-sortable">
 					{% for message in messages if (fromNow(message.creation, "secondes") >= 0) %}
 					<li>

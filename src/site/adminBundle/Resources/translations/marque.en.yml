@@ -14,6 +14,10 @@ fields:
     id: id
     nom: name
     descriptif: description
+    image: picture
     logo: logotype
     created: created
     updated: updated
+    mainMedia: picture
+    couleur: color
+    jamais: no modification

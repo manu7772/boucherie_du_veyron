@@ -118,6 +118,14 @@ class adresse extends baseEntity {
 	}
 
 	/**
+	 * @Assert\True(message="L'item n'est pas conforme.")
+	 */
+	public function isValid() {
+		// return ($this->image == null) || $this->image->isValid();
+		return true;
+	}
+
+	/**
 	 * @ORM\PrePersist
 	 * @ORM\PreUpdate
 	 * Définit le nom si null

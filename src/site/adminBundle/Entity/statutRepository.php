@@ -9,7 +9,7 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\ClassMetadata;
 
 use site\services\aetools;
-use site\services\aeEntities;
+use site\services\aeEntity;
 use site\UserBundle\Entity\User;
 
 /**

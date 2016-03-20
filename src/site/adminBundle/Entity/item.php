@@ -42,108 +42,11 @@ abstract class item extends baseSubEntity {
 	 */
 	protected $id;
 
-    /**
-     *  - PROPRIÉTAIRE
-     * @ORM\OneToOne(targetEntity="site\adminBundle\Entity\image", inversedBy="item", orphanRemoval=true, cascade={"persist", "remove"})
-	 * @ORM\JoinColumn(nullable=true, unique=true, onDelete="SET NULL")
-     */
-    private $image;
 
-	/**
-	 * - PROPRIÉTAIRE
-	 * @ORM\ManyToMany(targetEntity="site\adminBundle\Entity\categorie", inversedBy="items")
-	 * @ORM\JoinColumn(nullable=true, unique=false, onDelete="SET NULL")
-	 */
-	protected $categories;
+	// public function __construct() {
+	// 	parent::__construct();
+	// }
 
-
-	public function __construct() {
-		parent::__construct();
-		$this->image = null;
-		$this->categories = new ArrayCollection();
-	}
-
-	/**
-	 * @Assert\True(message="L'item n'est pas conforme.")
-	 */
-	public function isValid() {
-		return ($this->image == null) || $this->image->isValid();
-	}
-
-	/**
-	 * Get keywords
-	 * @return string 
-	 */
-	public function getKeywords() {
-		return implode($this->getTags()->toArray(), ', ');
-	}
-
-	/**
-	 * Get keywords
-	 * @return array 
-	 */
-	public function getArrayKeywords() {
-		return $this->getTags()->toArray();
-	}
-
-	/**
-	 * Renvoie l'image principale
-	 * @return image
-	 */
-	public function getMainMedia() {
-		return $this->getImage();
-	}
-
-	/**
-	 * Set image - PROPRIÉTAIRE
-	 * @param image $image
-	 * @return item
-	 */
-	public function setImage(image $image = null) {
-		// if($image == null) {
-		// 	$this->image->setItem(null);
-		// }
-		$this->image = $image;
-		if($this->image != null) $this->image->setItem($this);
-		return $this;
-	}
-
-	/**
-	 * Get image - PROPRIÉTAIRE
-	 * @return image $image
-	 */
-	public function getImage() {
-		return $this->image;
-	}
-
-	/**
-	 * Get categories - PROPRIÉTAIRE
-	 * @return ArrayCollection 
-	 */
-	public function getCategories() {
-		return $this->categories;
-	}
-
-	/**
-	 * Add categorie - PROPRIÉTAIRE
-	 * @param categorie $categorie
-	 * @return item
-	 */
-	public function addCategorie(categorie $categorie) {
-		$categorie->addItem($this);
-		$this->categories->add($categorie);
-		return $this;
-	}
-
-	/**
-	 * Remove categorie - PROPRIÉTAIRE
-	 * @param categorie $categorie
-	 * @return boolean
-	 */
-	public function removeCategorie(categorie $categorie) {
-		$categorie->removeItem($this);
-		return $this->categories->removeElement($categorie);
-	}
 
 
 }

@@ -16,3 +16,9 @@ fields:
     nom: nom
     created: création
     updated: mise à jour
+    adresse: adresse
+    image: vitrine
+    logo: logotype
+    descriptif: descriptif
+    mainMedia: visuel
+    jamais: aucune modification

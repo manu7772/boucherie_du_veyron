@@ -79,18 +79,18 @@ class articleType extends baseType {
 						else return $repo->findAllClosure();
 					},
 				))
-			->add('statut', 'entity', array(
-				"label"     => 'name',
-				'translation_domain' => 'statut',
-				'class'     => 'siteadminBundle:statut',
-				'property'  => 'nom',
-				'multiple'  => false,
-				"query_builder" => function($repo) {
-					if(method_exists($repo, 'defaultValsListClosure'))
-						return $repo->defaultValsListClosure($this->aeEntities);
-						else return $repo->findAllClosure();
-					},
-				))
+			// ->add('statut', 'entity', array(
+			// 	"label"     => 'name',
+			// 	'translation_domain' => 'statut',
+			// 	'class'     => 'siteadminBundle:statut',
+			// 	'property'  => 'nom',
+			// 	'multiple'  => false,
+			// 	"query_builder" => function($repo) {
+			// 		if(method_exists($repo, 'defaultValsListClosure'))
+			// 			return $repo->defaultValsListClosure($this->aeEntities);
+			// 			else return $repo->findAllClosure();
+			// 		},
+			// 	))
 			->add('marque', 'entity', array(
 				"label"     => 'name',
 				'translation_domain' => 'marque',
@@ -122,7 +122,7 @@ class articleType extends baseType {
 					),
 				))
 			// 1 image :
-			->add('image', new cropperType($this->controller, array('image' => $this->imagesData['image'])), array(
+			->add('image', new cropperType($this->controller, $this->imagesData), array(
 				'label' => 'fields.image',
 				'translation_domain' => 'article',
 				'required' => false,

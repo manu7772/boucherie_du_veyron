@@ -1,3 +1,6 @@
+{# @repository {"name": "entites", "classname": "image", "method": "findGroupByOwner", "params": {}} #}
+{# @test {"name": "entites", "classname": "image", "method": "findAll", "params": {}} #}
+
 {% extends 'siteadminBundle:entites:entiteList.html.twig' %}
 {% set cssjsloads = 'TAB' %}
 {% set DEVMODE = (app.environment in ['DEV', 'TEST']) or (is_granted('ROLE_SUPER_ADMIN')) %}
@@ -54,11 +57,12 @@
 								<img src="{{ entite.imgThumbnail(80, 80, 'cut')|raw }}" class="img-responsive img-thumbnail">
 							</td>
 							<td{{ bgcolor|raw }}>
-								{{ actions.entiteButtons(entite, ['show', 'edit','delete'], type) }}
+								{{ actions.entiteButtons(entite, ['show', 'edit','delete', 'active'], type) }}
 								{# - OFF ----------------------
 								{% if DEVMODE %}
 								<hr class="m-b-xs m-t-xs">
 								<div class="btn-group">
+									{{ actions. }}
 									{% if type.type_values|default(null) != null %}
 									<a href="{{ path('siteadmin_entite_type', {entite: entite_name, type_related: type.type_related, type_field: type.type_field, type_values: type.type_values|join(type_value_joiner)|url_encode, id: entite.id, action: 'check'}) }}" type="button" class="btn btn-danger btn-xs" title="Checker {{ entite_name }} {{ entite.nom }}"><i class="fa fa-check icon-wait-on-click"></i></a>
 									{% else %}
@@ -69,12 +73,10 @@
 								- OFF ---------------------- #}
 							</td>
 							<td{{ bgcolor|raw }}>
-								{% if type.type_values|default(null) != null %}
-								<a href="{{ path('siteadmin_entite_type', {entite: entite_name, type_related: type.type_related, type_field: type.type_field, type_values: type.type_values|join(type_value_joiner)|url_encode, id: entite.id, action: 'show'}) }}" title="{{ 'moredetails'|trans({'%name%': entite.nom}) }}"><strong>{{ entite.nom }}</strong></a>
-								{% else %}
-								<a href="{{ path('siteadmin_entite', {entite: entite_name, id: entite.id, action: 'show'}) }}" title="{{ 'moredetails'|trans({'%name%': entite.nom}) }}"><strong>{{ entite.nom }}</strong></a>
-								{% endif %}
+								<a href="{{ actions.entiteLink(entite, 'show', type, type_value_joiner) }}" title="{{ 'moredetails'|trans({'%name%': entite.nom}) }}"><strong>{{ entite.nom }}</strong></a>
 								{% if entite.statut.id|default(0) > 1 %}<br><small><i>({{ entite.statut.nom }})</i></small>{% endif %}
+								<br>
+								<em><i>{{ UCfirst((entite.dimension|default('dimensionInconnue'))|trans({}, entite.className)) }}</i></em>
 								<br>
 								<em><i>{{ fileSizeDisplay(entite.fileSize) }} - {{ entite.extension|default('?') }}</i></em>
 								<br>
@@ -83,7 +85,7 @@
 							{# <td{{ bgcolor|raw }}>{{ entite.originalnom }}</td> #}
 							{% if DEVMODE %}
 							<td{{ bgcolor|raw }}>
-								• {{ entite.format }}<br>
+								• {{ entite.format|default('?') }}<br>
 								• {{ entite.stockage }}<br>
 								• {{ entite.created|date(formatDateHeure) }}<br>
 								{% if entite.updated|default(null) != null %}
@@ -91,6 +93,8 @@
 								{% else %}
 								• <small><i class='text-muted'>({{ 'table.col.jamais'|trans }})</i></small>
 								{% endif %}
+								<br>
+								• {{ UCfirst(('owner.' ~ entite.owner)|trans({}, entite.className)) }}
 							</td>
 							{% endif %}
 						</tr>
@@ -98,7 +102,7 @@
 					</tbody>
 				</table>
 				{% else %}
-				<h3><i class="fa fa-ban"></i> {{ 'not_found'|trans({}, entite_name) }}</h3>
+				<h3><i class="fa fa-ban"></i> {{ UCfirst('not_found'|trans({}, entite_name)) }}</h3>
 				{% endif %}
 			</div>
 		</div>

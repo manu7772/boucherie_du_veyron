@@ -51,23 +51,8 @@ abstract class tier extends baseSubEntity {
 	protected $adresse;
 
 	/**
-	 * - PROPRIÉTAIRE
-	 * @ORM\ManyToMany(targetEntity="site\adminBundle\Entity\categorie", inversedBy="tiers")
-	 * @ORM\JoinColumn(nullable=true, unique=false, onDelete="SET NULL")
-	 */
-	protected $categories;
-
-    /**
-     *  - PROPRIÉTAIRE
-     * @ORM\OneToOne(targetEntity="site\adminBundle\Entity\image", inversedBy="tier", orphanRemoval=true, cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity="site\adminBundle\Entity\image", orphanRemoval=true, cascade={"all"})
 	 * @ORM\JoinColumn(nullable=true, unique=true, onDelete="SET NULL")
-     */
-    protected $image;
-
-	/**
-	 *  - PROPRIÉTAIRE
-	 * @ORM\OneToOne(targetEntity="site\adminBundle\Entity\image", inversedBy="logoTier", orphanRemoval=true, cascade={"persist", "remove"})
-	 * @ORM\JoinColumn(nullable=true, unique=false, onDelete="SET NULL")
 	 */
 	protected $logo;
 
@@ -75,9 +60,6 @@ abstract class tier extends baseSubEntity {
 	public function __construct() {
 		parent::__construct();
 		$this->adresse = null;
-		$this->categories = new ArrayCollection();
-		$this->image = null;
-		$this->logo = null;
 	}
 
 	/**
@@ -85,7 +67,9 @@ abstract class tier extends baseSubEntity {
 	 * @return image
 	 */
 	public function getMainMedia() {
-		return $this->getLogo();
+		if($this->getLogo() !== null) return $this->getLogo();
+		if($this->getImage() !== null) return $this->getImage();
+		return null;
 	}
 
 
@@ -109,61 +93,19 @@ abstract class tier extends baseSubEntity {
 	}
 
 	/**
-	 * Set image - PROPRIÉTAIRE
-	 * @param image $image
-	 * @return tier
-	 */
-	public function setImage(image $image = null) {
-		$this->image = $image;
-		if($this->image != null) $image->setTier($this);
-		return $this;
-	}
-
-	/**
-	 * Get image - PROPRIÉTAIRE
-	 * @return image $image
-	 */
-	public function getImage() {
-		return $this->image;
-	}
-
-	/**
-	 * Get categories - PROPRIÉTAIRE
-	 * @return ArrayCollection 
-	 */
-	public function getCategories() {
-		return $this->categories;
-	}
-
-	/**
-	 * Add categorie - PROPRIÉTAIRE
-	 * @param categorie $categorie
-	 * @return tier
-	 */
-	public function addCategorie(categorie $categorie) {
-		$categorie->addTier($this);
-		$this->categories->add($categorie);
-		return $this;
-	}
-
-	/**
-	 * Remove categorie - PROPRIÉTAIRE
-	 * @param categorie $categorie
-	 * @return boolean
-	 */
-	public function removeCategorie(categorie $categorie) {
-		$categorie->removeTier($this);
-		return $this->categories->removeElement($categorie);
-	}
-
-	/**
 	 * Set logo - PROPRIÉTAIRE
 	 * @param image $logo
 	 * @return tier
 	 */
 	public function setLogo(image $logo = null) {
-		$logo->setLogoTier($this);
+		if($this->logo != null && $logo == null) {
+			$this->logo->setElement(null);
+		}
 		$this->logo = $logo;
+		if($this->logo != null) {
+			$this->logo->setElement($this, 'logo');
+			$this->logo->setStatut($this->getStatut());
+		}
 		return $this;
 	}
 

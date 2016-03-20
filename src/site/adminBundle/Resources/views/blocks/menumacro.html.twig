@@ -34,13 +34,29 @@
 		{% endif %}
 	{% endfor %}
 {% endif %}
+{% if level1.level2.level3|default(null) is iterable %}
+	{% for l2 in level1.level2 %}
+	{% for item in l2 %}
+		{% if item.path is iterable %}
+		{% if path(item.path.path, item.path.params|default({})) == app.request.baseUrl ~ app.request.pathInfo %}{% set active = ' class="active"' %}{% endif %}
+		{% else %}
+		{% if path(item.path, item.params|default({})) == app.request.baseUrl ~ app.request.pathInfo %}{% set active = ' class="active"' %}{% endif %}
+		{% endif %}
+	{% endfor %}
+	{% endfor %}
+{% endif %}
+{% if level1.role|default(menu_Admin_default_role) == 'ROLE_SUPER_ADMIN' %}
+	{% set admin = ' text-muted' %}
+	{% else %}
+	{% set admin = '' %}
+{% endif %}
 {% if level1path == app.request.baseUrl ~ app.request.pathInfo %}{% set active = ' class="active"' %}{% endif %}
 <li{{ active|raw }}>
-	<a href="{{ level1path }}"><i class="fa {{ level1.icon|default(default_icon)|raw }}"></i> <span class="nav-label">{{ level1.nom|default('item')|trans({}, level1.trans_domain|default('messages'))|capitalize }}</span>{{ down|raw }}</a>
+	<a href="{{ level1path }}"><i class="fa {{ (level1.icon|default(default_icon))|trans({}, 'icon') }}{{ admin }} m-r-xs"></i><span class="nav-label{{ admin }}">{{ level1.nom|default('item')|trans({}, level1.trans_domain|default('messages'))|capitalize }}</span>{{ down|raw }}</a>
 	{% if level1.level2|default('') is iterable %}
 	<ul class="nav nav-second-level">
 		{% for itemL2 in level1.level2 %}
-		{{ self.level2(itemL2) }}
+		{{ self.level2(itemL2, level1.role) }}
 		{% endfor %}
 	</ul>
 	{% endif %}
@@ -49,16 +65,79 @@
 {% endmacro %}
 
 
-{% macro level2(item) %}
-	{% if is_granted(item.role|default(menu_Admin_default_role)) %}
-	{% set active = '' %}
-	{% if item.path is iterable %}
-	{% set path = path(item.path.path, item.path.params|default({})) %}
-	{% else %}
-	{% set path = path(item.path, item.params|default({})) %}
+{% macro level2(item, parentRole) %}
+	{% import _self as self %}
+	{% if is_granted(item.role|default(menu_Admin_default_role)) and is_granted(parentRole|default(menu_Admin_default_role)) %}
+		{% set active = '' %}
+		{% if item.path is iterable %}
+		{% set path = path(item.path.path, item.path.params|default({})) %}
+		{% else %}
+		{% set path = path(item.path, item.params|default({})) %}
+		{% endif %}
+		{% if path == app.request.baseUrl ~ app.request.pathInfo %}{% set active = ' class="active"' %}{% endif %}
+	
+		{% set down = '' %}
+		{% if item.level3|default(null) is iterable %}
+			{% set down = '<span class="fa arrow"></span>' %}
+			{% set level1path = '#' %}
+			{% for item in item.level3 %}
+				{% if item.path is iterable %}
+				{% if path(item.path.path, item.path.params|default({})) == app.request.baseUrl ~ app.request.pathInfo %}{% set active = ' class="active"' %}{% endif %}
+				{% else %}
+				{% if path(item.path, item.params|default({})) == app.request.baseUrl ~ app.request.pathInfo %}{% set active = ' class="active"' %}{% endif %}
+				{% endif %}
+			{% endfor %}
+		{% endif %}
+	
+		{% set icon = '' %}
+		{% set admin = '' %}
+		{% if item.role|default(menu_Admin_default_role) == 'ROLE_SUPER_ADMIN' or parentRole|default(menu_Admin_default_role) == 'ROLE_SUPER_ADMIN' %}
+			{% set admin = ' text-muted' %}
+		{% endif %}
+		{% if item.icon|default(null) != null %}
+			{% set icon = '<i class="fa ' ~ (item.icon|default(default_icon))|trans({}, 'icon') ~ admin ~ ' m-r-xs"></i>' %}
+		{% endif %}
+	
+		{% if item.role|default(menu_Admin_default_role) == 'ROLE_SUPER_ADMIN' %}
+			{% set parentRole = item.role %}
+		{% endif %}
+
+		<li{{ active|raw }}>
+			<a href="{{ path }}">{{ icon|raw }}<span class="nav-label{{ admin }}">{{ item.nom|default('item')|trans({}, item.trans_domain|default('messages'))|capitalize }}</span>{{ down|raw }}</a>
+			{% if item.level3|default('') is iterable %}
+			<ul class="nav nav-third-level">
+				{% for itemL3 in item.level3 %}
+				{{ self.level3(itemL3, parentRole) }}
+				{% endfor %}
+			</ul>
+			{% endif %}
+		</li>
 	{% endif %}
-	{% if path == app.request.baseUrl ~ app.request.pathInfo %}{% set active = ' class="active"' %}{% endif %}
-	<li{{ active|raw }}><a href="{{ path }}">{{ item.nom|default('item')|trans({}, item.trans_domain|default('messages'))|capitalize }}</a></li>
+{% endmacro %}
+
+
+{% macro level3(item, parentRole) %}
+	{% if is_granted(item.role|default(menu_Admin_default_role)) and is_granted(parentRole|default(menu_Admin_default_role)) %}
+		{% set icon = '' %}
+		{% set admin = '' %}
+		{% if item.role|default(menu_Admin_default_role) == 'ROLE_SUPER_ADMIN' or parentRole|default(menu_Admin_default_role) == 'ROLE_SUPER_ADMIN' %}
+			{% set admin = ' text-muted' %}
+		{% endif %}
+		{% if item.icon|default(null) != null %}
+			{% set icon = '<i class="fa ' ~ (item.icon|default(default_icon))|trans({}, 'icon') ~ admin ~ ' m-r-xs"></i>' %}
+		{% endif %}
+	
+		{% set active = '' %}
+		{% if item.path is iterable %}
+		{% set path = path(item.path.path, item.path.params|default({})) %}
+		{% else %}
+		{% set path = path(item.path, item.params|default({})) %}
+		{% endif %}
+		{% if path == app.request.baseUrl ~ app.request.pathInfo %}{% set active = ' class="active"' %}{% endif %}
+
+		<li{{ active|raw }}>
+			<a href="{{ path }}">{{ icon|raw }}<span class="nav-label{{ admin }}">{{ item.nom|default('item')|trans({}, item.trans_domain|default('messages'))|capitalize }}</span></a>
+		</li>
 	{% endif %}
 {% endmacro %}
 

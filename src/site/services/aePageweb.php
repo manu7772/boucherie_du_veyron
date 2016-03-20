@@ -40,9 +40,9 @@ class aePageweb extends aeItem {
      * @param baseEntity $entity
      * @return aeReponse
      */
-    public function save(baseEntity &$entity) {
-        return parent::save($entity);
-    }
+    // public function save(baseEntity &$entity) {
+    //     return parent::save($entity);
+    // }
 
     // public function getRepository() {
     //     return $this->getRepo();

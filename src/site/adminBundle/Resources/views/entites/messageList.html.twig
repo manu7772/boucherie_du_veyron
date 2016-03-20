@@ -109,7 +109,7 @@
 		<div class="col-md-12">
 			<div class="ibox float-e-margins">
 				<div class="ibox-content">
-					<h3><i class="fa fa-ban"></i> {{ UCfirst((entite_name ~ '.not_found')|trans) }}</h3>
+					<h3><i class="fa fa-ban"></i> {{ UCfirst('not_found'|trans({}, entite_name)) }}</h3>
 				</div>
 			</div>
 		</div>

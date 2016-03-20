@@ -26,19 +26,19 @@ class tauxTvaType extends baseType {
         // Builder…
         $builder
             ->add('nom', 'text', array(
-                'label' => 'form.nom',
-                'translation_domain' => 'messages',
+                'label' => 'fields.nom',
+                'translation_domain' => 'tauxTva',
                 'required' => true,
                 ))
             ->add('taux', 'text', array(
-                'label' => 'form.taux',
-                'translation_domain' => 'messages',
+                'label' => 'fields.taux',
+                'translation_domain' => 'tauxTva',
                 'required' => true,
                 ))
             // ->add('descriptif', 'textarea', array(
             ->add('descriptif', 'insRichtext', array(
-                'label' => 'form.descriptif',
-                'translation_domain' => 'messages',
+                'label' => 'fields.descriptif',
+                'translation_domain' => 'tauxTva',
                 'required' => false,
                 'attr' => array(
                     'rows' => '12',

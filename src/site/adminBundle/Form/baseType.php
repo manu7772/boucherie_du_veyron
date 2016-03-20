@@ -14,7 +14,7 @@ use Symfony\Component\Security\Core\SecurityContext;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormEvent;
 
-use site\services\aeEntities;
+use site\services\aeEntity;
 use site\adminBundle\Entity\statutRepository;
 
 abstract class baseType extends AbstractType {
@@ -23,12 +23,13 @@ abstract class baseType extends AbstractType {
 	protected $securityContext;
 	protected $parametres;
 	protected $_em;
+	protected $aeEntities = null;
 	
 	public function __construct(Controller $controller = null, $parametres = array()) {
 		$this->controller = $controller;
 		if(null !== $this->controller) {
 			$this->_em = $this->controller->get('doctrine')->getManager();
-			$this->aeEntities = $this->controller->get('aetools.aeentities');
+			$this->aeEntities = $this->controller->get('aetools.aeEntity');
 			$this->securityContext = $controller->get('security.context');
 			$this->user = $this->securityContext->getToken()->getUser();
 		}
@@ -57,7 +58,7 @@ abstract class baseType extends AbstractType {
 				// à conserver !! ci-dessous
 				if(null === $data) return;
 				// ajout du statut par défaut si null
-				$aeEntities->checkStatuts($data, false);
+				if(is_object($aeEntities)) $aeEntities->checkStatuts($data, false);
 				// if($aeEntities->checkStatuts($data, false)) 
 				// 	echo('<p>Statut "'.$data->getStatut()->getNom().'" ajouté à '.get_class($data).' depuis "'.get_called_class().'" (by event)</p>');
 				// 	else

@@ -172,11 +172,11 @@ abstract class media extends baseSubEntity {
 	}
 
 	/**
-	 * @Assert\True(message="Le type de fichier n'est pas conforme.")
+	 * @Assert\True(message="Le fichier ne contient aucune donnée.")
 	 */
 	public function isValid() {
 		// return $this->format->getEnabled();
-		return true;
+		return $this->binaryFile != null ? true : false ;
 	}
 
 	public function getShemaBase($format = null) {
@@ -206,13 +206,14 @@ abstract class media extends baseSubEntity {
 	 * @ORM\PreUpdate()
 	 */
 	public function upLoad(){
-		$info = $this->getInfoForPersist();
+		// $info = $this->getInfoForPersist();
 		// if($this->getId() != null) {
 		// 	// test only on update…
 		// 	if(null === $this->upload_file && null === $this->binaryFile && $info === null) return;
 		// }
 		if(null != $this->upload_file) {
 			// File
+			$this->setInfoForPersist(null);
 			$stream = fopen($this->upload_file->getRealPath(),'rb');
 			$this->setBinaryFile(stream_get_contents($stream));
 			fclose($stream);
@@ -221,12 +222,10 @@ abstract class media extends baseSubEntity {
 			$this->setExtension($this->getUploadFile_extension());
 			$this->setFormat($this->getUploadFile_typemime());
 			$this->setStockage($this->stockageList[1]);
-		} else {
-			// ???
+			if($this->getNom() == null) $this->setNom($this->getOriginalnom());
+			$this->defineNom();
 		}
-		if($this->getNom() == null) $this->setNom($this->getOriginalnom());
-		// Définit un nom si aucun n'est donné
-		$this->defineNom();
+		return;
 	}
 
 

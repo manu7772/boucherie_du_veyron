@@ -73,7 +73,7 @@
 					</tbody>
 				</table>
 				{% else %}
-				<h3><i class="fa fa-ban"></i> {{ (entite_name ~ '.not_found')|trans }}</h3>
+				<h3><i class="fa fa-ban"></i> {{ UCfirst('not_found'|trans({}, entite_name)) }}</h3>
 				{% endif %}
 			</div>
 		</div>

@@ -17,3 +17,9 @@ fields:
     nom: nom
     created: création
     updated: mis à jour
+    image: visuel
+    logo: logo
+    couleur: couleur
+    descriptif: descriptif
+    mainMedia: visuel
+    jamais: aucune modification

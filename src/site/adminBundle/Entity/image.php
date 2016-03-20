@@ -14,9 +14,10 @@ use Gedmo\Mapping\Annotation as Gedmo;
 use site\services\aeImages;
 use site\services\aetools;
 
-use site\adminBundle\Entity\media;
-use site\adminBundle\Entity\tier;
-use site\adminBundle\Entity\item;
+use site\adminBundle\Entity\baseSubEntity;
+// use site\adminBundle\Entity\media;
+// use site\adminBundle\Entity\tier;
+// use site\adminBundle\Entity\item;
 use site\UserBundle\Entity\User;
 
 use \DateTime;
@@ -35,25 +36,10 @@ class image extends media {
 
 
 	/**
-	 * - INVERSE
-	 * @ORM\OneToOne(targetEntity="site\adminBundle\Entity\item", mappedBy="image")
+	 * @ORM\ManyToOne(targetEntity="site\adminBundle\Entity\baseSubEntity")
 	 * @ORM\JoinColumn(nullable=true, unique=false, onDelete="SET NULL")
 	 */
-	protected $item;
-
-	/**
-	 * - INVERSE
-	 * @ORM\OneToOne(targetEntity="site\adminBundle\Entity\tier", mappedBy="image")
-	 * @ORM\JoinColumn(nullable=true, unique=false, onDelete="SET NULL")
-	 */
-	protected $tier;
-
-	/**
-	 * - INVERSE
-	 * @ORM\OneToOne(targetEntity="site\adminBundle\Entity\tier", mappedBy="logo")
-	 * @ORM\JoinColumn(nullable=true, unique=false, onDelete="SET NULL")
-	 */
-	protected $logoTier;
+	protected $element;
 
 	/**
 	 * - INVERSE
@@ -92,9 +78,7 @@ class image extends media {
 	public function __construct() {
 		parent::__construct();
 		$this->owner = null;
-		$this->item = null;
-		$this->tier = null;
-		$this->logoTier = null;
+		$this->element = null;
 		$this->userAvatar = null;
 		$this->ratioIndex = 0;
 		$this->width = 0;
@@ -125,69 +109,72 @@ class image extends media {
 			if(isset($info['dataType'])) {
 				if($info['dataType'] == "cropper") {
 					// cropper
-					// echo('<pre>Rawfile id : '.$this->getRawfile()->getId());
-					// var_dump($info);
-					// die('</pre>');
-					// if($info['owner'] != null) $this->setOwner($info['owner']);
-					if(isset($info['ratioIndex'])) $this->setRatioIndex($info['ratioIndex']);
-						else $this->setRatioIndex(0);
-					if($info['width'] != null) $this->setWidth($info['width']);
-					if($info['height'] != null) $this->setheight($info['height']);
-					if($info['file']['size'] != null) $this->setFileSize($info['file']['size']);
-					if($info['file']['type'] != null) {
-						$this->setFormat($info['file']['type']);
-						$this->setMediaType($this->getTypeOf($info['file']['type']));
-					}
-					$filehaschanged = false;
-					if($info['file']['name'] != null) {
-						$filehaschanged = true;
-						$this->setOriginalnom($info['file']['name']);
-						$ext = explode('.', $info['file']['name']);
-						$ext = end($ext);
-						if(!in_array($ext, $this->authorizedFormatsByType)) $this->setExtension($this->getExtByMime($info['file']['type']));
-						$this->setExtension($ext);
-					}
 					if($info['removeImage'] == true) {
 						// opération dans le service…
-					}
-					if($this->getRawfile() == null) {
-						// ne possède pas de rawfile
 					} else {
-						// possède un raw file
-						if(isset($info['getData'])) {
-							$notChanged = $this->setCroppingInfo($info['getData']);
-							if((!$notChanged) || $filehaschanged) {
-								// if(!$notChanged)
-								// 	echo('Changement de recadrage…');
-								// 	else
-								// 	echo('Changement d\'image…');
-								// echo('<p>Owner entity : '.$this->getOwnerEntity().'</p>');
-								// echo('<p>Owner field : '.$this->getOwnerField().'</p>');
-								// echo('<p>RatioIndex : '.$this->getRatioIndex().'</p>');
-								$this->getCropperInfo();
-								if(isset($this->cropperInfo['formats'][$this->getOwnerEntity()][$this->getOwnerField()][$this->getRatioIndex()])) {
-									$format = $this->cropperInfo['formats'][$this->getOwnerEntity()][$this->getOwnerField()][$this->getRatioIndex()];
-								} else {
-									$format = $this->cropperInfo['formats']['default'][$this->getRatioIndex()];
+						if($this->getRawfile() == null) {
+							// ne possède pas de rawfile
+						} else {
+							// possède un raw file
+							if(isset($info['getData'])) {
+								if(isset($info['ratioIndex'])) $this->setRatioIndex($info['ratioIndex']);
+									else $this->setRatioIndex(0);
+								if($info['file']['size'] != null) $this->setFileSize($info['file']['size']);
+								if($info['file']['type'] != null) {
+									$this->setFormat($info['file']['type']);
+									$this->setMediaType($this->getTypeOf($info['file']['type']));
 								}
-								$this->aeReponse = $this->getRawfile()->getCropped($format[0], $format[1], $info);
-								// echo($this->aeReponse->getMessage());
-								if($this->aeReponse->getResult() == true) {
-									// SUCCESS
-									$image = $this->aeReponse->getData();
-									// echo('<h1>OK !!</h1>');
-									// echo('<img src="'.$this->getShemaBase().base64_encode($image).'">');
-									$this->setBinaryFile($image);
-								} else {
-									// ERROR
+								$filehaschanged = false;
+								if($info['file']['name'] != null) {
+									$filehaschanged = true;
+									$this->setOriginalnom($info['file']['name']);
+									$ext = explode('.', $info['file']['name']);
+									$ext = end($ext);
+									if(!in_array($ext, $this->authorizedFormatsByType)) $this->setExtension($this->getExtByMime($info['file']['type']));
+									$this->setExtension($ext);
 								}
-							} // else echo('<p>Aucun changement ????</p>');
-						} // else echo('<p>Pas de getData ????</p>');
+								$notChanged = $this->setCroppingInfo($info['getData']);
+								if((!$notChanged) || $filehaschanged) {
+									// if(!$notChanged)
+									// 	echo('Changement de recadrage…');
+									// 	else
+									// 	echo('Changement d\'image…');
+									// echo('<p>Owner entity : '.$this->getOwnerEntity().'</p>');
+									// echo('<p>Owner field : '.$this->getOwnerField().'</p>');
+									// echo('<p>RatioIndex : '.$this->getRatioIndex().'</p>');
+									$this->getCropperInfo();
+									if(isset($this->cropperInfo['formats'][$this->getOwnerEntity()][$this->getOwnerField()][$this->getRatioIndex()])) {
+										$format = $this->cropperInfo['formats'][$this->getOwnerEntity()][$this->getOwnerField()][$this->getRatioIndex()];
+									} else {
+										$format = $this->cropperInfo['formats']['default'][$this->getRatioIndex()];
+									}
+									$this->aeReponse = $this->getRawfile()->getCropped($format[0], $format[1], $info);
+									// echo($this->aeReponse->getMessage());
+									if($this->aeReponse->getResult() == true) {
+										// SUCCESS
+										$image = $this->aeReponse->getData();
+										// echo('<h1>OK !!</h1>');
+										// echo('<img src="'.$this->getShemaBase().base64_encode($image).'">');
+										$img = imagecreatefromstring($image);
+										$this->setWidth(imagesx($img));
+										$this->setHeight(imagesy($img));
+										imagedestroy($img);
+										unset($img);
+										$this->setBinaryFile($image);
+									} else {
+										// ERROR
+									}
+								} // else echo('<p>Aucun changement ????</p>');
+								$this->setStockage($this->stockageList[0]);
+								if($this->getNom() == null) $this->setNom($this->getOriginalnom());
+								$this->defineNom();
+							} // else echo('<p>Pas de getData ????</p>');
+						}
 					}
-					$this->setStockage($this->stockageList[0]);
 				}
 			}
 		}
+		return;
 	}
 
 	public function getAeReponse() {
@@ -338,60 +325,36 @@ class image extends media {
 	}
 
 	/**
-	 * Set item - INVERSE
-	 * @param item $item
+	 * Get dimensions
+	 * @return string
+	 */
+	public function getDimension() {
+		if($this->getWidth()+$this->getHeight() == 0) return 'dimensionInconnue';
+		return $this->getWidth().'x'.$this->getHeight().'px';
+	}
+
+	/**
+	 * Set element
+	 * @param baseSubEntity $element
 	 * @return image
 	 */
-	public function setItem(item $item = null) {
-		$this->item = $item;
-		$this->setOwner($item->getClassName().':image');
+	public function setElement(baseSubEntity $element = null, $name = 'image') {
+		$this->element = $element;
+		if($element != null) {
+			$this->setOwner($element->getClassName().':'.$name);
+			$this->setStatut($element->getStatut());
+		} else {
+			$this->setOwner(null);
+		}
 		return $this;
 	}
 
 	/**
-	 * Get item - INVERSE
-	 * @return item 
+	 * Get element
+	 * @return baseSubEntity 
 	 */
-	public function getItem() {
-		return $this->item;
-	}
-
-	/**
-	 * Set tier - INVERSE
-	 * @param tier $tier
-	 * @return image
-	 */
-	public function setTier(tier $tier = null) {
-		$this->tier = $tier;
-		$this->setOwner($tier->getClassName().':image');
-		return $this;
-	}
-
-	/**
-	 * Get tier - INVERSE
-	 * @return tier 
-	 */
-	public function getTier() {
-		return $this->tier;
-	}
-
-	/**
-	 * Set logoTier - INVERSE
-	 * @param tier $logoTier
-	 * @return image
-	 */
-	public function setLogoTier(tier $logoTier = null) {
-		$this->logoTier = $logoTier;
-		$this->setOwner($logoTier->getClassName().':logo');
-		return $this;
-	}
-
-	/**
-	 * Get logoTier - INVERSE
-	 * @return tier 
-	 */
-	public function getLogoTier() {
-		return $this->logoTier;
+	public function getElement() {
+		return $this->element;
 	}
 
 	/**
@@ -401,7 +364,12 @@ class image extends media {
 	 */
 	public function setUserAvatar(User $userAvatar = null) {
 		$this->userAvatar = $userAvatar;
-		$this->setOwner($userAvatar->getClassName().':avatar');
+		if($userAvatar != null) {
+			$this->setOwner($userAvatar->getClassName().':avatar');
+			$this->setStatut($userAvatar->getStatut());
+		} else {
+			$this->setOwner(null);
+		}
 		return $this;
 	}
 

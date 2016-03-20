@@ -20,7 +20,7 @@ class superadminController extends Controller {
 	public function indexAction() {
 		$this->get('aetools.aetools')->updateBundlesInConfig();
 		$data = array();
-		$repo = $this->get('aetools.aeEntities')->getEm()->getRepository('site\adminBundle\Entity\article');
+		$repo = $this->get('aetools.aeEntity')->getEm()->getRepository('site\adminBundle\Entity\article');
 		$data['articles'] = $repo->findAll();
 		$data['panier_user'] = $this->get('aetools.aePanier')->getArticlesOfUser($this->getUser());
 		$data['panier_info'] = $this->get('aetools.aePanier')->getInfosPanier($this->getUser());
@@ -46,7 +46,7 @@ class superadminController extends Controller {
 
 	public function entitiesAction($entity = null, $field = null) {
 		$data = array();
-		$aeEntities = $this->get('aetools.aeEntities');
+		$aeEntities = $this->get('aetools.aeEntity');
 		$entities = array_flip($aeEntities->getListOfEnties());
 		// général
 		$level = '';

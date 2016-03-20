@@ -53,26 +53,18 @@
 						{% set bgcolor = ' style="background-color:' ~ entite.statut.couleur|default('transparent') ~ ';"' %}
 						<tr>
 							<td class="text-center"{{ bgcolor|raw }}>
-								{% if type.type_values|default(null) != null %}
-								<a href="{{ path('siteadmin_entite_type', {entite: entite_name, type_related: type.type_related, type_field: type.type_field, type_values: type.type_values|join(type_value_joiner)|url_encode, id: entite.id, action: 'show'}) }}" title="{{ UCfirst('moredetails'|trans({'%name%': entite.nom|default('#' ~ entite.id)}, entite.className)) }}"><strong>{{ entite.id }}</strong></a>
-								{% else %}
-								<a href="{{ path('siteadmin_entite', {entite: entite_name, id: entite.id, action: 'show'}) }}" title="{{ UCfirst('moredetails'|trans({'%name%': entite.nom|default('#' ~ entite.id)}, entite.className)) }}"><strong>{{ entite.id }}</strong></a>
-								{% endif %}
+								<a href="{{ actions.entiteLink(entite, 'show', type, type_value_joiner) }}" title="{{ UCfirst('moredetails'|trans({'%name%': entite.nom}, entite.className)) }}"><strong>{{ entite.id }}</strong></a>
 							</td>
 							{% if entite.nom is defined %}
 							<td{{ bgcolor|raw }}>
-								{% if type.type_values|default(null) != null %}
-								<a href="{{ path('siteadmin_entite_type', {entite: entite_name, type_related: type.type_related, type_field: type.type_field, type_values: type.type_values|join(type_value_joiner)|url_encode, id: entite.id, action: 'show'}) }}" title="{{ UCfirst('moredetails'|trans({'%name%': entite.nom}, entite.className)) }}"><strong>{{ entite.nom }}</strong></a>
-								{% else %}
-								<a href="{{ path('siteadmin_entite', {entite: entite_name, id: entite.id, action: 'show'}) }}" title="{{ UCfirst('moredetails'|trans({'%name%': entite.nom}, entite.className)) }}"><strong>{{ entite.nom }}</strong></a>
-								{% endif %}
+								<a href="{{ actions.entiteLink(entite, 'show', type, type_value_joiner) }}" title="{{ UCfirst('moredetails'|trans({'%name%': entite.nom}, entite.className)) }}"><strong>{{ entite.nom }}</strong></a>
 								{% if entite.statut is defined %}
 								{% if entite.statut.id > 1 %}<br><small><i>({{ entite.statut.nom }})</i></small>{% endif %}
 								{% endif %}
 							</td>
 							{% endif %}
 							<td{{ bgcolor|raw }}>
-								{{ actions.entiteButtons(entite, ['show','edit','delete', 'default','active'], type) }}
+								{{ actions.entiteButtons(entite, ['show','edit','delete', 'default','active'], type, type_value_joiner) }}
 								{# - OFF ----------------------
 								{% if DEVMODE %}
 								<hr class="m-b-xs m-t-xs">

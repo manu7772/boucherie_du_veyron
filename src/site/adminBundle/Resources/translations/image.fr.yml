@@ -9,10 +9,21 @@ backlist_btn: 'retour liste'
 dontexist: 'cette image n''existe pas'
 moredetails: 'plus de détails sur %name%'
 existe: cette image existe déjà
+dimensionInconnue: (dim. inconnue)
 supprime:
     nom: Supprimer image
     confirm: 'Souhaitez-vous vraiment supprimer l''image ?'
     confirm-definitif: 'Souhaitez-vous vraiment supprimer l''image ? Attention : elle sera définitivement supprimée.'
+owner:
+    'article:image': 'images articles'
+    'pageweb:image': 'images pages web'
+    'boutique:logo': 'logos boutiques'
+    'boutique:image': 'vitrines boutiques'
+    'marque:logo': 'logos marques'
+    'marque:image': 'images marques'
+    'reseau:logo': 'logos réseaux'
+    'reseau:image': 'images réseaux'
+    'User:avatar': 'photo utilisateur'
 fields:
     id: id
     nom: nom
@@ -20,3 +31,4 @@ fields:
     binaryFile: image
     created: création
     updated: mise à jour
+    jamais: aucune modification

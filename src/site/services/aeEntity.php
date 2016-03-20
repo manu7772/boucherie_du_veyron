@@ -12,6 +12,7 @@ use Doctrine\ORM\Mapping\ClassMetadata;
 use site\adminBundle\services\flashMessage;
 
 use site\adminBundle\Entity\baseEntity;
+use site\adminBundle\Entity\statut;
 
 use \ReflectionMethod;
 use \Exception;
@@ -19,7 +20,7 @@ use \DateTime;
 use \Date;
 use \Time;
 
-class aeEntities extends aetools {
+class aeEntity extends aetools {
 
 	const NOM_OBJET_TYPE 		= "objet_type";		// nom de l'objet type basique
 	const NOM_OBJET_READY 		= "objet_ready";	// nom de l'objet rempli avec les valeurs par défaut
@@ -66,7 +67,7 @@ class aeEntities extends aetools {
 
 	/**
 	 * Initialise les données pour le service
-	 * @return aeEntities
+	 * @return aeEntity
 	 */
 	protected function initDataaeEntities() {
 		// echo("<p style='color:red'>SERVICE classe : ".$this->getShortName()."</p>");
@@ -92,15 +93,60 @@ class aeEntities extends aetools {
 
 
 
+	/**
+	 * Renvoie le service de l'entité
+	 * Renvoie les services/entités parents dans l'ordre, puis aeEntity par défaut si non trouvé
+	 * @param mixed $entityShortName
+	 * @return object
+	 */
+	public function getEntityService($entity) {
+		if(is_object($entity)) {
+			$entityClassName = get_class($entity);
+			$entityShortName = $entity->getClassName();
+		} else if(is_string($entity)) {
+			if(preg_match('#([a-zA-Z_-]+\/)+Entity\/[a-zA-Z_-]{2,}$#', $entity)) {
+				// $entity = nom long
+				$entityClassName = $entity;
+				$entityShortName = $this->getEntityShortName($entity);
+			} else {
+				// $entity = nom court
+				$entityClassName = $this->getEntityClassName($entity);
+				$entityShortName = $entity;
+			}
+			$entity = new $entityClassName();
+		}
+		// parent classes
+		if(method_exists($entity, 'getParentsClassNames')) {
+			$parents = $entity->getParentsClassNames(true);
+		} else {
+			$parents = array(
+				$entityShortName,
+				'entity',
+			);
+		}
+		// Recherche du service le plus proche de l'entité
+		$service = null;
+		foreach ($parents as $parent) {
+			$aeServiceName = "aetools.ae".ucfirst(preg_replace('#^base#', '', $parent));
+			if($this->container->has($aeServiceName)) {
+				$service = $this->container->get($aeServiceName);
+				if($parent != $entityShortName) $service->defineEntity($entityShortName);
+				break 1;
+			}
+		}
+		return $service;
+	}
+
     /**
      * Check entity after change (edit…)
      * @param baseEntity &$entity
-	 * @return aeEntities
+	 * @return aeEntity
      */
     public function checkAfterChange(baseEntity &$entity) {
+    	if(method_exists($entity, 'check')) $entity->check();
         // Check statut… etc.
-        $this->checkStatuts($entity, false);
-        $this->checkInversedLinks($entity, false);
+        // $this->checkStatuts($entity, false);
+        // $this->checkInversedLinks($entity, false);
         return $this;
     }
 
@@ -109,7 +155,7 @@ class aeEntities extends aetools {
 	 * @param baseEntity $entity
 	 * @return aeReponse
 	 */
-	public function save(baseEntity &$entity) {
+	public function NOsave(baseEntity &$entity) {
 		$aeReponse = $this->container->get('aetools.aeReponse');
 		$response = true;
 		$sadmin = false;
@@ -145,7 +191,7 @@ class aeEntities extends aetools {
 	 * @param baseEntity $entity
 	 * @return aeReponse
 	 */
-	public function NOsave(baseEntity &$entity) {
+	public function save(baseEntity &$entity) {
 		$response = true;
 		$message = 'Entité enregistrée.';
 		$this->_em->persist($entity);
@@ -491,12 +537,12 @@ class aeEntities extends aetools {
 	 * si $loadDefaults = true, charge les valeurs par défaut des entités liées
 	 * $version -> si string, préciser le champ, puis la valeur, séparés par un pipe "|" (ex. : "cible|v1")
 	 *			-> objet version
-	 *          -> pour la version courante, mettre aeEntities::CURRENT_ADDED ou true
-	 *          -> pour la version par défaut, mettre aeEntities::DEFAULT_ADDED (version par défaut (champ : 'defaultVersion' = 1))
+	 *          -> pour la version courante, mettre aeEntity::CURRENT_ADDED ou true
+	 *          -> pour la version par défaut, mettre aeEntity::DEFAULT_ADDED (version par défaut (champ : 'defaultVersion' = 1))
 	 *          -> pour ne pas ajouter de version, mettre false
 	 * $loadDefaults
 	 *          -> boolean ou array de booleans/repoMethodes des champs à remplir avec entités par défaut
-	 *          (ex. : ['version'] = true / ['version'] = 'defaultVal' / ['version'] = aeEntities::CURRENT_ADDED / ['version'] = false)
+	 *          (ex. : ['version'] = true / ['version'] = 'defaultVal' / ['version'] = aeEntity::CURRENT_ADDED / ['version'] = false)
 	 * @param string $classEntite
 	 * @param mixed $loadDefaults
 	 * @param mixed $version - champ|valeur ou objet de la version
@@ -690,9 +736,11 @@ class aeEntities extends aetools {
 							if(method_exists($tar_repo, $what[self::VALUE_DEFAULT])) $defaultMethod = $what[self::VALUE_DEFAULT];
 						}
 						$this->writeConsole(self::TAB1.'Ajout des valeurs par défaut : (->'.$defaultMethod.'())', 'normal');
-						$associates = $tar_repo->$defaultMethod();
-						// $this->writeConsole($defaultMethod.'()');
-						if(is_object($associates)) $associates = array($associates);
+						if(method_exists($tar_repo, $defaultMethod)) {
+							$associates = $tar_repo->$defaultMethod();
+							// $this->writeConsole($defaultMethod.'()');
+							if(is_object($associates)) $associates = array($associates);
+						}
 					}
 					if(!is_array($associates)) $associates = array();
 					// echo('<pre>');
@@ -914,15 +962,20 @@ class aeEntities extends aetools {
 						if(is_string($otherSideField)) {
 							$tar_SET = $this->getMethodOfSetting($otherSideField, $entity2);
 							// setting pour $entity2
-							$entity2->$tar_SET($entity1);
-							$this->writeConsole('     • Reverse Side ok : '.$this->getEntityShortName($entity2).'->'.$tar_SET.'('.$entity1->getSlug().')', 'succes');
-							return true;
-						} else throw new Exception(self::TAB1."Données bidirectionnelles incomplètes : champ cible inconnu (\"".gettype($entity1)."::".$field."\" => \"".gettype($entity1)."::<INCONNU>\"). (".$this->getName()."::attachEachSides() / Ligne ".__LINE__.")", 1);
+							if(is_string($tar_SET)) {
+								$entity2->$tar_SET($entity1);
+								$this->writeConsole('     • Reverse Side ok : '.$this->getEntityShortName($entity2).'->'.$tar_SET.'('.$entity1->getSlug().')', 'succes');
+								return true;
+							}
+						}
+						// } else throw new Exception(self::TAB1."Données bidirectionnelles incomplètes : champ cible inconnu (\"".gettype($entity1)."::".$field."\" => \"".gettype($entity1)."::<INCONNU>\"). (".$this->getName()."::attachEachSides() / Ligne ".__LINE__.")", 1);
 					}
 					return true;
-				} else throw new Exception(self::TAB1."Setter absent (\"".gettype($entity1)."::".$field."\"). (".$this->getName()."::attachEachSides() / Ligne ".__LINE__.")", 1);
+				}
+				// } else throw new Exception(self::TAB1."Setter absent (\"".gettype($entity1)."::".$field."\"). (".$this->getName()."::attachEachSides() / Ligne ".__LINE__.")", 1);
 			}
-		} else $this->writeConsole(self::TAB1."Versions incompatibles : association impossible.", "error");
+		}
+		// } else $this->writeConsole(self::TAB1."Versions incompatibles : association impossible.", "error");
 		return false;
 	}
 
@@ -1493,19 +1546,22 @@ class aeEntities extends aetools {
 	 * Supprime une entité sans la retirer de la base (sauf si 'deleted')
 	 * 4 États : actif => inactif => deleted => et enfin, suppression de la base
 	 * @param baseEntity &$entite
+	 * @param statut $statut
 	 */
-	public function softDeleteEntity(&$entite) {
+	public function softDeleteEntity(&$entite, statut $statut = null) {
 		if(method_exists($entite, 'setStatut')) {
 			// si un champ statut existe : Règle :
 			// actif ---> inactif
 			// inactif ou expired ---> deleted (uniquement visible du SUPER ADMIN)
-			$niveau = $entite->getStatut()->getNiveau();
-			if(in_array($niveau, array('IS_AUTHENTICATED_ANONYMOUSLY'))) {
-				$statut = $this->getEm()->getRepository('site\adminBundle\Entity\statut')->findInactif();
-			} else if(in_array($niveau, array('ROLE_TRANSLATOR', 'ROLE_EDITOR', 'ROLE_ADMIN'))) {
-				$statut = $this->getEm()->getRepository('site\adminBundle\Entity\statut')->findDeleted();
-			} else {
-				$statut = 'delete';
+			if($statut == null) {
+				$niveau = $entite->getStatut()->getNiveau();
+				if(in_array($niveau, array('IS_AUTHENTICATED_ANONYMOUSLY'))) {
+					$statut = $this->getEm()->getRepository('site\adminBundle\Entity\statut')->findInactif();
+				} else if(in_array($niveau, array('ROLE_TRANSLATOR', 'ROLE_EDITOR', 'ROLE_ADMIN'))) {
+					$statut = $this->getEm()->getRepository('site\adminBundle\Entity\statut')->findDeleted();
+				} else {
+					$statut = 'delete';
+				}
 			}
 			if(is_array($statut)) $statut = reset($statut);
 			if(is_object($statut)) {
@@ -1519,6 +1575,14 @@ class aeEntities extends aetools {
 			// sinon on la supprime
 			$this->getEm()->remove($entite);
 		}
+		// if(method_exists($entite, 'getImage')) {
+		// 	$image = $entite->getImage();
+		// 	$this->softDeleteEntity($image, $statut);
+		// }
+		// if(method_exists($entite, 'getLogo')) {
+		// 	$logo = $entite->getLogo();
+		// 	$this->softDeleteEntity($logo, $statut);
+		// }
 		// flush
 		$this->getEm()->flush();
 	}
@@ -1528,7 +1592,7 @@ class aeEntities extends aetools {
 	 * option : array $listOfId - si null, supprime tous
 	 * @param string $shortName
 	 * @param array $listOfId = null
-	 * @return aeEntities
+	 * @return aeEntity
 	 */
 	public function deleteAllTemp($shortName, $listOfId = null) {
 		$items = $this->getRepo($shortName)->findTempStatut($listOfId);
@@ -1557,8 +1621,16 @@ class aeEntities extends aetools {
 			// si un champ statut existe
 			$actif = $this->getEm()->getRepository('site\adminBundle\Entity\statut')->findActif();
 			$entite->setStatut($actif);
-			$this->getEm()->flush();
 		}
+		// if(method_exists($entite, 'getImage')) {
+		// 	$image = $entite->getImage();
+		// 	$this->softActivateEntity($image);
+		// }
+		// if(method_exists($entite, 'getLogo')) {
+		// 	$logo = $entite->getLogo();
+		// 	$this->softActivateEntity($logo);
+		// }
+		$this->getEm()->flush();
 	}
 
 
@@ -1576,9 +1648,11 @@ class aeEntities extends aetools {
 		// echo('<h4>Check statut sur '.get_class($entity).'</h4>');
 		if(method_exists($entity, 'getStatut')) {
 			// echo('<p>getStatut existe</p>');
-			if($entity->getStatut() == null) {
+			$repoStatut = $this->getEm()->getRepository('site\adminBundle\Entity\statut');
+			$defaultVal = self::VALUE_DEFAULT;
+			if($entity->getStatut() == null && method_exists($repoStatut, $defaultVal)) {
 				// echo('<p>Statut NON rempli !!!</p>');
-				$statut = $this->getEm()->getRepository('site\adminBundle\Entity\statut')->defaultVal();
+				$statut = $repoStatut->$defaultVal();
 				// var_dump($statut);
 				if(is_array($statut)) $statut = reset($statut);
 				if(is_object($statut)) {
@@ -1589,7 +1663,7 @@ class aeEntities extends aetools {
 			}
 			// else echo('<p>Statut déjà rempli : ok</p>');
 		}
-		if($flush == true) $this->save($entity);
+		if($flush == true && $entity->getId() != null) $this->save($entity);
 		return $r;
 	}
 

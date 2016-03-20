@@ -38,8 +38,7 @@ class aePanier {
      * 
      */
     public function checkAfterChange($panier) {
-        // 
-        $this->container->get('aetools.aeEntities')->checkInversedLinks($panier, false);
+        $this->container->get('aetools.aeEntity')->checkInversedLinks($panier, false);
     }
 
     /**

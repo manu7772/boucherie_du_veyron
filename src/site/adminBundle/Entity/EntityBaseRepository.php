@@ -10,7 +10,7 @@ use Doctrine\ORM\Mapping\ClassMetadata;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 use site\services\aetools;
-use site\services\aeEntities;
+use site\services\aeEntity;
 use site\UserBundle\Entity\User;
 
 use \DateTime;
@@ -155,18 +155,29 @@ class EntityBaseRepository extends EntityRepository {
 	public function findWithField(array $data, $asArray = false) {
 		$asArray == true ? $getMethod = 'getArrayResult' : $getMethod = 'getResult';
 		if(isset($data['type_related']) && isset($data['type_field']) && isset($data['type_values'])) {
+			// foreach ($data['type_values'] as $key => $value) {
+			// 	$data['type_values'][$key] = $value.'%';
+			// }
 			$qb = $this->createQueryBuilder(self::ELEMENT);
 			if($data['type_related'] == '_self') {
 				// champ interne
-				$qb->where($qb->expr()->in(self::ELEMENT.'.'.$data['type_field'], $data['type_values']));
+				// $qb->where($qb->expr()->in(self::ELEMENT.'.'.$data['type_field'], $data['type_values']));
+				foreach ($data['type_values'] as $typeValue) {
+					if($typeValue !== 'null')
+						$qb->andWhere($qb->expr()->orX($qb->expr()->like(self::ELEMENT.'.'.$data['type_field'], $qb->expr()->literal('%'.$typeValue.'%'))));
+						else $qb->andWhere(self::ELEMENT.'.'.$data['type_field'].' IS NULL');
+				}
 			} else {
-				$qb
-					->join(self::ELEMENT.'.'.$data['type_related'], 'entity')
-					->where($qb->expr()->in('entity.'.$data['type_field'], $data['type_values']));
+				$qb->join(self::ELEMENT.'.'.$data['type_related'], 'entity');
+				foreach ($data['type_values'] as $typeValue) {
+					if($typeValue !== 'null')
+						$qb->andWhere($qb->expr()->orX($qb->expr()->like('entity.'.$data['type_field'], $qb->expr()->literal('%'.$typeValue.'%'))));
+						else $qb->andWhere('entity.'.$data['type_field'].' IS NULL');
+				}
 			}
 		} else throw new Exception("Missing parameters for Repository method \"findWithField\"", 1);
 		// mode normal : suppression des éléments périmés, sadmin, etc.
-		$this->compileForMode($qb);
+		$this->contextStatut($qb);
 		return $qb->getQuery()->$getMethod();
 	}
 

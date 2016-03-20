@@ -23,39 +23,59 @@ class reseauType extends baseType {
 	public function buildForm(FormBuilderInterface $builder, array $options) {
 		// ajout de action si défini
 		$this->initBuilder($builder);
+		$this->imagesData = array(
+			'image' => array(
+				'owner' => 'reseau:image'
+				),
+			'logo' => array(
+				'owner' => 'reseau:logo'
+				),
+			);
 		// Builder…
 		$builder
 			->add('nom', 'text', array(
-				'label' => 'table.col.nom',
-				'translation_domain' => 'messages',
+				'label' => 'fields.nom',
+				'translation_domain' => 'reseau',
 				'required' => true,
 				))
             ->add('couleur', 'insColorpicker', array(
-            	'label'		=> 'Couleur',
+            	'label'		=> 'fields.couleur',
+				'translation_domain' => 'reseau',
                 'required'  => true,
             	))
 			->add('adresse', new adresseType($this->controller), array(
-				'label' => 'table.col.adresse',
-				'translation_domain' => 'messages',
+				'label' => 'name',
+				'translation_domain' => 'adresse',
 				'required' => false,
 				))
-			->add('statut', 'entity', array(
-				'class'     => 'siteadminBundle:statut',
-				'property'  => 'nom',
-				'multiple'  => false,
-				"label"     => 'name',
-				'translation_domain' => 'marque',
-				"query_builder" => function($repo) {
-					if(method_exists($repo, 'defaultValsListClosure'))
-						return $repo->defaultValsListClosure($this->aeEntities);
-						else return $repo->findAllClosure();
-					},
-				))
+			// ->add('statut', 'entity', array(
+			// 	'class'     => 'siteadminBundle:statut',
+			// 	'property'  => 'nom',
+			// 	'multiple'  => false,
+			// 	"label"     => 'name',
+			// 	'translation_domain' => 'statut',
+			// 	"query_builder" => function($repo) {
+			// 		if(method_exists($repo, 'defaultValsListClosure'))
+			// 			return $repo->defaultValsListClosure($this->aeEntities);
+			// 			else return $repo->findAllClosure();
+			// 		},
+			// 	))
 			->add('descriptif', 'insRichtext', array(
-				'label' => 'form.descriptif',
-				'translation_domain' => 'messages',
+				'label' => 'fields.descriptif',
+				'translation_domain' => 'reseau',
 				'required' => false,
 				))
+			->add('image', new cropperType($this->controller, array('image' => $this->imagesData['image'])), array(
+				'label' => 'fields.image',
+				'translation_domain' => 'reseau',
+				'required' => false,
+				))
+			->add('logo', new cropperType($this->controller, array('image' => $this->imagesData['logo'])), array(
+				'label' => 'fields.logo',
+				'translation_domain' => 'reseau',
+				'required' => false,
+				))
+
 		;
 		// ajoute les valeurs hidden, passés en paramètre
 		$this->addHiddenValues($builder, true);

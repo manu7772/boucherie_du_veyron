@@ -9,6 +9,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 // Slug
 use Gedmo\Mapping\Annotation as Gedmo;
 
+use site\adminBundle\Entity\baseSubEntity;
 use site\adminBundle\Entity\baseEntity;
 use site\adminBundle\Entity\pageweb;
 
@@ -94,9 +95,9 @@ class categorie extends baseEntity {
 	/**
 	 * https://github.com/Atlantic18/DoctrineExtensions/blob/master/doc/sortable.md
 	 * @Gedmo\SortablePosition
-	 * @ORM\Column(type="integer")
+	 * @ORM\Column(type="integer", nullable=false)
 	 */
-	private $position;
+	protected $position;
 
 	/**
 	 * @var string
@@ -106,19 +107,10 @@ class categorie extends baseEntity {
 
 	/**
 	 * - INVERSE
-	 * @Gedmo\SortableGroup
-	 * @ORM\ManyToMany(targetEntity="site\adminBundle\Entity\item", mappedBy="categories")
-	 * @ORM\JoinColumn(nullable=true, unique=false, onDelete="SET NULL")
+	 * @ORM\ManyToMany(targetEntity="site\adminBundle\Entity\baseSubEntity", mappedBy="categories", cascade={"persist","remove"})
+	 * @ORM\JoinColumn(name="basesubentity_categorie", nullable=true, unique=false, onDelete="SET NULL")
 	 */
-	protected $items;
-
-	/**
-	 * - INVERSE
-	 * @Gedmo\SortableGroup
-	 * @ORM\ManyToMany(targetEntity="site\adminBundle\Entity\tier", mappedBy="categories")
-	 * @ORM\JoinColumn(nullable=true, unique=false, onDelete="SET NULL")
-	 */
-	protected $tiers;
+	protected $subEntitys;
 
 	/**
 	 * @var string
@@ -139,9 +131,8 @@ class categorie extends baseEntity {
 		$this->parent = null;
 		$this->children = new ArrayCollection();
 		$this->descriptif = null;
-		$this->items = new ArrayCollection();
-		$this->tiers = new ArrayCollection();
-		$this->couleur = "#FFFFFF";
+		$this->subEntitys = new ArrayCollection();
+		$this->couleur = "rgba(255,255,255,1)";
 		$this->url = null;
 	}
 
@@ -162,16 +153,16 @@ class categorie extends baseEntity {
 		$this->pageweb = $pageweb;
 	}
 
-	public function getLvl() {
-		return $this->lvl;
-	}
-
 	/**
 	 * get pageweb
 	 * @return pageweb
 	 */
 	public function getPageweb() {
 		return $this->pageweb;
+	}
+
+	public function getLvl() {
+		return $this->lvl;
 	}
 
 	public function setParent(categorie $parent = null) {
@@ -226,57 +217,30 @@ class categorie extends baseEntity {
 	}
 
 	/**
-	 * add item
-	 * @param item $item
+	 * add subEntity
+	 * @param baseSubEntity $subEntity
 	 * @return categorie
 	 */
-	public function addItem(item $item) {
-		$this->items->add($item);
+	public function addSubEntity(baseSubEntity $subEntity = null) {
+		if($subEntity != null) $this->subEntitys->add($subEntity);
 		return $this;
 	}
 
 	/**
-	 * remove item
-	 * @param item $item
+	 * remove subEntity
+	 * @param baseSubEntity $subEntity
 	 * @return boolean
 	 */
-	public function removeItem(item $item) {
-		return $this->items->removeElement($item);
+	public function removeSubEntity(baseSubEntity $subEntity) {
+		return $this->subEntitys->removeElement($subEntity);
 	}
 
 	/**
-	 * get items
+	 * get subEntitys
 	 * @return ArrayCollection
 	 */
-	public function getItems() {
-		return $this->items;
-	}
-
-	/**
-	 * add tier
-	 * @param tier $tier
-	 * @return categorie
-	 */
-	public function addTier(tier $tier) {
-		$this->tiers->add($tier);
-		return $this;
-	}
-
-	/**
-	 * remove tier
-	 * @param tier $tier
-	 * @return boolean
-	 */
-	public function removeTier(tier $tier) {
-		return $this->tiers->removeElement($tier);
-	}
-
-	/**
-	 * get tiers
-	 * @return ArrayCollection
-	 */
-	public function getTiers() {
-		return $this->tiers;
+	public function getSubEntitys() {
+		return $this->subEntitys;
 	}
 
 	/**

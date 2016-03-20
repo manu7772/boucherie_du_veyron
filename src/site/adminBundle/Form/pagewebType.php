@@ -26,11 +26,11 @@ class pagewebType extends baseType {
 		// ajout de action si défini
 		$this->initBuilder($builder);
 		$this->pageweb = $this->controller->get('aetools.aePageweb');
-		// $this->imagesData = array(
-		// 	'image' => array(
-		// 		'owner' => 'pageweb:image'
-		// 		),
-		// 	);
+		$this->imagesData = array(
+			'image' => array(
+				'owner' => 'pageweb:image'
+				),
+			);
 		// Builder…
 		$builder
 			->add('nom', 'text', array(
@@ -70,7 +70,7 @@ class pagewebType extends baseType {
 				'choice_list' => $this->pageweb->getPagewebChoices(),
 				))
 			// 1 image :
-			->add('image', new cropperType($this->controller, array('image' => array('owner' => 'pageweb:image'))), array(
+			->add('image', new cropperType($this->controller, $this->imagesData), array(
 				'label' => 'fields.image',
 				'translation_domain' => 'pageweb',
 				'required' => false,

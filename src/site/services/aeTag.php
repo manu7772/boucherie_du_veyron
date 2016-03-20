@@ -2,13 +2,13 @@
 namespace site\services;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use site\services\aeEntities;
+use site\services\aeEntity;
 
 use site\adminBundle\Entity\tag;
 use site\adminBundle\Entity\baseEntity;
 
 // call in controller with $this->get('aetools.aeTag');
-class aeTag extends aeEntities {
+class aeTag extends aeEntity {
 
     public function __construct(ContainerInterface $container) {
         parent::__construct($container);
@@ -30,8 +30,8 @@ class aeTag extends aeEntities {
      * @param baseEntity $entity
      * @return aeReponse
      */
-    public function save(baseEntity &$entity) {
-        return parent::save($entity);
-    }
+    // public function save(baseEntity &$entity) {
+    //     return parent::save($entity);
+    // }
 
 }

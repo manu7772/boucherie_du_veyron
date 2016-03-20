@@ -35,7 +35,7 @@ class DefaultController extends Controller {
 	public function pagewebAction($pageweb, $params = null) {
 		$data = $this->get('tools_json')->JSonExtract($params);
 		$data['pageweb'] = $this->get('aetools.aePageweb')->getRepo()->findOneBySlug($pageweb);
-		// $data['marques'] = $this->get('aetools.aeEntities')->getRepo('site\adminBundle\Entity\marque')->findAll();
+		// $data['marques'] = $this->get('aetools.aeEntity')->getRepo('site\adminBundle\Entity\marque')->findAll();
 		if(is_object($data['pageweb'])) {
 			$this->pagewebactions($data);
 			// chargement de la pageweb

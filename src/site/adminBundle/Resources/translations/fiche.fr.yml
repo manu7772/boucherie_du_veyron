@@ -25,3 +25,4 @@ fields:
     datePublication: date de publication
     dateExpiration: date de d'expiration
     image: visuel
+    jamais: aucune modification

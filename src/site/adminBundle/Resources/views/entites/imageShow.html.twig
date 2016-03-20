@@ -61,6 +61,10 @@
 							<td>{{ fileSizeDisplay(entite.fileSize) }}</td>
 						</tr>
 						<tr>
+							<td><strong>{{ 'table.col.dimensions'|trans }}</strong></td>
+							<td>{{ UCfirst((entite.dimension|default('dimensionInconnue'))|trans({}, entite.className)) }}</td>
+						</tr>
+						<tr>
 							<td><strong>{{ 'table.col.creation'|trans }}</strong></td>
 							<td>{{ entite.created|date(formatDateHeure) }}</td>
 						</tr>

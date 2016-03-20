@@ -38,6 +38,11 @@ services:
         class: %adminBundleservices%\flashMessages
         arguments: [@service_container]
 
+    # fonctionnalités de commandes en annotations dans fichiers Twig
+    aeTwigdescriptions:
+        class: %adminBundleservices%\aeTwigdescriptions
+        arguments: [@service_container]
+
     ###################################
     ### ELEMENTS DE FORMULAIRES
     ###################################

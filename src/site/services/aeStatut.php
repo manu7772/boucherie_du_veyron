@@ -2,14 +2,14 @@
 namespace site\services;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use site\services\aeEntities;
+use site\services\aeEntity;
 
 use site\adminBundle\Entity\statut;
 use site\adminBundle\Entity\baseEntity;
 use site\adminBundle\Entity\baseSubEntity;
 
 // call in controller with $this->get('aetools.aeStatut');
-class aeStatut extends aeEntities {
+class aeStatut extends aeEntity {
 
     public function __construct(ContainerInterface $container) {
         parent::__construct($container);
@@ -31,9 +31,9 @@ class aeStatut extends aeEntities {
      * @param baseEntity $entity
      * @return aeReponse
      */
-    public function save(baseEntity &$entity) {
-        return parent::save($entity);
-    }
+    // public function save(baseEntity &$entity) {
+    //     return parent::save($entity);
+    // }
 
     /**
      * Passe le baseSubEntity en mode temps

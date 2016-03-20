@@ -4,7 +4,10 @@ reseau:
         -
             nom: 'Internet'
             default: 1
+            couleur: 'rgba(230,129,255,0.37)'
         -
             nom: 'Professionnels'
+            couleur: 'rgba(242,62,62,0.29)'
         -
             nom: 'Grande distribution'
+            couleur: ''

@@ -242,7 +242,7 @@ class aeFixtures {
 				// ajout TVA
 				$newdata[$key]->setTauxTva($defaultTaux);
 			}
-			// $newdata[$key] = $this->container->get('aetools.aeEntities')->newObject($classname, true, false);
+			// $newdata[$key] = $this->container->get('aetools.aeEntity')->newObject($classname, true, false);
 			foreach ($dat as $attribute => $value) {
 				foreach ($attrMethods as $method) {
 					$m = $method.ucfirst($attribute);
@@ -256,7 +256,7 @@ class aeFixtures {
 	}
 
 	protected function getEntities() {
-		$this->classnames = array_flip($this->container->get('aetools.aeEntities')->getListOfEnties());
+		$this->classnames = array_flip($this->container->get('aetools.aeEntity')->getListOfEnties());
 		return $this->classnames;
 	}
 

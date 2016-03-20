@@ -9,10 +9,21 @@ backlist_btn: 'back to list'
 dontexist: 'this image does not exist'
 moredetails: 'more details on %name%'
 existe: this image already exists
+dimensionInconnue: (unknown size)
 supprime:
     nom: delete image
     confirm: 'Do you realy want to delete this image?'
     confirm-definitif: 'Do you realy want to delete this image? Beware : it will be finally deleted.'
+owner:
+    'article:image': 'products'
+    'pageweb:image': 'web pages'
+    'boutique:logo': 'stores logos'
+    'boutique:image': 'stores photo'
+    'marque:logo': 'brands logos'
+    'marque:image': 'brands images'
+    'reseau:logo': 'outlets logos'
+    'reseau:image': 'outlets images'
+    'User:avatar': 'user photo'
 fields:
     id: id
     nom: name
@@ -20,3 +31,4 @@ fields:
     binaryFile: picture
     created: created
     updated: updated
+    jamais: no modification

@@ -36,8 +36,7 @@ class aeMessage {
      * 
      */
     public function checkAfterChange($message) {
-        // 
-        $this->container->get('aetools.aeEntities')->checkInversedLinks($message, false);
+        $this->container->get('aetools.aeEntity')->checkInversedLinks($message, false);
     }
 
 

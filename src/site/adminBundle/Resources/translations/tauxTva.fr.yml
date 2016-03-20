@@ -18,3 +18,9 @@ fields:
     nom: nom
     created: création
     updated: mis à jour
+    descriptif: descriptif
+    taux: taux TVA
+    TTC: TTC
+    TVA: TVA
+    HT: HT
+    jamais: aucune modification

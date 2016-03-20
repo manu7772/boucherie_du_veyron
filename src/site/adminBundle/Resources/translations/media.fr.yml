@@ -14,3 +14,4 @@ fields:
     nom: nom
     created: création
     updated: mis à jour
+    jamais: aucune modification

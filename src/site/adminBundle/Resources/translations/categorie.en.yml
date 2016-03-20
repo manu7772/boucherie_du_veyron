@@ -1,0 +1,27 @@
+name_s: categories
+name: category
+not_found: 'no category found'
+x_found: '{0} no category found|{1} 1 category found|[2,+Inf] %count% categories found'
+create: 'create new category'
+create_btn: 'new category'
+backlist: 'back to list of categories'
+backlist_btn: 'back to list'
+dontexist: 'this category does not exist'
+moredetails: 'more details on %name%'
+existe: this category already exists
+grants:
+    no_access: You are not granted to access to the category<br>"%name%"
+fields:
+    id: id
+    nom: name
+    created: created
+    updated: updated
+    descriptif: description
+    jamais: no modification
+    pageweb: web page
+    parent: parent
+    children: children
+    position: position
+    subEntitys: elements
+    couleur: color
+    url: url

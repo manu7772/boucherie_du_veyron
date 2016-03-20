@@ -52,7 +52,9 @@
 								{% endif %}
 								- OFF ---------------------- #}
 							</td>
-							<td{{ bgcolor|raw }} class="text-center"><i class="fa fa-square fa-3x" style="color:{{ entite.couleur|raw }};"></i></td>
+							<td{{ bgcolor|raw }} class="text-center">
+								{{ actions.colorDot(entite.couleur) }}
+							</td>
 							<td{{ bgcolor|raw }}>{{ entite.descriptif|raw }}</td>
 							<td{{ bgcolor|raw }}>{{ UCfirst(('roles.' ~ entite.niveau)|trans) }}</td>
 							<td{{ bgcolor|raw }}>{{ entite.bundles|join('<br>')|raw }}</td>
@@ -61,7 +63,7 @@
 					</tbody>
 				</table>
 				{% else %}
-				<h3><i class="fa fa-ban"></i> {{ (entite_name ~ '.not_found')|trans }}</h3>
+				<h3><i class="fa fa-ban"></i> {{ UCfirst('not_found'|trans({}, entite_name)) }}</h3>
 				{% endif %}
 			</div>
 		</div>

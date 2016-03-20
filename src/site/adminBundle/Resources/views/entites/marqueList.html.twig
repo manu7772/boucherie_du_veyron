@@ -16,16 +16,17 @@
 					<thead>
 						<tr>
 							{% if DEVMODE %}<th class="text-center" style="width:1%;">{{ UCfirst('fields.id'|trans({}, entite_name)) }}</th>{% endif %}
-							<th class="text-center" style="width:1%;">{{ UCfirst('fields.logo'|trans({}, entite_name)) }}</th>
+							<th class="text-center" style="width:1%;">{{ UCfirst('fields.mainMedia'|trans({}, entite_name)) }}</th>
 							<th>{{ UCfirst('fields.nom'|trans({}, entite_name)) }}</th>
 							<th>{{ UCfirst('actions.name'|trans) }}</th>
+							<th>{{ UCfirst('fields.couleur'|trans({}, entite_name)) }}</th>
 							<th>{{ UCfirst('fields.descriptif'|trans({}, entite_name)) }}</th>
 						</tr>
 					</thead>
 					<tbody>
 						{% for entite in entites if(is_granted(entite.statut.niveau|default('ROLE_USER')) or DEVMODE) %}
+						{% set bgcolor = ' style="background-color:' ~ entite.statut.couleur|default('transparent') ~ ';"' %}
 						<tr>
-							{% set bgcolor = ' style="background-color:' ~ entite.statut.couleur|default('transparent') ~ ';"' %}
 							{% if DEVMODE %}<td class="text-center"{{ bgcolor|raw }}>{{ entite.id }}</td>{% endif %}
 							<td class="text-center"{{ bgcolor|raw }}>
 								{% if entite.mainMedia|default(null) != null %}
@@ -61,13 +62,16 @@
 								{% endif %}
 								- OFF ---------------------- #}
 							</td>
+							<td{{ bgcolor|raw }} class="text-center">
+								{{ actions.colorDot(entite.couleur) }}
+							</td>
 							<td{{ bgcolor|raw }}>{{ entite.descriptif|raw }}</td>
 						</tr>
 						{% endfor %}
 					</tbody>
 				</table>
 				{% else %}
-				<h3><i class="fa fa-ban"></i> {{ UCfirst('not_found'|trans({}, entite.className)) }}</h3>
+				<h3><i class="fa fa-ban"></i> {{ UCfirst('not_found'|trans({}, entite_name)) }}</h3>
 				{% endif %}
 			</div>
 		</div>

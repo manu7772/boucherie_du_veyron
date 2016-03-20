@@ -2,12 +2,12 @@
 namespace site\services;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use site\services\aeEntities;
+use site\services\aeEntity;
 
 use site\adminBundle\Entity\rawfile;
 use site\adminBundle\Entity\baseEntity;
 
-class aeRawfile extends aeEntities {
+class aeRawfile extends aeEntity {
 
     public function __construct(ContainerInterface $container) {
         parent::__construct($container);
@@ -29,9 +29,9 @@ class aeRawfile extends aeEntities {
      * @param baseEntity $entity
      * @return aeReponse
      */
-    public function save(baseEntity &$entity) {
-        return parent::save($entity);
-    }
+    // public function save(baseEntity &$entity) {
+    //     return parent::save($entity);
+    // }
 
 	/**
 	 * Renvoie une nouvelle entité rawfile remplie avec les données de $data

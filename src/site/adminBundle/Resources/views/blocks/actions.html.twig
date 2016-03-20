@@ -1,4 +1,4 @@
-{% macro entiteButtons(entite, actions, type) %}
+{% macro entiteButtons(entite, actions, type, type_value_joiner) %}
 	{% import _self as self %}
 	<div class="btn-group">
 	{% for action in actions %}
@@ -7,7 +7,7 @@
 	</div>
 {% endmacro %}
 
-{% macro entiteButton(entite, action, type) %}
+{% macro entiteButton(entite, action, type, type_value_joiner) %}
 	{% import _self as self %}
 	{% if action == "show" %}
 		<a href="{{ self.entiteLink(entite, action, type) }}" type="button" class="btn btn-white btn-xs" data-toggle="tooltip" data-placement="bottom" title="{{ UCfirst('moredetails'|trans({'%name%': entite.nom}, entite.className)) }}"><i class="fa fa-eye icon-wait-on-click"></i></a>
@@ -16,7 +16,7 @@
 		<a href="{{ self.entiteLink(entite, action, type) }}" type="button" class="btn btn-white btn-xs" data-toggle="tooltip" data-placement="bottom" title="{{ UCfirst('actions.modifier'|trans) }}"><i class="fa fa-pencil icon-wait-on-click"></i></a>
 	{% endif %}
 	{% if action == "delete" %}
-		<a href="{{ self.entiteLink(entite, action, type) }}" type="button" class="btn btn-white btn-xs" data-toggle="tooltip" data-placement="bottom" title="{{ UCfirst('actions.supprimer'|trans) }}"><i class="fa fa-times icon-wait-on-click"></i></a>
+		<a href="{{ self.entiteLink(entite, action, type) }}" type="button" class="btn btn-white btn-xs need-confirmation" data-toggle="tooltip" data-placement="bottom" title="{{ UCfirst('actions.supprimer'|trans) }}" data-title="{{ UCfirst('actions.supprimer'|trans) }}" data-message="{{ UCfirst('actions.suppQuestion'|trans({'%name%': entite.nom})) }}"><i class="fa fa-times icon-wait-on-click"></i></a>
 	{% endif %}
 	{% if action == "default" and entite.default is defined and (entite.statut.niveau|default('IS_AUTHENTICATED_ANONYMOUSLY') in ['IS_AUTHENTICATED_ANONYMOUSLY', 'ROLE_USER']) %}
 		{% set defcol = 'white' %}
@@ -32,7 +32,7 @@
 	{% endif %}
 {% endmacro %}
 
-{% macro entiteLink(entite, action, type) -%}
+{% macro entiteLink(entite, action, type, type_value_joiner) -%}
 	{%- if action in ['show','edit','delete', 'active'] -%}
 		{%- if type.type_values|default(null) != null -%}
 			{{- path('siteadmin_entite_type', {entite: entite.className, type_related: type.type_related, type_field: type.type_field, type_values: type.type_values|join(type_value_joiner)|url_encode, id: entite.id, action: action}) -}}
@@ -44,3 +44,15 @@
 		{{- path('siteadmin_set_default', {id: entite.id, entite: entite.className, redir: path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params'))|url_encode()}) -}}
 	{%- endif -%}
 {%- endmacro %}
+
+{% macro colorDot(color) -%}
+<span class="fa-stack fa-lg fa-2x">
+	<i class="fa fa-circle fa-stack-2x" style="color:{{ color|raw }};"></i>
+	<i class="fa fa-circle-o fa-stack-2x"></i>
+</span>
+{%- endmacro %}
+
+{% macro colorDot2(color) -%}
+<i class="fa fa-square fa-3x" style="padding: 0px 2px; border: solid 2px #bbb; border-radius: 9px; color:{{ color|raw }};"></i>
+{%- endmacro %}
+

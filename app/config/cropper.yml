@@ -8,7 +8,7 @@ parameters:
     formats:
         ### ALL DEFAULT
         default:
-            - null
+            # - null
             - [1024, 768]
             - [768, 1024]
             - [1024, 1024]
@@ -39,6 +39,18 @@ parameters:
             logo:
                 - [400, 400]
         marque:
+            image:
+                - [800, 600]
+            logo:
+                - [400, 400]
+        boutique:
+            image:
+                - [800, 600]
+            logo:
+                - [400, 400]
+        reseau:
+            image:
+                - [800, 600]
             logo:
                 - [400, 400]
         ### USER

@@ -62,7 +62,7 @@
 					<td{% if user.lastLogin is not null %} title="{{ user.lastLogin|date(formatDateHeure) }}"{% endif %}>
 						<strong>Login</strong> 
 						{% if user.lastLogin is not null %}
-						{{ dateFR(user.lastLogin, true) }} {{ user.lastLogin|date('H\\hi') }}
+						{{ dateFR(user.lastLogin, true)|raw }} {{ user.lastLogin|date('H\\hi')|raw }}
 						{% else %}
 						<i class="text-muted">(jamais)</i>
 						{% endif %}
@@ -85,7 +85,7 @@
 						<strong>Achats</strong> {{ factures|default([])|length }}
 					</td>
 					<td title="{{ cumulHT|default(0)|number_format(2, ',', '') }} {{ marketplace.devise.symb }}HT">
-						<strong>Total</strong> {{ cumulTTC|default(0)|number_format(2, ',', '') }}&nbsp;{{ marketplace.devise.symb }}{{ 'table.col.TTC'|trans }}
+						<strong>Total</strong> {{ cumulTTC|default(0)|number_format(2, ',', '') }}&nbsp;{{ marketplace.devise.symb }}{{ UCfirst('fields.TTC'|trans({}, 'tauxTva')) }}
 					</td>
 				</tr>
 				{% endif %}
@@ -151,8 +151,8 @@
 										<tr>
 											<td><strong>Article</strong></td>
 											<td><strong>Q.</strong></td>
-											<td><strong>Prix<sup>{{ 'table.col.TTC'|trans }}</sup></strong></td>
-											<td><strong>Total<sup>{{ 'table.col.TTC'|trans }}</sup></strong></td>
+											<td><strong>Prix<sup>{{ UCfirst('fields.TTC'|trans({}, 'tauxTva')) }}</sup></strong></td>
+											<td><strong>Total<sup>{{ UCfirst('fields.TTC'|trans({}, 'tauxTva')) }}</sup></strong></td>
 										</tr>
 										{% set totalpanierTTC = 0 %}
 										{% set totalpanierHT = 0 %}
@@ -167,7 +167,7 @@
 										</tr>
 										{% endfor %}
 										<tr style="border-top: 2px solid #bbb;">
-											<td colspan="3"><strong>Total {{ 'table.col.TTC'|trans }}</strong></td>
+											<td colspan="3"><strong>Total {{ UCfirst('fields.TTC'|trans({}, 'tauxTva')) }}</strong></td>
 											<td><strong>{{ totalpanierTTC|number_format(2, ',', '') }}&nbsp;{{ marketplace.devise.symb }}</strong></td>
 										</tr>
 										<tr>
@@ -210,7 +210,7 @@
 									<tbody>
 										<tr>
 											<td class="text-center"><strong>Nb.Art.</strong></td>
-											<td><strong>Total<sup>{{ 'table.col.TTC'|trans }}</sup></strong></td>
+											<td><strong>Total<sup>{{ UCfirst('fields.TTC'|trans({}, 'tauxTva')) }}</sup></strong></td>
 											<td><strong>Statut</strong></td>
 										</tr>
 										<tr>

@@ -15,3 +15,4 @@ fields:
     nom: name
     created: created
     updated: updated
+    jamais: no modification

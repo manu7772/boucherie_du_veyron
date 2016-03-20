@@ -19,22 +19,35 @@ twig:
             accueil:
                 nom: 'accueil'
                 path: siteadmin_homepage
-                icon: 'fa-home'
+                icon: 'entite.home'
             traduction:
                 role: 'ROLE_TRANSLATOR'
                 nom: 'traduction.name'
                 path: 'sitetranslate_homepage'
-                icon: 'fa-flag'
+                icon: 'entite.translate'
+            categories:
+                role: 'ROLE_EDITOR'
+                nom: 'name_s'
+                trans_domain: categorie
+                icon: 'entite.categorie'
+                path: 
+                    path: 'siteadmin_entite_type'
+                    params:
+                        entite: categorie
+                        type_related: _self
+                        type_field: parent
+                        type_values: 'null'
             marketplace:
                 role: 'ROLE_ADMIN'
                 nom: 'marketplace.name'
                 path: 'siteadmin_homepage'
-                icon: 'fa-shopping-cart'
+                icon: 'entite.article'
                 level2: 
                     article:
                         role: 'ROLE_ADMIN'
                         nom: 'name_s'
                         trans_domain: article
+                        icon: 'entite.article'
                         path: 
                             path: 'siteadmin_entite'
                             params:
@@ -43,6 +56,7 @@ twig:
                         role: 'ROLE_ADMIN'
                         nom: 'name_s'
                         trans_domain: marque
+                        icon: 'entite.marque'
                         path: 
                             path: 'siteadmin_entite'
                             params:
@@ -51,6 +65,7 @@ twig:
                         role: 'ROLE_ADMIN'
                         nom: 'name_s'
                         trans_domain: boutique
+                        icon: 'entite.boutique'
                         path: 
                             path: 'siteadmin_entite'
                             params:
@@ -59,6 +74,7 @@ twig:
                         role: 'ROLE_ADMIN'
                         nom: 'name_s'
                         trans_domain: reseau
+                        icon: 'entite.reseau'
                         path: 
                             path: 'siteadmin_entite'
                             params:
@@ -67,6 +83,7 @@ twig:
                         role: 'ROLE_ADMIN'
                         nom: 'name_s'
                         trans_domain: tauxTva
+                        icon: 'entite.tauxTva'
                         path: 
                             path: 'siteadmin_entite'
                             params:
@@ -76,46 +93,119 @@ twig:
                 nom: 'name_s'
                 trans_domain: pageweb
                 path: 'siteadmin_homepage'
-                icon: 'fa-desktop'
+                icon: 'entite.pageweb'
                 level2: 
-                    item0:
+                    pagewebs:
                         role: 'ROLE_EDITOR'
                         nom: 'name_s'
                         trans_domain: pageweb
+                        icon: 'entite.pageweb'
                         path: 
                             path: 'siteadmin_entite'
                             params:
                                 entite: pageweb
-                    item1:
+                    menus:
                         role: %restrict_admin%
                         nom: 'menu.name_s'
                         trans_domain: menus
+                        icon: 'entite.menu'
                         path: 
                             path: 'siteadmin_menus'
                             params:
                                 name: all
+                    images_pagewebs:
+                        nom: 'owner.pageweb:image'
+                        trans_domain: image
+                        icon: 'entite.image'
+                        path: 
+                            path: 'siteadmin_entite_type'
+                            params:
+                                entite: image
+                                type_related: _self
+                                type_field: owner
+                                type_values: pageweb
             media:
                 role: 'ROLE_EDITOR'
                 nom: 'name_s'
                 trans_domain: media
                 path: 'siteadmin_homepage'
-                icon: 'fa-film'
+                icon: 'entite.media'
                 level2: 
                     images:
                         nom: 'name_s'
                         trans_domain: image
+                        icon: 'entite.image'
                         path: 
                             path: 'siteadmin_entite'
                             params:
                                 entite: image
-                                # type_related: _self
-                                # type_field: mediaType
-                                # type_values: image
+                        level3:
+                            toutes_images:
+                                role: 'ROLE_SUPER_ADMIN'
+                                nom: 'toutes images'
+                                trans_domain: image
+                                icon: 'entite.image'
+                                path: 
+                                    path: 'siteadmin_entite'
+                                    params:
+                                        entite: image
+                            images_orphelines:
+                                nom: 'name_s'
+                                trans_domain: image
+                                path: 
+                                    path: 'siteadmin_entite_type'
+                                    params:
+                                        entite: image
+                                        type_related: _self
+                                        type_field: owner
+                                        type_values: 'null'
+                            images_articles:
+                                nom: 'owner.article:image'
+                                trans_domain: image
+                                path: 
+                                    path: 'siteadmin_entite_type'
+                                    params:
+                                        entite: image
+                                        type_related: _self
+                                        type_field: owner
+                                        type_values: article
+                            images_boutiques:
+                                nom: 'owner.boutique:image'
+                                trans_domain: image
+                                path: 
+                                    path: 'siteadmin_entite_type'
+                                    params:
+                                        entite: image
+                                        type_related: _self
+                                        type_field: owner
+                                        type_values: boutique
+                            images_reseaux:
+                                nom: 'owner.reseau:image'
+                                trans_domain: image
+                                path: 
+                                    path: 'siteadmin_entite_type'
+                                    params:
+                                        entite: image
+                                        type_related: _self
+                                        type_field: owner
+                                        type_values: reseau
+                            images_marques:
+                                nom: 'owner.marque:image'
+                                trans_domain: image
+                                path: 
+                                    path: 'siteadmin_entite_type'
+                                    params:
+                                        entite: image
+                                        type_related: _self
+                                        type_field: owner
+                                        type_values: marque
                     pdf:
                         nom: 'name_s'
                         trans_domain: pdf
+                        icon: 'entite.pdf'
                         path: 
                             path: 'siteadmin_entite'
+                            # path: 'siteadmin_entite_type'
                             params:
                                 entite: pdf
                                 # type_related: _self
@@ -124,6 +214,7 @@ twig:
                     fiches:
                         nom: 'name_s'
                         trans_domain: fiche
+                        icon: 'entite.fiche'
                         path: 
                             path: 'siteadmin_entite'
                             params:
@@ -131,12 +222,15 @@ twig:
                     tags:
                         nom: 'name_s'
                         trans_domain: tag
+                        icon: 'entite.tags'
                         path: 
                             path: 'siteadmin_entite'
                             params:
                                 entite: tag
                     raws:
+                        role: 'ROLE_SUPER_ADMIN'
                         nom: 'raw files'
+                        icon: 'entite.raw'
                         path: 
                             path: 'siteadmin_entite'
                             params:
@@ -146,7 +240,7 @@ twig:
                 nom: 'name_s'
                 trans_domain: User
                 path: 'site_user_homepage'
-                icon: 'fa-users'
+                icon: 'entite.User'
                 level2: 
                     Tous:
                         nom: 'roles.ALL'
@@ -182,15 +276,28 @@ twig:
                             params:
                                 type: ROLE_ADMIN
                     SuperAdmin:
+                        role: 'ROLE_SUPER_ADMIN'
                         nom: 'roles.ROLE_SUPER_ADMIN'
                         trans_domain: User
                         path: 
                             path: 'siteUser_users'
                             params:
                                 type: ROLE_SUPER_ADMIN
+                    images_User:
+                        nom: 'owner.User:avatar'
+                        trans_domain: image
+                        icon: 'entite.image'
+                        path: 
+                            path: 'siteadmin_entite_type'
+                            params:
+                                entite: image
+                                type_related: _self
+                                type_field: owner
+                                type_values: User
                     Adresses:
                         nom: 'name_s'
                         trans_domain: adresse
+                        icon: 'entite.adresse'
                         path: 
                             path: siteadmin_entite
                             params:
@@ -199,16 +306,17 @@ twig:
                 role: %restrict_admin%
                 nom: name_s
                 trans_domain: message
-                icon: fa-paper-plane
+                icon: 'entite.message'
                 path:
                     path: siteadmin_entite
                     params:
                         entite: message
             parametres:
-                role: %restrict_admin%
+                role: 'ROLE_SUPER_ADMIN'
+                # role: %restrict_admin%
                 nom: 'parametres'
                 path: 'siteadmin_homepage'
-                icon: 'fa-gear'
+                icon: 'entite.parametres'
                 level2: 
                     fileFormat:
                         nom: 'name_s'
@@ -218,7 +326,6 @@ twig:
                             params:
                                 entite: fileFormat
                     statut:
-                        role: 'ROLE_SUPER_ADMIN'
                         nom: 'name_s'
                         trans_domain: statut
                         path: 
@@ -228,13 +335,13 @@ twig:
             help:
                 nom: 'help'
                 path: siteadmin_support
-                icon: 'fa-support'
+                icon: 'entite.help'
             webmaster:
                 role: 'ROLE_SUPER_ADMIN'
                 nom: 'roles.ROLE_SUPER_ADMIN'
                 trans_domain: User
                 path: 'siteadmin_sadmin_index'
-                icon: 'fa-cogs'
+                icon: 'entite.webmaster'
                 level2: 
                     sadminHome:
                         nom: 'roles.ROLE_SUPER_ADMIN'

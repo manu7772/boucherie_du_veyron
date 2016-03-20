@@ -16,4 +16,41 @@ use Doctrine\ORM\Mapping\ClassMetadata;
  */
 class imageRepository extends mediaRepository {
 
+	/**
+	 * Retourne la liste des images groupées par owner
+	 * @return array
+	 */
+	public function findGroupByOwner() {
+		$qb = $this->createQueryBuilder(self::ELEMENT);
+		// $qb->join(self::ELEMENT.'.statut', 's');
+		$qb->select(
+			// self::ELEMENT.'.nom nom',
+			// self::ELEMENT.'.id id',
+			self::ELEMENT.'.owner owner',
+			// 's.nom statut_nom',
+			'count('.self::ELEMENT.'.owner) owner_count'
+		);
+		$this->contextStatut($qb);
+		$qb->groupBy(self::ELEMENT.'.owner');
+		// $qb->groupBy(self::ELEMENT.'.id');
+		// array(6) {
+		//   [0]=>
+		//   array(2) {
+		//     ["owner"]=>
+		//     string(13) "article:image"
+		//     ["owner_count"]=>
+		//     string(1) "4"
+		//   }
+		$owners = $qb->getQuery()->getArrayResult();
+		//
+		foreach ($owners as $key => $owner) {
+			$qb = $this->createQueryBuilder(self::ELEMENT);
+			$qb->where(self::ELEMENT.'.owner = ?1')
+				->setParameter('1', $owner['owner']);
+			$this->contextStatut($qb);
+			$owners[$key]['entites'] = $qb->getQuery()->getResult();
+		}
+		return $owners;
+	}
+
 }

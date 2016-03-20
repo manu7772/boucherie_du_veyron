@@ -2,13 +2,13 @@
 namespace site\services;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use site\services\aeEntities;
+use site\services\aeEntity;
 
 use site\adminBundle\Entity\media;
 use site\adminBundle\Entity\baseEntity;
 
 // call in controller with $this->get('aetools.media');
-class aeMedia extends aeEntities {
+class aeMedia extends aeEntity {
 
 	public function __construct(ContainerInterface $container) {
 		parent::__construct($container);
@@ -21,17 +21,8 @@ class aeMedia extends aeEntities {
 	 * @return aeMedia
 	 */
 	public function checkAfterChange(baseEntity &$entity) {
-        // $item = $entity->getItem();
-        // if($item != null)
-        //     echo('<p>Item : '.$item->getClassName().' / '.$item->getNom().' / '.$item->getId().'</p>');
-        // else echo('<p>Item : null</p>');
-        // echo('<pre>');
-        // var_dump($entity->getInfoForPersist());
-        // die('<pre>');
-
-        // echo('<p>End aeMedia::checkAfterChange()</p>');
-	    parent::checkAfterChange($entity);
-	    return $this;
+		parent::checkAfterChange($entity);
+		return $this;
 	}
 
 	/**
@@ -39,8 +30,8 @@ class aeMedia extends aeEntities {
 	 * @param baseEntity $entity
 	 * @return aeReponse
 	 */
-	public function save(baseEntity &$entity) {
-        return parent::save($entity);
-	}
+	// public function save(baseEntity &$entity) {
+	// 	return parent::save($entity);
+	// }
 
 }

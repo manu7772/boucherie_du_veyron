@@ -7,7 +7,7 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use site\services\aeEntities;
+use site\services\aeEntity;
 
 use \DateTime;
 
@@ -94,8 +94,8 @@ class entityListener implements EventSubscriber {
 		$this->_em = $this->eventArgs->getEntityManager();
 		$this->entityObject = $this->eventArgs->getEntity();
 
-		// service aeEntities -> avec EntityManager du Listener !!
-		$this->entityService = new aeEntities($this->container, $this->_em);
+		// service aeEntity -> avec EntityManager du Listener !!
+		$this->entityService = new aeEntity($this->container, $this->_em);
 
 		if(is_object($this->entityObject)) {
 			// info MetaData sur l'entité
