@@ -1,8 +1,8 @@
 <?php
-namespace site\services;
+namespace site\adminBundle\services;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use site\services\aeMedia;
+use site\adminBundle\services\aeMedia;
 
 use site\adminBundle\Entity\image;
 use site\adminBundle\Entity\baseEntity;

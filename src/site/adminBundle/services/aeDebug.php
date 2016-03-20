@@ -1,5 +1,5 @@
 <?php
-namespace site\services;
+namespace site\adminBundle\services;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
 // yaml parser
@@ -7,7 +7,7 @@ use Symfony\Component\Yaml\Parser;
 use Symfony\Component\Yaml\Dumper;
 use Symfony\Component\Yaml\Exception\ParseException;
 // aetools
-use site\services\aetools;
+use site\adminBundle\services\aetools;
 
 use \DateTime;
 

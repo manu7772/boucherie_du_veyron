@@ -1,5 +1,5 @@
 <?php
-namespace site\services;
+namespace site\adminBundle\services;
 
 use Symfony\Component\HttpFoundation\JsonResponse;
 

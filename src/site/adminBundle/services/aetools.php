@@ -1,5 +1,5 @@
 <?php
-namespace site\services;
+namespace site\adminBundle\services;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
@@ -28,7 +28,7 @@ class aetools {
 	const TAB2					= "      - ";
     const ARRAY_GLUE 			= '___';
 	// Paths
-	const GO_TO_ROOT 			= '/../../../';
+	const GO_TO_ROOT 			= '/../../../../';
     const SOURCE_FILES 			= 'src/';
 	const WEB_PATH				= 'web/';
     const BUNDLE_EXTENSION 		= 'Bundle';

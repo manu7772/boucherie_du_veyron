@@ -1,9 +1,9 @@
 <?php
 
-namespace site\services;
+namespace site\adminBundle\services;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use site\services\primarydata;
+use site\adminBundle\services\primarydata;
 use \Twig_Extension;
 use \Twig_SimpleFunction;
 use \Datetime;

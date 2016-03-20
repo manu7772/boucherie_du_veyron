@@ -1,10 +1,10 @@
 <?php
-namespace site\services;
+namespace site\adminBundle\services;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 // aetools
-use site\services\aetools;
+use site\adminBundle\services\aetools;
 
 // informations classes
 use Doctrine\ORM\Mapping\ClassMetadataInfo;

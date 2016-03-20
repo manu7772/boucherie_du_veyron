@@ -11,7 +11,7 @@ use JMS\Serializer\Annotation\Expose;
 // Slug
 use Gedmo\Mapping\Annotation as Gedmo;
 
-use site\services\aeImages;
+use site\adminBundle\services\aeImages;
 
 use site\adminBundle\Entity\media;
 use site\adminBundle\Entity\item;

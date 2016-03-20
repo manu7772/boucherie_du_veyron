@@ -8,8 +8,8 @@ use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\ClassMetadata;
 
-use site\services\aetools;
-use site\services\aeEntity;
+use site\adminBundle\services\aetools;
+use site\adminBundle\services\aeEntity;
 use site\UserBundle\Entity\User;
 
 /**

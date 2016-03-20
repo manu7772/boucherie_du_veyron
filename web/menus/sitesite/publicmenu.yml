@@ -3,7 +3,7 @@ roles:
     view: IS_AUTHENTICATED_ANONYMOUSLY
     edit: ROLE_ADMIN
     delete: ROLE_SUPER_ADMIN
-maxDepth: 3
+maxDepth: 1
 menu:
     -
         item:

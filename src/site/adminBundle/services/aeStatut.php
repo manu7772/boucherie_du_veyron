@@ -1,8 +1,8 @@
 <?php
-namespace site\services;
+namespace site\adminBundle\services;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use site\services\aeEntity;
+use site\adminBundle\services\aeEntity;
 
 use site\adminBundle\Entity\statut;
 use site\adminBundle\Entity\baseEntity;

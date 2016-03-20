@@ -6,7 +6,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-// use site\services\aeReponse;
+// use site\adminBundle\services\aeReponse;
 
 use site\adminBundle\Entity\media;
 use site\adminBundle\Entity\image;

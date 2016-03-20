@@ -1,24 +1,26 @@
 <?php
-namespace site\services;
+namespace site\adminBundle\services;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use site\services\aeMedia;
+use site\adminBundle\services\aeItem;
 
-use site\adminBundle\Entity\pdf;
+use site\adminBundle\Entity\fiche;
 use site\adminBundle\Entity\baseEntity;
 
-// call in controller with $this->get('aetools.aePdf');
-class aePdf extends aeMedia {
+// call in controller with $this->get('aetools.aeFiche');
+class aeFiche extends aeItem {
+
+    const CLASS_ENTITY = 'site\adminBundle\Entity\fiche';
 
     public function __construct(ContainerInterface $container) {
         parent::__construct($container);
-        $this->defineEntity('site\adminBundle\Entity\pdf');
+        $this->defineEntity(self::CLASS_ENTITY);
     }
 
     /**
      * Check entity after change (edit…)
      * @param baseEntity $entity
-     * @return aePdf
+     * @return aeFiche
      */
     public function checkAfterChange(baseEntity &$entity) {
         parent::checkAfterChange($entity);
@@ -26,13 +28,12 @@ class aePdf extends aeMedia {
     }
 
     /**
-     * Persist and flush a pdf
+     * Persist and flush a fiche
      * @param baseEntity $entity
      * @return aeReponse
      */
     // public function save(baseEntity &$entity) {
     //     return parent::save($entity);
     // }
-
 
 }

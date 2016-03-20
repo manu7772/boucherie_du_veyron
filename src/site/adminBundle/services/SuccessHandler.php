@@ -1,6 +1,6 @@
 <?php
 
-namespace site\services;
+namespace site\adminBundle\services;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Routing\RouterInterface;

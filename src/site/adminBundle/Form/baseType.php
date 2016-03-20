@@ -14,7 +14,7 @@ use Symfony\Component\Security\Core\SecurityContext;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormEvent;
 
-use site\services\aeEntity;
+use site\adminBundle\services\aeEntity;
 use site\adminBundle\Entity\statutRepository;
 
 abstract class baseType extends AbstractType {

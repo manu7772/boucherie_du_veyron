@@ -1,16 +1,16 @@
 <?php
-namespace site\services;
+namespace site\adminBundle\services;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use site\services\aeItem;
+use site\adminBundle\services\aeItem;
 
-use site\adminBundle\Entity\fiche;
+use site\adminBundle\Entity\article;
 use site\adminBundle\Entity\baseEntity;
 
-// call in controller with $this->get('aetools.aeFiche');
-class aeFiche extends aeItem {
+// call in controller with $this->get('aetools.aeArticle');
+class aeArticle extends aeItem {
 
-    const CLASS_ENTITY = 'site\adminBundle\Entity\fiche';
+    const CLASS_ENTITY = 'site\adminBundle\Entity\article';
 
     public function __construct(ContainerInterface $container) {
         parent::__construct($container);
@@ -20,7 +20,7 @@ class aeFiche extends aeItem {
     /**
      * Check entity after change (edit…)
      * @param baseEntity $entity
-     * @return aeFiche
+     * @return aeArticle
      */
     public function checkAfterChange(baseEntity &$entity) {
         parent::checkAfterChange($entity);
@@ -28,7 +28,7 @@ class aeFiche extends aeItem {
     }
 
     /**
-     * Persist and flush a fiche
+     * Persist and flush a article
      * @param baseEntity $entity
      * @return aeReponse
      */

@@ -11,7 +11,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Gedmo\Mapping\Annotation as Gedmo;
 use site\adminBundle\Entity\baseSubEntity;
 
-use site\services\aeImages;
+use site\adminBundle\services\aeImages;
 
 use site\adminBundle\Entity\item;
 use site\UserBundle\Entity\User;

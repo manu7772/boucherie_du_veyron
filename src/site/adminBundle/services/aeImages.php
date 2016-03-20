@@ -1,8 +1,8 @@
 <?php
-namespace site\services;
+namespace site\adminBundle\services;
 
-use site\services\aeReponse;
-use site\services\aetools;
+use site\adminBundle\services\aeReponse;
+use site\adminBundle\services\aetools;
 
 class aeImages {
 

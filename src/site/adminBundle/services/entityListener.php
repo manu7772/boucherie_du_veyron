@@ -1,13 +1,13 @@
 <?php
 
-namespace site\services;
+namespace site\adminBundle\services;
 
 use Doctrine\Common\EventSubscriber; 
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use site\services\aeEntity;
+use site\adminBundle\services\aeEntity;
 
 use \DateTime;
 
@@ -30,7 +30,7 @@ class entityListener implements EventSubscriber {
 		// parent::__construct();
 		$this->container = $container;
 
-		$this->FILESPY = fopen(__DIR__."/../../../web/images/filespy.txt", "a+");
+		$this->FILESPY = fopen(__DIR__."/../../../../web/images/filespy.txt", "a+");
 		$date = new DateTime;
 		$this->SPYwrite($date->format('d-m-Y H:i:s').' ------------------------------');
 	}

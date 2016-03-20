@@ -9,8 +9,8 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
-use site\services\aetools;
-use site\services\aeEntity;
+use site\adminBundle\services\aetools;
+use site\adminBundle\services\aeEntity;
 use site\UserBundle\Entity\User;
 
 use \DateTime;

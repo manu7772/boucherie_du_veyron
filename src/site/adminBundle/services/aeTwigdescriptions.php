@@ -2,7 +2,7 @@
 namespace site\adminBundle\services;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use site\services\aeEntity;
+use site\adminBundle\services\aeEntity;
 use \Exception;
 
 class aeTwigdescriptions extends aeEntity {

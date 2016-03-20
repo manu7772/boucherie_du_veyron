@@ -1,5 +1,5 @@
 <?php
-namespace site\services;
+namespace site\adminBundle\services;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\Extension\Core\ChoiceList\ChoiceList;
@@ -8,7 +8,7 @@ use site\adminBundle\Entity\article;
 use site\UserBundle\Entity\User;
 use site\adminBundle\Entity\panier;
 
-use site\services\aeReponse;
+use site\adminBundle\services\aeReponse;
 
 class aePanier {
 

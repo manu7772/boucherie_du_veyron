@@ -1,9 +1,9 @@
 <?php
-namespace site\services;
+namespace site\adminBundle\services;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\Extension\Core\ChoiceList\ChoiceList;
-use site\services\aeItem;
+use site\adminBundle\services\aeItem;
 
 use site\adminBundle\Entity\pageweb;
 use site\adminBundle\Entity\baseEntity;

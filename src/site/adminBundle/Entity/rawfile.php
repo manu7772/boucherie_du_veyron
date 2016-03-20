@@ -11,9 +11,9 @@ use JMS\Serializer\Annotation\Expose;
 // Slug
 use Gedmo\Mapping\Annotation as Gedmo;
 
-use site\services\aeImages;
-use site\services\aetools;
-use site\services\aeReponse;
+use site\adminBundle\services\aeImages;
+use site\adminBundle\services\aetools;
+use site\adminBundle\services\aeReponse;
 
 use site\adminBundle\Entity\baseSubEntity;
 
