@@ -1,40 +1,26 @@
 <div class="footer-widget">
 	<div class="container">
 		<div class="row">
+			{% if sitedata is defined %}
+			{% for item1 in sitedata.categorieFooters %}
 			<div class="col-sm-2">
 				<div class="single-widget">
-					<h2>Catégorie</h2>
+					<h2>{{ item1 }}</h2>
 					<ul class="nav nav-pills nav-stacked">
-						<li><a href="#">Bœuf</a></li>
-						<li><a href="#">Veau</a></li>
-						<li><a href="#">Agneau</a></li>
-						<li><a href="#">Porc</a></li>
+						{% if item1.subEntitys|default([])|length > 0 -%}
+							{%- for item2 in item1.subEntitys -%}
+							<li><a href="{{ path('site_pageweb', {pageweb: item2.slug }) }}">{{ UCfirst(item2) }}</a></li>
+							{%- endfor -%}
+						{%- else -%}
+							{%- for item2 in item1.children -%}
+							<li><a href="{{ path('site_pageweb_categories', {categorieSlug: item2.slug }) }}">{{ UCfirst(item2) }}</a></li>
+							{%- endfor -%}
+						{%- endif %}
 					</ul>
 				</div>
 			</div>
-			<div class="col-sm-2">
-				<div class="single-widget">
-					<h2>Epicerie</h2>
-					<ul class="nav nav-pills nav-stacked">
-						<li><a href="#">Saucissons</a></li>
-						<li><a href="#">Conserves</a></li>
-						<li><a href="#">Sauces</a></li>
-						<li><a href="#">Vins</a></li>
-					</ul>
-				</div>
-			</div>
-			<div class="col-sm-2">
-				<div class="single-widget">
-					<h2>Légalité</h2>
-					<ul class="nav nav-pills nav-stacked">
-						<li><a href="#">Conditions générales de vente</a></li>
-						<li><a href="#">Informations</a></li>
-						<li><a href="#">Normes européennes</a></li>
-						<li><a href="#">Nos partenaires</a></li>
-					</ul>
-				</div>
-			</div>										
-			
+			{% endfor %}
+			{% endif %}
 		</div>
 	</div>
 </div>

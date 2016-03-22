@@ -2,6 +2,10 @@ sitesite_homepage:
     path:       /
     defaults:   { _controller: sitesiteBundle:Default:index }
 
+site_pageweb_categories:
+    path:       /page/categories/{categorieSlug}/{params}
+    defaults:   { _controller: sitesiteBundle:Default:pagewebCategorie, params: null }
+
 site_pageweb:
     path:       /page/{pageweb}/{params}
     defaults:   { _controller: sitesiteBundle:Default:pageweb, params: null }

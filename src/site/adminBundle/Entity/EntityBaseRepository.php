@@ -79,18 +79,18 @@ class EntityBaseRepository extends EntityRepository {
 	/********************************/
 
 	public function defaultValAsClosure(aetools $aeEntities = null) {
-		$qb = $this->createQueryBuilder(self::ELEMENT);
+		// $qb = $this->createQueryBuilder(self::ELEMENT);
+		$qb = $this->findAllClosure($aeEntities);
 		$qb->where(self::ELEMENT.'.default = :def')
 			->setParameter('def', 1)
 			;
-		if($aeEntities != null) $this->declareContext($aeEntities);
-		$this->contextStatut($qb);
 		// resultat
 		return $qb;		
 	}
 
 	public function defaultValsListClosure(aetools $aeEntities = null) {
 		$qb = $this->findAllClosure($aeEntities);
+		// resultat
 		return $qb;
 	}
 

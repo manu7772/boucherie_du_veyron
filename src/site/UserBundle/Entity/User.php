@@ -13,6 +13,7 @@ use site\adminBundle\Entity\media;
 use site\adminBundle\Entity\message;
 use site\adminBundle\Entity\panier;
 use site\adminBundle\Entity\adresse;
+use site\adminBundle\Entity\site;
 
 use \DateTime;
 use \ReflectionClass;
@@ -103,10 +104,17 @@ class User extends BaseUser {
 
     /**
      * - PROPRIÉTAIRE
-     * @ORM\OneToOne(targetEntity="site\adminBundle\Entity\image", inversedBy="userAvatar", cascade={"all"})
+     * @ORM\OneToOne(targetEntity="site\adminBundle\Entity\image", orphanRemoval=true, inversedBy="userAvatar", cascade={"all"})
 	 * @ORM\JoinColumn(nullable=true, unique=true, onDelete="SET NULL")
      */
     private $avatar;
+
+	/**
+	 * - INVERSE
+	 * @ORM\ManyToMany(targetEntity="site\adminBundle\Entity\site", mappedBy="collaborateurs")
+	 * @ORM\JoinColumn(nullable=true, unique=false, onDelete="SET NULL")
+	 */
+	protected $sites;
 
 	/**
 	 * @ORM\Column(name="langue", type="string", length=32, unique=false, nullable=true)
@@ -125,6 +133,7 @@ class User extends BaseUser {
 		$this->avatar = null;
 		$this->adresse = null;
 		$this->adresseLivraison = null;
+		$this->sites = new ArrayCollection();
 		$this->langue = 'fr';
 		$this->validRoles = array(1 => 'ROLE_USER', 2 => 'ROLE_TRANSLATOR', 3 => 'ROLE_EDITOR', 4 => 'ROLE_ADMIN', 5 => 'ROLE_SUPER_ADMIN');
 	}
@@ -342,7 +351,7 @@ class User extends BaseUser {
 	 * @return pageweb
 	 */
 	public function setAvatar(media $avatar = null) {
-		$avatar->setUserAvatar($this);
+		if($avatar != null) $avatar->setUserAvatar($this);
 		$this->avatar = $avatar;
 		return $this;
 	}
@@ -391,6 +400,33 @@ class User extends BaseUser {
 	 */
 	public function getAdresseLivraison() {
 		return $this->adresseLivraison;
+	}
+
+	/**
+	 * Add site
+	 * @param site $site
+	 * @return User
+	 */
+	public function addSite(site $site) {
+		$this->sites->add($site);
+		return $this;
+	}
+
+	/**
+	 * Remove site
+	 * @param site $site
+	 * @return boolean
+	 */
+	public function removeSite(site $site) {
+		return $this->sites->removeElement($site);
+	}
+
+	/**
+	 * Get sites
+	 * @return ArrayCollection
+	 */
+	public function getSites() {
+		return $this->sites;
 	}
 
 	/**

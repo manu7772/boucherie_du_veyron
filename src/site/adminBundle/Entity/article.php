@@ -181,7 +181,7 @@ class article extends item {
 	 * @param string $accroche
 	 * @return article
 	 */
-	public function setAccroche($accroche) {
+	public function setAccroche($accroche = null) {
 		$this->accroche = $accroche;
 		return $this;
 	}

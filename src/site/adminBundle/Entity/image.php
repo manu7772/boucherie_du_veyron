@@ -103,77 +103,77 @@ class image extends media {
 	 */
 	public function upLoad(){
 		parent::upLoad();
-
+		// echo('<p style="color:red;">UPLOAD image</p>');
 		if(null == $this->upload_file) {
 			$info = $this->getInfoForPersist();
 			if(isset($info['dataType'])) {
 				if($info['dataType'] == "cropper") {
 					// cropper
-					if($info['removeImage'] == true) {
-						// opération dans le service…
+					if($this->getRawfile() == null) {
+						// ne possède pas de rawfile
+						// echo('<p style="color:orange;">Pas de RAWFILE ????</p>');
 					} else {
-						if($this->getRawfile() == null) {
-							// ne possède pas de rawfile
-						} else {
-							// possède un raw file
-							if(isset($info['getData'])) {
-								if(isset($info['ratioIndex'])) $this->setRatioIndex($info['ratioIndex']);
-									else $this->setRatioIndex(0);
-								if($info['file']['size'] != null) $this->setFileSize($info['file']['size']);
-								if($info['file']['type'] != null) {
-									$this->setFormat($info['file']['type']);
-									$this->setMediaType($this->getTypeOf($info['file']['type']));
+						// possède un raw file
+						if(isset($info['getData'])) {
+							if(isset($info['ratioIndex'])) $this->setRatioIndex($info['ratioIndex']);
+								else $this->setRatioIndex(0);
+							if($info['file']['size'] != null) $this->setFileSize($info['file']['size']);
+							if($info['file']['type'] != null) {
+								$this->setFormat($info['file']['type']);
+								$this->setMediaType($this->getTypeOf($info['file']['type']));
+							}
+							$filehaschanged = false;
+							if($info['file']['name'] != null) {
+								$filehaschanged = true;
+								$this->setOriginalnom($info['file']['name']);
+								$ext = explode('.', $info['file']['name']);
+								$ext = end($ext);
+								if(!in_array($ext, $this->authorizedFormatsByType)) $this->setExtension($this->getExtByMime($info['file']['type']));
+								$this->setExtension($ext);
+							}
+							$notChanged = $this->setCroppingInfo($info['getData']);
+							if((!$notChanged) || $filehaschanged) {
+								// if(!$notChanged)
+									// echo('Changement de cadrage…');
+									// else
+									// echo('Changement d\'image…');
+								// echo('<p>Owner entity : '.$this->getOwnerEntity().'</p>');
+								// echo('<p>Owner field : '.$this->getOwnerField().'</p>');
+								// echo('<p>RatioIndex : '.$this->getRatioIndex().'</p>');
+								$this->getCropperInfo();
+								if(isset($this->cropperInfo['formats'][$this->getOwnerEntity()][$this->getOwnerField()][$this->getRatioIndex()])) {
+									$format = $this->cropperInfo['formats'][$this->getOwnerEntity()][$this->getOwnerField()][$this->getRatioIndex()];
+								} else {
+									$format = $this->cropperInfo['formats']['default'][$this->getRatioIndex()];
 								}
-								$filehaschanged = false;
-								if($info['file']['name'] != null) {
-									$filehaschanged = true;
-									$this->setOriginalnom($info['file']['name']);
-									$ext = explode('.', $info['file']['name']);
-									$ext = end($ext);
-									if(!in_array($ext, $this->authorizedFormatsByType)) $this->setExtension($this->getExtByMime($info['file']['type']));
-									$this->setExtension($ext);
+								$this->aeReponse = $this->getRawfile()->getCropped($format[0], $format[1], $info);
+								// echo($this->aeReponse->getMessage());
+								if($this->aeReponse->getResult() == true) {
+									// SUCCESS
+									$image = $this->aeReponse->getData();
+									// echo('<h1>OK !!</h1>');
+									// echo('<img src="'.$this->getShemaBase().base64_encode($image).'">');
+									$img = imagecreatefromstring($image);
+									$this->setWidth(imagesx($img));
+									$this->setHeight(imagesy($img));
+									imagedestroy($img);
+									unset($img);
+									$this->setBinaryFile($image);
+								} else {
+									// ERROR
 								}
-								$notChanged = $this->setCroppingInfo($info['getData']);
-								if((!$notChanged) || $filehaschanged) {
-									// if(!$notChanged)
-									// 	echo('Changement de recadrage…');
-									// 	else
-									// 	echo('Changement d\'image…');
-									// echo('<p>Owner entity : '.$this->getOwnerEntity().'</p>');
-									// echo('<p>Owner field : '.$this->getOwnerField().'</p>');
-									// echo('<p>RatioIndex : '.$this->getRatioIndex().'</p>');
-									$this->getCropperInfo();
-									if(isset($this->cropperInfo['formats'][$this->getOwnerEntity()][$this->getOwnerField()][$this->getRatioIndex()])) {
-										$format = $this->cropperInfo['formats'][$this->getOwnerEntity()][$this->getOwnerField()][$this->getRatioIndex()];
-									} else {
-										$format = $this->cropperInfo['formats']['default'][$this->getRatioIndex()];
-									}
-									$this->aeReponse = $this->getRawfile()->getCropped($format[0], $format[1], $info);
-									// echo($this->aeReponse->getMessage());
-									if($this->aeReponse->getResult() == true) {
-										// SUCCESS
-										$image = $this->aeReponse->getData();
-										// echo('<h1>OK !!</h1>');
-										// echo('<img src="'.$this->getShemaBase().base64_encode($image).'">');
-										$img = imagecreatefromstring($image);
-										$this->setWidth(imagesx($img));
-										$this->setHeight(imagesy($img));
-										imagedestroy($img);
-										unset($img);
-										$this->setBinaryFile($image);
-									} else {
-										// ERROR
-									}
-								} // else echo('<p>Aucun changement ????</p>');
-								$this->setStockage($this->stockageList[0]);
-								if($this->getNom() == null) $this->setNom($this->getOriginalnom());
-								$this->defineNom();
-							} // else echo('<p>Pas de getData ????</p>');
+							}
+							// else echo('<p>Aucun changement ????</p>');
+							$this->setStockage($this->stockageList[0]);
+							if($this->getNom() == null) $this->setNom($this->getOriginalnom());
+							$this->defineNom();
 						}
+						// else echo('<p>Pas de getData ????</p>');
 					}
 				}
 			}
 		}
+		// die();
 		return;
 	}
 
@@ -342,7 +342,7 @@ class image extends media {
 		$this->element = $element;
 		if($element != null) {
 			$this->setOwner($element->getClassName().':'.$name);
-			$this->setStatut($element->getStatut());
+			// $this->setStatut($element->getStatut());
 		} else {
 			$this->setOwner(null);
 		}
@@ -366,7 +366,7 @@ class image extends media {
 		$this->userAvatar = $userAvatar;
 		if($userAvatar != null) {
 			$this->setOwner($userAvatar->getClassName().':avatar');
-			$this->setStatut($userAvatar->getStatut());
+			// $this->setStatut($userAvatar->getStatut());
 		} else {
 			$this->setOwner(null);
 		}

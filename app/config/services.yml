@@ -32,6 +32,16 @@ services:
         class: %ae_services%aeSubEntity
         arguments: [@service_container]
 
+    # fonctionnalités de site
+    aetools.aeSite:
+        class: %ae_services%aeSite
+        arguments: [@service_container]
+
+    # fonctionnalités de categorie
+    aetools.aeCategorie:
+        class: %ae_services%aeCategorie
+        arguments: [@service_container]
+
     # fonctionnalités de tag
     aetools.aeTag:
         class: %ae_services%aeTag

@@ -20,6 +20,7 @@ class superadminController extends Controller {
 	public function indexAction() {
 		$this->get('aetools.aetools')->updateBundlesInConfig();
 		$data = array();
+		$data['sitedata'] = $this->get('aetools.aeSite')->getRepo()->findByDefault(true)[0];
 		$repo = $this->get('aetools.aeEntity')->getEm()->getRepository('site\adminBundle\Entity\article');
 		$data['articles'] = $repo->findAll();
 		$data['panier_user'] = $this->get('aetools.aePanier')->getArticlesOfUser($this->getUser());
@@ -29,6 +30,8 @@ class superadminController extends Controller {
 
 	public function routesAction() {
 		$aetools = $this->get('aetools.aetools');
+		$data = array();
+		$data['sitedata'] = $this->get('aetools.aeSite')->getRepo()->findByDefault(true)[0];
 		// $data['params'] = $aetools->getRouteParameters();
 		$data['routes'] = $aetools->getAllRoutes();
 		// via stack
@@ -39,6 +42,8 @@ class superadminController extends Controller {
 	}
 
 	public function bundlesAction() {
+		$data = array();
+		$data['sitedata'] = $this->get('aetools.aeSite')->getRepo()->findByDefault(true)[0];
 		$data['bundles'] = $this->get('aetools.aetools')->getBundlesList(true);
 		$data['bundle'] = $this->get('aetools.aetools')->getBundleName();
 		return $this->render('siteadminBundle:superadmin:bundles.html.twig', $data);
@@ -46,6 +51,7 @@ class superadminController extends Controller {
 
 	public function entitiesAction($entity = null, $field = null) {
 		$data = array();
+		$data['sitedata'] = $this->get('aetools.aeSite')->getRepo()->findByDefault(true)[0];
 		$aeEntities = $this->get('aetools.aeEntity');
 		$entities = array_flip($aeEntities->getListOfEnties());
 		// général

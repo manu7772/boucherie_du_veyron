@@ -71,6 +71,7 @@ abstract class baseSubEntity extends baseEntity {
 	 */
 	protected $couleur;
 
+	protected $class_name;
 
 	public function __construct() {
 		parent::__construct();
@@ -80,6 +81,10 @@ abstract class baseSubEntity extends baseEntity {
 		$this->image = null;
 		$this->couleur = "rgba(255,255,255,1)";
 		$this->categories = new ArrayCollection();
+	}
+
+	public function getClass_name() {
+		return $this->class_name;
 	}
 
 	/**
@@ -140,8 +145,10 @@ abstract class baseSubEntity extends baseEntity {
 	 */
 	public function addCategorie(categorie $categorie = null) {
 		if($categorie != null) {
-			$categorie->addSubEntity($this);
-			$this->categories->add($categorie);
+			if(!$this->categories->contains($categorie)) {
+				$categorie->addSubEntity($this);
+				$this->categories->add($categorie);
+			}
 		}
 		return $this;
 	}
@@ -161,8 +168,9 @@ abstract class baseSubEntity extends baseEntity {
 	 * @param string $descriptif
 	 * @return baseSubEntity
 	 */
-	public function setDescriptif($descriptif) {
+	public function setDescriptif($descriptif = null) {
 		$this->descriptif = $descriptif;
+		if(strip_tags(preg_replace('#([[:space:]])+#', '', $this->descriptif)) == '') $this->descriptif = null;
 		return $this;
 	}
 

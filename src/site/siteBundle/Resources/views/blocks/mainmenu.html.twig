@@ -1,93 +1,35 @@
+{% if sitedata is defined %}
 <div class="col-sm-3 col-md-3 padding-right-resp"><!--colonne left-->
 	<div class="left-sidebar"><!--left-sidebar-->
      	
 		<div class="panel-group category-products" id="accordian"><!--category-products-->
-			<div class="panel panel-default"><!--product 1-->
+
+			{% for item1 in sitedata.menuArticle.children %}
+			<div class="panel panel-default"><!--product {{ item1 }}-->
 				<div class="panel-heading">
 					<h4 class="panel-title">
-						<a data-toggle="collapse" data-parent="#accordian" href="#boeuf">
+						<a data-toggle="collapse" data-parent="#accordian" href="#mainmenu-{{ item1.slug }}">
 							<span class="badge pull-right"><i class="fa fa-plus"></i></span>
-							BŒUF
+							{{ UCfirst(item1) }}
 						</a>
 					</h4>
 				</div>
-				<div id="boeuf" class="panel-collapse collapse">
+				{% if item1.children is iterable %}
+				<div id="mainmenu-{{ item1.slug }}" class="panel-collapse collapse">
 					<div class="panel-body">
 						<ul>
-							<li><a href="#">pièces du boucher </a></li>
-							<li><a href="#">à rôtir </a></li>
-							<li><a href="#">à griller </a></li>
-							<li><a href="#">à braiser</a></li>
-							<li><a href="#">abats </a></li>
+							{% for item2 in item1.children -%}
+							<li><a href="{{ path('site_pageweb_categories', {categorieSlug: item2.slug }) }}">{{ UCfirst(item2) }} </a></li>
+							{%- endfor %}
 						</ul>
 					</div>
 				</div>
-			</div><!--/product 1-->
-			<div class="panel panel-default"><!--product 2-->
-				<div class="panel-heading">
-					<h4 class="panel-title">
-						<a data-toggle="collapse" data-parent="#accordian" href="#veau">
-							<span class="badge pull-right"><i class="fa fa-plus"></i></span>
-							VEAU
-						</a>
-					</h4>
-				</div>
-				<div id="veau" class="panel-collapse collapse">
-					<div class="panel-body">
-						<ul>
-							<li><a href="#">pièces du boucher </a></li>
-							<li><a href="#">à rôtir </a></li>
-							<li><a href="#">à griller </a></li>
-							<li><a href="#">à braiser</a></li>
-							<li><a href="#">abats </a></li>
-						</ul>
-					</div>
-				</div>
-			</div><!--/product 2-->
-			<div class="panel panel-default"><!--product 3-->
-				<div class="panel-heading">
-					<h4 class="panel-title">
-						<a data-toggle="collapse" data-parent="#accordian" href="#agneau">
-							<span class="badge pull-right"><i class="fa fa-plus"></i></span>
-							AGNEAU
-						</a>
-					</h4>
-				</div>
-				<div id="agneau" class="panel-collapse collapse">
-					<div class="panel-body">
-						<ul>
-							<li><a href="#">pièces du boucher </a></li>
-							<li><a href="#">à rôtir </a></li>
-							<li><a href="#">à griller </a></li>
-							<li><a href="#">à braiser</a></li>
-							<li><a href="#">abats </a></li>
-						</ul>
-					</div>
-				</div>
-			</div><!--/product 3-->
-			<div class="panel panel-default"><!--product 4-->
-				<div class="panel-heading">
-					<h4 class="panel-title">
-						<a data-toggle="collapse" data-parent="#accordian" href="#porc">
-							<span class="badge pull-right"><i class="fa fa-plus"></i></span>
-							PORC
-						</a>
-					</h4>
-				</div>
-                <div id="porc" class="panel-collapse collapse">
-					<div class="panel-body">
-						<ul>
-							<li><a href="#">pièces du boucher </a></li>
-							<li><a href="#">à rôtir </a></li>
-							<li><a href="#">à griller </a></li>
-							<li><a href="#">à braiser</a></li>
-							<li><a href="#">abats </a></li>
-						</ul>
-					</div>
-				</div>
-			</div><!--product 4-->
+				{% endif %}
+			</div><!--/product {{ item1 }}-->
+			{% endfor %}
 			
 		</div><!--/category-products-->
 	
 	</div><!--/left-sidebar-->
 </div><!--/colonne left-->
+{% endif %}

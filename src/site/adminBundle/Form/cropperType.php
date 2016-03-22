@@ -81,6 +81,11 @@ class cropperType extends baseType {
 					'maxfilesize' => 12,
 					),
 				))
+				->add('nom', 'hidden', array(
+					'label'         => 'fields.nom',
+					'translation_domain' => 'image',
+					'required'		=> false,
+				))
 			;
 		}
 

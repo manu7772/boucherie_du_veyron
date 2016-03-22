@@ -1,0 +1,26 @@
+{% extends 'sitesiteBundle::base_pages.html.twig' %}
+{% set cssjsloads = 'simple' %}
+
+{% block mainContainer %}
+<section>
+	<div class="container">
+		<div class="row">
+
+			{{ include('sitesiteBundle:blocks:mainmenu.html.twig') }}
+
+			<div class="col-sm-9 col-md-9 padding-left-resp">
+				<div class="content-page-right">
+					<h2 class="title">{{ pageweb.titreh1|raw }}</h2>
+					<div class="single-section">
+						<p>{{ pageweb.code|raw }}</p>
+					</div>
+				</div>
+			</div>
+
+		</div>
+	</div>
+</section>
+
+{# include('sitesiteBundle:blocks:mini-liste-info.html.twig') #}
+
+{% endblock mainContainer %}

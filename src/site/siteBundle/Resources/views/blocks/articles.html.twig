@@ -1,0 +1,44 @@
+{% macro boxArticle(article, categorie) %}
+{% set categorie = categorie|default(article.categories) %}
+<div class="item active">
+	<div class="col-sm-12 col-md-4">
+		<div class="product-image-wrapper">
+			<div class="single-products">
+				<div class="productinfo">
+					{% if article.image|default(null) != null %}
+					{% if article.image.isScreenableImage %}
+					<img src="{{ article.image.imgThumbnail(275, null, 'in') }}" alt="{{ article.slug }}" />
+					{% endif %}
+					{% endif %}
+					<div class="product-bottom">
+						<div class="btn-group order-group for-product" role="group">
+							<!-- <h2>25<small>,50<sup>€</sup><span>/Kg</span></small></h2> -->
+							<h2>{{ article.prix|format(2, ',', '') }}€</h2>
+							<button type="button" class="btn btn-default btn-commander"><i class="fa fa-shopping-cart fa-flip-horizontal"></i></button>
+							<input class="command_quantity" type="text" name="quantity" value="1 (150g)" autocomplete="off" size="10">
+							<span class="btn-quantity">
+								<a class="btn quantity-top" href="#"><i class="fa fa-angle-up"></i></a>
+								<a class="btn quantity-bottom" href="#"><i class="fa fa-angle-down"></i></a>
+							</span>
+						</div>
+					</div>
+				</div>
+				<p class="tab-name-product">{{ article }}</p>
+				<p class="tab-info-category">{{ categorie.parents[categorie.parents|length - 3]|default(categorie) }}</p>
+				{% if categorie.image != null %}
+				{% if categorie.image.isScreenableImage %}
+				<img src="{{ categorie.image.imgThumbnail(66, null, 'in') }}" class="info-triangle" style="border:none;" alt="{{ categorie }}">
+				{% endif %}
+				{% else %}
+				{% set stop = false %}
+				{% for child in categorie.allChildren if (child.image != null) and (child in article.categories) and (stop == false) %}
+				<img src="{{ child.image.imgThumbnail(66, null, 'in') }}" class="info-triangle" style="border:none;" alt="{{ child }}">
+				{% set stop = true %}
+				{% endfor %}
+				{% endif %}
+			</div>
+		</div>
+	</div>
+</div>
+{% endmacro %}
+

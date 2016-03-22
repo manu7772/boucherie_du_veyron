@@ -3,7 +3,7 @@
 		<div class="row">
 			
 			{% block mainmenu %}
-			{{ render(controller('sitesiteBundle:Default:mainmenu')) }}
+			{{ include('sitesiteBundle:blocks:mainmenu.html.twig') }}
 			{% endblock mainmenu %}
 
 			{% block diaporama %}

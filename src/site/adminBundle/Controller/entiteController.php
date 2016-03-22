@@ -21,20 +21,24 @@ class entiteController extends Controller {
 	const DEFAULT_ACTION 		= 'list';
 	const TYPE_VALUE_JOINER 	= '___';
 
-	protected $entityService;
+	const LIST_REPO_METHOD		= 'findForList';
+	const LIST_REPO_DEFAULT		= 'findAll';
 
-	protected function getEntiteData($entite, $type_related = null, $type_field = null, $type_values = null, $action = null, $id = null) {
+
+	protected function getEntiteData($entite, $type_related = null, $type_field = null, $type_values = null, $method = null, $params = null, $repository = null, $action = null, $id = null) {
 		if($action == null) $action = self::DEFAULT_ACTION;
 		if(is_object($entite)) $entite = get_class($entite);
 		$data = array();
-		$exp = explode('\\', $entite);
-		if(count($exp) > 1) {
-			$data['classname'] = $entite;
-			$data['entite_name'] = end($exp);
-		} else {
-			$data['classname'] = 'site\\adminBundle\\Entity\\'.$entite;			
-			$data['entite_name'] = $entite;
-		}
+		$data['sitedata'] = $this->get('aetools.aeSite')->getRepo()->findByDefault(true)[0];
+		// find names of entity
+		$data['entite_name'] = $this->get('aetools.aeEntity')->getEntityShortName($entite);
+		$data['classname'] = $this->get('aetools.aeEntity')->getEntityClassName($entite);
+
+		$data['params'] = $params;
+		$data['repo']['method']	= $method;
+		if($method != null && $repository == null) $repository = $data['classname'];
+		$data['repo']['repository']	= $repository;
+		$data['type']['type_related']	= $type_related;
 		$data['type']['type_related']	= $type_related;
 		$data['type']['type_field']		= $type_field;
 		$data['type']['type_values']	= $this->typeValuesToArray(urldecode($type_values));
@@ -43,7 +47,6 @@ class entiteController extends Controller {
 		$data['entites'] = array();
 		$data['id'] = $id;
 		// EM
-		$this->entityService = $this->get('aetools.aeEntity');
 		// autres éléments…
 		switch ($data['entite_name']) {
 			case '...':
@@ -69,10 +72,10 @@ class entiteController extends Controller {
 		return $type_values;
 	}
 
-	public function entitePageAction($entite, $type_related = null, $type_field = null, $type_values = null, $action = null, $id = null) {
+	public function entitePageAction($entite, $type_related = null, $type_field = null, $type_values = null, $method = null, $params = null, $repository = null, $action = null, $id = null) {
 		if($action == null) $action = self::DEFAULT_ACTION;
 		
-		$data = $this->getEntiteData($entite, $type_related, $type_field, $type_values, $action, $id);
+		$data = $this->getEntiteData($entite, $type_related, $type_field, $type_values, $method, $params, $repository, $action, $id);
 		$entityService = $this->get('aetools.aeEntity')->getEntityService($data['entite_name']);
 
 		// page générique entités
@@ -126,7 +129,11 @@ class entiteController extends Controller {
 				if($data['type']['type_values'] != null) {
 					$data['entites'] = $entityService->getRepo()->findByField($data['type'], self::TYPE_SELF, true);
 				} else {
-					$data['entites'] = $entityService->getRepo()->findAll();
+					$repo = $entityService->getRepo($data['classname']);
+					if(method_exists($repo, self::LIST_REPO_METHOD)) $method = self::LIST_REPO_METHOD;
+						else $method = self::LIST_REPO_DEFAULT;
+					$data['entites'] = $repo->$method();
+					// $data['entites'] = $entityService->getRepo()->findAll();
 				}
 				break;
 			case 'delete' :
@@ -228,16 +235,20 @@ class entiteController extends Controller {
 				if(method_exists($entityService->getRepo(), 'findWithField')) {
 					$data['entites'] = $entityService->getRepo($data['classname'])->findWithField($data['type']);
 				} else throw new Exception("Method \"findWithField\" does not exist in Repository \"".$data['classname']."\"", 1);
+			} else if(isset($data['repo']['method'])) {
+				// recherche par repo
+				// echo('<p>Repo méthode : '.$method.'</p>');
+				$method = $data['repo']['method'];
+				$repo = $entityService->getRepo($data['repo']['repository']);
+				if(method_exists($repo, $method)) {
+					$data['entites'] = $repo->$method();
+				} else throw new Exception("Method \"".$method."\" does not exist in Repository \"".$data['repo']['repository']."\"", 1);
 			} else {
-				// recherche globale
-				// $data = array_merge(
-				// 	$data,
-				// 	$this->get('aeTwigdescriptions')->getCommandesInFile('site/adminBundle/Resources/views/entites/'.$entite.ucfirst($data['action']).'.html.twig')
-				// );
-				$data['entites'] = $entityService->getRepo($data['classname'])->findAll();
-				// echo('<pre>');
-				// var_dump($data['entites']);
-				// die('</pre>');
+				// findForList par défaut sinon findAll
+				$repo = $entityService->getRepo($data['classname']);
+				if(method_exists($repo, self::LIST_REPO_METHOD)) $method = self::LIST_REPO_METHOD;
+					else $method = self::LIST_REPO_DEFAULT;
+				$data['entites'] = $repo->$method();
 			}
 		}
 		
@@ -279,6 +290,7 @@ class entiteController extends Controller {
 		$memory = $this->get('aetools.aetools')->getConfigParameters('cropper.yml', 'memory_limit');
 		ini_set("memory_limit", $memory);
 		$data = array();
+		$data['sitedata'] = $this->get('aetools.aeSite')->getRepo()->findByDefault(true)[0];
 		$classname = urldecode($classname);
 		$entiteType = str_replace('Entity', 'Form', $classname.'Type');
 		$typeTmp = new $entiteType($this);

@@ -24,6 +24,7 @@ fields:
 entite:
     home: fa-home
     # entités
+    site: fa-building
     article: fa-shopping-cart
     adresse: fa-envelope-o
     pageweb: fa-desktop
@@ -41,6 +42,7 @@ entite:
     tag: fa-tag
     tags: fa-tags
     raw: fa-file
+    statut: fa-toggle-on
     # autres…
     translate: fa-flag
     menu: fa-list-ul

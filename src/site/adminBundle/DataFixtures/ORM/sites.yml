@@ -1,0 +1,32 @@
+site:
+    order: 100
+    data:
+        -
+            nom: 'Boucherie du Veyron'
+            accroche: 'Boucherie du Veyron'
+            default: 1
+            couleur: 'rgba(163,64,18,1)'
+            menuArticle:
+                field: nom
+                value: 'Menu latéral'
+            categorieArticles:
+                field: nom
+                value: 'Promotions'
+            categorieFooters:
+                field: nom
+                value: 'Infomations'
+        -
+            nom: 'Boucherie du Veyron TEST'
+            accroche: 'Boucherie du Veyron TEST'
+            descriptif: '<p>Version de test pour le site Boucherie du Veyron</p>'
+            default: 0
+            couleur: 'rgba(220,0,0,1)'
+            menuArticle:
+                field: nom
+                value: 'Menu latéral'
+            categorieArticles:
+                field: nom
+                value: 'Promotions'
+            categorieFooters:
+                field: nom
+                value: 'Infomations'

@@ -15,6 +15,7 @@ use site\adminBundle\Entity\tier;
 
 use site\adminBundle\Entity\media;
 use site\adminBundle\Entity\adresse;
+use site\adminBundle\Entity\site;
 
 use \DateTime;
 
@@ -43,9 +44,17 @@ class boutique extends tier {
 	 */
 	protected $nom;
 
+	/**
+	 * - INVERSE
+	 * @ORM\ManyToMany(targetEntity="site\adminBundle\Entity\site", mappedBy="collaborateurs")
+	 * @ORM\JoinColumn(nullable=true, unique=false, onDelete="SET NULL")
+	 */
+	protected $sites;
+
 
 	public function __construct() {
 		parent::__construct();
+		$this->sites = new ArrayCollection();
 	}
 
 	// /**
@@ -56,5 +65,31 @@ class boutique extends tier {
 	// 	return $this->getLogo();
 	// }
 
+	/**
+	 * Add site
+	 * @param site $site
+	 * @return boutique
+	 */
+	public function addSite(site $site) {
+		$this->sites->add($site);
+		return $this;
+	}
+
+	/**
+	 * Remove site
+	 * @param site $site
+	 * @return boolean
+	 */
+	public function removeSite(site $site) {
+		return $this->sites->removeElement($site);
+	}
+
+	/**
+	 * Get sites
+	 * @return ArrayCollection
+	 */
+	public function getSites() {
+		return $this->sites;
+	}
 
 }

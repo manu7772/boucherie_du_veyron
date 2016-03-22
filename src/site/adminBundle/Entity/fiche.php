@@ -104,7 +104,6 @@ class fiche extends item {
 		$this->datePublication = new DateTime();
 		$this->dateExpiration = null;
 		$this->articles = new ArrayCollection();
-		reset($this->listeNiveaux);
 		$this->setNiveau(reset($this->listeNiveaux)); // Niveau par défaut
 		$this->duree = 30;
 		$this->tags = new ArrayCollection();

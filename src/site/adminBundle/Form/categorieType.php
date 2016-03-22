@@ -23,19 +23,36 @@ class categorieType extends baseType {
     public function buildForm(FormBuilderInterface $builder, array $options) {
         // ajout de action si défini
         $this->initBuilder($builder);
+        $this->imagesData = array(
+            'image' => array(
+                'owner' => 'categorie:image'
+                ),
+            );
+
+        $categorie = $builder->getData();
+        $changeNom = false;
+        if($categorie != null) if($categorie->getId() != null) {
+            if($categorie->getParent() == null) $changeNom = true;
+        }
         // Builder…
         $builder
             ->add('nom', 'text', array(
                 'label' => 'fields.nom',
                 'translation_domain' => 'categorie',
                 'required' => true,
+                'disabled' => $changeNom,
                 ))
             ->add('parent', 'entity', array(
                 "label"     => 'fields.parent',
                 'translation_domain' => 'categorie',
+                'group_by'  => 'parent.nom',
                 'class'     => 'siteadminBundle:categorie',
                 'property'  => 'nom',
-                'required' => false,
+                'required'  => false,
+                'attr'      => array(
+                    'class'         => 'chosen-select chosen-select-width chosen-select-no-results',
+                    'placeholder'   => 'form.select',
+                    ),
                 ))
             ->add('descriptif', 'insRichtext', array(
                 'label' => 'fields.descriptif',
@@ -53,21 +70,61 @@ class categorieType extends baseType {
                 'class'     => 'siteadminBundle:pageweb',
                 'property'  => 'nom',
                 'required' => false,
-                ))
-            ->add('subEntitys', 'entity', array(
-                "label"     => 'fields.subEntitys',
-                'translation_domain' => 'categorie',
-                'class'     => 'siteadminBundle:baseSubEntity',
-                'property'  => 'nom',
-                'multiple'  => true,
-                'required' => false,
+                'attr'      => array(
+                    'class'         => 'chosen-select chosen-select-width chosen-select-no-results',
+                    'placeholder'   => 'form.select',
+                    ),
                 ))
             ->add('url', 'text', array(
                 'label' => 'fields.url',
                 'translation_domain' => 'categorie',
                 'required' => false,
                 ))
+            // 1 image :
+            ->add('image', new cropperType($this->controller, $this->imagesData), array(
+                'label' => 'fields.image',
+                'translation_domain' => 'categorie',
+                'required' => false,
+                ))
         ;
+        if($categorie != null) {
+            if($categorie->getParent() == null) {
+                $builder
+                    ->add('accepts', 'choice', array(
+                        "required"  => false,
+                        "label"     => 'fields.accepts',
+                        'translation_domain' => 'categorie',
+                        'multiple'  => true,
+                        "choices"   => $categorie->getAcceptsList(),
+                        'attr'      => array(
+                            'class'         => 'chosen-select chosen-select-width chosen-select-no-results',
+                            'placeholder'   => 'form.select',
+                            ),
+                        ))
+                ;
+            } else if($categorie->getLvl() > 0) {
+                $builder
+                    ->add('subEntitys', 'entity', array(
+                        "label"     => 'fields.subEntitys',
+                        'translation_domain' => 'categorie',
+                        'class'     => 'siteadminBundle:baseSubEntity',
+                        'property'  => 'nom',
+                        'multiple'  => true,
+                        'required' => false,
+                        'group_by' => 'class_name',
+                        "query_builder" => function($repo) use ($categorie) {
+                            if(method_exists($repo, 'getElementsBySubType'))
+                                return $repo->getElementsBySubType($categorie);
+                                else return $repo->findAllClosure();
+                            },
+                        'attr'      => array(
+                            'class'         => 'chosen-select chosen-select-width chosen-select-no-results',
+                            'placeholder'   => 'form.select',
+                            ),
+                        ))
+                ;
+            }
+        }
         // ajoute les valeurs hidden, passés en paramètre
         $this->addHiddenValues($builder, true);
     }

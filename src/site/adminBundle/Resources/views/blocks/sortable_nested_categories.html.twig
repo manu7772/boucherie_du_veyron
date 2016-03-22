@@ -1,0 +1,26 @@
+{% macro nestedlist(categorie) %}
+{% import _self as self %}
+<div class="dd" id="nestable-{{ categorie.id }}">
+	{% for child in categorie.children -%}
+	{{- self.nestedItem(child) -}}
+	{%- endfor %}
+</div>
+{% endmacro %}
+
+
+{% macro nestedItem(categorie) %}
+{% import _self as self %}
+<ol class="dd-list">
+    <li class="dd-item" data-id="1">
+        <div class="dd-handle">
+            <a href="{{ path('siteadmin_entite', {entite: categorie.className, action: 'show', id: categorie.id}) }}"><span class="label label-info"><i class="fa fa-eye icon-wait-on-click"></i></span></a>
+            <a href="{{ path('siteadmin_entite', {entite: categorie.className, action: 'edit', id: categorie.id}) }}"><span class="label label-info"><i class="fa fa-pencil icon-wait-on-click"></i></span></a>
+            <a href="{{ path('siteadmin_entite', {entite: categorie.className, action: 'delete', id: categorie.id}) }}" class="need-confirmation" data-title="{{ UCfirst('supprime.nom'|trans({}, categorie.className)) }}" data-message="{{ UCfirst('supprime.confirm-definitif'|trans({}, categorie.className)) }}"><span class="label label-danger icon-wait-on-click"><i class="fa fa-times"></i></span></a>
+            {{ categorie }}
+        </div>
+        {% for child in categorie.children -%}
+        {{- self.nestedItem(child) -}}
+        {%- endfor %}
+    </ol>
+</li>
+{% endmacro %}

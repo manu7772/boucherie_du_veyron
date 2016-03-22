@@ -19,6 +19,7 @@ class menusController extends Controller {
 
 	public function indexAction() {
 		$data = array();
+		$data['sitedata'] = $this->get('aetools.aeSite')->getRepo()->findByDefault(true)[0];
 		$aeMenus = $this->get('aetools.aeMenus');
 		$data['menus'] = $aeMenus->getInfoMenus();
 		$data['bundles'] = $aeMenus->getBundles();
@@ -27,6 +28,7 @@ class menusController extends Controller {
 
 	public function actionAction($action, $bundle, $name = null, $id = null) {
 		$data = array();
+		$data['sitedata'] = $this->get('aetools.aeSite')->getRepo()->findByDefault(true)[0];
 		$data['action'] = $action;
 		$data['bundle'] = $bundle;
 		$data['name'] = $name;

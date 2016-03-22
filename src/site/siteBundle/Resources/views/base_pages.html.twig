@@ -1,29 +1,29 @@
 {% extends 'sitesiteBundle:bases:base_' ~ cssjsloads|default('simple')|lower ~ '.html.twig' %}
 
 {% block body %}
-    {% block header %}
-    <header id="header"><!--header-->
-        {% block headerTop %}
-            {{ include("sitesiteBundle:blocks:headerTop.html.twig") }}
-        {% endblock headerTop %}        
-        {% block headerMiddle %}
-        {{ render(controller('sitesiteBundle:Default:headerMiddle')) }}
-        {% endblock headerMiddle %} 
-    </header><!--/header-->
-    {% endblock header %}
+	{% block header %}
+	<header id="header"><!--header-->
+		{% block headerTop %}
+			{{ include("sitesiteBundle:blocks:headerTop.html.twig") }}
+		{% endblock headerTop %}
+		{% block headerMiddle %}
+			{{ render(controller('sitesiteBundle:Default:headerMiddle')) }}
+		{% endblock headerMiddle %} 
+	</header><!--/header-->
+	{% endblock header %}
 
-    {% block mainContainer %}
-    {% endblock mainContainer %}
+	{% block mainContainer %}
+	{% endblock mainContainer %}
 
-    {% block footers %}
-    <footer id="footer"><!--Footer-->
-        {% block footerTop %}
-            {{ include("sitesiteBundle:blocks:footerTop.html.twig") }}
-        {% endblock footerTop %}        
-        {% block footerBottom %}
-            {{ include("sitesiteBundle:blocks:footerBottom.html.twig") }}
-        {% endblock footerBottom %} 
-    </footer><!--/Footer-->
-    {% endblock footers %}
+	{% block footers %}
+	<footer id="footer"><!--Footer-->
+		{% block footerTop %}
+			{{ include("sitesiteBundle:blocks:footerTop.html.twig") }}
+		{% endblock footerTop %}
+		{% block footerBottom %}
+			{{ include("sitesiteBundle:blocks:footerBottom.html.twig") }}
+		{% endblock footerBottom %}
+	</footer><!--/Footer-->
+	{% endblock footers %}
 
 {% endblock body %}

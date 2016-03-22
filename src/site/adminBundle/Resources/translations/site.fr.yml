@@ -1,0 +1,30 @@
+name_s: sites
+name: site
+not_found: 'aucun site trouvé'
+x_found: '{0} aucun site trouvé|{1} 1 site trouvé|[2,+Inf] %count% sites trouvés'
+create: 'créer un nouvel site'
+create_btn: 'nouvel site'
+created: '{0} Aucun site créé|{1} %count% site a été créé : %list%|[2,+Inf] %count% sites ont été créés : %list%'
+new: '{0,1} nouvel site|[2,+Inf] %count% nouveaux sites'
+backlist: 'retour à la liste des sites'
+backlist_btn: 'retour liste'
+dontexist: 'cet site n''existe pas'
+existe: 'cet site existe déjà'
+suppression: 'le site %name% a été supprimé'
+moredetails: 'plus de détails sur %name%'
+grants:
+    no_access: Vous n'avez pas les droits pour accéder au site<br>"%name%"
+fields:
+    id: id
+    nom: nom
+    accroche: accroche
+    descriptif: descriptif
+    couleur: couleur
+    menuArticle: menu articles
+    categorieArticles: collections de promo
+    categorieFooters: collections pour footer
+    boutiques: boutiques
+    collaborateurs: collaborateurs
+    image: image
+    logo: logo
+    favicon: favicon

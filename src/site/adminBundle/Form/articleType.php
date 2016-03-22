@@ -121,6 +121,24 @@ class articleType extends baseType {
 					'placeholder'	=> 'form.select',
 					),
 				))
+			->add('categories', 'entity', array(
+				"label"     => 'name_s',
+				'translation_domain' => 'categorie',
+				'class'     => 'siteadminBundle:categorie',
+				'property'  => 'nom',
+				'multiple'  => true,
+				'required' => false,
+				'group_by' => 'parent.nom',
+				"query_builder" => function($repo) {
+                	if(method_exists($repo, 'getElementsBySubType'))
+                	    return $repo->getElementsBySubType(array('article'));
+                	    else return $repo->findAllClosure();
+                	},
+				'attr'		=> array(
+					'class'			=> 'chosen-select chosen-select-width chosen-select-no-results',
+					'placeholder'	=> 'form.select',
+					),
+				))
 			// 1 image :
 			->add('image', new cropperType($this->controller, $this->imagesData), array(
 				'label' => 'fields.image',

@@ -8,6 +8,14 @@ use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\ClassMetadata;
 
+// use site\adminBundle\Entity\article;
+// use site\adminBundle\Entity\image;
+// use site\adminBundle\Entity\pdf;
+// use site\adminBundle\Entity\marque;
+// use site\adminBundle\Entity\reseau;
+// use site\adminBundle\Entity\boutique;
+// use site\adminBundle\Entity\pageweb;
+
 /**
  * baseSubEntityRepository
  *
@@ -15,5 +23,27 @@ use Doctrine\ORM\Mapping\ClassMetadata;
  * repository methods below.
  */
 class baseSubEntityRepository extends EntityBaseRepository {
+
+
+	/********************************/
+	/*** CLOSURES                 ***/
+	/********************************/
+
+	public function getElementsBySubType($categorie) {
+		$qb = $this->createQueryBuilder(self::ELEMENT);
+		if(is_object($categorie)) {			
+			$types = $categorie->getAccepts();
+		} else {
+			$types = $categorie;
+		}
+		if(is_string($types)) $types = array($types);
+		foreach ($types as $type) {
+			$type = 'site\\adminBundle\\Entity\\'.$type;
+			$qb->orWhere($qb->expr()->isInstanceOf(self::ELEMENT, $type));
+		}
+		// resultat
+		return $qb;
+	}
+
 
 }

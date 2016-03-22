@@ -28,15 +28,68 @@ twig:
             categories:
                 role: 'ROLE_EDITOR'
                 nom: 'name_s'
+                path: 'siteadmin_homepage'
                 trans_domain: categorie
                 icon: 'entite.categorie'
-                path: 
-                    path: 'siteadmin_entite_type'
-                    params:
-                        entite: categorie
-                        type_related: _self
-                        type_field: parent
-                        type_values: 'null'
+                level2: 
+                    roots:
+                        nom: 'groupes'
+                        trans_domain: categorie
+                        path: 
+                            path: 'siteadmin_entite_repo'
+                            params:
+                                entite: categorie
+                                method: findRoots
+                                # repository: ~
+                    level1:
+                        nom: 'tous types'
+                        trans_domain: categorie
+                        path: 
+                            path: 'siteadmin_entite_repo'
+                            params:
+                                entite: categorie
+                                method: findLevel
+                                # repository: ~
+                    cat_article:
+                        nom: 'article'
+                        trans_domain: article
+                        path:
+                            path: 'siteadmin_entite_type'
+                            params:
+                                entite: categorie
+                                type_related: _self
+                                type_field: accepts
+                                type_values: article
+                    cat_pageweb:
+                        nom: 'pageweb'
+                        trans_domain: pageweb
+                        path:
+                            path: 'siteadmin_entite_type'
+                            params:
+                                entite: categorie
+                                type_related: _self
+                                type_field: accepts
+                                type_values: pageweb
+                    cat_fiche:
+                        nom: 'fiche'
+                        trans_domain: fiche
+                        path:
+                            path: 'siteadmin_entite_type'
+                            params:
+                                entite: categorie
+                                type_related: _self
+                                type_field: accepts
+                                type_values: fiche
+                    cat_images:
+                        nom: 'image'
+                        trans_domain: image
+                        path:
+                            path: 'siteadmin_entite_type'
+                            params:
+                                entite: categorie
+                                type_related: _self
+                                type_field: accepts
+                                type_values: image
             marketplace:
                 role: 'ROLE_ADMIN'
                 nom: 'marketplace.name'
@@ -312,26 +365,29 @@ twig:
                     params:
                         entite: message
             parametres:
-                role: 'ROLE_SUPER_ADMIN'
-                # role: %restrict_admin%
+                role: %restrict_admin%
                 nom: 'parametres'
                 path: 'siteadmin_homepage'
                 icon: 'entite.parametres'
                 level2: 
-                    fileFormat:
-                        nom: 'name_s'
-                        trans_domain: fileFormat
-                        path: 
-                            path: 'siteadmin_entite'
-                            params:
-                                entite: fileFormat
                     statut:
                         nom: 'name_s'
+                        role: %restrict_admin%
+                        icon: 'entite.statut'
                         trans_domain: statut
                         path: 
                             path: 'siteadmin_entite'
                             params:
                                 entite: statut
+                    site:
+                        nom: 'name_s'
+                        role: %restrict_admin%
+                        trans_domain: site
+                        icon: 'entite.site'
+                        path: 
+                            path: 'siteadmin_entite'
+                            params:
+                                entite: site
             help:
                 nom: 'help'
                 path: siteadmin_support

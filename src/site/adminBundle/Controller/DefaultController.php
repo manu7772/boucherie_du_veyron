@@ -35,6 +35,7 @@ class DefaultController extends Controller {
 	public function indexAction() {
 		$this->get('aetools.aetools')->updateBundlesInConfig();
 		$data = array();
+		$data['sitedata'] = $this->get('aetools.aeSite')->getRepo()->findByDefault(true)[0];
 		$data['messages'] = $this->get('aetools.aeMessage')->getRepo()->findNotRead();
 		return $this->render('siteadminBundle:Default:index.html.twig', $data);
 	}
@@ -45,6 +46,7 @@ class DefaultController extends Controller {
 	 */
 	public function supportAction() {
 		$data = array();
+		$data['sitedata'] = $this->get('aetools.aeSite')->getRepo()->findByDefault(true)[0];
 		return $this->render('siteadminBundle:Default:support.html.twig', $data);
 	}
 

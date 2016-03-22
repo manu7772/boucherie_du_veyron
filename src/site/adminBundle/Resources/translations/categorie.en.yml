@@ -9,6 +9,10 @@ backlist_btn: 'back to list'
 dontexist: 'this category does not exist'
 moredetails: 'more details on %name%'
 existe: this category already exists
+supprime:
+    nom: delete category
+    confirm: 'Do you realy want to delete this category?'
+    confirm-definitif: 'Do you realy want to delete this category? Beware : it will be finally deleted.'
 grants:
     no_access: You are not granted to access to the category<br>"%name%"
 fields:
@@ -19,9 +23,14 @@ fields:
     descriptif: description
     jamais: no modification
     pageweb: web page
+    image: picture
     parent: parent
     children: children
     position: position
     subEntitys: elements
     couleur: color
     url: url
+    accepts: type of category
+    parents: parents
+    parent: parent
+    elements: elements

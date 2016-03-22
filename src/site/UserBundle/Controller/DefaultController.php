@@ -86,6 +86,9 @@ class DefaultController extends Controller {
 	 * @return Response
 	 */
 	public function editAction($username) {
+		set_time_limit(300);
+		$memory = $this->get('aetools.aetools')->getConfigParameters('cropper.yml', 'memory_limit');
+		ini_set("memory_limit", $memory);
 		$request = $this->getRequest();
 		$userManager = $this->get('fos_user.user_manager');
 		$data['user'] = $userManager->findUserByUsername($username);
@@ -103,9 +106,15 @@ class DefaultController extends Controller {
 				$dispatcher = $this->get('event_dispatcher');
 				$event = new FormEvent($form, $request);
 				$dispatcher->dispatch(FOSUserEvents::PROFILE_EDIT_SUCCESS, $event);
-				if($data['user']->getAvatar() != null) {
+				if(is_object($data['user']->getAvatar())) {
 					$avatar = $data['user']->getAvatar();
+					$infoForPersist = $avatar->getInfoForPersist();
+					$this->get('aetools.debug')->debugFile($infoForPersist);
 					$this->get('aetools.aeImage')->checkAfterChange($avatar);
+					if($infoForPersist['removeImage'] === true || $infoForPersist['removeImage'] === 'true') {
+						// Supression de l'image
+						$data['user']->setAvatar(null);
+					}
 				}
 				$userManager->updateUser($data['user']);
 				//

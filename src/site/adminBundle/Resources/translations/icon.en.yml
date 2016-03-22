@@ -21,3 +21,31 @@ fields:
     created: created
     updated: updated
     jamais: no modification
+entite:
+    home: fa-home
+    # entités
+    site: fa-bank
+    article: fa-shopping-cart
+    adresse: fa-envelope-o
+    pageweb: fa-desktop
+    fiche: fa-file-text-o
+    marque: fa-trophy
+    boutique: fa-building-o
+    reseau: fa-share-alt
+    categorie: fa-sitemap
+    tauxTva: fa-calculator
+    User: fa-user
+    message: fa-paper-plane
+    media: fa-film
+    image: fa-file-image-o
+    pdf: fa-file-pdf-o
+    tag: fa-tag
+    tags: fa-tags
+    raw: fa-file
+    statut: fa-toggle-on
+    # autres…
+    translate: fa-flag
+    menu: fa-list-ul
+    parametres: fa-gear
+    help: fa-support
+    webmaster: fa-cogs

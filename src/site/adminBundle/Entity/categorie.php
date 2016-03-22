@@ -87,7 +87,8 @@ class categorie extends baseEntity {
 	protected $parent;
 
 	/**
-	 * @ORM\OneToMany(targetEntity="site\adminBundle\Entity\categorie", mappedBy="parent")
+	 * @ORM\OneToMany(targetEntity="site\adminBundle\Entity\categorie", mappedBy="parent", cascade={"persist","remove"})
+	 * @ORM\JoinColumn(nullable=true, unique=false, onDelete="SET NULL")
 	 * @ORM\OrderBy({"lft" = "ASC"})
 	 */
 	protected $children;
@@ -107,10 +108,17 @@ class categorie extends baseEntity {
 
 	/**
 	 * - INVERSE
-	 * @ORM\ManyToMany(targetEntity="site\adminBundle\Entity\baseSubEntity", mappedBy="categories", cascade={"persist","remove"})
+	 * @ORM\ManyToMany(targetEntity="site\adminBundle\Entity\baseSubEntity", mappedBy="categories")
 	 * @ORM\JoinColumn(name="basesubentity_categorie", nullable=true, unique=false, onDelete="SET NULL")
 	 */
 	protected $subEntitys;
+
+	/**
+	 * Classes d'entités accceptées pour subEntitys
+	 * @var string
+	 * @ORM\Column(name="accept", type="text", nullable=true, unique=false)
+	 */
+	protected $accepts;
 
 	/**
 	 * @var string
@@ -124,6 +132,26 @@ class categorie extends baseEntity {
 	 */
 	protected $url;
 
+    /**
+     * @ORM\OneToOne(targetEntity="site\adminBundle\Entity\image", orphanRemoval=true, cascade={"all"})
+	 * @ORM\JoinColumn(nullable=true, unique=true, onDelete="SET NULL")
+     */
+    protected $image;
+
+
+	// Liste des termes valides pour accept
+	protected $accept_list = array(
+		'article'			=> 'Articles',
+		'image'				=> 'Images',
+		'pdf'				=> 'Fichiers PDF',
+		'fiche'				=> 'Fiches recettes',
+		'marque'			=> 'Marques',
+		'reseau'			=> 'Réseaux',
+		'boutique'			=> 'Boutiques',
+		'pageweb'			=> 'Pages web',
+	);
+	// subEntitys mémorisées
+	protected $subEntitysMem;
 
 	public function __construct() {
 		parent::__construct();
@@ -134,15 +162,48 @@ class categorie extends baseEntity {
 		$this->subEntitys = new ArrayCollection();
 		$this->couleur = "rgba(255,255,255,1)";
 		$this->url = null;
+		$this->accepts = json_encode(array());
+		$this->image = null;
+		$this->subEntitysMem = array();
 	}
 
 	/**
-	 * Renvoie le nom court de la classe
-	 * @return media
+	 * @ORM\PostLoad
+	 * 
+	 * mémorise subEntitys
+	 * @return categorie
 	 */
-	// public function getClassName() {
-	// 	return self::CLASS_CATEGORIE;
-	// }
+	public function PostLoad() {
+		$this->subEntitysMem = $this->getSubEntitys()->toArray();
+		return $this;
+	}
+
+	/**
+	 * Renvoie l'image principale
+	 * @return image
+	 */
+	public function getMainMedia() {
+		return $this->getImage();
+	}
+
+	/**
+	 * @ORM\PrePersist
+	 * @ORM\PreUpdate
+	 * 
+	 * Check categorie
+	 * @return array
+	 */
+	public function check() {
+		return $this->getRootAccepts(true);
+	}
+
+	/**
+	 * Un élément par défaut dans la table est-il obligatoire ?
+	 * @return boolean
+	 */
+	public function isDefaultNullable() {
+		return true;
+	}
 
 	/**
 	 * set pageweb
@@ -167,14 +228,34 @@ class categorie extends baseEntity {
 
 	public function setParent(categorie $parent = null) {
 		$this->parent = $parent;
+		$parent->addChildren($this);
+		return $this;
 	}
 
 	public function getParent() {
 		return $this->parent;
 	}
 
+	public function getParents($includeThis = false) {
+		if($includeThis === true) $parents = array($this);
+			else $parents = array();
+		if($this->getParent() != null) {
+			$parent = $this->getParent();
+			$parents = array_merge($parents, $parent->getParents(true));
+		}
+		return $parents;
+	}
+
 	public function getChildren() {
 		return $this->children;
+	}
+
+	public function getAllChildren() {
+		$allChildren = $this->getChildren()->toArray();
+		if(is_array($allChildren)) foreach ($allChildren as $children) $allChildren = array_merge($allChildren, $children->getAllChildren());
+		// if(is_array($allChildren)) foreach ($allChildren as $children) $allChildren = array_unique(array_merge($allChildren, $children->getAllChildren()));
+			else $allChildren = array();
+		return $allChildren;
 	}
 
 	/**
@@ -194,9 +275,10 @@ class categorie extends baseEntity {
 		return $this->position;
 	}
 
-	// public function addChildren(categorie $children = null) {
-	// 	return $this->children;
-	// }
+	public function addChildren(categorie $children = null) {
+		if(!$this->children->contains($children)) $this->children->add($children);
+		return $this;
+	}
 
 	/**
 	 * Set descriptif
@@ -244,6 +326,117 @@ class categorie extends baseEntity {
 	}
 
 	/**
+	 * get subEntitys + subEntitys of children
+	 * @return ArrayCollection
+	 */
+	public function getAllSubEntitys() {
+		$subEntitys = $this->getSubEntitys()->toArray();
+		foreach ($this->getChildren() as $child) {
+			$subEntitys = array_merge($subEntitys, $child->getAllSubEntitys());
+		}
+		return array_unique($subEntitys);
+	}
+
+	/**
+	 * get subEntitys
+	 * @return ArrayCollection
+	 */
+	public function getSubEntitysMem() {
+		return $this->subEntitysMem;
+	}
+
+	public function getAcceptsList() {
+		return $this->accept_list;
+	}
+
+	/**
+	 * add accept
+	 * @param json/array $accept = null
+	 * @return boolean
+	 */
+	public function addAccept($accept) {
+		if(is_array($accept)) foreach ($accept as $value) $this->addAccept($value);
+		$accepts = $this->getAccepts();
+		if(!in_array($accept, $accepts) && array_key_exists($accept, $this->accept_list)) {
+			$accepts[] = $accept;
+			$this->accepts = json_encode($accepts);
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * remove accept
+	 * @param json/array $accept = null
+	 * @return boolean
+	 */
+	public function removeAccept($accept) {
+		$accepts = $this->getAccepts();
+		$keys = array_keys($accepts);
+		if(count($keys) > 0) {
+			foreach ($keys as $key) unset($accepts[$key]);
+			$this->accepts = json_encode($accepts);
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * set accepts
+	 * @param json/array $accepts = null
+	 * @return categorie
+	 */
+	public function setAccepts($accepts = null) {
+		$test = false;
+		if(is_string($accepts)) {
+			$accepts2 = json_decode($accepts);
+			if($accepts2 == null) $accepts = array($accepts);
+				else $accepts = $accept2;
+		}
+		if(is_array($accepts)) {
+			if(count($accepts) > 0) $test = true;	
+		}
+		if($test === true) {
+			foreach ($accepts as $key => $accept) {
+				if(!array_key_exists($accept, $this->accept_list)) unset($accepts[$key]);
+			}
+			$this->accepts = json_encode($accepts);
+		}
+		return $this;
+	}
+
+	/**
+	 * has accept
+	 * @return boolean
+	 */
+	public function hasAccept($accept) {
+		$accepts = $this->getAccepts();
+		return in_array($accept, $accepts);
+	}
+
+	/**
+	 * get accepts
+	 * @return array
+	 */
+	public function getAccepts() {
+		return json_decode($this->accepts, true);
+	}
+
+	/**
+	 * get accepts
+	 * @param boolean $setForThis = false
+	 * @return array
+	 */
+	public function getRootAccepts($setForThis = false) {
+		$parents = $this->getParents();
+		if(count($parents) > 0) {
+			$rootParent = end($parents);
+			if($setForThis === true) $this->setAccepts($rootParent->getAccepts());
+		} else return $this->getAccepts();
+		return $rootParent->getAccepts();
+	}
+
+	/**
 	 * Set couleur
 	 * @param string $couleur
 	 * @return categorie
@@ -277,6 +470,25 @@ class categorie extends baseEntity {
 	 */
 	public function getUrl() {
 		return $this->url;
+	}
+
+	/**
+	 * Set image - PROPRIÉTAIRE
+	 * @param image $image
+	 * @return categorie
+	 */
+	public function setImage(image $image = null) {
+		$this->image = $image;
+		if($image != null) $image->setOwner($this->getClassName().':'.'image');
+		return $this;
+	}
+
+	/**
+	 * Get image - PROPRIÉTAIRE
+	 * @return image $image
+	 */
+	public function getImage() {
+		return $this->image;
 	}
 
 

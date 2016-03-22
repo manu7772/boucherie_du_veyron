@@ -8,10 +8,18 @@ parameters:
     formats:
         ### ALL DEFAULT
         default:
-            # - null
+            # - null # ==> format libre
             - [1024, 768]
             - [768, 1024]
             - [1024, 1024]
+        ### SITE
+        site:
+            image:
+                - [260, 118]
+            logo:
+                - [400, 400]
+            favicon:
+                - [16, 16]
         ### ITEM
         item:
             image:
@@ -19,9 +27,6 @@ parameters:
         article:
             image: 
                 - [1000, 700]
-                # - [800, 800]
-                # - [800, 600]
-                # - null # ==> format libre
         pageweb:
             image:
                 - [1024, 768]
@@ -53,6 +58,10 @@ parameters:
                 - [800, 600]
             logo:
                 - [400, 400]
+        ### CATEGORIE
+        categorie:
+            image:
+                - [132, 132]
         ### USER
         User:
             avatar:

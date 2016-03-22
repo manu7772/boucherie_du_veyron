@@ -343,9 +343,7 @@ abstract class media extends baseSubEntity {
 	 * @return media
 	 */
 	public function setRawfile(rawfile $rawfile = null) {
-		// if(is_object($this->rawfile)) $this->rawfile->setMedia(null);
 		$this->rawfile = $rawfile;
-		// $rawfile->setMedia($this);
 		return $this;
 	}
 

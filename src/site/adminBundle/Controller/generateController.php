@@ -20,6 +20,7 @@ class generateController extends Controller {
 	public function indexAction($action = null, $entite = null) {
 		$this->get('aetools.aetools')->updateBundlesInConfig();
 		$data = array();
+		$data['sitedata'] = $this->get('aetools.aeSite')->getRepo()->findByDefault(true)[0];
 		$data['action'] = $action;
 		$data['entite'] = $entite;
 		if($entite != null) $data['classname'] = $this->getClassname($entite);

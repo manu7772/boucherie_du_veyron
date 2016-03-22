@@ -3,6 +3,7 @@
 namespace site\adminBundle\Entity;
 
 use site\adminBundle\Entity\EntityBaseRepository;
+use site\adminBundle\Entity\categorie;
 // use Gedmo\Sortable\Entity\Repository\SortableRepository;
 // use Gedmo\Tree\Entity\Repository\NestedTreeRepository;
 // use Gedmo\Tree\Traits\Repository\ORM\NestedTreeRepositoryTrait;
@@ -40,6 +41,109 @@ class categorieRepository extends EntityBaseRepository {
 		parent::__construct($em, $class);
 		// $this->initializeTreeRepository($em, $class);
 	}
+
+	/**
+	 * Renvoie les éléments root de catégories
+	 * @param boolean $shortCutContext = false
+	 * @return array
+	 */
+	public function findForList($shortCutContext = false) {
+		return $this->findRoots($shortCutContext);
+	}
+
+	/**
+	 * Renvoie les éléments root de catégories
+	 * @param boolean $shortCutContext = false
+	 * @return array
+	 */
+	public function findRoots($types = null, $shortCutContext = false) {
+		$qb = $this->createQueryBuilder(self::ELEMENT);
+		if($types != null) $this->getElementsBySubType($types, $qb);
+		if($shortCutContext == false) $this->contextStatut($qb);
+		$this->getRoots($qb);
+		return $qb->getQuery()->getResult();
+	}
+
+	/**
+	 * Renvoie les éléments root de catégories
+	 * @param boolean $shortCutContext = false
+	 * @return array
+	 */
+	public function findLevel($level = 1, $types = null, $shortCutContext = false) {
+		$qb = $this->createQueryBuilder(self::ELEMENT);
+		if($types != null) $this->getElementsBySubType($types, $qb);
+		if($shortCutContext == false) $this->contextStatut($qb);
+		$this->getByLevel($level, $qb);
+		return $qb->getQuery()->getResult();
+	}
+
+	/**
+	 * Recherche des entités selon des valeurs/champ
+	 * $type_related = '_self' pour désigner un champ interne
+	 */
+	public function findWithField(array $data, $asArray = false) {
+		$asArray == true ? $getMethod = 'getArrayResult' : $getMethod = 'getResult';
+		if(isset($data['type_related']) && isset($data['type_field']) && isset($data['type_values'])) {
+			// foreach ($data['type_values'] as $key => $value) {
+			// 	$data['type_values'][$key] = $value.'%';
+			// }
+			$qb = $this->createQueryBuilder(self::ELEMENT);
+			if($data['type_related'] == '_self') {
+				// champ interne
+				// $qb->where($qb->expr()->in(self::ELEMENT.'.'.$data['type_field'], $data['type_values']));
+				foreach ($data['type_values'] as $typeValue) {
+					if($typeValue !== 'null')
+						$qb->andWhere($qb->expr()->orX($qb->expr()->like(self::ELEMENT.'.'.$data['type_field'], $qb->expr()->literal('%'.$typeValue.'%'))));
+						else $qb->andWhere(self::ELEMENT.'.'.$data['type_field'].' IS NULL');
+				}
+			} else {
+				$qb->join(self::ELEMENT.'.'.$data['type_related'], 'entity');
+				foreach ($data['type_values'] as $typeValue) {
+					if($typeValue !== 'null')
+						$qb->andWhere($qb->expr()->orX($qb->expr()->like('entity.'.$data['type_field'], $qb->expr()->literal('%'.$typeValue.'%'))));
+						else $qb->andWhere('entity.'.$data['type_field'].' IS NULL');
+				}
+			}
+		} else throw new Exception("Missing parameters for Repository method \"findWithField\"", 1);
+		// recherche uniquement dans les niveaux 1
+		$this->getByLevel(1, $qb);
+		// mode normal : suppression des éléments périmés, sadmin, etc.
+		$this->contextStatut($qb);
+		return $qb->getQuery()->$getMethod();
+	}
+
+
+	/********************************/
+	/*** CLOSURES                 ***/
+	/********************************/
+
+	public function getElementsBySubType($types, &$qb = null) {
+		if($qb == null) $qb = $this->createQueryBuilder(self::ELEMENT);
+		if(is_string($types)) $types = array($types);
+		foreach ($types as $type) {
+			$qb->orWhere($qb->expr()->orX($qb->expr()->like(self::ELEMENT.'.accepts', $qb->expr()->literal('%'.$type.'%'))));
+		}
+		// resultat
+		return $qb;
+	}
+
+	public function getByLevel($level = 0, &$qb = null) {
+		if($qb == null) $qb = $this->createQueryBuilder(self::ELEMENT);
+		$qb->andWhere(self::ELEMENT.'.lvl = :level')
+			->setParameter('level', intval($level))
+			;
+		// resultat
+		return $qb;
+	}
+
+	public function getRoots(&$qb = null) {
+		if($qb == null) $qb = $this->createQueryBuilder(self::ELEMENT);
+		$qb->andWhere(self::ELEMENT.'.parent IS NULL');
+		// resultat
+		return $qb;
+	}
+
+
 
 
 

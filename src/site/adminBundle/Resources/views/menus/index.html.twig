@@ -8,24 +8,24 @@
 		<div class="row">
 			<div class="col-md-9">
 				{% if name|default('all') != 'all' %}
-				<h2>{{ 'menu.name'|trans|capitalize }} {{ name }}</h2>
+				<h2>{{ UCfirst('menu.name'|trans({}, 'menus')) }} {{ name }}</h2>
 				<ol class="breadcrumb">
-					<li><a href="{{ path('siteadmin_homepage') }}"><strong>{{ 'administration'|trans|capitalize }}</strong></a></li>
-					<li><a href="{{ path('siteadmin_menus', {name: 'all'}) }}"><strong>{{ 'menu.name_s'|trans|capitalize }}</strong></a></li>
+					<li><a href="{{ path('siteadmin_homepage') }}"><strong>{{ UCfirst('administration'|trans) }}</strong></a></li>
+					<li><a href="{{ path('siteadmin_menus', {name: 'all'}) }}"><strong>{{ UCfirst('menu.name_s'|trans({}, 'menus')) }}</strong></a></li>
 					<li>{{ name }}</li>
 				</ol>
 				{% else %}
-				<h2>{{ 'menu.name_s'|trans|capitalize }}</h2>
+				<h2>{{ UCfirst('menu.name_s'|trans({}, 'menus')) }}</h2>
 				<ol class="breadcrumb">
-					<li><a href="{{ path('siteadmin_homepage') }}"><strong>{{ 'administration'|trans|capitalize }}</strong></a></li>
-					<li>{{ 'menu.name_s'|trans|capitalize }}</li>
+					<li><a href="{{ path('siteadmin_homepage') }}"><strong>{{ UCfirst('administration'|trans) }}</strong></a></li>
+					<li>{{ UCfirst('menu.name_s'|trans({}, 'menus')) }}</li>
 				</ol>
 				{% endif %}
 			</div>
 			<div class="col-md-3 m-t-lg">
 				<div class="dropdown">
 					<button class="btn btn-xs btn-warning dropdown-toggle pull-right" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-						<i class="fa fa-plus"></i> {{ 'menu.create_btn'|trans|capitalize }}
+						<i class="fa fa-plus"></i> {{ UCfirst('menu.create_btn'|trans({}, 'menus')) }}
 						<span class="caret"></span>
 					</button>
 					<ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
@@ -46,7 +46,7 @@
 		{% if menus|default([])|length > 0 %}
 		<div class="ibox float-e-margins">
 			<div class="ibox-title">
-				<h5>{{ 'menu.name_s'|trans|capitalize }}</h5>
+				<h5>{{ UCfirst('menu.name_s'|trans({}, 'menus')) }}</h5>
 				<div class="ibox-tools">
 					<a class="collapse-link">
 						<i class="fa fa-chevron-up"></i>
@@ -61,9 +61,9 @@
 					<table class="table table-striped">
 						<thead>
 							<tr>
-								<th>{{ 'table.col.bundle'|trans }}</th>
-								<th>{{ 'table.col.nom'|trans }}</th>
-								<th>{{ 'actions.name'|trans }}</th>
+								<th>{{ UCfirst('menu.bundle'|trans({}, 'menus')) }}</th>
+								<th>{{ UCfirst('menu.nom'|trans({}, 'menus')) }}</th>
+								<th>{{ UCfirst('actions.name'|trans) }}</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -89,7 +89,7 @@
 			</div>
 		</div>
 		{% else %}
-		<h3><i class="fa fa-ban"></i> {{ 'menu.not_found'|trans|capitalize }}</h3>
+		<h3><i class="fa fa-ban"></i> {{ UCfirst('menu.not_found'|trans({}, 'menus')) }}</h3>
 		{% endif %}
 	</div>
 </div>

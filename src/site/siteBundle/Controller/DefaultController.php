@@ -15,6 +15,7 @@ use site\adminBundle\Entity\pageweb;
 class DefaultController extends Controller {
 
 	public function indexAction() {
+		$data['sitedata'] = $this->get('aetools.aeSite')->getRepo()->findByDefault(true)[0];
 		$data['pageweb'] = $this->get('aetools.aePageweb')->getDefaultPage();
 		if(is_object($data['pageweb'])) {
 			$this->pagewebactions($data);
@@ -32,9 +33,18 @@ class DefaultController extends Controller {
 		}
 	}
 
+	public function pagewebCategorieAction($categorieSlug, $params = null) {
+		$params = $this->get('tools_json')->JSonExtract($params);
+		$params['categorie'] = $categorieSlug;
+		$categorie = $this->get('aetools.aeCategorie')->getRepo()->findOneBySlug($categorieSlug);
+		return $this->pagewebAction($categorie->getPageweb(), $params);
+	}
+
 	public function pagewebAction($pageweb, $params = null) {
 		$data = $this->get('tools_json')->JSonExtract($params);
-		$data['pageweb'] = $this->get('aetools.aePageweb')->getRepo()->findOneBySlug($pageweb);
+		$data['sitedata'] = $this->get('aetools.aeSite')->getRepo()->findByDefault(true)[0];
+		if(is_object($pageweb)) $data['pageweb'] = $pageweb;
+			else $data['pageweb'] = $this->get('aetools.aePageweb')->getRepo()->findOneBySlug($pageweb);
 		// $data['marques'] = $this->get('aetools.aeEntity')->getRepo('site\adminBundle\Entity\marque')->findAll();
 		if(is_object($data['pageweb'])) {
 			$this->pagewebactions($data);
@@ -46,9 +56,10 @@ class DefaultController extends Controller {
 			}
 		} else {
 			// si aucune page web… chargement de la page par défaut…
-			$userService = $this->get('service.users');
-			$userService->usersExist(true);
-			return $this->redirect($this->generateUrl('generate'));
+			return $this->redirect($this->generateUrl('sitesite_homepage'));
+			// $userService = $this->get('service.users');
+			// $userService->usersExist(true);
+			// return $this->redirect($this->generateUrl('generate'));
 		}
 	}
 
@@ -93,7 +104,11 @@ class DefaultController extends Controller {
 				}
 				$data['message_form'] = $form->createView();
 				break;
-			
+			case 'articles':
+				if(isset($data['categorie'])) {
+					$data['categorie'] = $this->get('aetools.aeCategorie')->getRepo()->findOneBySlug($data['categorie']);
+				}
+				break;
 			default:
 				# code...
 				break;
@@ -134,10 +149,22 @@ class DefaultController extends Controller {
 		}
 	}
 
-	public function mainmenuAction() {
-		$data = array();
-		return $this->render('sitesiteBundle:blocks:mainmenu.html.twig', $data);
-	}
+	// public function mainmenuAction() {
+	// 	$data = array();
+	// 	$data['mainmenu'] = $this->get('aetools.aeCategorie')->getRepo()->findByNom('Menu latéral');
+	// 	return $this->render('sitesiteBundle:blocks:mainmenu.html.twig', $data);
+	// }
+
+	// public function miniListeInfoAction() {
+	// 	$data = array();
+	// 	return $this->render('sitesiteBundle:blocks:mini-liste-info.html.twig', $data);
+	// }
+
+	// public function footerTopAction() {
+	// 	$data = array();
+	// 	$data['mainmenu'] = $this->get('aetools.aeCategorie')->getRepo()->findByNom('Menu latéral');
+	// 	return $this->render('sitesiteBundle:blocks:footerTop.html.twig', $data);
+	// }
 
 	public function diaporamaAction($slug = 'intro') {
 		$data = array();

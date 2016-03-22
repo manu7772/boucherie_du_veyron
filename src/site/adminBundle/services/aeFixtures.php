@@ -2,6 +2,7 @@
 namespace site\adminBundle\services;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Doctrine\DBAL\Types\Type;
 // yaml parser
 use Symfony\Component\Yaml\Parser;
 use Symfony\Component\Yaml\Dumper;
@@ -9,11 +10,13 @@ use Symfony\Component\Yaml\Exception\ParseException;
 // aetools
 use site\adminBundle\services\aetools;
 
+use \DateTime;
+
 /**
  * Service aeFixtures
  * - Gestion des fixtures
  */
-class aeFixtures {
+class aeFixtures extends aeEntity {
 
 	const ARRAY_GLUE = '___';
 	const SOURCE_FILES = 'src/';
@@ -23,8 +26,6 @@ class aeFixtures {
 	const GO_TO_ROOT = '/../../../../';
 	const MAX_YAML_LEVEL = 10;
 
-	protected $container; 			// container
-	protected $aetools; 			// aetools
 	protected $languages; 			// array des langues disponibles --> config.yml --> default_locales: "fr|en|en_US|es|it|de"
 	protected $bundlesLanguages;	// array des langues disponibles par bundles --> config.yml --> list_locales: "fr|en", etc.
 	protected $default_locale; 		// string locale par défaut --> config.yml --> locale: "en"
@@ -35,10 +36,10 @@ class aeFixtures {
 	protected $rootPath;			// Dossier root du site
 
 	public function __construct(ContainerInterface $container) {
-		$this->container = $container;
-		$this->aetools = new aetools();
-		$this->rootPath = __DIR__.self::GO_TO_ROOT;
-		$this->aetools->setRootPath("/");
+		parent::__construct($container);
+		// $this->container = $container;
+		// $this->rootPath = __DIR__.self::GO_TO_ROOT;
+		$this->setRootPath("/");
 		// récupération de fichiers et check
 		$this->initFiles();
 		// $this->verifData();
@@ -49,10 +50,10 @@ class aeFixtures {
 		$this->bundles_list = array();
 		$this->files_list = array();
 		// récupération des dossiers "translations", enfants DIRECTS des dossiers "Resources", uniquement dans "src"
-		$fold_datafixtures = $this->aetools->exploreDir(self::SOURCE_FILES, self::FOLD_DATAFIXTURES, "dossiers");
+		$fold_datafixtures = $this->exploreDir(self::SOURCE_FILES, self::FOLD_DATAFIXTURES, "dossiers");
 		$this->fold_ORM = array();
 		foreach ($fold_datafixtures as $fR) {
-			$res = $this->aetools->exploreDir($fR['sitepath'].$fR['nom'], self::FOLD_ORM, "dossiers", false); // false --> enfants directs
+			$res = $this->exploreDir($fR['sitepath'].$fR['nom'], self::FOLD_ORM, "dossiers", false); // false --> enfants directs
 			if(count($res) > 0) foreach ($res as $folder) {
 				$this->fold_ORM[] = $folder;
 			}
@@ -121,7 +122,7 @@ class aeFixtures {
 	 * @return array
 	 */
 	protected function getFixturesFiles($path) {
-		return $this->aetools->exploreDir($path, "s\.yml$", "fichiers", false, true);
+		return $this->exploreDir($path, "s\.yml$", "fichiers", false, true);
 	}
 
 
@@ -231,7 +232,7 @@ class aeFixtures {
 		$defaultStatut = reset($defaultStatut);
 		$defaultTaux = reset($defaultTaux);
 		$newdata = array();
-		$attrMethods = array('set', 'add');
+		$attrMethods = array('add', 'set');
 		foreach ($data as $key => $dat) {
 			$newdata[$key] = new $classname();
 			if(method_exists($newdata[$key], 'setStatut')) {
@@ -242,21 +243,73 @@ class aeFixtures {
 				// ajout TVA
 				$newdata[$key]->setTauxTva($defaultTaux);
 			}
-			// $newdata[$key] = $this->container->get('aetools.aeEntity')->newObject($classname, true, false);
+			// $newdata[$key] = $this->newObject($classname, true, false);
+			// echo('<p><strong>Entity (simple) : '.$newdata[$key].'</strong> / '.$classname);
 			foreach ($dat as $attribute => $value) {
 				foreach ($attrMethods as $method) {
 					$m = $method.ucfirst($attribute);
-					if(method_exists($newdata[$key], $m)) $newdata[$key]->$m($value);
+					if(method_exists($newdata[$key], $m)) {
+						// echo('<pre>');
+						// var_dump($value);
+						// echo('</pre>');
+						if(!$this->hasAssociation($attribute, $newdata[$key])) {
+							// champ simple
+							// echo('<p>');
+							switch ($this->getTypeOfField($attribute, $newdata[$key])) {
+								case Type::BOOLEAN:
+									if(in_array(strtolower($value), array('1', 1, 'true', true))) {
+										$newdata[$key]->$m(true);
+										// echo(' => '.$attribute.' <i>('.$this->getTypeOfField($attribute, $newdata[$key]).')</i> = TRUE');
+									} else {
+										$newdata[$key]->$m(false);
+										// echo(' => '.$attribute.' <i>('.$this->getTypeOfField($attribute, $newdata[$key]).')</i> = FALSE');
+									}
+									break;
+								case Type::DATETIME:
+								case Type::DATETIMETZ:
+								case Type::DATE:
+								case Type::TIME:
+									$datetime = new DateTime($value);
+									$newdata[$key]->$m($datetime->format(self::FORMAT_DATETIME_SQL));
+									// echo(' => '.$attribute.' <i>('.$this->getTypeOfField($attribute, $newdata[$key]).')</i> = '.$datetime->format(self::FORMAT_DATETIME_SQL));
+									break;
+								default:
+									$newdata[$key]->$m($value);
+									if(!is_array($value)) $value = array($value);
+									// echo(' => '.$attribute.' <i>('.$this->getTypeOfField($attribute, $newdata[$key]).')</i> = '.implode(' / ', $value));
+									break;
+							}
+							// echo('</p>');
+							break 1;
+						} else {
+							// entité liée
+							$otherSideEntity = $this->getTargetEntity($attribute, $newdata[$key]);
+							// echo('<p><strong>Entity (link) : '.$newdata[$key].'</strong> / '.$classname.'</p>');
+							// echo('<p>Other side : '.$otherSideEntity.'</p>');
+							$repo = $em->getRepository($otherSideEntity);
+							$ml = 'findBy'.ucfirst($value['field']);
+							$linkeds = $repo->$ml($value['value']);
+							if(is_array($linkeds)) {
+								foreach ($linkeds as $linked) {
+									$newdata[$key]->$m($linked);							
+									if(preg_match('#^set#', $m)) break 1;
+								}
+							}
+						}
+					}
 				}
 			}
+			// echo('</p><p>Saving…');
 			$em->persist($newdata[$key]);
+			$em->flush();
+			// echo(' OK !</p>');
 		}
-		if(count($newdata) > 0) $em->flush();
+		// if(count($newdata) > 0) $em->flush();
 		return $newdata;
 	}
 
 	protected function getEntities() {
-		$this->classnames = array_flip($this->container->get('aetools.aeEntity')->getListOfEnties());
+		$this->classnames = array_flip($this->getListOfEnties());
 		return $this->classnames;
 	}
 

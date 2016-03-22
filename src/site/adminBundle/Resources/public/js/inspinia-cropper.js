@@ -1,7 +1,7 @@
 $(document).ready(function() {
 
-	var dev = true;
-	// var dev = false;
+	// var dev = true;
+	var dev = false;
 	// loading
 	var loading = false;
 	var croppername = '_cropper';
@@ -198,10 +198,10 @@ $(document).ready(function() {
 		var cropperOptions = {
 			aspectRatio: ratio[data.ratioIndex],
 			preview: cropperId + croppername + " .img-preview",
-			autoCropArea: 0.95,
+			autoCropArea: 1.0, 
 			responsive: true,
 			restore: true,
-			viewMode: 3,
+			viewMode: 2,
 			movable: false,
 			// rotatable: false,
 			// scalable: false,
@@ -402,7 +402,6 @@ $(document).ready(function() {
 			$image.cropper('destroy').cropper(cropperOptions);
 			// updateIfIsPicture();
 		});
-
 
 	});
 

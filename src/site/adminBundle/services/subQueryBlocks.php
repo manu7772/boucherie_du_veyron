@@ -2,6 +2,7 @@
 namespace site\adminBundle\services;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use \Twig_Function_Method;
 
 class subQueryBlocks extends \Twig_Extension {
 
@@ -13,7 +14,7 @@ class subQueryBlocks extends \Twig_Extension {
 
 	public function getFunctions() {
 		return array(
-			'SQBlock'			=> new \Twig_Function_Method($this, 'SQBlock'),
+			'SQBlock'			=> new Twig_Function_Method($this, 'SQBlock'),
 			);
 	}
 

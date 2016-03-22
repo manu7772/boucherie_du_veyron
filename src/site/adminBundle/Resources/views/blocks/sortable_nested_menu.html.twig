@@ -70,7 +70,7 @@
 		</label>
 		<input id="{{ idnest }}{{ item.item.id }}-name" class='name form-control m-b-xs' value='{{- (item.item.name|default(sanstexte))|trans({}, item.item.trans_domain|default(trans_domain|default('menus')))|raw -}}' data-idnest="{{ idnest }}" data-id="{{ item.item.id }}">
 		<!-- pageweb -->
-		<label for="#{{ idnest }}{{ item.item.id }}-pageweb">{{ UCfirst('pageweb.name'|trans) }}</label>
+		<label for="#{{ idnest }}{{ item.item.id }}-pageweb">{{ UCfirst('name'|trans({}, 'pageweb')) }}</label>
 		<select id="{{ idnest }}{{ item.item.id }}-pageweb" name="pageweb" class='pageweb form-control m-b-xs' data-idnest="{{ idnest }}" data-id="{{ item.item.id }}">
 			<optgroup label="nopage" style="border-bottom: #dddddd solid 1px;">
 				<option{% if not item.item.path.params.pageweb|default(null) in arraySlugNom(pagewebs) %} selected{% endif %} value="">{{ UCfirst('menu.aucunepageweb'|trans({}, 'menus')) }}</option>

@@ -91,7 +91,7 @@ class pageweb extends item {
 	 */
 	public function setCode($code = null) {
 		$this->code = $code;
-		if(trim($this->code) == '') $this->code = null;
+		if(strip_tags(preg_replace('#([[:space:]])+#', '', $this->code)) == '') $this->code = null;
 		return $this;
 	}
 

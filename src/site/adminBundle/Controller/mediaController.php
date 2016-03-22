@@ -90,7 +90,7 @@ class mediaController extends Controller {
 	 * Renvoit un objet aeReponse avec l'ID de la nouvelle image
 	 * @return aeReponse
 	 */
-	public function ApersistRawImageAction($entityShortName) {
+	public function NOpersistRawImageAction($entityShortName) {
 		set_time_limit(300);
 		$memory = $this->get('aetools.aetools')->getConfigParameters('cropper.yml', 'memory_limit');
 		ini_set("memory_limit", $memory);

@@ -145,7 +145,7 @@ class aeEntity extends aetools {
     public function checkAfterChange(baseEntity &$entity) {
     	if(method_exists($entity, 'check')) $entity->check();
         // Check statut… etc.
-        // $this->checkStatuts($entity, false);
+        $this->checkStatuts($entity, false);
         // $this->checkInversedLinks($entity, false);
         return $this;
     }
@@ -155,7 +155,7 @@ class aeEntity extends aetools {
 	 * @param baseEntity $entity
 	 * @return aeReponse
 	 */
-	public function NOsave(baseEntity &$entity) {
+	public function NOsave(baseEntity &$entity, $flush = true) {
 		$aeReponse = $this->container->get('aetools.aeReponse');
 		$response = true;
 		$sadmin = false;
@@ -170,13 +170,15 @@ class aeEntity extends aetools {
 				$message = $e->getMessage();
 				else $message = 'Erreur système.';
 		}
-		try {
-			$this->_em->flush();
-		} catch (Exception $e) {
-			$response = false;
-			if(($this->isDev() && $sadmin) === true)
-				$message = $e->getMessage();
-				else $message = 'Erreur système.';
+		if($flush === true) {
+			try {
+				$this->_em->flush();
+			} catch (Exception $e) {
+				$response = false;
+				if(($this->isDev() && $sadmin) === true)
+					$message = $e->getMessage();
+					else $message = 'Erreur système.';
+			}
 		}
 		return $aeReponse
 			->setResult($response)
@@ -191,11 +193,11 @@ class aeEntity extends aetools {
 	 * @param baseEntity $entity
 	 * @return aeReponse
 	 */
-	public function save(baseEntity &$entity) {
+	public function save(baseEntity &$entity, $flush = true) {
 		$response = true;
 		$message = 'Entité enregistrée.';
 		$this->_em->persist($entity);
-		$this->_em->flush();
+		if($flush === true) $this->_em->flush();
 		return $this
 			->container->get('aetools.aeReponse')
 			->setResult($response)
@@ -955,7 +957,7 @@ class aeEntity extends aetools {
 					// setting pour $entity1
 					$entity1->$obj_SET($entity2);
 					// echo('<p style="color:orange;">- Attached '.$field.' : '.$entity1->$obj_GET().'</p>');
-					$this->writeConsole('     • Association ok : '.$this->getEntityShortName($entity1).'->'.$obj_SET.'('.$entity2->getSlug().')', 'succes');
+					// $this->writeConsole('     • Association ok : '.$this->getEntityShortName($entity1).'->'.$obj_SET.'('.$entity2->getSlug().')', 'succes');
 					if($this->isBidirectional($field, $entity1)) {
 						// oui, bidirectionnelle
 						$otherSideField = $this->get_OtherSide_sourceField($field, $entity1);
@@ -964,7 +966,7 @@ class aeEntity extends aetools {
 							// setting pour $entity2
 							if(is_string($tar_SET)) {
 								$entity2->$tar_SET($entity1);
-								$this->writeConsole('     • Reverse Side ok : '.$this->getEntityShortName($entity2).'->'.$tar_SET.'('.$entity1->getSlug().')', 'succes');
+								// $this->writeConsole('     • Reverse Side ok : '.$this->getEntityShortName($entity2).'->'.$tar_SET.'('.$entity1->getSlug().')', 'succes');
 								return true;
 							}
 						}

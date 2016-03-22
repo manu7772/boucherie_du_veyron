@@ -30,8 +30,12 @@ generate:
 
 # ACTIONS ENTITES
 siteadmin_entite_type:
-    path:     /entite/{entite}/{type_related}/{type_field}/{type_values}/{action}/{id}
+    path:     /entite-type/{entite}/{type_related}/{type_field}/{type_values}/{action}/{id}
     defaults: { _controller: siteadminBundle:entite:entitePage, action: null, id: null }
+
+siteadmin_entite_repo:
+    path:     /entite-repo/{entite}/{method}/{params}/{repository}
+    defaults: { _controller: siteadminBundle:entite:entitePage, params: null, repository: null }
 
 siteadmin_entite:
     path:     /entite/{entite}/{action}/{id}

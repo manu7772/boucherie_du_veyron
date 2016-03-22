@@ -3,7 +3,11 @@
 		<div class="row">
 			<div class="col-xs-4 col-sm-3 col-md-3 content-logo">
 				<div class="logo pull-left">
+					{% if sitedata.image|default(null) != null %}
+					<a href="{{ path('sitesite_homepage') }}"><img src="{{ sitedata.favicon.img }}" alt="logo" /></a> {# sitedata.favicon.imgThumbnail(260, 118, in) #}
+					{% else %}
 					<a href="{{ path('sitesite_homepage') }}"><img src="{{ asset('bundles/sitesite/images/home/logo.jpg') }}" alt="logo" /></a>
+					{% endif %}
 				</div>
 			</div>
 			<div class="col-xs-8 col-sm-9 col-md-9 padding-right">

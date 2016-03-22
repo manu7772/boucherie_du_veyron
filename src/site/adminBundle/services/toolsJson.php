@@ -12,6 +12,7 @@ class toolsJson {
 	 * @return array
 	 */
 	public function JSonExtract($params) {
+		if(is_array($params)) return $params;
 		$returnPdata = array();
 		$pd = json_decode($params, true);
 		if($pd !== null) $returnPdata = $pd;
