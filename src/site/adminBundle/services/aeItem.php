@@ -20,8 +20,8 @@ class aeItem extends aeSubEntity {
      * @param baseEntity $entity
 	 * @return aeItem
      */
-    public function checkAfterChange(baseEntity &$entity) {
-    	parent::checkAfterChange($entity);
+    public function checkAfterChange(baseEntity &$entity, $butEntities = []) {
+    	parent::checkAfterChange($entity, $butEntities);
 		return $this;
 	}
 

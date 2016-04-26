@@ -9,7 +9,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 // Transformer
 use Symfony\Component\Form\CallbackTransformer;
 // User
-use Symfony\Component\Security\Core\SecurityContext;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage as SecurityContext;
 // Paramétrage de formulaire
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormEvent;
@@ -36,6 +36,9 @@ class siteType extends baseType {
             'favicon' => array(
                 'owner' => 'site:favicon'
                 ),
+            'adminLogo' => array(
+                'owner' => 'site:adminLogo'
+                ),
             );
         // Builder…
         $builder
@@ -53,6 +56,9 @@ class siteType extends baseType {
                 'label' => 'fields.descriptif',
                 'translation_domain' => 'site',
                 'required' => false,
+                'attr' => array(
+                    'data-height' => 140,
+                    )
                 ))
             ->add('couleur', 'insColorpicker', array(
                 'label'     => 'fields.couleur',
@@ -72,9 +78,9 @@ class siteType extends baseType {
                         return $repo->getElementsBySubType(array('article'));
                         else return $repo->findAllClosure();
                     },
+                'placeholder'   => 'form.select',
                 'attr'      => array(
-                    'class'         => 'chosen-select chosen-select-width chosen-select-no-results',
-                    'placeholder'   => 'form.select',
+                    'class'         => 'select2',
                     ),
                 ))
             ->add('categorieArticles', 'entity', array(
@@ -90,9 +96,9 @@ class siteType extends baseType {
                         return $repo->getElementsBySubType(array('article', 'fiche'));
                         else return $repo->findAllClosure();
                     },
+                'placeholder'   => 'form.select',
                 'attr'      => array(
-                    'class'         => 'chosen-select chosen-select-width chosen-select-no-results',
-                    'placeholder'   => 'form.select',
+                    'class'         => 'select2',
                     ),
                 ))
             ->add('categorieFooters', 'entity', array(
@@ -105,12 +111,12 @@ class siteType extends baseType {
                 'group_by' => 'parent.nom',
                 "query_builder" => function($repo) {
                     if(method_exists($repo, 'getElementsBySubType'))
-                        return $repo->getElementsBySubType(array('article', 'pageweb'));
+                        return $repo->getElementsBySubType(array('article', 'pageweb', 'fiche'));
                         else return $repo->findAllClosure();
                     },
+                'placeholder'   => 'form.select',
                 'attr'      => array(
-                    'class'         => 'chosen-select chosen-select-width chosen-select-no-results',
-                    'placeholder'   => 'form.select',
+                    'class'         => 'select2',
                     ),
                 ))
             ->add('boutiques', 'entity', array(
@@ -120,9 +126,9 @@ class siteType extends baseType {
                 'property'  => 'nom',
                 'multiple'  => true,
                 'required' => false,
+                'placeholder'   => 'form.select',
                 'attr'      => array(
-                    'class'         => 'chosen-select chosen-select-width chosen-select-no-results',
-                    'placeholder'   => 'form.select',
+                    'class'         => 'select2',
                     ),
                 ))
             ->add('collaborateurs', 'entity', array(
@@ -133,9 +139,9 @@ class siteType extends baseType {
                 'multiple'  => true,
                 'required' => false,
                 'group_by' => 'bestRole',
+                'placeholder'   => 'form.select',
                 'attr'      => array(
-                    'class'         => 'chosen-select chosen-select-width chosen-select-no-results',
-                    'placeholder'   => 'form.select',
+                    'class'         => 'select2',
                     ),
                 ))
             ->add('image', new cropperType($this->controller, array('image' => $this->imagesData['image'])), array(
@@ -150,6 +156,11 @@ class siteType extends baseType {
                 ))
             ->add('favicon', new cropperType($this->controller, array('image' => $this->imagesData['favicon'])), array(
                 'label' => 'fields.favicon',
+                'translation_domain' => 'site',
+                'required' => false,
+                ))
+            ->add('adminLogo', new cropperType($this->controller, array('image' => $this->imagesData['adminLogo'])), array(
+                'label' => 'fields.adminLogo',
                 'translation_domain' => 'site',
                 'required' => false,
                 ))

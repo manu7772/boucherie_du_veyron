@@ -1,5 +1,5 @@
 {% extends 'siteadminBundle::page_admin_generic.html.twig' %}
-{% set cssjsloads = 'FORM' %}
+{% set cssjsloads = cssjsloads|default('FORM') %}
 {% set DEVMODE = (app.environment in ['dev', 'test']) or (is_granted('ROLE_SUPER_ADMIN')) %}
 
 {% block page_heading %}

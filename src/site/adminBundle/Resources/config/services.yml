@@ -1,8 +1,7 @@
 parameters:
 #    acme_grouplabo_inspinia.example.class: site\adminBundle\Example
-    siteadminBundle:        site\adminBundle
-    adminBundleservices:   	%siteadminBundle%\services
-    adminFormType:   	    %siteadminBundle%\Form\Type\
+    adminBundleservices:   	site\adminBundle\services
+    adminFormType:   	    site\adminBundle\Form\Type\
 
 services:
 #    acme_grouplabo_inspinia.example:

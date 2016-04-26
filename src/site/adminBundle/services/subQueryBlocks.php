@@ -3,8 +3,9 @@ namespace site\adminBundle\services;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use \Twig_Function_Method;
+use \Twig_Extension;
 
-class subQueryBlocks extends \Twig_Extension {
+class subQueryBlocks extends Twig_Extension {
 
 	private $container;
 

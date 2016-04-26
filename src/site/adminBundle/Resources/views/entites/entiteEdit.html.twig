@@ -1,14 +1,14 @@
 {% extends 'siteadminBundle::page_admin_generic.html.twig' %}
-{% set cssjsloads = 'FORM' %}
+{% set cssjsloads = cssjsloads|default('FORM') %}
 {% set DEVMODE = (app.environment in ['dev', 'test']) or (is_granted('ROLE_SUPER_ADMIN')) %}
 
 {% block page_heading %}
 <div class="row wrapper border-bottom white-bg page-heading">
 	<div class="col-lg-12 m-t-xs">
 		<h2 class="row">
-			<div class="col-md-8 ellipsis">{{ UCfirst(('name')|trans({}, entite.className)) }} {{ entite.nom|default('#' ~ entite.id) }}</div>
+			<div class="col-md-8 ellipsis">{{ UCfirst(('name')|trans({}, entite.className)) }} {{ entite|trans({}, entite.className) }}</div>
 			<div class="col-md-4">
-				<a href="{{ path('siteadmin_entite', {entite: edit_form.vars.value.className, id: entite.id, action: 'delete'}) }}" type="button" class="btn btn-xs btn-danger btn-outline pull-right need-confirmation" data-message="{{ UCfirst('actions.suppQuestion'|trans({'%name%': entite.nom|default('#' ~ entite.id)})) }}"><i class="fa fa-times icon-wait-on-click"></i> {{ UCfirst('actions.supprimer'|trans) }}</a>
+				<a href="{{ path('siteadmin_entite', {entite: edit_form.vars.value.className, id: entite.id, action: 'delete'}) }}" type="button" class="btn btn-xs btn-danger btn-outline pull-right need-confirmation" data-message="{{ UCfirst('actions.suppQuestion'|trans({'%name%': entite|trans({}, entite.className)})) }}"><i class="fa fa-times icon-wait-on-click"></i> {{ UCfirst('actions.supprimer'|trans) }}</a>
 				{#
 				<a href="{{ path('siteadmin_entite', {entite: edit_form.vars.value.className, id: entite.id, action: 'edit'}) }}" type="button" class="btn btn-xs btn-warning pull-right"><i class="fa fa-pencil icon-wait-on-click"></i> {{ UCfirst('actions.modifier'|trans) }}</a>
 				#}
@@ -19,7 +19,7 @@
 		<ol class="breadcrumb">
 			<li><a href="{{ path('siteadmin_homepage') }}"><strong>{{ UCfirst('administration'|trans) }}</strong></a></li>
 			<li><a href="{{ path('siteadmin_entite', {entite: edit_form.vars.value.className}) }}"><strong>{{ UCfirst('name_s'|trans({}, entite.className)) }}</strong></a></li>
-			<li><a href="{{ path('siteadmin_entite', {entite: edit_form.vars.value.className, id: entite.id, action: 'show'}) }}"><strong>{{ entite.nom|default('#' ~ entite.id) }}</strong></a></li>
+			<li><a href="{{ path('siteadmin_entite', {entite: edit_form.vars.value.className, id: entite.id, action: 'show'}) }}"><strong>{{ entite|trans({}, entite.className) }}</strong></a></li>
 			<li>{{ UCfirst('actions.modification'|trans) }}</li>
 		</ol>
 	</div>

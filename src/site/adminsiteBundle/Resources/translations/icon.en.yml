@@ -1,0 +1,54 @@
+icon:
+    name_s: icons
+    name: icon
+    not_found: 'no icon found'
+    x_found: '{0} no icon found|{1} 1 icon found|[2,+Inf] %count% icons found'
+    create: 'create new icon'
+    create_btn: 'new icon'
+    created: '{0} no icon created|{1} %count% icon have been created : %list%|[2,+Inf] %count% icons have been created : %list%'
+    new: '{0,1}new icon|[2,+Inf] %count% new icons'
+    backlist: 'back to list of icons'
+    backlist_btn: 'back to list'
+    dontexist: 'this icon does not exist'
+    existe: 'this icon already exists'
+    suppression: 'icon %name% have been deleted'
+    moredetails: 'more details on %name%'
+grants:
+    no_access: You are not granted to access to<br>"%name%"
+form:
+    select: Select…
+fields:
+    id: id
+    nom: name
+    created: created
+    updated: updated
+    jamais: no modification
+entite:
+    home: fa-home
+    unknown: fa-question
+    # entités
+    site: fa-bank
+    article: fa-shopping-cart
+    adresse: fa-envelope-o
+    pageweb: fa-desktop
+    fiche: fa-file-text-o
+    marque: fa-trophy
+    boutique: fa-building-o
+    reseau: fa-share-alt
+    categorie: fa-sitemap
+    tauxTva: fa-calculator
+    User: fa-user
+    message: fa-paper-plane
+    media: fa-film
+    image: fa-file-image-o
+    pdf: fa-file-pdf-o
+    tag: fa-tag
+    tags: fa-tags
+    raw: fa-file
+    statut: fa-toggle-on
+    # autres…
+    translate: fa-flag
+    menu: fa-list-ul
+    parametres: fa-gear
+    help: fa-support
+    webmaster: fa-cogs

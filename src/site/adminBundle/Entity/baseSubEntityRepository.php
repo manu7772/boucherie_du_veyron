@@ -29,17 +29,15 @@ class baseSubEntityRepository extends EntityBaseRepository {
 	/*** CLOSURES                 ***/
 	/********************************/
 
-	public function getElementsBySubType($categorie) {
+	public function getElementsBySubTypes($categories) {
 		$qb = $this->createQueryBuilder(self::ELEMENT);
-		if(is_object($categorie)) {			
-			$types = $categorie->getAccepts();
-		} else {
-			$types = $categorie;
+		$types = array();
+		if(is_object($categories)) $categories = array($categories);
+		foreach ($categories as $categorie) {
+			$types = array_merge($types, $categorie->getAccepts());
 		}
-		if(is_string($types)) $types = array($types);
-		foreach ($types as $type) {
-			$type = 'site\\adminBundle\\Entity\\'.$type;
-			$qb->orWhere($qb->expr()->isInstanceOf(self::ELEMENT, $type));
+		foreach (array_unique($types) as $type) {
+			if(is_string($type)) $qb->orWhere($qb->expr()->isInstanceOf(self::ELEMENT, 'site\\adminBundle\\Entity\\'.$type));
 		}
 		// resultat
 		return $qb;

@@ -1,5 +1,6 @@
 twig:
     globals:
+        siteadminBundle: %siteadminBundle%
         keywords:
             title: site.title
             description: site.description
@@ -32,24 +33,16 @@ twig:
                 trans_domain: categorie
                 icon: 'entite.categorie'
                 level2: 
-                    roots:
-                        nom: 'groupes'
+                    cat_mixed:
+                        nom: 'types.multimedia'
                         trans_domain: categorie
-                        path: 
-                            path: 'siteadmin_entite_repo'
+                        path:
+                            path: 'siteadmin_entite_type'
                             params:
                                 entite: categorie
-                                method: findRoots
-                                # repository: ~
-                    level1:
-                        nom: 'tous types'
-                        trans_domain: categorie
-                        path: 
-                            path: 'siteadmin_entite_repo'
-                            params:
-                                entite: categorie
-                                method: findLevel
-                                # repository: ~
+                                type_related: parent
+                                type_field: nom
+                                type_values: 'types.multimedia'
                     cat_article:
                         nom: 'article'
                         trans_domain: article
@@ -58,18 +51,8 @@ twig:
                             params:
                                 entite: categorie
                                 type_related: _self
-                                type_field: accepts
+                                type_field: type
                                 type_values: article
-                    cat_pageweb:
-                        nom: 'pageweb'
-                        trans_domain: pageweb
-                        path:
-                            path: 'siteadmin_entite_type'
-                            params:
-                                entite: categorie
-                                type_related: _self
-                                type_field: accepts
-                                type_values: pageweb
                     cat_fiche:
                         nom: 'fiche'
                         trans_domain: fiche
@@ -78,7 +61,7 @@ twig:
                             params:
                                 entite: categorie
                                 type_related: _self
-                                type_field: accepts
+                                type_field: type
                                 type_values: fiche
                     cat_images:
                         nom: 'image'
@@ -88,8 +71,48 @@ twig:
                             params:
                                 entite: categorie
                                 type_related: _self
-                                type_field: accepts
+                                type_field: type
                                 type_values: image
+                    cat_boutiques:
+                        nom: 'boutique'
+                        trans_domain: boutique
+                        path:
+                            path: 'siteadmin_entite_type'
+                            params:
+                                entite: categorie
+                                type_related: _self
+                                type_field: type
+                                type_values: boutique
+                    cat_pdfs:
+                        nom: 'pdf'
+                        trans_domain: pdf
+                        path:
+                            path: 'siteadmin_entite_type'
+                            params:
+                                entite: categorie
+                                type_related: _self
+                                type_field: type
+                                type_values: pdf
+                    roots:
+                        nom: 'groupes'
+                        trans_domain: categorie
+                        role: 'ROLE_SUPER_ADMIN'
+                        path: 
+                            path: 'siteadmin_entite_repo'
+                            params:
+                                entite: categorie
+                                method: findRoots
+                                # repository: ~
+                    level1:
+                        nom: 'tous types'
+                        trans_domain: categorie
+                        role: 'ROLE_SUPER_ADMIN'
+                        path: 
+                            path: 'siteadmin_entite_repo'
+                            params:
+                                entite: categorie
+                                method: findLevel
+                                # repository: ~
             marketplace:
                 role: 'ROLE_ADMIN'
                 nom: 'marketplace.name'
@@ -157,15 +180,28 @@ twig:
                             path: 'siteadmin_entite'
                             params:
                                 entite: pageweb
+                    cat_pageweb:
+                        nom: 'pageweb_coll'
+                        trans_domain: pageweb
+                        path:
+                            path: 'siteadmin_entite_type'
+                            params:
+                                entite: categorie
+                                type_related: _self
+                                type_field: type
+                                type_values: pageweb
                     menus:
                         role: %restrict_admin%
                         nom: 'menu.name_s'
-                        trans_domain: menus
                         icon: 'entite.menu'
-                        path: 
-                            path: 'siteadmin_menus'
+                        trans_domain: menus
+                        path:
+                            path: 'siteadmin_entite_type'
                             params:
-                                name: all
+                                entite: categorie
+                                type_related: _self
+                                type_field: type
+                                type_values: menu
                     images_pagewebs:
                         nom: 'owner.pageweb:image'
                         trans_domain: image
@@ -177,6 +213,13 @@ twig:
                                 type_related: _self
                                 type_field: owner
                                 type_values: pageweb
+                    menus2:
+                        role: 'ROLE_SUPER_ADMIN'
+                        nom: 'menu.name_s'
+                        path: 
+                            path: 'siteadmin_menus'
+                            params:
+                                name: all
             media:
                 role: 'ROLE_EDITOR'
                 nom: 'name_s'
@@ -282,12 +325,36 @@ twig:
                                 entite: tag
                     raws:
                         role: 'ROLE_SUPER_ADMIN'
-                        nom: 'raw files'
+                        nom: 'name_s'
+                        trans_domain: rawfile
                         icon: 'entite.raw'
                         path: 
                             path: 'siteadmin_entite'
                             params:
-                                entite: rawfile
+                                entite: image
+                        level3: 
+                            raws_image:
+                                nom: 'types.image.name_s'
+                                trans_domain: rawfile
+                                icon: 'entite.raw'
+                                path: 
+                                    path: 'siteadmin_entite_type'
+                                    params:
+                                        entite: rawfile
+                                        type_related: _self
+                                        type_field: format
+                                        type_values: image
+                            raws_pdf:
+                                nom: 'types.image.name_s'
+                                trans_domain: rawfile
+                                icon: 'entite.raw'
+                                path: 
+                                    path: 'siteadmin_entite_type'
+                                    params:
+                                        entite: rawfile
+                                        type_related: _self
+                                        type_field: format
+                                        type_values: pdf
             utilisateurs:
                 role: %restrict_admin%
                 nom: 'name_s'

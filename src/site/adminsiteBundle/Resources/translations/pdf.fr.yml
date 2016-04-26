@@ -1,0 +1,25 @@
+name_s: fichiers PDF
+name: fichier PDF
+consulter: consulter la fichier PDFrie
+not_found: 'aucun fichier PDF trouvé'
+x_found: '{0} aucun fichier PDF trouvé|{1} 1 fichier PDF trouvé|[2,+Inf] %count% fichiers PDF trouvés'
+create: 'créer un nouveau fichier PDF'
+create_btn: 'nouveau fichier PDF'
+backlist: 'retour à la liste des fichiers PDF'
+backlist_btn: 'retour liste'
+dontexist: 'ce fichier PDF n''existe pas'
+moredetails: 'plus de détails sur %name%'
+existe: ce fichier PDF existe déjà
+form:
+    select: Sélectionnez…
+fields:
+    id: id
+    nom: nom
+    created: création
+    updated: mis à jour
+    jamais: aucune modification
+    subEntitys: éléments
+    parents: parents
+    parent: parent
+    elements: éléments
+    icon: icône

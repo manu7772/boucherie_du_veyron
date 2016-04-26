@@ -5,17 +5,19 @@ namespace site\siteBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use site\adminBundle\services\flashMessage;
 
 use site\adminBundle\Entity\message;
-use site\adminBundle\Form\contactmessageType;
-use \DateTime;
-
 use site\adminBundle\Entity\pageweb;
+use site\adminBundle\Form\contactmessageType;
+
+use \DateTime;
+use \Exception;
 
 class DefaultController extends Controller {
 
 	public function indexAction() {
-		$data['sitedata'] = $this->get('aetools.aeSite')->getRepo()->findByDefault(true)[0];
+		$data['sitedata'] = $this->get('aetools.aeSite')->getDefaultSiteData();
 		$data['pageweb'] = $this->get('aetools.aePageweb')->getDefaultPage();
 		if(is_object($data['pageweb'])) {
 			$this->pagewebactions($data);
@@ -34,15 +36,17 @@ class DefaultController extends Controller {
 	}
 
 	public function pagewebCategorieAction($categorieSlug, $params = null) {
-		$params = $this->get('tools_json')->JSonExtract($params);
-		$params['categorie'] = $categorieSlug;
+		$data = $this->get('tools_json')->JSonExtract($params);
+		$data['categorie'] = $categorieSlug;
 		$categorie = $this->get('aetools.aeCategorie')->getRepo()->findOneBySlug($categorieSlug);
-		return $this->pagewebAction($categorie->getPageweb(), $params);
+		$data['sitedata'] = $this->get('aetools.aeSite')->getDefaultSiteData();
+		return $this->pagewebAction($categorie->getPageweb(), $data);
 	}
 
 	public function pagewebAction($pageweb, $params = null) {
 		$data = $this->get('tools_json')->JSonExtract($params);
-		$data['sitedata'] = $this->get('aetools.aeSite')->getRepo()->findByDefault(true)[0];
+		$data['pageweb'] = $this->get('aetools.aePageweb')->getDefaultPage();
+		$data['sitedata'] = $this->get('aetools.aeSite')->getDefaultSiteData();
 		if(is_object($pageweb)) $data['pageweb'] = $pageweb;
 			else $data['pageweb'] = $this->get('aetools.aePageweb')->getRepo()->findOneBySlug($pageweb);
 		// $data['marques'] = $this->get('aetools.aeEntity')->getRepo('site\adminBundle\Entity\marque')->findAll();
@@ -64,6 +68,7 @@ class DefaultController extends Controller {
 	}
 
 	protected function pagewebactions(&$data) {
+		$trans = $this->get('translator');
 		switch ($data['pageweb']->getModelename()) {
 			case 'contact':
 				// page contact
@@ -88,7 +93,12 @@ class DefaultController extends Controller {
 						// enregistrement
 						$this->em->persist($message);
 						$this->em->flush();
-						$data['message_success'] = "message.success";
+						// $data['message_success'] = "message.success";
+						$this->get('flash_messages')->send(array(
+							'title'		=> ucfirst($trans->trans('message.title.sent')),
+							'type'		=> flashMessage::MESSAGES_SUCCESS,
+							'text'		=> ucfirst($trans->trans('message.success')),
+						));
 						// nouveau formulaire
 						$new_message = $this->getNewEntity('site\adminBundle\Entity\message');
 						$new_message->setNom($message->getNom());
@@ -99,7 +109,12 @@ class DefaultController extends Controller {
 						$form = $this->createForm(new contactmessageType($this, []), $new_message);
 						$data['redirect'] = $this->generateUrl('site_pageweb', array('pageweb' => $data['pageweb']));
 					} else {
-						$data['message_error'] = "message.error";
+						// $data['message_error'] = "message.error";
+						$this->get('flash_messages')->send(array(
+							'title'		=> ucfirst($trans->trans('message.title.error')),
+							'type'		=> flashMessage::MESSAGES_ERROR,
+							'text'		=> ucfirst($trans->trans('message.error')),
+						));
 					}
 				}
 				$data['message_form'] = $form->createView();
@@ -130,6 +145,7 @@ class DefaultController extends Controller {
 
 	public function headerMiddleAction() {
 		$data['menu'] = $this->get('aetools.aeMenus')->getMenu('site-menu');
+		$data['sitedata'] = $this->get('aetools.aeSite')->getDefaultSiteData();
 		// récupération route/params requête MASTER
 		$stack = $this->get('request_stack');
 		$masterRequest = $stack->getMasterRequest();

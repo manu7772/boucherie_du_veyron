@@ -9,7 +9,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 // Transformer
 use Symfony\Component\Form\CallbackTransformer;
 // User
-use Symfony\Component\Security\Core\SecurityContext;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage as SecurityContext;
 // Paramétrage de formulaire
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormEvent;
@@ -36,6 +36,9 @@ class statutType extends baseType {
 				'label' => 'fields.descriptif',
 				'translation_domain' => 'statut',
 				'required' => false,
+				'attr' => array(
+					'data-height' => 140,
+					)
 				))
             ->add('couleur', 'insColorpicker', array(
             	'label' => 'fields.couleur',
@@ -48,6 +51,10 @@ class statutType extends baseType {
             	'required'	=> true,
             	'multiple'	=> false,
             	"choices"   => $statut->getRoleChoices($this->user),
+            	'placeholder'   => 'form.select',
+            	'attr'		=> array(
+            		'class'			=> 'select2',
+            		),
             	))
             ->add('bundles', 'choice', array(
             	'label' => 'fields.bundles',
@@ -55,6 +62,10 @@ class statutType extends baseType {
             	'required'	=> true,
             	'multiple'	=> true,
             	"choices"   => $statut->getBundleChoices(),
+            	'placeholder'   => 'form.select',
+            	'attr'		=> array(
+            		'class'			=> 'select2',
+            		),
             	))
 		;
 		// ajoute les valeurs hidden, passés en paramètre

@@ -2,7 +2,8 @@
 
 namespace site\adminBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use site\adminBundle\Controller\baseController;
+// use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -13,14 +14,14 @@ use \Exception;
  * generateController
  * @Security("has_role('ROLE_SUPER_ADMIN')")
  */
-class generateController extends Controller {
+class generateController extends baseController {
 
 	protected $classnames = null;
 
 	public function indexAction($action = null, $entite = null) {
 		$this->get('aetools.aetools')->updateBundlesInConfig();
 		$data = array();
-		$data['sitedata'] = $this->get('aetools.aeSite')->getRepo()->findByDefault(true)[0];
+		$data['sitedata'] = $this->get('aetools.aeSite')->getDefaultSiteData();
 		$data['action'] = $action;
 		$data['entite'] = $entite;
 		if($entite != null) $data['classname'] = $this->getClassname($entite);
@@ -31,7 +32,7 @@ class generateController extends Controller {
 				if($entite != null) $data['created'][$entite] = $this->generateEntite($entite);
 				break;
 			case 'empty':
-				if($entite != null) $data['emptied'][$entite] = $this->emptyEntity($entite);
+				if($entite != null) $data['emptied'][$entite] = $this->get('aetools.aefixtures')->emptyEntity($entite);
 				break;
 			default:
 				break;

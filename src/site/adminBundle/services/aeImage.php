@@ -19,9 +19,9 @@ class aeImage extends aeMedia {
 	 * @param baseEntity $entity
 	 * @return aeImage
 	 */
-	public function checkAfterChange(baseEntity &$entity) {
+	public function checkAfterChange(baseEntity &$entity, $butEntities = []) {
 		$infoForPersist = $entity->getInfoForPersist();
-		$entity->setNom($entity->getNom().'+');
+		$entity->setNom($entity->getNom());
 		if(isset($infoForPersist['rawfiles']['actual'])) {
 			$rawfile = $this->_em->getRepository('site\adminBundle\Entity\rawfile')->find(intval($infoForPersist['rawfiles']['actual']));
 			if(is_object($rawfile)) {
@@ -34,8 +34,7 @@ class aeImage extends aeMedia {
 				$this->container->get('aetools.aeStatut')->setWebmaster($rawfile);
 				$entity->setRawfile($rawfile);
 				// echo('<p>- new RAWFILE in '.get_class($this).' : '.$entity->getRawfile().'</p>');
-			}
-			else {
+			} else {
 				// echo('<p>RAWFILE introuvable : '.$infoForPersist['rawfiles']['actual'].' ???</p>');
 				// echo('<pre>');
 				// var_dump($rawfile);
@@ -43,7 +42,8 @@ class aeImage extends aeMedia {
 			}
 		}
 		// else echo('<p>RAWFILE de rawfiles / actual : non renseigné !???</p>');
-		parent::checkAfterChange($entity);
+		// $entity->upLoad();
+		parent::checkAfterChange($entity, $butEntities);
 		return $this;
 	}
 

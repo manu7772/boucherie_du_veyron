@@ -4,6 +4,7 @@ imports:
     - { resource: services.yml }
     - { resource: twigpages_globals.yml }
     - { resource: labo_parameters.yml }
+    - { resource: labo_icons.yml }
     - { resource: cropper.yml }
 
 # Put parameters here that don't need to change on each machine where the app is deployed

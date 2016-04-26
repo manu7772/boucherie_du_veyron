@@ -2,7 +2,8 @@
 
 namespace site\adminBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use site\adminBundle\Controller\baseController;
+// use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -15,21 +16,14 @@ use \Exception;
  * entiteController
  * @Security("has_role('ROLE_EDITOR')")
  */
-class entiteController extends Controller {
-
-	const TYPE_SELF 			= '_self';
-	const DEFAULT_ACTION 		= 'list';
-	const TYPE_VALUE_JOINER 	= '___';
-
-	const LIST_REPO_METHOD		= 'findForList';
-	const LIST_REPO_DEFAULT		= 'findAll';
+class entiteController extends baseController {
 
 
 	protected function getEntiteData($entite, $type_related = null, $type_field = null, $type_values = null, $method = null, $params = null, $repository = null, $action = null, $id = null) {
 		if($action == null) $action = self::DEFAULT_ACTION;
 		if(is_object($entite)) $entite = get_class($entite);
 		$data = array();
-		$data['sitedata'] = $this->get('aetools.aeSite')->getRepo()->findByDefault(true)[0];
+		$data['sitedata'] = $this->get('aetools.aeSite')->getDefaultSiteData();
 		// find names of entity
 		$data['entite_name'] = $this->get('aetools.aeEntity')->getEntityShortName($entite);
 		$data['classname'] = $this->get('aetools.aeEntity')->getEntityClassName($entite);
@@ -38,7 +32,6 @@ class entiteController extends Controller {
 		$data['repo']['method']	= $method;
 		if($method != null && $repository == null) $repository = $data['classname'];
 		$data['repo']['repository']	= $repository;
-		$data['type']['type_related']	= $type_related;
 		$data['type']['type_related']	= $type_related;
 		$data['type']['type_field']		= $type_field;
 		$data['type']['type_values']	= $this->typeValuesToArray(urldecode($type_values));
@@ -80,7 +73,7 @@ class entiteController extends Controller {
 
 		// page générique entités
 		switch ($data['action']) {
-			case 'create' :
+			case self::CREATE_ACTION :
 				$data['entite'] = $entityService->getNewEntity($data['classname']);
 				$data[$data['action'].'_form'] = $this->getEntityFormView($data);
 				if($data[$data['action'].'_form'] == false) {
@@ -89,7 +82,7 @@ class entiteController extends Controller {
 					$data['id'] = null;
 				}
 				break;
-			case 'show' :
+			case self::SHOW_ACTION :
 				$data['entite'] = $entityService->getRepo($data['classname'])->find($id);
 				if(!is_object($data['entite'])) {
 					// $this->get('aetools.aeExceptions')->launchException('not_found', null, $data['entite_name']);
@@ -102,7 +95,7 @@ class entiteController extends Controller {
 					$data['id'] = null;
 				}
 				break;
-			case 'edit' :
+			case self::EDIT_ACTION :
 				set_time_limit(300);
 				$memory = $this->get('aetools.aetools')->getConfigParameters('cropper.yml', 'memory_limit');
 				ini_set("memory_limit", $memory);
@@ -116,15 +109,21 @@ class entiteController extends Controller {
 					));
 					$data['action'] = self::DEFAULT_ACTION;
 					$data['id'] = null;
-				}
-				$data[$data['action'].'_form'] = $this->getEntityFormView($data);
-				if($data[$data['action'].'_form'] == false) {
-					// erreur formulaire
-					$data['action'] = self::DEFAULT_ACTION;
-					$data['id'] = null;
+				} else {
+					$data[$data['action'].'_form'] = $this->getEntityFormView($data);
+					if($data[$data['action'].'_form'] == false) {
+						// erreur formulaire
+						$this->get('flash_messages')->send(array(
+							'title'		=> 'Erreur formulaire',
+							'type'		=> flashMessage::MESSAGES_ERROR,
+							'text'		=> 'Le formulaire n\'a pas été généré correctement.',
+						));
+						$data['action'] = self::DEFAULT_ACTION;
+						$data['id'] = null;
+					}
 				}
 				break;
-			case 'check' :
+			case self::CHECK_ACTION :
 				// DEFAULT_ACTION
 				if($data['type']['type_values'] != null) {
 					$data['entites'] = $entityService->getRepo()->findByField($data['type'], self::TYPE_SELF, true);
@@ -136,7 +135,7 @@ class entiteController extends Controller {
 					// $data['entites'] = $entityService->getRepo()->findAll();
 				}
 				break;
-			case 'delete' :
+			case self::DELETE_ACTION :
 				$data['entite'] = $entityService->getRepo()->find($id);
 				if(!is_object($data['entite'])) {
 					$this->get('flash_messages')->send(array(
@@ -170,7 +169,7 @@ class entiteController extends Controller {
 				$data['id'] = null;
 				return $this->redirect($this->generateEntityUrl($data));
 				break;
-			case 'active' :
+			case self::ACTIVE_ACTION :
 				$data['entite'] = $entityService->getRepo()->find($id);
 				if(!is_object($data['entite'])) {
 					$this->get('flash_messages')->send(array(
@@ -204,7 +203,7 @@ class entiteController extends Controller {
 					'type'		=> flashMessage::MESSAGES_WARNING,
 					'text'		=> 'L\'image de '.$data['entite'].' a été supprimée.',
 				));
-				$data['action'] = 'show';
+				$data['action'] = self::SHOW_ACTION;
 				return $this->redirect($this->generateEntityUrl($data));
 				break;
 			case 'delete_linked_logo' :
@@ -218,7 +217,7 @@ class entiteController extends Controller {
 					'type'		=> flashMessage::MESSAGES_WARNING,
 					'text'		=> 'Le logo de '.$data['entite'].' a été supprimé.',
 				));
-				$data['action'] = 'show';
+				$data['action'] = self::SHOW_ACTION;
 				return $this->redirect($this->generateEntityUrl($data));
 				break;
 			default:
@@ -251,12 +250,15 @@ class entiteController extends Controller {
 				$data['entites'] = $repo->$method();
 			}
 		}
+
+		// ajout de données contextuelles (selon entity et action)
+		$this->addContextData($data);
 		
 		$template = 'siteadminBundle:entites:'.$entite.ucfirst($data['action']).'.html.twig';
 		if(!$this->get('templating')->exists($template)) {
 			$template = 'siteadminBundle:entites:'.'entite'.ucfirst($data['action']).'.html.twig';
 			if(!$this->get('templating')->exists($template)) {
-				$this->redirect($this->generateUrl('siteadmin_homepage'));
+				return $this->redirect($this->generateUrl('siteadmin_homepage'));
 			}
 		}
 		return $this->render($template, $data);
@@ -278,6 +280,69 @@ class entiteController extends Controller {
 		return $this->generateUrl('siteadmin_entite', array('entite' => $data['entite_name'], 'action' => $data['action'], 'id' => $data['id']));
 	}
 
+	protected function addContextData(&$data) {
+		$entityService = $this->get('aetools.aeEntity')->getEntityService($data['entite_name']);
+		switch ($data['entite_name']) {
+			case 'categorie':
+				$jstreeObjects = $this->get('aetools.aeJstree');
+				if($data['action'] == self::LIST_ACTION) {
+					$rootParents = array();
+					foreach ($data['entites'] as $entite) {
+						// treeview
+						$jstreeObjects->createNew($entite);
+						// rootparents
+						if(is_object($entite->getRootParent(1))) 
+							$rootParents[$entite->getId()] = $entite->getRootParent(1);
+					}
+					if(count($rootParents) < 1) $rootParents = null;
+						else $rootParents = reset($rootParents);
+					// formulaire création new
+					$data['new_entite'] = $entityService->getNewEntity($data['classname']);
+					if($rootParents != null) {
+						$data['new_entite']->addParent($rootParents);
+					}
+					// $data['type']['type_field']
+					// $data['type']['type_values']
+
+					// $data['form_pre_create'] =
+						// $this->getEntityFormView($data, 'preCategorieType');
+						// $this->createFormBuilder('preCategorieType', array())
+							// ->setAction($this->generateUrl('siteadmin_entite', array('entite' => $data['entite_name'], 'action' => self::CREATE_ACTION)))
+							// ->add('input', 'text', array(
+							// 	'label' => 'form.nom',
+							// 	'translation_domain' => 'messages',
+							// 	))
+							// ->add('submit', 'submit', array(
+							// 	'attr' => array('class' => 'btn-danger btn-outline', 'label' => self::CREATE_ACTION),
+							// 	))
+							// ->getForm()
+							// ->createView()
+							;
+				} else if($data['action'] == self::SHOW_ACTION) {
+					$jstreeObjects->createNew($data['entite']);
+				}
+				$data['jstreeObjects'] = $jstreeObjects;
+				break;
+			default:
+				# code...
+				break;
+		}
+		return $data;
+	}
+
+		// return $this->createFormBuilder(null, array('attr' => array('style' => 'display: inline;')))
+		// 	->setAction($this->generateUrl('siteadmin_entite', array('id' => $id)))
+		// 	->setMethod('DELETE')
+		// 	->add('submit', 'submit', array(
+		// 		'label' => '<i class="fa fa-times"></i> '.$this->get('translator')->trans($texte),
+		// 		'attr' => array(
+		// 			'class' => $class,
+		// 			'data-name' => $name,
+		// 			)
+		// 		))
+		// 	->getForm()
+		// ;
+
 	/**
 	 * Actions en retour de formulaire entity
 	 * @param string $classname
@@ -290,7 +355,7 @@ class entiteController extends Controller {
 		$memory = $this->get('aetools.aetools')->getConfigParameters('cropper.yml', 'memory_limit');
 		ini_set("memory_limit", $memory);
 		$data = array();
-		$data['sitedata'] = $this->get('aetools.aeSite')->getRepo()->findByDefault(true)[0];
+		$data['sitedata'] = $this->get('aetools.aeSite')->getDefaultSiteData();
 		$classname = urldecode($classname);
 		$entiteType = str_replace('Entity', 'Form', $classname.'Type');
 		$typeTmp = new $entiteType($this);
@@ -323,7 +388,7 @@ class entiteController extends Controller {
 			));
 		} else {
 			switch ($data['action']) {
-				case 'delete':
+				case self::DELETE_ACTION:
 					$entityService->softDelete($data['entite']);
 					if(isset($data['onSuccess'])) return $this->redirect($data['onSuccess']);
 					break;
@@ -394,27 +459,37 @@ class entiteController extends Controller {
 	 */
 	public function getEntityForm(&$data, $typeType = null, $getViewNow = false) {
 		if(!is_array($data)) throw new Exception("getEntityForm : data doit être défini !", 1);
-		$types_valid = array('create', 'edit', 'copy', 'delete');
+		$types_valid = array(self::LIST_ACTION, self::SHOW_ACTION, self::CREATE_ACTION, self::EDIT_ACTION, self::COPY_ACTION, self::DELETE_ACTION);
 		if(!in_array($data['action'], $types_valid)) {
 			// throw new Exception("Action ".$action." invalide, doit être ".json_encode($types_valid, true), 1);
 			throw new Exception("getEntityForm => type d'action invalide : ".$data['action'], 1);
 		}
 		// récupère les directions en fonction des résultats
 		$this->addContextActionsToData($data);
-		$viewForm = false;
 		$form = false;
 		// define Type
-		if(!is_string($typeType)) $typeType = $data['classname'].'Type';
-		$entiteType = str_replace('Entity', 'Form', $typeType);
+		$baseClassType = str_replace('Entity', 'Form', preg_replace('#'.$data['entite_name'].'$#', '', $data['classname']));
+		$entiteType = $typeType;
+		if(!is_string($typeType)) {
+			// Type non fourni => Type selon nom de l'entité
+			$entiteType = $baseClassType.$data['entite_name'].'Type';
+		} else if(!preg_match('#^(.+\\.+)+$#', $typeType)) {
+			// Type fourni => vérification si classname complet fourni
+			$entiteType = $baseClassType.$typeType;
+		}
 		switch ($data['action']) {
-			case 'create':
-			case 'edit':
+			case self::SHOW_ACTION:
+			case self::LIST_ACTION:
+			case self::CREATE_ACTION:
 				$form = $this->createForm(new $entiteType($this, $data), $data['entite']);
 				break;
-			case 'copy':
+			case self::EDIT_ACTION:
+				$form = $this->createForm(new $entiteType($this, $data), $data['entite']);
+				break;
+			case self::COPY_ACTION:
 				throw new Exception("Ce formulaire ".$data['action']." n'est pas encore supporté.", 1);
 				break;
-			case 'delete':
+			case self::DELETE_ACTION:
 				throw new Exception("Ce formulaire ".$data['action']." n'est pas encore supporté.", 1);
 				break;
 			default:
@@ -425,15 +500,15 @@ class entiteController extends Controller {
 				));
 				break;
 		}
-		if($form != false) $viewForm = $form->createView();
-			else {
-				$this->get('flash_messages')->send(array(
-					'title'		=> 'Erreur de génération du formalaire',
-					'type'		=> flashMessage::MESSAGES_ERROR,
-					'text'		=> 'Le formulaire n\'a pas pu être généré. Veuillez contacter le webmaster.',
-				));
-			}
-		if($getViewNow != false) return $viewForm;
+		if($form == false) {
+			$this->get('flash_messages')->send(array(
+				'title'		=> 'Erreur de génération du formalaire',
+				'type'		=> flashMessage::MESSAGES_ERROR,
+				'text'		=> 'Le formulaire n\'a pas pu être généré. Veuillez contacter le webmaster.',
+			));
+		} else {
+			if($getViewNow != false) return $form->createView();
+		}
 		return $form;
 	}
 
@@ -458,14 +533,14 @@ class entiteController extends Controller {
 							'type_related'	=> $data['type']['type_related'],
 							'type_field'	=> $data['type']['type_field'],
 							'type_values'	=> $this->typeValuesToString($data['type']['type_values']),
-							'action'		=> 'show',
+							'action'		=> self::SHOW_ACTION,
 							'id'			=> $data['entite']->getId(),
 							), true);
 					} else {
 						$data['onSuccess'] = $this->generateUrl('siteadmin_entite', array(
 							'entite'	=> $data['entite_name'],
 							'id'		=> $data['entite']->getId(),
-							'action'	=> 'show',
+							'action'	=> self::SHOW_ACTION,
 							), true);
 					}
 				}
@@ -473,8 +548,7 @@ class entiteController extends Controller {
 					$data['onError'] = null;
 				}
 				break;
-			case 'create':
-			case 'edit':
+			case self::CREATE_ACTION:
 				if(!isset($data['form_action'])) {
 					$data['form_action'] = $this->generateUrl('siteadmin_form_action', array(
 						'classname'	=> $data['classname'],
@@ -487,14 +561,41 @@ class entiteController extends Controller {
 							'type_related'	=> $data['type']['type_related'],
 							'type_field'	=> $data['type']['type_field'],
 							'type_values'	=> $this->typeValuesToString($data['type']['type_values']),
-							'action'		=> 'list',
+							'action'		=> self::LIST_ACTION,
 							// 'id'			=> $data['entite']->getId(),
 							), true);
 					} else {
 						$data['onSuccess'] = $this->generateUrl('siteadmin_entite', array(
 							'entite'	=> $data['entite_name'],
 							// 'id'		=> $data['entite']->getId(),
-							'action'	=> 'list',
+							'action'	=> self::LIST_ACTION,
+							), true);
+					}
+				}
+				if(!isset($data['onError'])) {
+					$data['onError'] = null;
+				}
+			case self::EDIT_ACTION:
+				if(!isset($data['form_action'])) {
+					$data['form_action'] = $this->generateUrl('siteadmin_form_action', array(
+						'classname'	=> $data['classname'],
+						), true);
+				}
+				if(!isset($data['onSuccess'])) {
+					if($data['type']['type_related'] != null) {
+						$data['onSuccess'] = $this->generateUrl('siteadmin_entite_type', array(
+							'entite'		=> $data['entite_name'],
+							'type_related'	=> $data['type']['type_related'],
+							'type_field'	=> $data['type']['type_field'],
+							'type_values'	=> $this->typeValuesToString($data['type']['type_values']),
+							'action'		=> self::LIST_ACTION,
+							// 'id'			=> $data['entite']->getId(),
+							), true);
+					} else {
+						$data['onSuccess'] = $this->generateUrl('siteadmin_entite', array(
+							'entite'	=> $data['entite_name'],
+							// 'id'		=> $data['entite']->getId(),
+							'action'	=> self::LIST_ACTION,
 							), true);
 					}
 				}
@@ -502,7 +603,7 @@ class entiteController extends Controller {
 					$data['onError'] = null;
 				}
 				break;
-			case 'copy':
+			case self::COPY_ACTION:
 				if(!isset($data['form_action'])) {
 					$data['form_action'] = $this->generateUrl('siteadmin_form_action', array(
 						'classname'	=> $data['classname'],
@@ -512,14 +613,14 @@ class entiteController extends Controller {
 					$data['onSuccess'] = $this->generateUrl('siteadmin_entite', array(
 						'entite'	=> $data['entite_name'],
 						'id'		=> null,
-						'action'	=> 'show',
+						'action'	=> self::SHOW_ACTION,
 						), true);
 				}
 				if(!isset($data['onError'])) {
 					$data['onError'] = null;
 				}
 				break;
-			case 'delete':
+			case self::DELETE_ACTION:
 				if(!isset($data['form_action'])) {
 					$data['form_action'] = $this->generateUrl('siteadmin_form_action', array(
 						'classname'	=> $data['classname'],
@@ -534,13 +635,17 @@ class entiteController extends Controller {
 					$data['onError'] = $this->generateUrl('siteadmin_entite', array(
 						'entite'	=> $data['entite_name'],
 						'id'		=> $data['entite']->getId(),
-						'action'	=> 'show',
+						'action'	=> self::SHOW_ACTION,
 						), true);
 				}
 				break;
 			
 			default:
-				# code...
+				if(!isset($data['form_action'])) {
+					$data['form_action'] = $this->generateUrl('siteadmin_form_action', array(
+						'classname'	=> $data['classname'],
+						), true);
+				}
 				break;
 		}
 		// return $data;

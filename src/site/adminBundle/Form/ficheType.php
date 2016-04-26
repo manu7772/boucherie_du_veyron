@@ -9,7 +9,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 // Transformer
 use Symfony\Component\Form\CallbackTransformer;
 // User
-use Symfony\Component\Security\Core\SecurityContext;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage as SecurityContext;
 // Paramétrage de formulaire
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormEvent;
@@ -49,6 +49,9 @@ class ficheType extends baseType {
 				'label' => 'fields.descriptif',
 				'translation_domain' => 'fiche',
 				'required' => false,
+				'attr' => array(
+					'data-height' => 400,
+					)
 				))
 			->add('niveau', 'choice', array(
 				"required"  => true,
@@ -69,18 +72,18 @@ class ficheType extends baseType {
 			// ->add('dateCreation')
 			// ->add('dateMaj')
 			// ->add('slug')
-			->add('statut', 'entity', array(
-				'class'     => 'siteadminBundle:statut',
-				'property'  => 'nom',
-				'multiple'  => false,
-				"label"     => 'name',
-				'translation_domain' => 'statut',
-				"query_builder" => function($repo) {
-					if(method_exists($repo, 'defaultValsListClosure'))
-						return $repo->defaultValsListClosure($this->aeEntities);
-						else return $repo->findAllClosure();
-					},
-				))
+			// ->add('statut', 'entity', array(
+			// 	'class'     => 'siteadminBundle:statut',
+			// 	'property'  => 'nom',
+			// 	'multiple'  => false,
+			// 	"label"     => 'name',
+			// 	'translation_domain' => 'statut',
+			// 	"query_builder" => function($repo) {
+			// 		if(method_exists($repo, 'defaultValsListClosure'))
+			// 			return $repo->defaultValsListClosure($this->aeEntities);
+			// 			else return $repo->findAllClosure();
+			// 		},
+			// 	))
 			->add('image', new cropperType($this->controller, array('image' => array('owner' => 'fiche:image'))), array(
 				'label' => 'fields.image',
 				'translation_domain' => 'fiche',
@@ -93,9 +96,9 @@ class ficheType extends baseType {
 				'class'		=> 'siteadminBundle:tag',
 				'multiple'	=> true,
 				'required'	=> false,
+				'placeholder'   => 'form.select',
 				'attr'		=> array(
-					'class'			=> 'chosen-select chosen-select-width chosen-select-no-results',
-					'placeholder'	=> 'form.select',
+					'class'			=> 'select2',
 					),
 				))
 			->add('articles', 'entity', array(
@@ -105,9 +108,9 @@ class ficheType extends baseType {
 				'class'		=> 'siteadminBundle:article',
 				'multiple'	=> true,
 				'required'	=> false,
+				'placeholder'   => 'form.select',
 				'attr'		=> array(
-					'class'			=> 'chosen-select chosen-select-width chosen-select-no-results',
-					'placeholder'	=> 'form.select',
+					'class'			=> 'select2',
 					),
 				))
 			->add('datePublication', 'insDatepicker', array(

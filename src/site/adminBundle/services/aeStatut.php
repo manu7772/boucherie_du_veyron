@@ -21,8 +21,8 @@ class aeStatut extends aeEntity {
      * @param baseEntity $entity
      * @return aeStatut
      */
-    public function checkAfterChange(baseEntity &$entity) {
-        parent::checkAfterChange($entity);
+    public function checkAfterChange(baseEntity &$entity, $butEntities = []) {
+        parent::checkAfterChange($entity, $butEntities);
         return $this;
     }
 

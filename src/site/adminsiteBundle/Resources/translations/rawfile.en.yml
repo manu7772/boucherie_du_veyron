@@ -1,0 +1,41 @@
+name_s: raw-files
+name: raw-file
+not_found: 'no raw-file found'
+x_found: '{0} no raw-file found|{1} 1 raw-file found|[2,+Inf] %count% raw-files found'
+create: 'create new raw-file'
+create_btn: 'new raw-file'
+backlist: 'back to list of raw-files'
+backlist_btn: 'back to list'
+dontexist: 'this raw-file does not exist'
+moredetails: 'more details on %name%'
+existe: this raw-file already exists
+deleteAllTemp: delete Temp
+dimensionInconnue: (undefined dimensions)
+types:
+    image:
+        name: raw-image
+        name_s: raw-images
+    pdf:
+        name: raw-PDF
+        name_s: raw-PDFs
+form:
+    select: Select…
+fields:
+    id: id
+    nom: name
+    created: created
+    updated: updated
+    binaryFile: preview
+    originalnom: original name
+    format: format
+    extension: extension
+    width: width
+    height: height
+    fileSize: file size
+    descriptif: description
+    jamais: no modification
+    subEntitys: elements
+    parents: parents
+    parent: parent
+    elements: elements
+    icon: icon

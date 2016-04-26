@@ -119,6 +119,13 @@ class message {
 		$this->read = null;
 	}
 
+	public function memOldValues($addedfields = null) {
+		$fields = array('user');
+		if(count($addedfields) > 0 && is_array($addedfields)) $fields = array_unique(array_merge($fields, $addedfields));
+		parent::memOldValues($fields);
+		return $this;
+	}
+
 	public function __toString() {
 		return $this->getObjet()."/".$this->getNom();
 	}
@@ -353,8 +360,7 @@ class message {
 	 * @param user $user
 	 * @return article
 	 */
-	public function setUser(User $user = null, $doReverse = true) {
-		if($doReverse == true && $user != null) $user->addMessage($this, false);
+	public function setUser(User $user = null) {
 		$this->user = $user;
 		return $this;
 	}

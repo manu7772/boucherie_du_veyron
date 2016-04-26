@@ -9,9 +9,10 @@ use Doctrine\Common\Collections\ArrayCollection;
 // Slug
 use Gedmo\Mapping\Annotation as Gedmo;
 
+use site\adminBundle\services\aetools;
 use \ReflectionClass;
-use \DateTime;
 use \Exception;
+use \DateTime;
 
 /**
  * @ORM\MappedSuperclass
@@ -31,6 +32,12 @@ abstract class baseEntity {
 	 * @ORM\Column(name="nom", type="string", nullable=true, unique=false)
 	 */
 	protected $nom;
+
+	/**
+	 * @var string
+	 * @ORM\Column(name="icon", type="string", nullable=true, unique=false)
+	 */
+	protected $icon;
 
 	/**
 	 * @var DateTime
@@ -56,12 +63,15 @@ abstract class baseEntity {
 	 */
 	protected $default;
 
+	protected $listIcons;
 
 	public function __construct() {
 		$this->nom = null;
+		$this->icon = null;
 		$this->created = new DateTime();
 		$this->updated = null;
 		$this->default = false;
+		$listIcons = null;
 	}
 
 	public function __toString() {
@@ -74,11 +84,61 @@ abstract class baseEntity {
     }
 
 	/**
+	 * @ORM\PrePersist
+	 * @ORM\PreUpdate
+	 */
+	public function check() {
+		// do nothing, here…
+	}
+
+	/**
+	 * @Assert\IsTrue(message="L'entité de base n'est pas conforme.")
+	 */
+	public function isBaseEntityValid() {
+		return true;
+	}
+
+	/**
 	 * Get id
 	 * @return integer 
 	 */
 	public function getId() {
 		return $this->id;
+	}
+
+	public function getListIcons($flat = false) {
+		if($this->listIcons == null) {
+			$aetools = new aetools();
+			$this->listIcons = $this->transformIconList($aetools->getLaboParam('icons', 'labo_icons.yml'));
+		}
+		if(!(bool) $flat) return $this->listIcons;
+			else return $this->getFlatList($this->listIcons);
+	}
+
+	public function setListIcons($array) {
+		$this->listIcons = $array;
+	}
+
+	protected function getFlatList($array) {
+		$flat_list = array();
+		if(is_array($array)) {
+			foreach ($array as $value) {
+				if(is_array($value)) $flat_list = array_merge($flat_list, $this->getFlatList($value));
+					else if(is_string($value)) $flat_list[] = $value;
+			}
+		} else if(is_string($array)) $flat_list[] = $value;
+		return $flat_list;
+	}
+
+	protected function transformIconList($iconList) {
+		$list = array();
+		if(is_array($iconList)) {
+			foreach ($iconList as $key => $icon) {
+				if(is_array($icon)) $list[$key] = $this->transformIconList($icon);
+					else if(is_string($icon)) $list[$icon] = preg_replace('#^fa-#', '', $icon);
+			}
+		} else if(is_string($iconList)) $list[$iconList] = preg_replace('#^fa-#', '', $iconList);
+		return $list;
 	}
 
 	/**
@@ -150,12 +210,31 @@ abstract class baseEntity {
 	}
 
 	/**
+	 * Set icon
+	 * @param string $icon
+	 * @return baseEntity
+	 */
+	public function setIcon($icon = null) {
+		if(trim($icon) == '') $icon = null;
+		$this->icon = trim($icon);
+		return $this;
+	}
+
+	/**
+	 * Get icon
+	 * @return string 
+	 */
+	public function getIcon() {
+		return $this->icon;
+	}
+
+	/**
 	 * Set default
 	 * @param string $default
 	 * @return baseEntity
 	 */
 	public function setDefault($default) {
-		$default == true ? $this->default = true : $this->default = false;
+		$this->default = (bool) $default;
 		return $this;
 	}
 

@@ -9,7 +9,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 // Transformer
 use Symfony\Component\Form\CallbackTransformer;
 // User
-use Symfony\Component\Security\Core\SecurityContext;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage as SecurityContext;
 // Paramétrage de formulaire
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormEvent;
@@ -42,6 +42,9 @@ class pagewebType extends baseType {
 				'label' => 'fields.code',
 				'translation_domain' => 'pageweb',
 				'required' => false,
+				'attr' => array(
+					'data-height' => 300,
+					)
 				))
 			->add('title', 'text', array(
 				'label' => 'fields.title',
@@ -82,9 +85,10 @@ class pagewebType extends baseType {
 				'class' => 'site\adminBundle\Entity\tag',
 				'multiple' => true,
 				'required' => false,
-				'attr' => array(
-					'class' => 'chosen-select chosen-select-width chosen-select-no-results',
-					'placeholder' => 'form.select',
+				'placeholder'   => 'form.select',
+				'attr'		=> array(
+					'class'			=> 'select2',
+					'data-limit'	=> 8,
 					),
 				"query_builder" => function($repo) {
 					if(method_exists($repo, 'defaultValsListClosure'))
@@ -92,6 +96,23 @@ class pagewebType extends baseType {
 						else return $repo->findAllClosure();
 					},
 				))
+			->add('parents', 'entity', array(
+				"label"     => 'name_s',
+				'translation_domain' => 'categorie',
+				'class'     => 'siteadminBundle:categorie',
+				'property'  => 'nom',
+				'multiple'  => true,
+				'required' => false,
+				'group_by' => 'parent.nom',
+				"query_builder" => function($repo) {
+					return $repo->getElementsBySubTypeButRoot(array('pageweb'));
+			    	},
+				'placeholder'   => 'form.select',
+				'attr'		=> array(
+					'class'			=> 'select2',
+					),
+				))
+
 		;
 		// ajoute les valeurs hidden, passés en paramètre
 		$this->addHiddenValues($builder, true);

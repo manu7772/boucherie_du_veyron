@@ -1,5 +1,5 @@
 {% extends 'siteadminBundle:entites:entiteShow.html.twig' %}
-{% set cssjsloads = 'TAB' %}
+{% set cssjsloads = 'simple' %}
 {% set DEVMODE = (app.environment in ['DEV', 'TEST']) or (is_granted('ROLE_SUPER_ADMIN')) %}
 
 {% block page_heading %}
@@ -30,28 +30,32 @@
 					<tbody>
 						{% if entite.nom is defined %}
 						<tr>
-							<td><strong>{{ 'table.col.nom'|trans }}</strong></td>
+							<td><strong>{{ UCfirst('fields.nom'|trans({}, entite_name)) }}</strong></td>
 							<td>{{ entite.nom }}</td>
 						</tr>
 						{% endif %}
 						<tr>
-							<td><strong>{{ 'table.col.title'|trans }}</strong></td>
+							<td><strong>{{ UCfirst('fields.parents'|trans({}, entite_name)) }}</strong></td>
+							<td>{{ actions.labelLinkList(entite.allParentsInverse, entite.parents, null, null, null, 'show') }}</td>
+						</tr>
+						<tr>
+							<td><strong>{{ UCfirst('fields.title'|trans({}, entite_name)) }}</strong></td>
 							<td>{{ entite.title }}</td>
 						</tr>
 						<tr>
-							<td><strong>{{ 'table.col.titreh1'|trans }}</strong></td>
+							<td><strong>{{ UCfirst('fields.titreh1'|trans({}, entite_name)) }}</strong></td>
 							<td>{{ entite.titreh1 }}</td>
 						</tr>
 						<tr>
-							<td><strong>{{ 'table.col.modele'|trans }}</strong></td>
+							<td><strong>{{ UCfirst('fields.modele'|trans({}, entite_name)) }}</strong></td>
 							<td>{{ entite.modelename }}</td>
 						</tr>
 						<tr>
-							<td><strong>{{ 'table.col.metadescription'|trans }}</strong></td>
+							<td><strong>{{ UCfirst('fields.metadescription'|trans({}, entite_name)) }}</strong></td>
 							<td>{{ entite.metadescription }}</td>
 						</tr>
 						<tr>
-							<td><strong>{{ 'table.col.keywords'|trans }}</strong></td>
+							<td><strong>{{ UCfirst('fields.keywords'|trans({}, entite_name)) }}</strong></td>
 							<td>{{ entite.keywords }}</td>
 						</tr>
 					</tbody>

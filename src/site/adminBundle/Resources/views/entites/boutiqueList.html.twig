@@ -19,6 +19,7 @@
 							<th class="text-center" style="width:1%;">{{ UCfirst('fields.mainMedia'|trans({}, entite_name)) }}</th>
 							<th>{{ UCfirst('fields.nom'|trans({}, entite_name)) }}</th>
 							<th>{{ UCfirst('actions.name'|trans) }}</th>
+							<th>{{ UCfirst('fields.parents'|trans({}, entite_name)) }}</th>
 							<th>{{ UCfirst('fields.descriptif'|trans({}, entite_name)) }}</th>
 						</tr>
 					</thead>
@@ -61,6 +62,7 @@
 								{% endif %}
 								- OFF ---------------------- #}
 							</td>
+							<td{{ bgcolor|raw }}>{{ actions.labelList(entite.allParentsInverse, entite.parents) }}</td>
 							<td{{ bgcolor|raw }}>{{ entite.descriptif|raw }}</td>
 						</tr>
 						{% endfor %}

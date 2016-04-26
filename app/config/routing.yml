@@ -1,3 +1,7 @@
+siteadminsite:
+    resource: "@siteadminsiteBundle/Resources/config/routing.yml"
+    prefix:   /
+
 main_admin:
     pattern: /{_locale}
     defaults: { _controller: siteadminBundle:Default:index, _locale: %locale% }

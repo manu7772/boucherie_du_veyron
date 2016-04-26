@@ -21,6 +21,8 @@ use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\ClassMetadata;
 
+use \Exception;
+
 /**
  * categorieRepository
  *
@@ -37,10 +39,137 @@ class categorieRepository extends EntityBaseRepository {
 	// use ClosureTreeRepository;
 	// use AbstractTreeRepository;
 
-	public function __construct(EntityManager $em, ClassMetadata $class) {
-		parent::__construct($em, $class);
+	// public function __construct(EntityManager $em, ClassMetadata $class) {
+		// parent::__construct($em, $class);
 		// $this->initializeTreeRepository($em, $class);
+	// }
+
+
+	public function findArrayTree($id = null, $shortCutContext = false) {
+		$qb = $this->createQueryBuilder(self::ELEMENT);
+		if($id != null) {
+			$id = intval($id);
+			if($id > 0) $qb->where(self::ELEMENT.'.id = :id')->setParameter('id', $id);
+		} else {
+			$qb->where(self::ELEMENT.'.parent IS NULL');
+		}
+		$this->selectForTree($qb, self::ELEMENT, $shortCutContext);
+
+		$results = $qb->getQuery()->getScalarResult();
+		$this->addChildrenInTree($results, $shortCutContext);
+		return $results;
 	}
+
+	protected function addChildrenInTree(&$elements, $shortCutContext = false) {
+		foreach ($elements as $key => $element) {
+			// opened
+			// $fields = $this->getFields();
+			$fields = array('opened','bundles');
+			foreach ($fields as $field) {
+				switch ($field) {
+					case 'opened':
+						if(isset($elements[$key][$field])) $elements[$key]['state'] = array($field => (boolean) $elements[$key][$field]);
+							else $elements[$key]['state'] = array($field => false);
+						unset($elements[$key][$field]);
+						break;
+					default:
+						if(isset($elements[$key][$field])) {
+							if(unserialize($elements[$key][$field]) != null) {
+								$elements[$key][$field] = unserialize($elements[$key][$field]);
+							} else {
+								$elements[$key][$field] = array();
+							}
+						}
+						break;
+				}
+			}
+			// new Request
+			$qb = $this->createQueryBuilder(self::ELEMENT);
+			$qb->where(self::ELEMENT.'.parent = :parentId')->setParameter('parentId', $element['id']);
+			$this->selectForTree($qb, self::ELEMENT, $shortCutContext);
+			// subEntities
+			$qb->leftJoin(self::ELEMENT.'.subEntitys', 'subEntitys');
+			$qb->addSelect('subEntitys.id subId');
+			// result
+			// echo('<h6 style="color:blue;">'.$qb->getQuery()->getSQL().'</h6>');
+			$results = $qb->getQuery()->getScalarResult();
+			// children
+			if(count($results) > 0) {
+				$this->addChildrenInTree($results, $shortCutContext);
+				if(!isset($elements[$key]['children'])) $elements[$key]['children'] = array();
+				$elements[$key]['children'] = $results + $elements[$key]['children'];
+			}
+			// $this->selectForTree($qb, 'children', $shortCutContext);
+		}
+	}
+
+	protected function addItemsInTree($elem, $shortCutContext = false) {
+	}
+
+	protected function selectForTree(&$qb, $elem, $shortCutContext = false) {
+		$qb->select($elem.'.id id');
+		// context by statut
+		if($shortCutContext == false) $this->contextStatut($qb, $elem);
+		$validFields = $this->getFields();
+		// echo('<pre>');
+		// var_dump($validFields);
+		// die('</pre>');
+		$fields = array(
+			// single
+			// 'id' => 'id', // id inutile / déjà précisé en début de méthode
+			'nom' => 'text',
+			'open' => 'opened',
+			'couleur' => 'color',
+			'class_name' => 'type',
+			// association
+			// 'subEntitys' => array('id' => 'subEntitysId'),
+			'statut' => array('niveau' => 'niveau', 'bundles' => 'bundles'),
+			// 'stat' => array('niveau', 'bundles'),
+			);
+		foreach ($fields as $field => $name) {
+			if(!is_string($field) && is_array($name)) {
+				throw new Exception("Champ manquant : vous devez préciser le nom ou l'alias du champ pour ".json_encode($name).".", 1);
+			}
+			if(!is_string($field) && is_string($name)) $field = $name;
+			if(!is_array($name)) $names = array($name); else $names = $name;
+			if('single' === $validFields[$field]['type']) {
+				// FIELD (single)
+				foreach ($names as $name => $dataName) {
+					$qb->addSelect($elem.'.'.$field.' '.$dataName);
+				}
+			} else if('association' === $validFields[$field]['type']) {
+				// ALIAS (association)
+				// création de l'alias s'il n'existe pas
+				if(!$this->aliasExists($qb, $field)) $qb->join($elem.'.'.$field, $field);
+				foreach ($names as $name => $dataName) {
+					$qb->addSelect($field.'.'.$name.' '.$dataName);
+				}
+			} else {
+				throw new Exception("- ".$elem." : champ \"".$field."\" indéfini !", 1);
+			}
+		}
+		// groupBy
+		$qb->addGroupBy($elem.'.id');
+	}
+
+	// public function findSimpleScalarArticles($onlyActive = false) {
+	// 	$qb = $this->createQueryBuilder(self::ELEMENT)
+	// 		->join(self::ELEMENT.'.statut', 's')
+	// 		->leftJoin(self::ELEMENT.'.serialnumbers', 'sery')
+	// 		->leftJoin('sery.user', 'user')
+	// 		->select(
+	// 			self::ELEMENT.'.id id',
+	// 			self::ELEMENT.'.nom nom',
+	// 			self::ELEMENT.'.slug slug',
+	// 			's.nom statut_nom',
+	// 			'count(sery.id) number_series',
+	// 			'count(user.id) number_users'
+	// 			)
+	// 		->groupBy(self::ELEMENT.'.id')
+	// 		;
+	// 	if($onlyActive === true) $qb = $this->defaultStatut($qb);
+	// 	return $qb->getQuery()->getScalarResult();
+	// }
 
 	/**
 	 * Renvoie les éléments root de catégories
@@ -48,7 +177,8 @@ class categorieRepository extends EntityBaseRepository {
 	 * @return array
 	 */
 	public function findForList($shortCutContext = false) {
-		return $this->findRoots($shortCutContext);
+		return $this->findAll($shortCutContext);
+		// return $this->findRoots($shortCutContext);
 	}
 
 	/**
@@ -69,7 +199,7 @@ class categorieRepository extends EntityBaseRepository {
 	 * @param boolean $shortCutContext = false
 	 * @return array
 	 */
-	public function findLevel($level = 1, $types = null, $shortCutContext = false) {
+	public function findLevel($level = 0, $types = null, $shortCutContext = false) {
 		$qb = $this->createQueryBuilder(self::ELEMENT);
 		if($types != null) $this->getElementsBySubType($types, $qb);
 		if($shortCutContext == false) $this->contextStatut($qb);
@@ -117,11 +247,30 @@ class categorieRepository extends EntityBaseRepository {
 	/*** CLOSURES                 ***/
 	/********************************/
 
+	public function getElementsBySubTypeButRoot($types, &$qb = null) {
+		$qb = $this->getElementsBySubType($types, $qb);
+		return $this->getNotRoots($qb);
+	}
+
 	public function getElementsBySubType($types, &$qb = null) {
 		if($qb == null) $qb = $this->createQueryBuilder(self::ELEMENT);
 		if(is_string($types)) $types = array($types);
 		foreach ($types as $type) {
 			$qb->orWhere($qb->expr()->orX($qb->expr()->like(self::ELEMENT.'.accepts', $qb->expr()->literal('%'.$type.'%'))));
+		}
+		$this->contextStatut($qb);
+		// resultat
+		return $qb;
+	}
+
+
+	public function getElementsButCategories($categories, &$qb = null) {
+		if($qb == null) $qb = $this->createQueryBuilder(self::ELEMENT);
+		if(is_object($categories)) $categories = array($categories);
+		foreach ($categories as $categorie) {
+			$qb->andWhere(self::ELEMENT.'.id != :id')
+				->setParameter('id', $categorie->getId())
+			;
 		}
 		// resultat
 		return $qb;
@@ -138,7 +287,14 @@ class categorieRepository extends EntityBaseRepository {
 
 	public function getRoots(&$qb = null) {
 		if($qb == null) $qb = $this->createQueryBuilder(self::ELEMENT);
-		$qb->andWhere(self::ELEMENT.'.parent IS NULL');
+		$qb->andWhere(self::ELEMENT.'.lvl = 0');
+		// resultat
+		return $qb;
+	}
+
+	public function getNotRoots(&$qb = null) {
+		if($qb == null) $qb = $this->createQueryBuilder(self::ELEMENT);
+		$qb->andWhere(self::ELEMENT.'.lvl != 0');
 		// resultat
 		return $qb;
 	}

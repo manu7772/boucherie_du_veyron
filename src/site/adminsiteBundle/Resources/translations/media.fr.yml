@@ -1,0 +1,24 @@
+name_s: médias
+name: média
+not_found: 'aucun média trouvé'
+x_found: '{0} aucun média trouvé|{1} 1 média trouvé|[2,+Inf] %count% médias trouvés'
+create: 'créer un nouveau média'
+create_btn: 'nouveau média'
+backlist: 'retour à la liste des médias'
+backlist_btn: 'retour liste'
+dontexist: 'ce média n''existe pas'
+moredetails: 'plus de détails sur %name%'
+existe: ce media existe déjà
+form:
+    select: Sélectionnez…
+fields:
+    id: id
+    nom: nom
+    created: création
+    updated: mis à jour
+    jamais: aucune modification
+    subEntitys: éléments
+    parents: parents
+    parent: parent
+    elements: éléments
+    icon: icône

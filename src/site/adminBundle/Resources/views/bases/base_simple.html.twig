@@ -12,12 +12,13 @@
 
 		'bundles/siteadmin/framework_inspinia/css/plugins/toastr/toastr.min.css'
 		'bundles/siteadmin/framework_inspinia/bootstrap-colorpicker-master/dist/css/bootstrap-colorpicker.css'
-		'bundles/siteadmin/framework_inspinia/css/plugins/chosen/chosen.css'
+		'bundles/siteadmin/framework_inspinia/select2-4.0.2/dist/css/select2.min.css'
 		'bundles/siteadmin/framework_inspinia/css/plugins/summernote/summernote.css'
 		'bundles/siteadmin/framework_inspinia/css/plugins/summernote/summernote-bs3.css'
 		'bundles/siteadmin/framework_inspinia/css/plugins/datapicker/datepicker3.css'
 		'bundles/siteadmin/framework_inspinia/css/plugins/jasny/jasny-bootstrap.min.css'
 		'bundles/siteadmin/framework_inspinia/css/plugins/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css'
+		'bundles/siteadmin/css/switchery_mini.css'
 
 		'bundles/siteadmin/css/style.less'
 		'bundles/siteadmin/framework_inspinia/css/style.less'
@@ -28,7 +29,7 @@
 		<!-- Favicone Icon -->
 		{% block favicon %}
 		{% if sitedata is defined %}
-		{% if sitedata.favicon != null %}
+		{% if sitedata.favicon|default(null) != null %}
 		<link rel="shortcut icon" type="image/x-icon" href="{{ sitedata.favicon.img }}">
 		<link rel="icon" type="image/png" href="{{ sitedata.favicon.img }}">
 		<link rel="apple-touch-icon" href="{{ sitedata.favicon.img }}">
@@ -69,12 +70,13 @@
 		
 		'bundles/siteadmin/framework_inspinia/js/bootstrap.js'
 		'bundles/siteadmin/framework_inspinia/js/plugins/toastr/toastr.min.js'
+		'bundles/siteadmin/framework_inspinia/select2-4.0.2/dist/js/select2.full.min.js'
 		'bundles/siteadmin/framework_inspinia/bootstrap-colorpicker-master/dist/js/bootstrap-colorpicker.js'
-		'bundles/siteadmin/framework_inspinia/js/plugins/chosen/chosen.jquery.js'
 		'bundles/siteadmin/framework_inspinia/js/plugins/summernote/summernote.js'
 		'bundles/siteadmin/framework_inspinia/js/plugins/datapicker/bootstrap-datepicker.js'
 		'bundles/siteadmin/framework_inspinia/js/plugins/jasny/jasny-bootstrap.min.js'
 		'bundles/siteadmin/framework_inspinia/js/plugins/nestable/jquery.nestable.js'
+		'bundles/siteadmin/framework_inspinia/js/plugins/switchery/switchery.js'
 
 		'bundles/siteadmin/js/inspinia-help.js'
 		'bundles/siteadmin/js/inspinia-data-messages.js'
@@ -87,6 +89,7 @@
 		<script type="text/javascript" src="{{ asset_url }}"></script>
 		{% endjavascripts %}
 		{% endblock javascripts %}
+		<script src="{{ asset('bundles/siteadmin/framework_inspinia/select2-4.0.2/dist/js/i18n/' ~ app.request.locale|lower ~ '.js') }}"></script>
 		<script type="text/javascript">
 		jQuery(document).ready(function($) {
 			{% block end_javascripts %}

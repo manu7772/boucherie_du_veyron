@@ -1,0 +1,29 @@
+name_s: TVA rates
+name: TVA rate
+not_found: 'no TVA rate found'
+x_found: '{0} no TVA rate found|{1} 1 TVA rate found|[2,+Inf] %count% TVA rates found'
+create: 'create new TVA rate'
+create_btn: 'new TVA rate'
+created: '{0} no TVA rate created|{1} %count% TVA rate have been created : %list%|[2,+Inf] %count% TVA rates have been created : %list%'
+new: '{0,1}new TVA rate|[2,+Inf] %count% new TVA rates'
+backlist: 'back to list of TVA rates'
+backlist_btn: 'back to list'
+dontexist: 'this TVA rate does not exist'
+bydefault: 'set as default TVA rate'
+existe: 'this TVA rate already exists'
+suppression: 'TVA rate %name% have been deleted'
+moredetails: 'more details on %name%'
+form:
+    select: Select…
+fields:
+    id: id
+    nom: name
+    created: created
+    updated: updated
+    descriptif: description
+    taux: VAT rate
+    TTC: TTC
+    TVA: VAT
+    HT: HT
+    jamais: no modification
+    icon: icon

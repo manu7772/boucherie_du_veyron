@@ -38,6 +38,12 @@
 								{% endif %}
 							</td>
 						</tr>
+						<tr>
+							<td><strong>{{ UCfirst('name_s'|trans({}, 'article')) }}</strong></td>
+							<td>
+								{{ actions.labelLinkList(entite.articles, [], null, type, type_value_joiner, 'show') }}
+							</td>
+						</tr>
 					</tbody>
 				</table>
 			</div>

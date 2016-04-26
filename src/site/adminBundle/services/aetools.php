@@ -5,10 +5,12 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 use Symfony\Component\Yaml\Parser;
 use Symfony\Component\Yaml\Dumper;
+use Doctrine\DBAL\Types\Type;
 
 use \Exception;
 use \DateTime;
 use \ReflectionClass;
+use \ReflectionMethod;
 
 
 /**
@@ -26,12 +28,12 @@ class aetools {
 	const EOLine				= "\n";				// End of line Terminal
 	const TAB1					= "   - ";
 	const TAB2					= "      - ";
-    const ARRAY_GLUE 			= '___';
+	const ARRAY_GLUE 			= '___';
 	// Paths
 	const GO_TO_ROOT 			= '/../../../../';
-    const SOURCE_FILES 			= 'src/';
+	const SOURCE_FILES 			= 'src/';
 	const WEB_PATH				= 'web/';
-    const BUNDLE_EXTENSION 		= 'Bundle';
+	const BUNDLE_EXTENSION 		= 'Bundle';
 	// Dossiers
 	const DEFAULT_CHMOD			= 0755;
 	// DateTime
@@ -92,7 +94,7 @@ class aetools {
 		// initialisation de données nécessaires au service
 		$this->initAllData();
 		// initialisation nécessitant la présence du controller
-		// return $this;
+		return $this;
 	}
 
 	public function __destruct() {
@@ -149,26 +151,9 @@ class aetools {
 			case "WINDOWS": $this->aslash = self::WIN_ASLASH; break;
 			default: $this->aslash = self::ASLASH; break;
 		}
+		// $this->aslash = DIRECTORY_SEPARATOR;
 		// nom du mémo
 		$this->memo = $this->getName().$this->memo;
-	}
-
-	/**
-	 * set configuration from app/config/config.yml (labo)
-	 */
-	public function setConfig($parameters) {
-		$this->labo_parameters = $parameters;
-	}
-
-	/**
-	 * get configuration
-	 * @param string $item
-	 * @return mixed
-	 */
-	public function getConfig($item = null) {
-		if(is_string($item) && array_key_exists($item, $this->labo_parameters)) $params = $this->labo_parameters[$item];
-			else $params = $this->labo_parameters;
-		return $params;
 	}
 
 	/**
@@ -786,6 +771,23 @@ class aetools {
 
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////////
+	// ARRAY FUNCTIONS
+	////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	public function array_unique_in_array2_recursive($array1, $array2) {
+		$result = array();
+		foreach ($array2 as $key => $value) {
+			if(is_array($array2[$key]) && isset($array1[$key])) {
+				if(is_array($array1[$key])) $result[$key] = $this->array_unique_in_array2_recursive($array1[$key], $array2[$key]);
+			} else if(is_array($array1)) {
+				if(!in_array($array2[$key], $array1)) $result[$key] = $array2[$key];
+			}
+		}
+		return $result;
+	}
+
+
+	////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// SERVICE EVENTS
 	////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -1059,7 +1061,7 @@ class aetools {
 	// YML FILES
 	////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	public function getYmlContent($file) {
+	public function getYmlContent($file = 'config.yml') {
 		$pathFile = $this->gotoroot.'app/config/'.$file;
 		if(file_exists($pathFile)) {
 			$yaml = new Parser();
@@ -1069,6 +1071,15 @@ class aetools {
 	}
 
 	public function getConfigParameters($file, $data = null) {
+		$content = $this->getYmlContent($file);
+		if(is_string($data)) {
+			if(isset($content['parameters'][$data])) return $content['parameters'][$data];
+				else throw new Exception("aetools::getConfigParameters() : le paramètre \"".$data."\" n'existe pas dans le fichier ".$file.".", 1);
+		}
+		return $content['parameters'];
+	}
+
+	public function getLaboParam($data = null, $file = 'labo_parameters.yml') {
 		$content = $this->getYmlContent($file);
 		if(is_string($data)) {
 			if(isset($content['parameters'][$data])) return $content['parameters'][$data];
@@ -1382,7 +1393,180 @@ class aetools {
 		if($this->isControllerAbsent()) printf($this->getXRT($n));
 	}
 
+	public function dump_debug($name, $input, $limit = 4) {
+		echo('<pre><h3>'.$name.' : '.gettype($input).'</h3>');
+		var_dump($this->dump_debug_recursive($input, $limit));
+		echo('</pre>');
+	}
 
+	public function dump_debug_recursive($input, $limit = 4) {
+		if($limit > 0) {
+			$data = array();
+			switch (gettype($input)) {
+				case Type::TARRAY:
+					foreach ($input as $key => $value) $data[gettype($input).':'.count($input)][$key] = $this->dump_debug_recursive($value, $limit - 1);
+					break;
+				case Type::OBJECT:
+					$ReflectionClass = new ReflectionClass(get_class($input));
+					$methods = $ReflectionClass->getMethods(ReflectionMethod::IS_PUBLIC);
+					foreach ($methods as $method) {
+						$method = $method->getName();
+						$parameters = $ReflectionClass->getMethod($method)->getParameters();
+						if(preg_match('#^get#', $method)) {
+							if(count($parameters) < 0) {
+								try {
+									$rdata = $this->dump_debug_recursive($input->$method(), $limit - 1);
+								} catch (Exception $e) {
+									$rdata = $e->getMessage();
+								}
+								$data[get_class($input)]['Public:'.$method]['getter:data'] = $rdata;
+							} else {
+								$data[get_class($input)]['Public:'.$method]['getter:params'] = $this->dump_debug_recursive($parameters, $limit - 1);
+							}
+						} else if(preg_match('#^set#', $method)) {
+							$data[get_class($input)]['Public:'.$method]['setter:params'] = $this->dump_debug_recursive($parameters, $limit - 1);
+						} else {
+							$data[get_class($input)]['Public:'.$method]['divers:params'] = $this->dump_debug_recursive($parameters, $limit - 1);
+						}
+					}
+					break;
+				case Type::DATETIME:
+				case Type::DATETIMETZ:
+				case Type::DATE:
+				case Type::TIME:
+					$data[gettype($input)] = $input->format(self::FORMAT_DATETIME_SQL);
+					break;
+				case Type::STRING:
+				case Type::TEXT:
+				case Type::BLOB:
+					$data[gettype($input).':'.strlen($input)] = json_encode($input);
+					break;
+				default:
+					$data[gettype($input)] = json_encode($input);
+					break;
+			}
+			return $data;
+		} else return '…';
+	}
+
+	public function dump_debug_x($input, $collapse = false) {
+		$recursive = function($data, $level = 0) use (&$recursive, $collapse) {
+			global $argv;
+
+			$isTerminal = isset($argv);
+
+			if (!$isTerminal && $level == 0 && !defined("DUMP_DEBUG_SCRIPT")) {
+				define("DUMP_DEBUG_SCRIPT", true);
+
+				echo '<script language="Javascript">function toggleDisplay(id) {';
+				echo 'var state = document.getElementById("container"+id).style.display;';
+				echo 'document.getElementById("container"+id).style.display = state == "inline" ? "none" : "inline";';
+				echo 'document.getElementById("plus"+id).style.display = state == "inline" ? "inline" : "none";';
+				echo '}</script>'."\n";
+			}
+
+			$type = !is_string($data) && is_callable($data) ? "Callable" : ucfirst(gettype($data));
+			$type_data = null;
+			$type_color = null;
+			$type_length = null;
+
+			switch ($type) {
+				case "String": 
+					$type_color = "green";
+					$type_length = strlen($data);
+					$type_data = "\"" . htmlentities($data) . "\""; break;
+
+				case "Double": 
+				case "Float": 
+					$type = "Float";
+					$type_color = "#0099c5";
+					$type_length = strlen($data);
+					$type_data = htmlentities($data); break;
+
+				case "Integer": 
+					$type_color = "red";
+					$type_length = strlen($data);
+					$type_data = htmlentities($data); break;
+
+				case "Boolean": 
+					$type_color = "#92008d";
+					$type_length = strlen($data);
+					$type_data = $data ? "TRUE" : "FALSE"; break;
+
+				case "NULL": 
+					$type_length = 0; break;
+
+				case "Array": 
+					$type_length = count($data);
+			}
+
+			if (in_array($type, array("Object", "Array"))) {
+				$notEmpty = false;
+
+				foreach($data as $key => $value) {
+					if (!$notEmpty) {
+						$notEmpty = true;
+
+						if ($isTerminal) {
+							echo $type . ($type_length !== null ? "(" . $type_length . ")" : "")."\n";
+
+						} else {
+							$id = substr(md5(rand().":".$key.":".$level), 0, 8);
+
+							echo "<a href=\"javascript:toggleDisplay('". $id ."');\" style=\"text-decoration:none\">";
+							echo "<span style='color:#666666'>" . $type . ($type_length !== null ? "(" . $type_length . ")" : "") . "</span>";
+							echo "</a>";
+							echo "<span id=\"plus". $id ."\" style=\"display: " . ($collapse ? "inline" : "none") . ";\">&nbsp;&#10549;</span>";
+							echo "<div id=\"container". $id ."\" style=\"display: " . ($collapse ? "" : "inline") . ";\">";
+							echo "<br />";
+						}
+
+						for ($i=0; $i <= $level; $i++) {
+							echo $isTerminal ? "|    " : "<span style='color:black'>|</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+						}
+
+						echo $isTerminal ? "\n" : "<br />";
+					}
+
+					for ($i=0; $i <= $level; $i++) {
+						echo $isTerminal ? "|    " : "<span style='color:black'>|</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+					}
+
+					echo $isTerminal ? "[" . $key . "] => " : "<span style='color:black'>[" . $key . "]&nbsp;=>&nbsp;</span>";
+
+					call_user_func($recursive, $value, $level+1);
+				}
+
+				if ($notEmpty) {
+					for ($i=0; $i <= $level; $i++) {
+						echo $isTerminal ? "|    " : "<span style='color:black'>|</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+					}
+
+					if (!$isTerminal) {
+						echo "</div>";
+					}
+
+				} else {
+					echo $isTerminal ? 
+							$type . ($type_length !== null ? "(" . $type_length . ")" : "") . "  " : 
+							"<span style='color:#666666'>" . $type . ($type_length !== null ? "(" . $type_length . ")" : "") . "</span>&nbsp;&nbsp;";
+				}
+
+			} else {
+				echo $isTerminal ? 
+						$type . ($type_length !== null ? "(" . $type_length . ")" : "") . "  " : 
+						"<span style='color:#666666'>" . $type . ($type_length !== null ? "(" . $type_length . ")" : "") . "</span>&nbsp;&nbsp;";
+
+				if ($type_data != null) {
+					echo $isTerminal ? $type_data : "<span style='color:" . $type_color . "'>" . $type_data . "</span>";
+				}
+			}
+
+			echo $isTerminal ? "\n" : "<br />";
+		};
+
+		call_user_func($recursive, $input);
+	}
 
 }
 

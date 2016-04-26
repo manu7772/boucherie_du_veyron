@@ -1,0 +1,28 @@
+menu:
+    catalogue:
+        accueil: home
+        comment: order
+        metier: 'our job'
+        fetes: celebrations
+        contact: contact
+        hop-hop-hop: 'contactHOP******!ZAdqsdfqsdfqsdfqsdqsdfqsdfqsdfqsdf qsdfqsd fqsdf qsdfq'
+        connexion: connexion
+        login: login
+        la-connexion-du-jour: 'the login of the day'
+        new: new
+        nouveauté: nouveauté
+        realisations: realisations
+        videos: videos
+    nom: name
+    name: menu
+    name_s: menus
+    not_found: 'no menu found'
+    create_btn: 'new menu'
+    supprimer: delete
+    supprimerligne: 'delete this menu line?'
+    attentionchildren: 'Beware : all children lines of this menu line will be deleted too!'
+    aucunepageweb: 'no element'
+    niveaumax: 'max levels'
+    options: options
+    ajouterligne: 'add a new line'
+    ajouterlignetexte: 'Do you want to add a new line?'

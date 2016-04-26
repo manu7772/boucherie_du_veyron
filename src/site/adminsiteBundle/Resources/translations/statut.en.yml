@@ -1,0 +1,37 @@
+name_s: statuts
+name: statut
+not_found: 'no statut found'
+x_found: '{0} no statut found|{1} 1 statut found|[2,+Inf] %count% statuts found'
+create: 'create new statut'
+create_btn: 'new statut'
+created: '{0} no statut created|{1} %count% statut have been created : %list%|[2,+Inf] %count% statuts have been created : %list%'
+new: '{0,1}new statut|[2,+Inf] %count% new statuts'
+backlist: 'back to list of statuts'
+backlist_btn: 'back to list'
+dontexist: 'this statut does not exist'
+existe: 'this statut already exists'
+suppression: 'statut %name% have been deleted'
+moredetails: 'more details on %name%'
+bydefault: 'set as default statut'
+grants:
+    no_access: You are not granted to access to the statut<br>"%name%"
+form:
+    select: Select…
+fields:
+    id: id
+    nom: name
+    descriptif: description
+    couleur: color
+    niveau: level
+    bundles: bundles
+    created: created
+    updated: updated
+    jamais: no modification
+    icon: icon
+roles:
+    IS_AUTHENTICATED_ANONYMOUSLY: public
+    ROLE_USER: connected
+    ROLE_TRANSLATOR: translator
+    ROLE_EDITOR: éditor
+    ROLE_ADMIN: administrator
+    ROLE_SUPER_ADMIN: webmaster

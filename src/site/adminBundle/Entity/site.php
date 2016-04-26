@@ -69,7 +69,7 @@ class site extends baseEntity {
 	protected $descriptif;
 
 	/**
-	 * @ORM\ManyToOne(targetEntity="site\adminBundle\Entity\categorie")
+	 * @ORM\ManyToOne(targetEntity="site\adminBundle\Entity\categorie", cascade={"persist"})
 	 * @ORM\JoinColumn(nullable=true, unique=false, onDelete="SET NULL")
 	 * @ORM\JoinTable(name="site_cat_menu")
 	 */
@@ -90,7 +90,7 @@ class site extends baseEntity {
 	protected $categorieFooters;
 
 	/**
-	 * @ORM\ManyToMany(targetEntity="site\adminBundle\Entity\boutique", inversedBy="sites")
+	 * @ORM\ManyToMany(targetEntity="site\adminBundle\Entity\boutique", inversedBy="sites", cascade={"persist"})
 	 * @ORM\JoinColumn(nullable=true, unique=false, onDelete="SET NULL")
 	 */
 	protected $boutiques;
@@ -119,6 +119,12 @@ class site extends baseEntity {
      */
     protected $favicon;
 
+    /**
+     * @ORM\OneToOne(targetEntity="site\adminBundle\Entity\image", orphanRemoval=true, cascade={"all"})
+	 * @ORM\JoinColumn(nullable=true, unique=true, onDelete="SET NULL")
+     */
+    protected $adminLogo;
+
 	/**
 	 * @var string
 	 * @ORM\Column(name="couleur", type="string", length=24, nullable=false, unique=false)
@@ -138,9 +144,16 @@ class site extends baseEntity {
 		$this->image = null;
 		$this->logo = null;
 		$this->favicon = null;
+		$this->adminLogo = null;
 		$this->couleur = "rgba(255,255,255,1)";
 	}
 
+	public function memOldValues($addedfields = null) {
+		$fields = array('boutiques', 'collaborateurs');
+		if(count($addedfields) > 0 && is_array($addedfields)) $fields = array_unique(array_merge($fields, $addedfields));
+		parent::memOldValues($fields);
+		return $this;
+	}
 
     // abstract public function getClassName();
     public function getClassName() {
@@ -286,7 +299,7 @@ class site extends baseEntity {
 	 */
 	public function addBoutique(boutique $boutique) {
 		$this->boutiques->add($boutique);
-		$boutique->addSite($this);
+		// $boutique->addSite($this);
 		return $this;
 	}
 
@@ -296,7 +309,7 @@ class site extends baseEntity {
 	 * @return boolean
 	 */
 	public function removeBoutique(boutique $boutique) {
-		$boutique->removeSite($this);
+		// $boutique->removeSite($this);
 		return $this->boutiques->removeElement($boutique);
 	}
 
@@ -315,7 +328,7 @@ class site extends baseEntity {
 	 */
 	public function addCollaborateur(User $collaborateur) {
 		$this->collaborateurs->add($collaborateur);
-		$collaborateur->addSite($this);
+		// $collaborateur->addSite($this);
 		return $this;
 	}
 
@@ -325,7 +338,7 @@ class site extends baseEntity {
 	 * @return boolean
 	 */
 	public function removeCollaborateur(User $collaborateur) {
-		$collaborateur->removeSite($this);
+		// $collaborateur->removeSite($this);
 		return $this->collaborateurs->removeElement($collaborateur);
 	}
 
@@ -392,6 +405,25 @@ class site extends baseEntity {
 	 */
 	public function getFavicon() {
 		return $this->favicon;
+	}
+
+	/**
+	 * Set adminLogo
+	 * @param image $adminLogo
+	 * @return site
+	 */
+	public function setAdminLogo(image $adminLogo = null) {
+		$this->adminLogo = $adminLogo;
+		if($adminLogo != null) $adminLogo->setOwner('site:adminLogo');
+		return $this;
+	}
+
+	/**
+	 * Get adminLogo
+	 * @return image $adminLogo
+	 */
+	public function getAdminLogo() {
+		return $this->adminLogo;
 	}
 
 	/**

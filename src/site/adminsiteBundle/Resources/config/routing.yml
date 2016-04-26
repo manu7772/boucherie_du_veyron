@@ -1,0 +1,114 @@
+siteadmin_homepage:
+    path:     /
+    defaults: { _controller: siteadminsiteBundle:Default:index }
+
+siteadmin_support:
+    path:     /support
+    defaults: { _controller: siteadminsiteBundle:Default:support }
+
+# SUPER ADMIN
+siteadmin_sadmin_index:
+    path:     /superadmin
+    defaults: { _controller: siteadminsiteBundle:superadmin:index }
+
+siteadmin_sadmin_routes:
+    path:     /superadmin/routes
+    defaults: { _controller: siteadminsiteBundle:superadmin:routes }
+
+siteadmin_sadmin_bundles:
+    path:     /superadmin/bundles
+    defaults: { _controller: siteadminsiteBundle:superadmin:bundles }
+
+siteadmin_sadmin_entities:
+    path:     /superadmin/entities/{entity}/{field}
+    defaults: { _controller: siteadminsiteBundle:superadmin:entities, entity: null, field: null }
+
+# GENERATION SITE
+generate:
+    path:     /generate/{action}/{entite}
+    defaults: { _controller: siteadminsiteBundle:generate:index, action: null, entite: null }
+
+# ACTIONS ENTITES
+siteadmin_entite_type:
+    path:     /entite-type/{entite}/{type_related}/{type_field}/{type_values}/{action}/{id}
+    defaults: { _controller: siteadminsiteBundle:entite:entitePage, action: null, id: null }
+
+siteadmin_entite_repo:
+    path:     /entite-repo/{entite}/{method}/{params}/{repository}
+    defaults: { _controller: siteadminsiteBundle:entite:entitePage, params: null, repository: null }
+
+siteadmin_entite:
+    path:     /entite/{entite}/{action}/{id}
+    defaults: { _controller: siteadminsiteBundle:entite:entitePage, action: null, id: null }
+
+siteadmin_form_action:
+    path:     /form-action/{classname}
+    defaults: { _controller: siteadminsiteBundle:entite:entitePostFormPage }
+    requirements:
+
+siteadmin_set_default:
+    path:     /entite-set/as-default/{id}/{entite}/{redir}
+    defaults: { _controller: siteadminsiteBundle:entite:entite_as_default, redir: 'siteadmin_homepage' }
+
+#CATEGORIES
+# siteadmin_categorie:
+#     path:     /categorie/action/{action}/{type}/{value}/{id}
+#     defaults: { _controller: siteadminsiteBundle:categorie:categorie, action: null, type: null, value: null, id: null }
+
+# siteadmin_categorie_level:
+#     path:     /categorie/level/{level}
+#     defaults: { _controller: siteadminsiteBundle:categorie:level, level: 0 }
+
+# siteadmin_categorie_accept:
+#     path:     /categorie/accept/{accept}
+#     defaults: { _controller: siteadminsiteBundle:categorie:accept, accept: 0 }
+
+categorie_ajax_data:
+    path:     /categorie/ajax-data/{id}
+    defaults: { _controller: siteadminsiteBundle:categorie:ajaxData, id: null }
+
+
+# MENUS
+siteadmin_menus:
+    path:     /menus/{name}
+    defaults: { _controller: siteadminsiteBundle:menus:index, name: 'all' }
+
+siteadmin_menus_action:
+    path:     /menus/action/{action}/{bundle}/{name}/{id}
+    defaults: { _controller: siteadminsiteBundle:menus:action, name: null, id: null }
+
+siteadmin_ajax_modify:
+    path:     /menus/ajax-modify/{bundle}/{name}
+    defaults: { _controller: siteadminsiteBundle:menus:modify }
+
+siteadmin_ajax_maxDepth:
+    path:     /menus/ajax-maxDepht/{bundle}/{name}/{value}
+    defaults: { _controller: siteadminsiteBundle:menus:changeMaxDepth }
+
+# USERS
+siteUser_users:
+    path:     /users/{type}/{action}/{params}
+    defaults: { _controller: siteUserBundle:Default:index, type: 'all', action: 'list', params: null }
+
+siteUser_info:
+    path:     /user/show/{username}
+    defaults: { _controller: siteUserBundle:Default:show }
+
+siteUser_edit:
+    path:     /user/edit/{username}
+    defaults: { _controller: siteUserBundle:Default:edit }
+
+siteUser_delete:
+    path:     /user/delete/{username}
+    defaults: { _controller: siteUserBundle:Default:delete }
+
+# MEDIA / IMAGES / PDF
+siteMedia_saveRawFile:
+    path:     /media/save-raw-file/{entityShortName}
+    defaults: { _controller: siteadminsiteBundle:media:persistRawImage }
+    requirements:
+        entityShortName: image|pdf
+
+# siteMedia_action:
+#     path:     /media/action/{action}
+#     defaults: { _controller: siteadminsiteBundle:media:action }

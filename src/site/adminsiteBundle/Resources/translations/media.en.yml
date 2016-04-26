@@ -1,0 +1,24 @@
+name_s: medias
+name: media
+not_found: 'no media found'
+x_found: '{0} no media found|{1} 1 media found|[2,+Inf] %count% medias found'
+create: 'create new media'
+create_btn: 'new media'
+backlist: 'back to list of medias'
+backlist_btn: 'back to list'
+dontexist: 'this media does not exist'
+moredetails: 'more details on %name%'
+existe: this media already exists
+form:
+    select: Select…
+fields:
+    id: id
+    nom: name
+    created: created
+    updated: updated
+    jamais: no modification
+    subEntitys: elements
+    parents: parents
+    parent: parent
+    elements: elements
+    icon: icon

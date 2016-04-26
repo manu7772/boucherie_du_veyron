@@ -16,5 +16,10 @@ footer:
     generation: 'generated with'
     rights: 'all rights reserved'
 message:
+    name: message
+    name_s: messages
     success: 'Your message have been sent. Thanks.'
     error: 'Your message have not been saved. Thanks for fullfill correctly your request.'
+    title:
+        sent: message sent
+        error: error message

@@ -30,8 +30,8 @@ class aePageweb extends aeItem {
      * @param baseEntity $entity
      * @return aePageweb
      */
-    public function checkAfterChange(baseEntity &$entity) {
-        parent::checkAfterChange($entity);
+    public function checkAfterChange(baseEntity &$entity, $butEntities = []) {
+        parent::checkAfterChange($entity, $butEntities);
         return $this;
     }
 

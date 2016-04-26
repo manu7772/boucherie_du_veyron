@@ -193,7 +193,7 @@ class aeFixtures extends aeEntity {
 	 * @param string $entite
 	 * @return integer
 	 */
-	protected function emptyEntity($entite) {
+	public function emptyEntity($entite) {
 		$em = $this->container->get('doctrine')->getManager();
 		$number = 0;
 		switch ($entite) {
@@ -227,69 +227,46 @@ class aeFixtures extends aeEntity {
 		$classname = $this->getClassname($entite);
 		if($empty === true) $this->emptyEntity($entite);
 		$em = $this->container->get('doctrine')->getManager();
-		$defaultStatut = $em->getRepository('site\adminBundle\Entity\statut')->defaultVal();
-		$defaultTaux = $em->getRepository('site\adminBundle\Entity\tauxTva')->defaultVal();
-		$defaultStatut = reset($defaultStatut);
-		$defaultTaux = reset($defaultTaux);
+		$defaultTaux = ;
 		$newdata = array();
-		$attrMethods = array('add', 'set');
 		foreach ($data as $key => $dat) {
 			$newdata[$key] = new $classname();
-			if(method_exists($newdata[$key], 'setStatut')) {
-				// ajout statut
-				$newdata[$key]->setStatut($defaultStatut);
-			}
-			if(method_exists($newdata[$key], 'setTauxTva')) {
-				// ajout TVA
-				$newdata[$key]->setTauxTva($defaultTaux);
-			}
-			// $newdata[$key] = $this->newObject($classname, true, false);
-			// echo('<p><strong>Entity (simple) : '.$newdata[$key].'</strong> / '.$classname);
+			$service = $this->getEntityService($newdata[$key]);
+			$service->checkStatuts($newdata[$key], false);
+			$service->checkTva($newdata[$key], false);
 			foreach ($dat as $attribute => $value) {
-				foreach ($attrMethods as $method) {
-					$m = $method.ucfirst($attribute);
-					if(method_exists($newdata[$key], $m)) {
-						// echo('<pre>');
-						// var_dump($value);
-						// echo('</pre>');
-						if(!$this->hasAssociation($attribute, $newdata[$key])) {
-							// champ simple
-							// echo('<p>');
-							switch ($this->getTypeOfField($attribute, $newdata[$key])) {
-								case Type::BOOLEAN:
-									if(in_array(strtolower($value), array('1', 1, 'true', true))) {
-										$newdata[$key]->$m(true);
-										// echo(' => '.$attribute.' <i>('.$this->getTypeOfField($attribute, $newdata[$key]).')</i> = TRUE');
-									} else {
-										$newdata[$key]->$m(false);
-										// echo(' => '.$attribute.' <i>('.$this->getTypeOfField($attribute, $newdata[$key]).')</i> = FALSE');
-									}
-									break;
-								case Type::DATETIME:
-								case Type::DATETIMETZ:
-								case Type::DATE:
-								case Type::TIME:
-									$datetime = new DateTime($value);
-									$newdata[$key]->$m($datetime->format(self::FORMAT_DATETIME_SQL));
-									// echo(' => '.$attribute.' <i>('.$this->getTypeOfField($attribute, $newdata[$key]).')</i> = '.$datetime->format(self::FORMAT_DATETIME_SQL));
-									break;
-								default:
-									$newdata[$key]->$m($value);
-									if(!is_array($value)) $value = array($value);
-									// echo(' => '.$attribute.' <i>('.$this->getTypeOfField($attribute, $newdata[$key]).')</i> = '.implode(' / ', $value));
-									break;
-							}
-							// echo('</p>');
-							break 1;
-						} else {
-							// entité liée
-							$otherSideEntity = $this->getTargetEntity($attribute, $newdata[$key]);
-							// echo('<p><strong>Entity (link) : '.$newdata[$key].'</strong> / '.$classname.'</p>');
-							// echo('<p>Other side : '.$otherSideEntity.'</p>');
-							$repo = $em->getRepository($otherSideEntity);
-							$ml = 'findBy'.ucfirst($value['field']);
-							$linkeds = $repo->$ml($value['value']);
-							if(is_array($linkeds)) {
+				$m = $this->getMethodOfSetting($attribute, $newdata[$key]);
+				if(method_exists($newdata[$key], $m)) {
+					if(!$this->hasAssociation($attribute, $newdata[$key])) {
+						// champ simple
+						switch ($this->getTypeOfField($attribute, $newdata[$key])) {
+							case Type::BOOLEAN:
+								if(in_array(strtolower($value), array('1', 1, 'true', true))) {
+									$newdata[$key]->$m(true);
+								} else {
+									$newdata[$key]->$m(false);
+								}
+								break;
+							case Type::DATETIME:
+							case Type::DATETIMETZ:
+							case Type::DATE:
+							case Type::TIME:
+								$datetime = new DateTime($value);
+								$newdata[$key]->$m($datetime->format(self::FORMAT_DATETIME_SQL));
+								break;
+							default:
+								$newdata[$key]->$m($value);
+								break;
+						}
+					} else {
+						// entité liée
+						$otherSideEntity = $this->getTargetEntity($attribute, $newdata[$key]);
+						$repo = $em->getRepository($otherSideEntity);
+						$ml = 'findBy'.ucfirst($value['field']);
+						if(!is_array($value['value'])) $value['value'] = array($value['value']);
+						foreach ($value['value'] as $value) {
+							$linkeds = $repo->$ml($value);
+							if(count($linkeds) > 0) {
 								foreach ($linkeds as $linked) {
 									$newdata[$key]->$m($linked);							
 									if(preg_match('#^set#', $m)) break 1;
@@ -299,12 +276,11 @@ class aeFixtures extends aeEntity {
 					}
 				}
 			}
-			// echo('</p><p>Saving…');
-			$em->persist($newdata[$key]);
-			$em->flush();
-			// echo(' OK !</p>');
+			$service->checkAfterChange($newdata[$key]);
+			$service->save($newdata[$key], true);
+			// $em->persist($newdata[$key]);
+			// $em->flush();
 		}
-		// if(count($newdata) > 0) $em->flush();
 		return $newdata;
 	}
 

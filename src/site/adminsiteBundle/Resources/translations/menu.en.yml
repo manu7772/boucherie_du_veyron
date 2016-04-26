@@ -1,0 +1,24 @@
+menu: menu
+menus: menus
+name_s: menus
+name: menu
+not_found: 'no menu found'
+x_found: '{0} no menu found|{1} 1 menu found|[2,+Inf] %count% menus found'
+create: 'create new menu'
+create_btn: 'new menu'
+backlist: 'back to list of menus'
+backlist_btn: 'back to list'
+dontexist: 'this menu does not exist'
+moredetails: 'more details on %name%'
+existe: 'this menu already exists'
+form:
+    select: Select…
+fields:
+    id: id
+    nom: name
+    jamais: no modification
+    subEntitys: elements
+    parents: parents
+    parent: parent
+    elements: elements
+    icon: icon

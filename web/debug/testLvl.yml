@@ -1,0 +1,84 @@
+-
+    '2016-04-26 04:00:38':
+        '':
+            Entity:
+                id: null
+                parent: la-boutique
+                parents:
+                    count: 2
+                    names: 'articles > La boutique'
+            Level:
+                old: '0'
+                new: '2'
+-
+    '2016-04-26 04:03:29':
+        pieces-du-boucher:
+            Entity:
+                id: 131
+                parent: articles-1
+                parents:
+                    count: 1
+                    names: articles
+            Level:
+                old: '3'
+                new: '1'
+-
+    '2016-04-26 04:03:41':
+        '':
+            Entity:
+                id: null
+                parent: la-boutique
+                parents:
+                    count: 2
+                    names: 'articles > La boutique'
+            Level:
+                old: '0'
+                new: '2'
+-
+    '2016-04-26 04:10:28':
+        '':
+            Entity:
+                id: null
+                parent: la-boutique
+                parents:
+                    count: 2
+                    names: 'articles > La boutique'
+            Level:
+                old: '0'
+                new: '2'
+-
+    '2016-04-26 04:23:43':
+        pieces-du-boucher:
+            Entity:
+                id: 131
+                parent: boeuf
+                parents:
+                    count: 3
+                    names: 'articles > La boutique > Bœuf'
+            Level:
+                old: '1'
+                new: '3'
+-
+    '2016-04-26 04:23:54':
+        '':
+            Entity:
+                id: null
+                parent: la-boutique
+                parents:
+                    count: 2
+                    names: 'articles > La boutique'
+            Level:
+                old: '0'
+                new: '2'
+-
+    '2016-04-26 04:24:49':
+        '':
+            Entity:
+                id: null
+                parent: la-boutique
+                parents:
+                    count: 2
+                    names: 'articles > La boutique'
+            Level:
+                old: '0'
+                new: '2'

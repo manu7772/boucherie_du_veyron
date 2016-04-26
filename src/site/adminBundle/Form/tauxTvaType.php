@@ -9,7 +9,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 // Transformer
 use Symfony\Component\Form\CallbackTransformer;
 // User
-use Symfony\Component\Security\Core\SecurityContext;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage as SecurityContext;
 // Paramétrage de formulaire
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormEvent;
@@ -41,7 +41,8 @@ class tauxTvaType extends baseType {
                 'translation_domain' => 'tauxTva',
                 'required' => false,
                 'attr' => array(
-                    'rows' => '12',
+                    // 'rows' => '12',
+                    'data-height' => 140,
                     )
                 ))
             // ->add('creation')

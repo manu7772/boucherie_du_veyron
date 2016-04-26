@@ -2,7 +2,8 @@
 
 namespace site\adminBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use site\adminBundle\Controller\baseController;
+// use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -23,7 +24,7 @@ use \Exception;
  * mediaController
  * @Security("has_role('ROLE_EDITOR')")
  */
-class mediaController extends Controller {
+class mediaController extends baseController {
 
 	/**
 	 * AJAX - Reçoit les données image et les enregistre en base de données
@@ -52,7 +53,7 @@ class mediaController extends Controller {
 		$aeRawfile->deleteAllTemp('rawfile', $data['rawfiles']['list']);
 		// crée un nouveau rawfile
 		$rawfile = $aeRawfile->getNewRawfileWithData($data);
-		$aeReponse = $aeRawfile->save($rawfile);
+		$aeReponse = $aeRawfile->checkAfterChange($rawfile)->save($rawfile);
 		if($aeReponse->getResult()) {
 			// OK
 			// $id = $rawfile->getId();

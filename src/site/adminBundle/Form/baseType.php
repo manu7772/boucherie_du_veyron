@@ -9,7 +9,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 // Transformer
 use Symfony\Component\Form\CallbackTransformer;
 // User
-use Symfony\Component\Security\Core\SecurityContext;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage as SecurityContext;
 // Paramétrage de formulaire
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormEvent;
@@ -68,11 +68,11 @@ abstract class baseType extends AbstractType {
 
 	}
 
-	protected function addSubmit(FormBuilderInterface &$builder) {
+	protected function addSubmit(FormBuilderInterface &$builder, $text = 'form.enregistrer') {
 		// AJOUT SUBMIT
 		if(!($builder->getData() == null)) {
 			$builder->add('submit', 'submit', array(
-				'label' => 'form.enregistrer',
+				'label' => $text,
 				'translation_domain' => 'messages',
 				'attr' => array(
 					'class' => "btn btn-md btn-block btn-info",
@@ -87,9 +87,9 @@ abstract class baseType extends AbstractType {
 	 * @param FormBuilderInterface $builder
 	 * @return FormBuilderInterface
 	 */
-	protected function addHiddenValues(FormBuilderInterface &$builder, $addSubmit = false) {
+	protected function addHiddenValues(FormBuilderInterface &$builder, $addSubmit = false, $text = 'form.enregistrer') {
 		if(!($builder->getData() == null)) {
-			if($addSubmit == true) $this->addSubmit($builder);
+			if($addSubmit == true) $this->addSubmit($builder, $text);
 			$data = array();
 			$nom = 'hiddenData';
 			foreach($this->parametres as $key => $value) {

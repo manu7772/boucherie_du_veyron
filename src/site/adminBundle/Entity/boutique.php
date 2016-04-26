@@ -46,7 +46,7 @@ class boutique extends tier {
 
 	/**
 	 * - INVERSE
-	 * @ORM\ManyToMany(targetEntity="site\adminBundle\Entity\site", mappedBy="collaborateurs")
+	 * @ORM\ManyToMany(targetEntity="site\adminBundle\Entity\site", mappedBy="boutiques")
 	 * @ORM\JoinColumn(nullable=true, unique=false, onDelete="SET NULL")
 	 */
 	protected $sites;
@@ -55,6 +55,13 @@ class boutique extends tier {
 	public function __construct() {
 		parent::__construct();
 		$this->sites = new ArrayCollection();
+	}
+
+	public function memOldValues($addedfields = null) {
+		$fields = array('sites');
+		if(count($addedfields) > 0 && is_array($addedfields)) $fields = array_unique(array_merge($fields, $addedfields));
+		parent::memOldValues($fields);
+		return $this;
 	}
 
 	// /**

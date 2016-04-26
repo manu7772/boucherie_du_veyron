@@ -20,22 +20,27 @@ class aeTier extends aeSubEntity {
 	 * @param baseEntity $entity
 	 * @return aeTier
 	 */
-	public function checkAfterChange(baseEntity &$entity) {
-		// check logo
-		$logo = $entity->getLogo();
-		if(is_object($logo)) {
-			// if($logo->isValid()) {
-				$infoForPersist = $logo->getInfoForPersist();
-				$this->container->get('aetools.debug')->debugFile($infoForPersist);
-				$service = $this->container->get('aetools.aeEntity')->getEntityService($logo);
-				$service->checkAfterChange($logo);
-				if($infoForPersist['removeImage'] === true || $infoForPersist['removeImage'] === 'true') {
-					// Supression du logo
-					$entity->setLogo(null);
-				}
-			// } else $entity->setLogo(null);
-		}
-		parent::checkAfterChange($entity);
+	public function checkAfterChange(baseEntity &$entity, $butEntities = []) {
+        // check images
+        $fields = array('logo');
+        foreach ($fields as $field) {
+            $get = 'get'.ucfirst($field);
+            $set = 'set'.ucfirst($field);
+            $image = $entity->$get();
+            if(is_object($image)) {
+                $infoForPersist = $image->getInfoForPersist();
+                $this->container->get('aetools.debug')->debugFile($infoForPersist);
+                if($infoForPersist['removeImage'] === true || $infoForPersist['removeImage'] === 'true') {
+                    // Supression de l'image
+                    $entity->$set(null);
+                } else {
+                    // Gestion de l'image
+                    $service = $this->container->get('aetools.aeEntity')->getEntityService($image);
+                    $service->checkAfterChange($image);
+                }
+            }
+        }
+		parent::checkAfterChange($entity, $butEntities);
 		return $this;
 	}
 

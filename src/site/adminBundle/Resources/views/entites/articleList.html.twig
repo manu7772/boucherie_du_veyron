@@ -38,13 +38,16 @@
 								{% endif %}
 							</td>
 							<td{{ bgcolor|raw }}>
-								{% if type.type_values|default(null) != null %}
-								<a href="{{ path('siteadmin_entite_type', {entite: entite.className, type_related: type.type_related, type_field: type.type_field, type_values: type.type_values|join(type_value_joiner)|url_encode, id: entite.id, action: 'show'}) }}" title="{{ UCfirst('moredetails'|trans({'%name%': entite.nom}, entite.className)) }}"><strong>{{ entite.nom }}</strong></a>
-								{% else %}
-								<a href="{{ path('siteadmin_entite', {entite: entite.className, id: entite.id, action: 'show'}) }}" title="{{ UCfirst('moredetails'|trans({'%name%': entite.nom})) }}"><strong>{{ entite.nom }}</strong></a>
-								{% endif %}
+								<p class="m-b-none">
+									{% if type.type_values|default(null) != null %}
+									<a href="{{ path('siteadmin_entite_type', {entite: entite.className, type_related: type.type_related, type_field: type.type_field, type_values: type.type_values|join(type_value_joiner)|url_encode, id: entite.id, action: 'show'}) }}" title="{{ UCfirst('moredetails'|trans({'%name%': entite.nom}, entite.className)) }}"><strong>{{ entite.nom }}</strong></a>
+									{% else %}
+									<a href="{{ path('siteadmin_entite', {entite: entite.className, id: entite.id, action: 'show'}) }}" title="{{ UCfirst('moredetails'|trans({'%name%': entite.nom})) }}"><strong>{{ entite.nom }}</strong></a>
+									{% endif %}
+								</p>
+								{% if entite.marque != null %}<p class="m-b-none"><small>{{ UCfirst('name'|trans({}, 'marque')) }} <strong>{{ entite.marque.nom|json_encode }}</strong></small></p>{% endif %}
 								{% if entite.statut is defined %}
-								{% if entite.statut.id > 1 %}<br><small><i>({{ entite.statut.nom }})</i></small>{% endif %}
+								{% if entite.statut.id > 1 %}<p class="m-b-none"><small><i>({{ entite.statut.nom }})</i></small></p>{% endif %}
 								{% endif %}
 							</td>
 							<td{{ bgcolor|raw }}>
@@ -75,4 +78,9 @@
 		</div>
 	</div>
 </div>
+{% if entites|length > 0 and DEVMODE %}
+{% for entite in entites %}
+	{{ dump(entite.oldValues|default('aucune')) }}
+{% endfor %}
+{% endif %}
 {% endblock content %}

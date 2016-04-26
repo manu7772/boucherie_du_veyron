@@ -1,0 +1,1234 @@
+-
+    '2016-04-26 01:24:44':
+        info:
+            0: Proxies\__CG__\site\adminBundle\Entity\image
+            id: '81'
+        old:
+            parents: {  }
+            userAvatar: null
+        current: {  }
+        new: {  }
+        delete:
+            parents: {  }
+            userAvatar: null
+-
+    '2016-04-26 01:24:44':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: '26'
+        old:
+            parents:
+                - la-boutique
+        current:
+            parents:
+                - la-boutique
+        new:
+            parents: {  }
+        delete:
+            parents: {  }
+-
+    '2016-04-26 01:32:48':
+        info:
+            0: Proxies\__CG__\site\adminBundle\Entity\image
+            id: '81'
+        old:
+            parents: {  }
+            userAvatar: null
+        current: {  }
+        new: {  }
+        delete:
+            parents: {  }
+            userAvatar: null
+-
+    '2016-04-26 01:32:48':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: '26'
+        old:
+            parents:
+                - types-article
+        current:
+            parents:
+                - types-article
+        new:
+            parents: {  }
+        delete:
+            parents: {  }
+-
+    '2016-04-26 01:35:47':
+        info:
+            0: Proxies\__CG__\site\adminBundle\Entity\image
+            id: '81'
+        old:
+            parents: {  }
+            userAvatar: null
+        current: {  }
+        new: {  }
+        delete:
+            parents: {  }
+            userAvatar: null
+-
+    '2016-04-26 01:35:47':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: '26'
+        old:
+            parents:
+                - la-boutique
+        current:
+            parents:
+                - la-boutique
+        new:
+            parents: {  }
+        delete:
+            parents: {  }
+-
+    '2016-04-26 01:41:46':
+        info:
+            0: Proxies\__CG__\site\adminBundle\Entity\image
+            id: '81'
+        old:
+            parents: {  }
+            userAvatar: null
+        current: {  }
+        new: {  }
+        delete:
+            parents: {  }
+            userAvatar: null
+-
+    '2016-04-26 01:41:46':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: '26'
+        old:
+            parents:
+                - types-article
+        current:
+            parents:
+                - types-article
+        new:
+            parents: {  }
+        delete:
+            parents: {  }
+-
+    '2016-04-26 02:36:44':
+        info:
+            0: Proxies\__CG__\site\adminBundle\Entity\image
+            id: '81'
+        old:
+            parents: {  }
+            userAvatar: null
+        current: {  }
+        new: {  }
+        delete:
+            parents: {  }
+            userAvatar: null
+-
+    '2016-04-26 02:36:44':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: '26'
+        old:
+            parents:
+                - la-boutique
+        current:
+            parents:
+                - la-boutique
+        new:
+            parents: {  }
+        delete:
+            parents: {  }
+-
+    '2016-04-26 02:42:14':
+        info:
+            0: Proxies\__CG__\site\adminBundle\Entity\image
+            id: '81'
+        old:
+            parents: {  }
+            userAvatar: null
+        current: {  }
+        new: {  }
+        delete:
+            parents: {  }
+            userAvatar: null
+-
+    '2016-04-26 02:42:14':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: '26'
+        old:
+            parents:
+                - la-boutique
+        current:
+            parents:
+                - la-boutique
+        new:
+            parents: {  }
+        delete:
+            parents: {  }
+-
+    '2016-04-26 02:47:49':
+        info:
+            0: Proxies\__CG__\site\adminBundle\Entity\image
+            id: '81'
+        old:
+            parents: {  }
+            userAvatar: null
+        current: {  }
+        new: {  }
+        delete:
+            parents: {  }
+            userAvatar: null
+-
+    '2016-04-26 02:47:49':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: '26'
+        old:
+            parents:
+                - la-boutique
+        current:
+            parents:
+                - la-boutique
+        new:
+            parents: {  }
+        delete:
+            parents: {  }
+-
+    '2016-04-26 03:03:35':
+        info:
+            0: Proxies\__CG__\site\adminBundle\Entity\image
+            id: '81'
+        old:
+            parents: {  }
+            userAvatar: null
+        current: {  }
+        new: {  }
+        delete:
+            parents: {  }
+            userAvatar: null
+-
+    '2016-04-26 03:03:35':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: '26'
+        old:
+            parents:
+                - types-article
+        current:
+            parents:
+                - types-article
+        new:
+            parents: {  }
+        delete:
+            parents: {  }
+-
+    '2016-04-26 03:07:05':
+        info:
+            0: Proxies\__CG__\site\adminBundle\Entity\image
+            id: '81'
+        old:
+            parents: {  }
+            userAvatar: null
+        current: {  }
+        new: {  }
+        delete:
+            parents: {  }
+            userAvatar: null
+-
+    '2016-04-26 03:07:05':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: '26'
+        old:
+            parents:
+                - la-boutique
+        current:
+            parents:
+                - la-boutique
+        new:
+            parents: {  }
+        delete:
+            parents: {  }
+-
+    '2016-04-26 03:20:44':
+        info:
+            0: Proxies\__CG__\site\adminBundle\Entity\image
+            id: '81'
+        old:
+            parents: {  }
+            userAvatar: null
+        current: {  }
+        new: {  }
+        delete:
+            parents: {  }
+            userAvatar: null
+-
+    '2016-04-26 03:20:44':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: '26'
+        old:
+            parents:
+                - types-article
+        current:
+            parents:
+                - types-article
+        new:
+            parents: {  }
+        delete:
+            parents: {  }
+-
+    '2016-04-26 03:23:45':
+        info:
+            0: Proxies\__CG__\site\adminBundle\Entity\image
+            id: '81'
+        old:
+            parents: {  }
+            userAvatar: null
+        current: {  }
+        new: {  }
+        delete:
+            parents: {  }
+            userAvatar: null
+-
+    '2016-04-26 03:23:45':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: '26'
+        old:
+            parents:
+                - la-boutique
+        current:
+            parents:
+                - la-boutique
+        new:
+            parents: {  }
+        delete:
+            parents: {  }
+-
+    '2016-04-26 03:32:56':
+        info:
+            0: Proxies\__CG__\site\adminBundle\Entity\image
+            id: '81'
+        old:
+            parents: {  }
+            userAvatar: null
+        current: {  }
+        new: {  }
+        delete:
+            parents: {  }
+            userAvatar: null
+-
+    '2016-04-26 03:32:56':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: '26'
+        old:
+            parents:
+                - types-article
+        current:
+            parents:
+                - la-boutique
+                - types-article
+        new:
+            parents:
+                - la-boutique
+            result:
+                parents: 'Error : not found null with source "childrens" on  (111 char.)'
+        delete:
+            parents: {  }
+-
+    '2016-04-26 03:37:02':
+        info:
+            0: Proxies\__CG__\site\adminBundle\Entity\image
+            id: '81'
+        old:
+            parents: {  }
+            userAvatar: null
+        current: {  }
+        new: {  }
+        delete:
+            parents: {  }
+            userAvatar: null
+-
+    '2016-04-26 03:37:02':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: '26'
+        old:
+            parents:
+                - la-boutique
+        current:
+            parents:
+                - types-article
+        new:
+            parents:
+                - types-article
+            result:
+                parents: 'Error : not found null with source "childrens" on  (111 char.)'
+        delete:
+            parents:
+                - la-boutique
+            result:
+                parents: 'Error : not found null with source "childrens" on  (111 char.)'
+-
+    '2016-04-26 03:47:40':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-26 03:54:39':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-26 03:54:40':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-26 03:54:40':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-26 03:54:40':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-26 03:54:40':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-26 03:54:40':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-26 03:54:40':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-26 03:54:41':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-26 03:54:41':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-26 03:54:41':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-26 03:54:41':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-26 03:54:41':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-26 03:54:42':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-26 03:54:42':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-26 03:54:42':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-26 03:54:43':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-26 03:54:43':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-26 03:54:44':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-26 03:54:44':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-26 03:54:44':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-26 03:54:45':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-26 03:54:45':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-26 03:54:46':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-26 03:54:46':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-26 03:54:46':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-26 03:54:47':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-26 03:54:47':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-26 03:54:47':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-26 03:54:48':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-26 03:54:48':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-26 03:54:48':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-26 03:54:49':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-26 03:54:49':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-26 03:54:49':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-26 03:54:50':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-26 03:54:50':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-26 03:54:50':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-26 03:54:51':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-26 03:54:51':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-26 03:54:51':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-26 03:54:52':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-26 03:54:52':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-26 03:54:52':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-26 03:54:53':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-26 03:54:53':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-26 03:54:53':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-26 03:54:54':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-26 03:54:54':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-26 03:54:55':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-26 03:54:55':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-26 03:54:55':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-26 03:54:56':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-26 04:03:29':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: '131'
+        old:
+            parents:
+                - boeuf
+        current:
+            parents:
+                - articles-1
+        new:
+            parents:
+                - articles-1
+            result:
+                parents: 'Error : not found null with source "childrens" on  (111 char.)'
+        delete:
+            parents:
+                - boeuf
+            result:
+                parents: 'Error : not found null with source "childrens" on  (111 char.)'
+-
+    '2016-04-26 04:23:43':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: '130'
+        old:
+            parents:
+                - la-boutique
+        current:
+            parents:
+                - la-boutique
+                - articles-1
+        new:
+            parents:
+                1: articles-1
+            result:
+                parents: 'Error : not found null with source "childrens" on  (111 char.)'
+        delete:
+            parents: {  }
+-
+    '2016-04-26 04:23:43':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: '129'
+        old:
+            parents:
+                - articles-1
+        current:
+            parents:
+                - articles-1
+        new:
+            parents: {  }
+        delete:
+            parents: {  }
+-
+    '2016-04-26 04:23:43':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: '131'
+        old:
+            parents:
+                - articles-1
+        current:
+            parents:
+                - boeuf
+                - la-boutique
+                - articles-1
+        new:
+            parents:
+                - boeuf
+                - la-boutique
+            result:
+                parents: 'Success : data added'
+        delete:
+            parents: {  }
+-
+    '2016-04-26 13:08:12':
+        info:
+            rawfile: site\adminBundle\Entity\rawfile
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-26 13:53:30':
+        info:
+            article: site\adminBundle\Entity\article
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-26 14:21:28':
+        info:
+            rawfile: site\adminBundle\Entity\rawfile
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-26 14:22:20':
+        info:
+            image: site\adminBundle\Entity\image
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-26 14:22:20':
+        info:
+            0: Proxies\__CG__\site\adminBundle\Entity\image
+            id: '94'
+        old:
+            parents: {  }
+            userAvatar: null
+        current: {  }
+        new: {  }
+        delete:
+            parents: {  }
+            userAvatar: null
+-
+    '2016-04-26 14:22:20':
+        info:
+            fiche: site\adminBundle\Entity\fiche
+            id: '88'
+        old:
+            parents: {  }
+            articles:
+                - filet-de-rumstec-2
+        current:
+            parents: {  }
+            articles:
+                - filet-de-rumstec-2
+                - poulet-de-bresse
+        new:
+            parents: {  }
+            articles:
+                1: poulet-de-bresse
+        delete:
+            parents: {  }
+            articles: {  }
+-
+    '2016-04-26 14:22:20':
+        info:
+            article: site\adminBundle\Entity\article
+            id: '159'
+        old:
+            parents: {  }
+            marque: de-bresse
+            reseaus:
+                - internet
+            pdf: null
+            fiches: {  }
+            articlesParents: {  }
+            articlesLies:
+                - faux-filet
+        current:
+            parents: {  }
+            marque: de-bresse
+            reseaus:
+                - internet
+            pdf: null
+            fiches:
+                - recette-de-veau-maringot
+            articlesParents: {  }
+            articlesLies:
+                - faux-filet
+        new:
+            parents: {  }
+            reseaus: {  }
+            fiches:
+                - recette-de-veau-maringot
+            articlesParents: {  }
+            articlesLies: {  }
+            result:
+                fiches: 'Success : data added'
+        delete:
+            parents: {  }
+            reseaus: {  }
+            fiches: {  }
+            articlesParents: {  }
+            articlesLies: {  }
+-
+    '2016-04-26 14:25:04':
+        info:
+            rawfile: site\adminBundle\Entity\rawfile
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-26 14:25:31':
+        info:
+            image: site\adminBundle\Entity\image
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-26 14:25:31':
+        info:
+            article: site\adminBundle\Entity\article
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-26 14:28:57':
+        info:
+            0: Proxies\__CG__\site\adminBundle\Entity\image
+            id: '164'
+        old:
+            parents: {  }
+            userAvatar: null
+        current: {  }
+        new: {  }
+        delete:
+            parents: {  }
+            userAvatar: null
+-
+    '2016-04-26 14:28:57':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: '129'
+        old:
+            parents:
+                - articles-1
+        current:
+            parents:
+                - articles-1
+        new:
+            parents: {  }
+        delete:
+            parents: {  }
+-
+    '2016-04-26 14:28:57':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: '143'
+        old:
+            parents:
+                - agneau
+        current:
+            parents:
+                - agneau
+                - la-boutique
+                - articles-1
+        new:
+            parents:
+                1: la-boutique
+                2: articles-1
+            result:
+                parents: 'Error : not found null with source "childrens" on  (111 char.)'
+        delete:
+            parents: {  }
+-
+    '2016-04-26 14:28:57':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: '129'
+        old:
+            parents:
+                - articles-1
+        current:
+            parents:
+                - articles-1
+        new:
+            parents: {  }
+        delete:
+            parents: {  }
+-
+    '2016-04-26 14:28:57':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: '145'
+        old:
+            parents:
+                - agneau
+        current:
+            parents:
+                - agneau
+                - la-boutique
+                - articles-1
+        new:
+            parents:
+                1: la-boutique
+                2: articles-1
+            result:
+                parents: 'Error : not found null with source "childrens" on  (111 char.)'
+        delete:
+            parents: {  }
+-
+    '2016-04-26 14:28:57':
+        info:
+            0: Proxies\__CG__\site\adminBundle\Entity\image
+            id: '94'
+        old:
+            parents: {  }
+            userAvatar: null
+        current: {  }
+        new: {  }
+        delete:
+            parents: {  }
+            userAvatar: null
+-
+    '2016-04-26 14:28:57':
+        info:
+            fiche: site\adminBundle\Entity\fiche
+            id: '88'
+        old:
+            parents: {  }
+            articles:
+                - filet-de-rumstec-2
+                - poulet-de-bresse
+        current:
+            parents: {  }
+            articles:
+                - filet-de-rumstec-2
+                - poulet-de-bresse
+                - cote-d-agneau
+        new:
+            parents: {  }
+            articles:
+                2: cote-d-agneau
+        delete:
+            parents: {  }
+            articles: {  }
+-
+    '2016-04-26 14:28:57':
+        info:
+            article: site\adminBundle\Entity\article
+            id: '163'
+        old:
+            parents: {  }
+            marque: charollais
+            reseaus:
+                - internet
+                - professionnels
+            pdf: null
+            fiches: {  }
+            articlesParents: {  }
+            articlesLies:
+                - poulet-de-bresse
+        current:
+            parents:
+                - pieces-du-boucher-2
+                - a-griller-2
+            marque: charollais
+            reseaus:
+                - internet
+                - professionnels
+            pdf: null
+            fiches:
+                - recette-de-veau-maringot
+            articlesParents: {  }
+            articlesLies:
+                - poulet-de-bresse
+        new:
+            parents:
+                - pieces-du-boucher-2
+                - a-griller-2
+            reseaus: {  }
+            fiches:
+                - recette-de-veau-maringot
+            articlesParents: {  }
+            articlesLies: {  }
+            result:
+                parents: 'Success : data added'
+                fiches: 'Success : data added'
+        delete:
+            parents: {  }
+            reseaus: {  }
+            fiches: {  }
+            articlesParents: {  }
+            articlesLies: {  }

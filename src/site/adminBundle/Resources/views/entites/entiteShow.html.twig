@@ -1,12 +1,14 @@
 {% extends 'siteadminBundle::page_admin_generic.html.twig' %}
-{% set cssjsloads = 'simple' %}
+{% set cssjsloads = cssjsloads|default('simple') %}
 {% set DEVMODE = (app.environment in ['DEV', 'TEST']) or (is_granted('ROLE_SUPER_ADMIN')) %}
+{% import 'siteadminBundle:blocks:actions.html.twig' as actions %}
 
 {% block page_heading %}
 <div class="row wrapper border-bottom white-bg page-heading">
 	<div class="col-lg-12 m-t-xs">
 		<h2 class="row">
-			<div class="col-md-8 ellipsis">{{ UCfirst('name'|trans({}, entite.className)) }} {{ entite.nom|default('#' ~ entite.id) }}</div>
+			{% block headtitle %}
+			<div class="col-md-8 ellipsis">{{ UCfirst('name'|trans({}, entite.className)) }} <i class="fa {{ actions.icon(entite) }} m-r-xs"></i><strong>{{ entite.nom|default('#' ~ entite.id)|trans({}, entite.className) }}</strong></div>
 			<div class="col-md-4">
 				<a href="{{ path('siteadmin_entite', {entite: entite_name, id: entite.id, action: 'delete'}) }}" type="button" class="btn btn-xs btn-danger btn-outline pull-right need-confirmation" title="{{ UCfirst('actions.suppression'|trans) }}" data-message="{{ UCfirst('actions.suppQuestion'|trans({'%name%': entite.nom|default('#' ~ entite.id)})) }}"><i class="fa fa-times icon-wait-on-click"></i> {{ UCfirst('actions.supprimer'|trans) }}</a>
 				<a href="{{ path('siteadmin_entite', {entite: entite_name, id: entite.id, action: 'edit'}) }}" type="button" class="btn btn-xs btn-warning pull-right"><i class="fa fa-pencil icon-wait-on-click"></i> {{ UCfirst('actions.modifier'|trans) }}</a>
@@ -16,12 +18,15 @@
 				<a href="{{ path('siteadmin_entite', {entite: entite_name}) }}" type="button" class="btn btn-xs btn-white pull-right"><i class="fa fa-bars icon-wait-on-click"></i> {{ UCfirst('backlist_btn'|trans({}, entite.className)) }}</a>
 				<!-- <a href="{{ path('siteadmin_entite', {entite: entite_name, action: 'create'}) }}" type="button" class="btn btn-xs btn-warning pull-right"><i class="fa fa-plus icon-wait-on-click"></i> {{ UCfirst('create_btn'|trans({}, entite.className)) }}</a> -->
 			</div>
+			{% endblock headtitle %}
 		</h2>
+		{% block breadcrumb %}
 		<ol class="breadcrumb ellipsis">
 			<li><a href="{{ path('siteadmin_homepage') }}"><strong>{{ UCfirst('administration'|trans) }}</strong></a></li>
 			<li><a href="{{ path('siteadmin_entite', {entite: entite_name}) }}"><strong>{{ UCfirst('name_s'|trans({}, entite.className)) }}</strong></a></li>
-			<li>{{ entite.nom|default('#' ~ entite.id) }}</li>
+			<li>{{ entite.nom|default('#' ~ entite.id)|trans({}, entite.className) }}</li>
 		</ol>
+		{% endblock breadcrumb %}
 	</div>
 </div>
 {% endblock page_heading %}

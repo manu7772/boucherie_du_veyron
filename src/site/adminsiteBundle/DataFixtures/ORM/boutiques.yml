@@ -1,0 +1,8 @@
+boutique:
+    order: 5
+    data:
+        -
+            nom: 'Boutique de Poncin'
+            parents:
+                field: nom
+                value: 'Boutiques Ain'

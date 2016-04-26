@@ -25,12 +25,7 @@ class twigTools extends Twig_Extension {
 			new Twig_SimpleFunction('datatables_hidden', array($this, 'datatables_hidden')),
 			new Twig_SimpleFunction('correctTransField', array($this, 'correctTransField')),
 			new Twig_SimpleFunction('phraseCut', array($this, 'phraseCut')),
-			new Twig_SimpleFunction('colonizeWords', array($this, 'colonizeWords')),
-			new Twig_SimpleFunction('colonizeWordsWithP', array($this, 'colonizeWordsWithP')),
 			new Twig_SimpleFunction('cleanSpaces', array($this, 'cleanSpaces')),
-			new Twig_SimpleFunction('adminDataType', array($this, 'adminDataType')),
-			new Twig_SimpleFunction('developpeArray', array($this, 'developpeArray')),
-			new Twig_SimpleFunction('developpeObject', array($this, 'developpeObject')),
 			new Twig_SimpleFunction('intervalDateFR', array($this, 'intervalDateFR')),
 			new Twig_SimpleFunction('dateFR', array($this, 'dateFR')),
 			new Twig_SimpleFunction('minUCfirst', array($this, 'minUCfirst')),
@@ -44,16 +39,10 @@ class twigTools extends Twig_Extension {
 			new Twig_SimpleFunction('simpleURL', array($this, 'simpleURL')),
 			new Twig_SimpleFunction('Url_encode', array($this, 'Url_encode')),
 			new Twig_SimpleFunction('googleMapURL', array($this, 'googleMapURL')),
-			new Twig_SimpleFunction('serializeT', array($this, 'serializeT')),
-			new Twig_SimpleFunction('unserializeT', array($this, 'unserializeT')),
-			new Twig_SimpleFunction('paramsByUrl', array($this, 'paramsByUrl')),
-			new Twig_SimpleFunction('implode', array($this, 'implode')),
 			new Twig_SimpleFunction('plur', array($this, 'pluriel')),
-			new Twig_SimpleFunction('plurNumber', array($this, 'plurNumber')),
 			new Twig_SimpleFunction('valueOfObject', array($this, 'valueOfObject')),
 			new Twig_SimpleFunction('imgVolume', array($this, 'imgVolume')),
 			new Twig_SimpleFunction('annee', array($this, 'annee')),
-			new Twig_SimpleFunction('URIperform', array($this, 'URIperform')),
 			new Twig_SimpleFunction('fillOfChars', array($this, 'fillOfChars')),
 			new Twig_SimpleFunction('idify', array($this, 'idify')),
 			new Twig_SimpleFunction('zerosDevant', array($this, 'zerosDevant')),
@@ -64,13 +53,11 @@ class twigTools extends Twig_Extension {
 			new Twig_SimpleFunction('getFlashes', array($this, 'getFlashes')),
 			new Twig_SimpleFunction('compareRoles', array($this, 'compareRoles')),
 			new Twig_SimpleFunction('permittedRoles', array($this, 'permittedRoles')),
-			new Twig_SimpleFunction('B64forImg', array($this, 'B64forImg')),
-			new Twig_SimpleFunction('encode64', array($this, 'encode64')),
-			new Twig_SimpleFunction('ThumbMedia', array($this, 'ThumbMedia')),
 			new Twig_SimpleFunction('fileSizeDisplay', array($this, 'fileSizeDisplay')),
 			new Twig_SimpleFunction('fromNow', array($this, 'fromNow')),
 			new Twig_SimpleFunction('arrayNomSlug', array($this, 'arrayNomSlug')),
 			new Twig_SimpleFunction('arraySlugNom', array($this, 'arraySlugNom')),
+			new Twig_SimpleFunction('fileExists', array($this, 'fileExists')),
 			);
 	}
 
@@ -116,79 +103,6 @@ class twigTools extends Twig_Extension {
 	}
 
 	/**
-	 * Renvoie à la ligne pour optimiser un texte sur une colonne. 
-	 * Pratique dans les tableaux
-	 * @param string $t - texte
-	 * @param intger $n - nombre de lettres maxi avant retour à la ligne
-	 * @return string
-	 */
-	public function colonizeWords($t, $n, $separ = "br", $cutmot = true) {
-		if($cutmot !== true) $cutmot = false;
-		$voyelles = array("a", "e", "i", "o", "u", "y");
-		$consonnes = array("b", "c", "d", "f", "g", "h", "j", "k", "l", "m", "n", "p", "q", "r", "s", "t", "v", "w", "x", "z");
-		// réduction pour faire une moyenne
-		if($n > 5) $n = $n - 2;
-		// supprime espaces en trop
-		$t = $this->cleanSpaces(trim($t));
-		$changes = array(" ", "-");
-		$glueword = "-";
-		$cpt = 1;
-		$line = 0;
-		$txr = array();
-		$txr[$line] = "";
-		// Génération des lignes de texte en tableau
-		for ($i=0; $i < strlen($t); $i++) {
-			$char = substr($t, $i, 1);
-			$cutm = false;
-			if($cutmot === true && $i > ($n - 1)) {
-				// voyelle suivie d'une consonne… ou deux mêmes lettres
-				if((in_array(strtolower($char), $voyelles) && in_array(strtolower(substr($t, $i + 1, 1)), $consonnes)) || (strtolower($char) == strtolower(substr($t, $i + 1, 1)))) {
-					// au moins deux lettres avant de couper… et moins d'une lettre avant la fin du mot
-					if(strtolower(substr($t, $i -1, 1)) != " " && strtolower(substr($t, $i -2, 1)) != " " && strtolower(substr($t, $i +1, 1)) != " " && strtolower(substr($t, $i +2, 1)) != " " && $i < (strlen($t) - 2)) {
-						$cutm = true;
-					}
-				}
-			}
-			if($cpt > $n && (in_array($char, $changes) || $cutm === true)) {
-				if($char == " ") $char = "";
-				if($cutm === true) $char = $char.$glueword;
-				$cpt = 1;
-				$txr[$line] .= $char;
-				$line++;
-				$txr[$line] = "";
-			} else {
-				$cpt++;
-				$txr[$line] .= $char;
-			}
-		}
-		// ajout des séparateurs
-		switch (strtolower($separ)) {
-			case 'p':
-			case 'span':
-			case 'div':
-			case 'li':
-				$balise = strtolower($separ);
-				$result = '<'.$balise.'>'.implode('</'.$balise.'><'.$balise.'>', $txr).'</'.$balise.'>';
-				break;
-			default: // <br> par défaut
-				$result = implode('<br>', $txr);
-				break;
-		}
-		return $result;
-	}
-
-	/**
-	 * Crée des lignes <p> pour optimiser un texte sur une colonne. 
-	 * Pratique dans les tableaux
-	 * @param string $t - texte
-	 * @param intger $n - nombre de lettres maxi avant retour à la ligne
-	 * @return string
-	 */
-	public function colonizeWordsWithP($t, $n) {
-		return $this->colonizeWords($t, $n, 'p');
-	}
-
-	/**
 	 * Supprime les espaces doubles (ou plus) d'une phrase
 	 * @param string $t - texte
 	 * @param intger $n - nombre d'espaces à supprimer (à partir de 2, par défaut)
@@ -197,93 +111,6 @@ class twigTools extends Twig_Extension {
 	public function cleanSpaces($t, $n = 2) {
 		return preg_replace('#\s{'.$n.',}#', " ", $t);
 	}
-
-
-	/**
-	 * Renvoie la donnée sous forme de données admin
-	 * "true" ou "false" pour un booléen, par exemple
-	 * @param data
-	 * @return string
-	 */
-	public function adminDataType($data, $miseEnForme = true, $developpe = false) {
-		if(is_bool($data)) {
-			if($data === true) $miseEnForme?$r = "<span style='color:green;'>#true</span>":$r = "#true";
-				else $miseEnForme?$r = "<span style='color:red;'>#false</span>":$r = "#false";
-			return $r;
-		} else if(is_array($data)) {
-			if($developpe === true) {
-				$txt = serialize($data);
-			} else {
-				$txt = count($data);
-			}
-			$miseEnForme?$r = "<span style='color:blue;font-style:italic;'>(#array ".$txt.")</span>":$r = "(#array ".$txt.")";
-			return $r;
-		} else if(is_object($data)) {
-			$miseEnForme?$r = "<span style='color:blue;font-style:italic;'>(#object)</span>":$r = "(#object)";
-			return $r;
-		} else {
-			return $data;
-		}
-	}
-
-	/**
-	 * developpeArray
-	 * 
-	 * Transforme un array() en informations texte
-	 * @param data
-	 * @return string
-	 */
-	public function developpeArray($data) {
-		if(is_array($data)) {
-			$r = $this->developpeArray_recursive($data);
-		} else $r = $data;
-		return $r;
-	}
-	public function developpeArray_recursive($data) {
-		$sep = "";
-		if(is_array($data) && count($data) > 0) foreach($data as $nom => $vals) {
-			if(is_array($vals)) $r = $sep.$nom." = ".$this->developpeArray_recursive($vals);
-				else $r = $sep.$nom." = ".$vals;
-			$sep = " | ";
-		} else {
-			$r = $data;
-		}
-		return $r;
-	}
-
-	/**
-	 * developpeObject
-	 * 
-	 * Transforme un object() en informations texte
-	 * @param data
-	 * @return string
-	 */
-	public function developpeObject($data) {
-		return $this->developpeArray($this->developpeObject_recursive($data));
-	}
-	public function developpeObject_recursive($data) {
-		$ret = array();
-		$ret['type'] = gettype($data);
-		$ret['data'] = array();
-		// tests…
-		if(is_object($data)) {
-			// object
-			$ret['classname'] = get_class($data);
-			$ret['methods'] = array();
-		} else if (is_array($data)) {
-			// array
-			foreach ($data as $key => $value) {
-				$ret['data'][] = $this->developpeObject_recursive($value);
-			}
-		} else {
-			// autre
-			if(is_bool($data)) return $data ? $ret['data'] = 'true' : $ret['data'] = 'false';
-				else return $ret['data'];
-		}
-		$ret['count'] = count($ret['data']);
-		return $ret;
-	}
-
 
 	/**
 	 * Transforme une date au format jj/mm/aa en aaaa-mm-jj pour utilisation Datetime
@@ -644,52 +471,6 @@ class twigTools extends Twig_Extension {
 	}
 
 	/**
-	 * serializeT
-	 * Renvoie la chaîne unserialisée (PHP : serialize())
-	 *
-	 * @param string $data
-	 */
-	public function serializeT($data) {
-		return serialize($data);
-	}
-
-	/**
-	 * unserializeT
-	 * Renvoie la chaîne unserialisée (PHP : unserialize())
-	 *
-	 * @param string $data
-	 */
-	public function unserializeT($data) {
-		return unserialize($data);
-	}
-
-	/**
-	 * paramsByUrl
-	 * Renvoie du tableau fourni une chaîne comptatible URL pour passer en paramètre
-	 *
-	 * @param array $data
-	 * @return string
-	 */
-	public function paramsByUrl($data) {
-		$r = array();
-		foreach($data as $nom => $val) $r[] = $nom."=".$val;
-		$result = implode("&", $r);
-		return "?".$result;
-	}
-
-	/**
-	 * implode
-	 * Renvoie du tableau fourni une chaîne comptatible URL pour passer en paramètre
-	 *
-	 * @param string/array $lk
-	 * @param array $data
-	 * @return string
-	 */
-	public function implode($lk, $data = null) {
-		return implode($lk, $data);
-	}
-
-	/**
 	 * pluriel
 	 * Renvoie un "s" si count($elem) > 1
 	 * on peut remplacer le "s" par "x" ou autre
@@ -698,19 +479,8 @@ class twigTools extends Twig_Extension {
 	 * @return string
 	 */
 	public function pluriel($elem, $s = "s") {
-		return count($elem) > 1 ? $s : "";
-	}
-
-	/**
-	 * plurNumber
-	 * Renvoie un "s" si $elem > 1
-	 * on peut remplacer le "s" par "x" ou autre
-	 * @param $elem
-	 * @param $s
-	 * @return string
-	 */
-	public function plurNumber($elem, $s = "s") {
-		return $elem > 1 ? $s : "";
+		if(is_array($elem)) return count($elem) > 1 ? $s : "";
+		else return intval($elem) > 1 ? $s : "";
 	}
 
 	/**
@@ -767,20 +537,6 @@ class twigTools extends Twig_Extension {
 	public function annee() {
 		$date = new Datetime();
 		return $date->format("Y");
-	}
-
-	/**
-	 *
-	 */
-	public function URIperform($t) {
-		$search = array(
-			"###ROOT###",
-			);
-		$replace = array(
-			$this->container->get("request")->getBasePath(),
-			);
-		$t = str_replace($search, $replace, $t);
-		return $t;
 	}
 
 	/**
@@ -966,48 +722,6 @@ class twigTools extends Twig_Extension {
 		return in_array($userRole, $this->addLowerRoles($roles));
 	}
 
-	public function B64forImg($media) {
-		// echo('<pre>');
-		// var_dump($media);
-		// die('</pre>');
-		$size = '2x';
-		if($media->isImage()) {
-			if($media->isScreenableImage()) {
-				$format = $media->getFormat_contentType();
-				// else $format = 'image/png';
-				return '<img src="data:'.$format.';base64,'.$media->getThumbnailB64(64,64).'">';
-			} else {
-				return '<i class="fa fa-question-circle fa-'.$size.' text-danger"></i>';
-			}
-		} else {
-			return '<i class="fa '.$media->getFormat_icon().' fa-'.$size.'"></i>';
-		}
-	}
-
-	public function ThumbMedia($media, $responsive = false, $classes = null, $sizex = null, $sizey = null) {
-		$size = '2x';
-		if($sizex == null && $sizey == null) $sizex = $sizey = 64;
-		if(is_array($classes)) $classes = implode(' ', $classes);
-		if(!is_string($classes)) $classes = "";
-		if(strlen($classes) > 0) $sep = " "; else $sep = "";
-		if($responsive == true) $classes = 'img-responsive'.$sep.$classes;
-		if($media->isImage()) {
-			if($media->isScreenableImage()) {
-				$format = $media->getFormat_contentType();
-				// $format = 'image/png';
-				return '<img src="data:'.$format.';base64,'.$media->getThumbnailB64($sizex,$sizey).'" class="'.$classes.'">';
-			} else {
-				return '<i class="fa fa-question-circle fa-'.$size.' text-danger"></i>';
-			}
-		} else {
-			return '<i class="fa '.$media->getFormat_icon().' fa-'.$size.'"></i>';
-		}
-	}
-
-	public function encode64($data) {
-		return base64_encode($data);
-	}
-
 	public function fileSizeDisplay($size, $unit = 'auto', $decimal = 0) {
 		$validUnits = array(
 			'auto'	=> 1,
@@ -1063,5 +777,13 @@ class twigTools extends Twig_Extension {
 		}
 		return $ret;
 	}
+
+	public function fileExists($file) {
+		$file = $this->container->get('aetools.aetools')->setRootPath()->getCurrentPath().'../'.preg_replace('#^/#', '', $file);
+		// if(@file_exists($file)) $a = 'OK'; else $a = 'non';
+		// echo('<p>'.$file.' : '.$a.'</p>');
+		return @file_exists($file);
+	}
+
 
 }

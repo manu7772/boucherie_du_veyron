@@ -39,7 +39,7 @@ menu:
         item:
             id: fetes
             name: menu.catalogue.fetes
-            role: ROLE_ADMIN
+            role: ROLE_SUPER_ADMIN
             path:
                 route: site_pageweb
                 params:

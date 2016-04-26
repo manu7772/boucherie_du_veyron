@@ -1,0 +1,204 @@
+admin: 'Boucherie du Veyron'
+roles:
+    IS_AUTHENTICATED_ANONYMOUSLY: public
+    ROLE_USER: connecté
+    ROLE_TRANSLATOR: traducteur
+    ROLE_EDITOR: éditeur
+    ROLE_ADMIN: administrateur
+    ROLE_SUPER_ADMIN: webmaster
+date_format:
+    date: Y-m-d
+    time: 'H:i:s'
+    datetime: 'Y-m-d H:i:s'
+entity:
+    notblank:
+        nom: Vous devez préciser le nom
+install:
+    name_s: installations
+    name: installation
+    fixfiles: Fichiers fixtures
+    info:
+        class: classe :
+        elements: éléments :
+    generation: génération
+    suppression: suppression
+    generer: générer
+    effacer: effacer
+    sansnom: sans nom
+    message:
+        supprimes: '{0} Aucun élément n''a été supprimé.|{1} %count% élément a été supprimé.|[2,+Inf] %count% éléments ont été supprimés.'
+        generer:
+            title: Attention !
+            texte: 'Les données existantes vont être totalement supprimées avant génération. Veuillez confirmer, s.v.p.'
+        effacer:
+            title: Attention !
+            texte: 'Les données existantes vont être totalement supprimées. Veuillez confirmer, s.v.p.'
+marketplace:
+    name: e-commerce
+icons:
+    default_icon: icône par défaut
+actions:
+    name: actions
+    voir: voir
+    modification: modification
+    modifierName: modifier %name%
+    modifier: modifier
+    creation: création
+    ajouter: ajouter
+    suppression: suppression
+    supprimer: supprimer
+    suppQuestion: Souhaitez-vous vraiment supprimer %name% ?
+    vue: 'vue en détails'
+    activer: mode actif
+    desactiver: mode inactif
+    forbidden: actions interdites
+    repondre: répondre
+    analyse: analyse
+table:
+    col:
+        id: id
+        libelle: libellé
+        valeur: valeur
+        nom: nom
+        originalnom: nom du fichier
+        slug: slug
+        title: titre
+        titreh1: titre H1
+        modele: modèle
+        keywords: mots clés
+        descriptif: descriptif
+        metadescription: description
+        attribut: attribut
+        creation: création
+        maj: 'mise à jour'
+        jamais: non modifié
+        icone: icône
+        typemime: 'type mime'
+        parent_folder: 'dossier parent'
+        child_folders: 'contenu dossiers'
+        child_files: 'contenu fichiers'
+        visuel: visuel
+        original: original
+        apercu: aperçu
+        version: version
+        versions_list: 'liste des versions'
+        tag: tag
+        default: défaut
+        email: courriel
+        originalnom: nom fichier
+        bundle: bundle
+        objet: objet
+        message: message
+        admin: info admin
+        size: taille
+        mediatype: Type de média
+        logo: logotype
+        vitrine: vitrine
+        adresse: adresse
+msg:
+    supp: 'souhaitez-vous supprimer cet élément ?'
+    suppression: suppression
+form:
+    enregistrer: Enregistrer
+    envoyer: envoyer
+    select: Sélectionner…
+    nom: Nom
+    prenom: Prénom
+    telephone: Téléphone
+    typemime: 'Type de fichier'
+    icone: Icône
+    actif: Actif
+    groupes: Groups
+    fa_groupes: '<i class="fa fa-users"></i> Groups'
+    parent_folder: 'Dossier parent'
+    child_folders: 'Children folders'
+    fa_child_folders: '<i class="fa fa-folder-open"></i> Children folders'
+    fa_parent_folder: '<i class="fa fa-folder"></i> Parent folder'
+    creation: Création
+    update: 'Mise à jour'
+    current_version: 'Current version'
+    fa_current_version: '<i class="fa fa-files"></i> Current version'
+    tags: Tags
+    tags_create: 'Créez ici des tags en les séparant par des virgules…'
+    fa_tags: '<i class="fa fa-tags"></i> Tags'
+    fa_tags_list: '<i class="fa fa-tags"></i> Liste de tags'
+    fichiers: Files
+    fa_fichiers: '<i class="fa fa-files-o"></i> Files'
+    telechargement: Téléchargement
+    code: Texte de page
+    background: Image de fond
+    email: Courriel
+    message: Votre message…
+    envoyer: Envoyer
+    objet: Objet de votre message
+    fichier: fichier
+    supprimer: supprimer
+    zoomIn: zoom +
+    zoomOut: zoom -
+    flipH: retourner horizontalement
+    flipV: retourner verticalement
+    rotationG: rotation à gauche
+    rotationD: rotation à droite
+    uploadNewImage: charger une nouvelle image
+    avatar: avatar
+    descriptif: descriptif
+    taux: taux
+    accroche: accroche
+    cp: code postal
+    ville: ville
+    commentaire: commentaire
+sizes:
+    Ko: Ko
+    Mo: Mo
+    Go: Go
+    To: To
+erreurs:
+    supp_simple: 'erreur de suppression'
+    suppression: 'erreur lors de la suppression de %name%'
+recherche:
+    name: recherche
+statistique:
+    name: statistique
+    name_s: statistiques
+administration: administration
+superadmin:
+    name: webmaster
+    entites: entités Doctrine
+savoirplus: 'en savoir plus'
+copyright: copyright
+titre: titre
+message: message
+non: non
+oui: oui
+close: fermer
+open: ouvrir
+erreur: erreur
+reset_all: 'effacer tout'
+parametres: paramètres
+reglages: configuration
+informations: informations
+information: information
+options: options
+télécharger: télécharger
+homepage: sommaire
+arborescence: 'arborescence'
+parents: parents
+parent: parent
+enfants: enfants
+enfant: enfant
+card: carte
+document_s: documents
+document: document
+dossier_racine: 'dossier racine'
+dossiers_parents: 'dossiers parents'
+dossier_parent: 'dossier parent'
+dossiers_enfants: 'dossiers enfants'
+dossier_enfant: 'dossier enfant'
+accueil: accueil
+racine: racine
+validator:
+    jstree:
+        nonConforme: 'Un objet JStree est non conforme'
+
+
+

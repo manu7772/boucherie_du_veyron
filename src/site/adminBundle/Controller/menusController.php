@@ -2,7 +2,8 @@
 
 namespace site\adminBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use site\adminBundle\Controller\baseController;
+// use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -15,11 +16,11 @@ use \Exception;
  * menusController
  * @Security("has_role('ROLE_ADMIN')")
  */
-class menusController extends Controller {
+class menusController extends baseController {
 
 	public function indexAction() {
 		$data = array();
-		$data['sitedata'] = $this->get('aetools.aeSite')->getRepo()->findByDefault(true)[0];
+		$data['sitedata'] = $this->get('aetools.aeSite')->getDefaultSiteData();
 		$aeMenus = $this->get('aetools.aeMenus');
 		$data['menus'] = $aeMenus->getInfoMenus();
 		$data['bundles'] = $aeMenus->getBundles();
@@ -28,7 +29,7 @@ class menusController extends Controller {
 
 	public function actionAction($action, $bundle, $name = null, $id = null) {
 		$data = array();
-		$data['sitedata'] = $this->get('aetools.aeSite')->getRepo()->findByDefault(true)[0];
+		$data['sitedata'] = $this->get('aetools.aeSite')->getDefaultSiteData();
 		$data['action'] = $action;
 		$data['bundle'] = $bundle;
 		$data['name'] = $name;

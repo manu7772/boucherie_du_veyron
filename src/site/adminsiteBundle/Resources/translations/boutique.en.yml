@@ -1,0 +1,31 @@
+name_s: stores
+name: store
+not_found: 'no store found'
+x_found: '{0} no store found|{1} 1 store found|[2,+Inf] %count% stores found'
+create: 'create new store'
+create_btn: 'new store'
+backlist: 'back to list of stores'
+backlist_btn: 'back to list'
+dontexist: 'this store does not exist'
+moredetails: 'more details on %name%'
+existe: this store already exists
+grants:
+    no_access: You are not granted to access to the store<br>"%name%"
+form:
+    select: Select…
+fields:
+    id: id
+    nom: name
+    created: created
+    updated: updated
+    adresse: adress
+    image: store photo
+    logo: logotype
+    descriptif: description
+    mainMedia: picture
+    jamais: no modification
+    subEntitys: elements
+    parents: parents
+    parent: parent
+    elements: elements
+    icon: icon

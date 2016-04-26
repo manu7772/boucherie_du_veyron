@@ -109,6 +109,13 @@ class fiche extends item {
 		$this->tags = new ArrayCollection();
 	}
 
+	public function memOldValues($addedfields = null) {
+		$fields = array('articles');
+		if(count($addedfields) > 0 && is_array($addedfields)) $fields = array_unique(array_merge($fields, $addedfields));
+		parent::memOldValues($fields);
+		return $this;
+	}
+ 
     // public function getClassName(){
     //     return parent::CLASS_FICHE;
     // }
@@ -251,8 +258,8 @@ class fiche extends item {
 	 * @return video
 	 */
 	public function addArticle(article $article) {
-		$article->addFiche($this);
-		$this->articles->add($article);
+		// $article->addFiche($this);
+		if(!$this->articles->contains($article)) $this->articles->add($article);
 		return $this;
 	}
 
@@ -262,7 +269,7 @@ class fiche extends item {
 	 * @return boolean
 	 */
 	public function removeArticle(article $article) {
-		$article->removeFiche($this);
+		// $article->removeFiche($this);
 		return $this->articles->removeElement($article);
 	}
 

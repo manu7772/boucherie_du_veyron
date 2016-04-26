@@ -2,7 +2,8 @@
 
 namespace site\adminBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use site\adminBundle\Controller\baseController;
+// use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -15,12 +16,12 @@ use \Exception;
  * superadminController
  * @Security("has_role('ROLE_SUPER_ADMIN')")
  */
-class superadminController extends Controller {
+class superadminController extends baseController {
 
 	public function indexAction() {
 		$this->get('aetools.aetools')->updateBundlesInConfig();
 		$data = array();
-		$data['sitedata'] = $this->get('aetools.aeSite')->getRepo()->findByDefault(true)[0];
+		$data['sitedata'] = $this->get('aetools.aeSite')->getDefaultSiteData();
 		$repo = $this->get('aetools.aeEntity')->getEm()->getRepository('site\adminBundle\Entity\article');
 		$data['articles'] = $repo->findAll();
 		$data['panier_user'] = $this->get('aetools.aePanier')->getArticlesOfUser($this->getUser());
@@ -31,7 +32,7 @@ class superadminController extends Controller {
 	public function routesAction() {
 		$aetools = $this->get('aetools.aetools');
 		$data = array();
-		$data['sitedata'] = $this->get('aetools.aeSite')->getRepo()->findByDefault(true)[0];
+		$data['sitedata'] = $this->get('aetools.aeSite')->getDefaultSiteData();
 		// $data['params'] = $aetools->getRouteParameters();
 		$data['routes'] = $aetools->getAllRoutes();
 		// via stack
@@ -43,7 +44,7 @@ class superadminController extends Controller {
 
 	public function bundlesAction() {
 		$data = array();
-		$data['sitedata'] = $this->get('aetools.aeSite')->getRepo()->findByDefault(true)[0];
+		$data['sitedata'] = $this->get('aetools.aeSite')->getDefaultSiteData();
 		$data['bundles'] = $this->get('aetools.aetools')->getBundlesList(true);
 		$data['bundle'] = $this->get('aetools.aetools')->getBundleName();
 		return $this->render('siteadminBundle:superadmin:bundles.html.twig', $data);
@@ -51,7 +52,7 @@ class superadminController extends Controller {
 
 	public function entitiesAction($entity = null, $field = null) {
 		$data = array();
-		$data['sitedata'] = $this->get('aetools.aeSite')->getRepo()->findByDefault(true)[0];
+		$data['sitedata'] = $this->get('aetools.aeSite')->getDefaultSiteData();
 		$aeEntities = $this->get('aetools.aeEntity');
 		$entities = array_flip($aeEntities->getListOfEnties());
 		// général

@@ -20,6 +20,8 @@ parameters:
                 - [400, 400]
             favicon:
                 - [16, 16]
+            adminLogo:
+                - [137, 52]
         ### ITEM
         item:
             image:

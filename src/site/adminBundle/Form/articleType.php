@@ -9,7 +9,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 // Transformer
 use Symfony\Component\Form\CallbackTransformer;
 // User
-use Symfony\Component\Security\Core\SecurityContext;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage as SecurityContext;
 // Paramétrage de formulaire
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormEvent;
@@ -28,6 +28,7 @@ class articleType extends baseType {
 	public function buildForm(FormBuilderInterface $builder, array $options) {
 		// ajout de action si défini
 		$this->initBuilder($builder);
+		$data = $builder->getData();
 		$this->imagesData = array(
 			'image' => array(
 				'owner' => 'article:image'
@@ -49,6 +50,9 @@ class articleType extends baseType {
 				'label' => 'fields.descriptif',
 				'translation_domain' => 'article',
 				'required' => false,
+				'attr' => array(
+					'data-height' => 140,
+					)
 				))
 			// ->add('dateCreation')
 			// ->add('dateMaj')
@@ -73,11 +77,16 @@ class articleType extends baseType {
 				'class'     => 'siteadminBundle:tauxTva',
 				'property'  => 'nomlong',
 				'multiple'  => false,
+				'required'	=> true,
 				"query_builder" => function($repo) {
 					if(method_exists($repo, 'defaultValsListClosure'))
 						return $repo->defaultValsListClosure($this->aeEntities);
 						else return $repo->findAllClosure();
 					},
+				'placeholder'   => 'form.select',
+				'attr'		=> array(
+					'class'			=> 'select2',
+					),
 				))
 			// ->add('statut', 'entity', array(
 			// 	"label"     => 'name',
@@ -103,6 +112,10 @@ class articleType extends baseType {
 						return $repo->defaultValsListClosure($this->aeEntities);
 						else return $repo->findAllClosure();
 					},
+				'placeholder'   => 'form.select',
+				'attr'		=> array(
+					'class'			=> 'select2',
+					),
 				))
 			->add('reseaus', 'entity', array(
 				"label"     => 'name_s',
@@ -116,12 +129,12 @@ class articleType extends baseType {
 						return $repo->defaultValsListClosure($this->aeEntities);
 						else return $repo->findAllClosure();
 					},
+				'placeholder'   => 'form.select',
 				'attr'		=> array(
-					'class'			=> 'chosen-select chosen-select-width chosen-select-no-results',
-					'placeholder'	=> 'form.select',
+					'class'			=> 'select2',
 					),
 				))
-			->add('categories', 'entity', array(
+			->add('parents', 'entity', array(
 				"label"     => 'name_s',
 				'translation_domain' => 'categorie',
 				'class'     => 'siteadminBundle:categorie',
@@ -130,13 +143,11 @@ class articleType extends baseType {
 				'required' => false,
 				'group_by' => 'parent.nom',
 				"query_builder" => function($repo) {
-                	if(method_exists($repo, 'getElementsBySubType'))
-                	    return $repo->getElementsBySubType(array('article'));
-                	    else return $repo->findAllClosure();
-                	},
+					return $repo->getElementsBySubTypeButRoot(array('article'));
+					},
+				'placeholder'   => 'form.select',
 				'attr'		=> array(
-					'class'			=> 'chosen-select chosen-select-width chosen-select-no-results',
-					'placeholder'	=> 'form.select',
+					'class'			=> 'select2',
 					),
 				))
 			// 1 image :
@@ -170,9 +181,9 @@ class articleType extends baseType {
 				'multiple'	=> true,
 				'expanded'	=> false,
 				"required"	=> false,
+				'placeholder'   => 'form.select',
 				'attr'		=> array(
-					'class'			=> 'chosen-select chosen-select-width chosen-select-no-results',
-					'placeholder'	=> 'form.select',
+					'class'			=> 'select2',
 					),
 				"query_builder" => function($repo) {
 					if(method_exists($repo, 'defaultValsListClosure'))
@@ -187,9 +198,10 @@ class articleType extends baseType {
 				'class'		=> 'siteadminBundle:tag',
 				'multiple'	=> true,
 				'required'	=> false,
+				'placeholder'   => 'form.select',
 				'attr'		=> array(
-					'class'			=> 'chosen-select chosen-select-width chosen-select-no-results',
-					'placeholder'	=> 'form.select',
+					'class'			=> 'select2',
+					'data-limit'	=> 8,
 					),
 				"query_builder" => function($repo) {
 					if(method_exists($repo, 'defaultValsListClosure'))
@@ -218,13 +230,13 @@ class articleType extends baseType {
 				'multiple'	=> true,
 				'expanded'	=> false,
 				"required"	=> false,
+				'placeholder'   => 'form.select',
 				'attr'		=> array(
-					'class'			=> 'chosen-select chosen-select-width chosen-select-no-results',
-					'placeholder'	=> 'form.select',
+					'class'			=> 'select2',
 					),
-				"query_builder" => function($repo) {
+				"query_builder" => function($repo) use ($data) {
 					if(method_exists($repo, 'defaultValsListClosure'))
-						return $repo->defaultValsListClosure($this->aeEntities);
+						return $repo->defaultValsListClosure($this->aeEntities, $data);
 						else return $repo->findAllClosure();
 					},
 				))

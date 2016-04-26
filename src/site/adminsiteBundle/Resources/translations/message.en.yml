@@ -1,0 +1,31 @@
+name_s: messages
+name: message
+not_found: 'no message found'
+x_found: '{0} no message found|{1} 1 message found|[2,+Inf] %count% messages found'
+create: 'create new message'
+create_btn: 'new message'
+backlist: 'back to list of messages'
+backlist_btn: 'back to list'
+dontexist: 'this message does not exist'
+moredetails: 'more details on %name%'
+existe: 'this message already exists'
+action:
+    consulter: consult messages list
+    supprimer: delete
+    repondre: answer to the sender of the message
+    lu: mark as red
+    nonlu: mark as not red
+etat:
+    lu: red
+    nonlu: not red
+form:
+    select: Select…
+fields:
+    id: id
+    nom: name
+    jamais: no modification
+    subEntitys: elements
+    parents: parents
+    parent: parent
+    elements: elements
+    icon: icon

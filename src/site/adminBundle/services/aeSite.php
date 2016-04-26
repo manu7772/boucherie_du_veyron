@@ -20,59 +20,27 @@ class aeSite extends aeEntity {
      * @param baseEntity $entity
      * @return aeSite
      */
-    public function checkAfterChange(baseEntity &$entity) {
-        // check image
-        $image = $entity->getImage();
-        if(is_object($image)) {
-            // if($image->isValid()) {
+    public function checkAfterChange(baseEntity &$entity, $butEntities = []) {
+        // check images
+        $fields = array('image', 'logo', 'favicon', 'adminLogo');
+        foreach ($fields as $field) {
+            $get = 'get'.ucfirst($field);
+            $set = 'set'.ucfirst($field);
+            $image = $entity->$get();
+            if(is_object($image)) {
                 $infoForPersist = $image->getInfoForPersist();
-                // $infoForPersist['type_image'] = 'image';
                 $this->container->get('aetools.debug')->debugFile($infoForPersist);
-                $service = $this->container->get('aetools.aeEntity')->getEntityService($image);
-                $service->checkAfterChange($image);
                 if($infoForPersist['removeImage'] === true || $infoForPersist['removeImage'] === 'true') {
                     // Supression de l'image
-                    // echo('<p>aeSite - image : suppression !!</p>');
-                    $entity->setImage(null);
+                    $entity->$set(null);
+                } else {
+                    // Gestion de l'image
+                    $service = $this->container->get('aetools.aeEntity')->getEntityService($image);
+                    $service->checkAfterChange($image);
                 }
-            // } else $entity->setImage(null);
+            }
         }
-        // else echo('<p>aeSite - image : aucune</p>');
-        // check logo
-        $logo = $entity->getLogo();
-        if(is_object($logo)) {
-            // if($logo->isValid()) {
-                $infoForPersist = $logo->getInfoForPersist();
-                // $infoForPersist['type_image'] = 'logo';
-                $this->container->get('aetools.debug')->debugFile($infoForPersist);
-                $service = $this->container->get('aetools.aeEntity')->getEntityService($logo);
-                $service->checkAfterChange($logo);
-                if($infoForPersist['removeImage'] === true || $infoForPersist['removeImage'] === 'true') {
-                    // Supression de l'image
-                    // echo('<p>aeSite - logo : suppression !!</p>');
-                    $entity->setLogo(null);
-                }
-            // } else $entity->setLogo(null);
-        }
-        // else echo('<p>aeSite - logo : aucun</p>');
-        // check favicon
-        $favicon = $entity->getFavicon();
-        if(is_object($favicon)) {
-            // if($favicon->isValid()) {
-                $infoForPersist = $favicon->getInfoForPersist();
-                // $infoForPersist['type_image'] = 'favicon';
-                $this->container->get('aetools.debug')->debugFile($infoForPersist);
-                $service = $this->container->get('aetools.aeEntity')->getEntityService($favicon);
-                $service->checkAfterChange($favicon);
-                if($infoForPersist['removeImage'] === true || $infoForPersist['removeImage'] === 'true') {
-                    // Supression de l'image
-                    // echo('<p>aeSite - favicon : suppression !!</p>');
-                    $entity->setFavicon(null);
-                }
-            // } else $entity->setFavicon(null);
-        }
-        // else echo('<p>aeSite - favicon : aucun</p>');
-        parent::checkAfterChange($entity);
+        parent::checkAfterChange($entity, $butEntities);
         return $this;
     }
 
@@ -84,5 +52,11 @@ class aeSite extends aeEntity {
     // public function save(baseEntity &$entity, $flush = true) {
     //  return parent::save($entity, $flush);
     // }
+
+    public function getDefaultSiteData() {
+        $default = $this->getRepo()->findByDefault(true);
+        if(count($default) > 0) return reset($default);
+        else return array();
+    }
 
 }

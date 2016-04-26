@@ -132,6 +132,13 @@ class article extends item {
     //     return parent::CLASS_ARTICLE;
     // }
 
+	public function memOldValues($addedfields = null) {
+		$fields = array('marque', 'reseaus', 'pdf', 'fiches', 'articlesParents', 'articlesLies');
+		if(count($addedfields) > 0 && is_array($addedfields)) $fields = array_unique(array_merge($fields, $addedfields));
+		parent::memOldValues($fields);
+		return $this;
+	}
+
 	/**
 	 * @ORM\PrePersist
 	 * @ORM\PreUpdate
@@ -270,8 +277,8 @@ class article extends item {
 	 * @return article
 	 */
 	public function setMarque(marque $marque = null) {
-		if($marque == null) $marque->removeArticle($this);
-		else $marque->addArticle($this);
+		// if($marque == null) $marque->removeArticle($this);
+		// else $marque->addArticle($this);
 		$this->marque = $marque;
 		return $this;
 	}
@@ -290,7 +297,7 @@ class article extends item {
 	 * @return article
 	 */
 	public function setpdf(pdf $pdf = null) {
-		$pdf->setArticle($this);
+		// $pdf->setArticle($this);
 		$this->pdf = $pdf;
 		return $this;
 	}
@@ -309,7 +316,7 @@ class article extends item {
 	 * @return article
 	 */
 	public function addReseau(reseau $reseau) {
-		$reseau->addArticle($this);
+		// $reseau->addArticle($this);
 		$this->reseaus->add($reseau);
 		return $this;
 	}
@@ -320,7 +327,7 @@ class article extends item {
 	 * @return boolean
 	 */
 	public function removeReseau(reseau $reseau) {
-		$reseau->removeArticle($this);
+		// $reseau->removeArticle($this);
 		return $this->reseaus->removeElement($reseau);
 	}
 
@@ -346,7 +353,7 @@ class article extends item {
 	 * @return article
 	 */
 	public function addFiche(fiche $fiche) {
-		$this->fiches->add($fiche);
+		if(!$this->fiches->contains($fiche)) $this->fiches->add($fiche);
 		return $this;
 	}
 
@@ -390,18 +397,19 @@ class article extends item {
 	 * @return article
 	 */
 	public function addArticlesLie(article $articlesLies) {
-		$this->articlesLies->add($articlesLies);
-		$articlesLies->addArticlesParent($this);
+		if($articlesLies != $this) $this->articlesLies->add($articlesLies);
+		// $articlesLies->addArticlesParent($this);
 		return $this;
 	}
 
 	/**
 	 * Remove articlesLies
 	 * @param article $articlesLies
+	 * @return boolean
 	 */
 	public function removeArticlesLie(article $articlesLies) {
-		$this->articlesLies->removeElement($articlesLies);
-		$articlesLies->removeArticlesParent($this);
+		return $this->articlesLies->removeElement($articlesLies);
+		// $articlesLies->removeArticlesParent($this);
 	}
 
 	/**

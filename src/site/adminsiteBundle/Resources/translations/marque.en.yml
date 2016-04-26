@@ -1,0 +1,30 @@
+name_s: brands
+name: brand
+not_found: 'no brand found'
+x_found: '{0} no brand found|{1} 1 brand found|[2,+Inf] %count% brands found'
+create: 'create new brand'
+create_btn: 'new brand'
+backlist: 'back to list of brands'
+backlist_btn: 'back to list'
+dontexist: 'this brand does not exist'
+moredetails: 'more details on %name%'
+bydefault: 'set as default brand'
+existe: this brand already exists
+form:
+    select: Select…
+fields:
+    id: id
+    nom: name
+    descriptif: description
+    image: picture
+    logo: logotype
+    created: created
+    updated: updated
+    mainMedia: picture
+    couleur: color
+    jamais: no modification
+    subEntitys: elements
+    parents: parents
+    parent: parent
+    elements: elements
+    icon: icon

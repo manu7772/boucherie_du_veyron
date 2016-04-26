@@ -1,0 +1,27 @@
+name_s: éléments
+name: élément
+not_found: 'aucun élément trouvé'
+x_found: '{0} aucun élément trouvé|{1} 1 élément trouvé|[2,+Inf] %count% éléments trouvés'
+create: 'créer un nouvel élément'
+create_btn: 'nouveau éléments'
+backlist: 'retour à la liste des éléments'
+backlist_btn: 'retour liste'
+dontexist: 'ce élément n''existe pas'
+suppression: 'l''élément %name% a été supprimé'
+moredetails: 'plus de détails sur %name%'
+existe: cet élément existe déjà
+grants:
+    no_access: Vous n'avez pas les droits pour accéder à<br>"%name%"
+form:
+    select: Sélectionnez…
+fields:
+    id: id
+    nom: nom
+    created: création
+    updated: mis à jour
+    jamais: aucune modification
+    subEntitys: éléments
+    parents: parents
+    parent: parent
+    elements: éléments
+    icon: icône

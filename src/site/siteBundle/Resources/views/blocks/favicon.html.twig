@@ -1,6 +1,6 @@
 <!-- Favicone Icon -->
 {% if sitedata is defined %}
-{% if sitedata.favicon != null %}
+{% if sitedata.favicon|default(null) != null %}
 <link rel="shortcut icon" type="image/x-icon" href="{{ sitedata.favicon.img }}">
 <link rel="icon" type="image/png" href="{{ sitedata.favicon.img }}">
 <link rel="apple-touch-icon" href="{{ sitedata.favicon.img }}">

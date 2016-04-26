@@ -2,7 +2,7 @@
 	<div class="container">
 		<div class="row">
 			{% if sitedata is defined %}
-			{% for item1 in sitedata.categorieFooters %}
+			{% for item1 in sitedata.categorieFooters|default([]) %}
 			<div class="col-sm-2">
 				<div class="single-widget">
 					<h2>{{ item1 }}</h2>

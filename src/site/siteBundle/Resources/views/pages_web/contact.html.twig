@@ -1,5 +1,4 @@
 {% extends 'sitesiteBundle::base_pages.html.twig' %}
-{% set cssjsloads = 'gmap' %}
 
 {% block mainContainer %}
 	<div class="container">
@@ -29,44 +28,54 @@
 	
 		
 	<section id="section-color">
-	
 		<div id="contact-page"  class="container"><!--container-->
 			<div class="center">
 				<h2 class="title text-center">{{ pageweb.titreh1|raw }}</h2>
 				<p class="text-center">{{ pageweb.code|raw }}</p>
 			</div>
+			{#
 			{% if message_success is defined %}
-			<div class="status alert alert-success">{{ message_success|trans }}</div>
+			<div class="col-sm-12">
+				<div class="status alert alert-success">{{ message_success|trans }}</div>
+				<hr style="clear:both;">
+			</div>
 			{% endif %}
 			{% if message_error is defined %}
-			<div class="status alert alert-danger">{{ message_error|trans }}</div>
+			<div class="col-sm-12">
+				<div class="status alert alert-danger">{{ message_error|trans }}</div>
+				<hr style="clear:both;">
+			</div>
 			{% endif %}
-			{{ form_start(message_form) }}
-			<!-- <form id="main-contact-form" class="contact-form row" name="contact-form" method="post"> -->
-			<div class="col-sm-6">
-				{% for item in ['nom', 'prenom', 'email', 'telephone'] %}
-				<div class="form-group col-md-12">
-					{{ form_widget(message_form[item]) }}
-					{{ form_errors(message_form[item]) }}
+			#}
+			<div class="container">
+				<div class="col-sm-12">
+					{{ form_start(message_form) }}
+					<!-- <form id="main-contact-form" class="contact-form row" name="contact-form" method="post"> -->
+					<div class="col-sm-6">
+						{% for item in ['nom', 'prenom', 'email', 'telephone'] %}
+						<div class="form-group col-md-12">
+							{{ form_widget(message_form[item]) }}
+							{{ form_errors(message_form[item]) }}
+						</div>
+						{% endfor %}
+					</div>
+						
+					<div class="col-sm-6">
+						{% for item in ['objet', 'message'] %}
+						<div class="form-group col-md-12">
+							{{ form_widget(message_form[item]) }}
+							{{ form_errors(message_form[item]) }}
+						</div>
+						{% endfor %}
+						<div class="form-group col-md-12">
+							{{ form_widget(message_form['submit']) }}
+						</div>
+					</div>
+					{{ form_rest(message_form) }}
+					{{ form_end(message_form) }}
 				</div>
-				{% endfor %}
 			</div>
-				
-			<div class="col-sm-6">
-				{% for item in ['objet', 'message'] %}
-				<div class="form-group col-md-12">
-					{{ form_widget(message_form[item]) }}
-					{{ form_errors(message_form[item]) }}
-				</div>
-				{% endfor %}
-				<div class="form-group col-md-12">
-					{{ form_widget(message_form['submit']) }}
-				</div>
-			</div>
-			{{ form_rest(message_form) }}
-			{{ form_end(message_form) }}
 		</div><!--/container-->
-
 	</section>
 
 	<div class="container visible-xs">
@@ -80,6 +89,5 @@
 			</div>
 		</div>
 	</div><!--/#contact-page-->
-
 
 {% endblock mainContainer %}

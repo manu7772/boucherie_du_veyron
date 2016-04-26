@@ -8,6 +8,8 @@ use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\ClassMetadata;
 
+use site\adminBundle\services\aetools;
+
 /**
  * articleRepository
  *
@@ -15,5 +17,20 @@ use Doctrine\ORM\Mapping\ClassMetadata;
  * repository methods below.
  */
 class articleRepository extends itemRepository {
+
+	public function defaultValsListClosure(aetools $aeEntities = null, $data = null) {
+		$qb = parent::defaultValsListClosure($aeEntities, $data);
+		if(is_object($data)) {
+			$id = $data->getId();
+			if($id != null) {
+				// exclut lui-même
+				$qb->andWhere(self::ELEMENT.'.id != :id')
+					->setParameter('id', $id)
+					;
+			}
+		}
+		// resultat
+		return $qb;
+	}
 
 }

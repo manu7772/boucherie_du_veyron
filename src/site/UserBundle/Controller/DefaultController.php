@@ -29,6 +29,7 @@ class DefaultController extends Controller {
 	 */
 	public function indexAction($type = "all", $action = 'list', $params = null) {
 		$data = array();
+		$data['sitedata'] = $this->get('aetools.aeSite')->getDefaultSiteData();
 		$data['users'] = array();
 		$data["entite"] = self::ENTITE_NAME;
 		$userRoles = $this->get('labo_user_roles');
@@ -66,6 +67,7 @@ class DefaultController extends Controller {
 	 * @return Response
 	 */
 	public function showAction($username) {
+		$data['sitedata'] = $this->get('aetools.aeSite')->getDefaultSiteData();
 		$userManager = $this->get('fos_user.user_manager');
 		$data['user'] = $userManager->findUserByUsername($username);
 
@@ -86,9 +88,11 @@ class DefaultController extends Controller {
 	 * @return Response
 	 */
 	public function editAction($username) {
+		// echo('<p>Enrgistrement user (edit)</p>');
 		set_time_limit(300);
 		$memory = $this->get('aetools.aetools')->getConfigParameters('cropper.yml', 'memory_limit');
 		ini_set("memory_limit", $memory);
+		$data['sitedata'] = $this->get('aetools.aeSite')->getDefaultSiteData();
 		$request = $this->getRequest();
 		$userManager = $this->get('fos_user.user_manager');
 		$data['user'] = $userManager->findUserByUsername($username);
@@ -106,15 +110,19 @@ class DefaultController extends Controller {
 				$dispatcher = $this->get('event_dispatcher');
 				$event = new FormEvent($form, $request);
 				$dispatcher->dispatch(FOSUserEvents::PROFILE_EDIT_SUCCESS, $event);
-				if(is_object($data['user']->getAvatar())) {
-					$avatar = $data['user']->getAvatar();
-					$infoForPersist = $avatar->getInfoForPersist();
-					$this->get('aetools.debug')->debugFile($infoForPersist);
-					$this->get('aetools.aeImage')->checkAfterChange($avatar);
-					if($infoForPersist['removeImage'] === true || $infoForPersist['removeImage'] === 'true') {
-						// Supression de l'image
-						$data['user']->setAvatar(null);
-					}
+
+				$image = $data['user']->getAvatar();
+				if(is_object($image)) {
+				    $infoForPersist = $image->getInfoForPersist();
+				    $this->container->get('aetools.debug')->debugFile($infoForPersist);
+				    if($infoForPersist['removeImage'] === true || $infoForPersist['removeImage'] === 'true') {
+				        // Supression de l'image
+				        $data['user']->setAvatar(null);
+				    } else {
+				        // Gestion de l'image
+				        $service = $this->container->get('aetools.aeEntity')->getEntityService($image);
+				        $service->checkAfterChange($image);
+				    }
 				}
 				$userManager->updateUser($data['user']);
 				//
@@ -276,6 +284,7 @@ class DefaultController extends Controller {
 	}
 
 	public function checkUsersAction($params = null) {
+		$data['sitedata'] = $this->get('aetools.aeSite')->getDefaultSiteData();
 		set_time_limit(600);
 		// $userManager = $this->getDoctrine()->getManager()->getRepository(self::ENTITE_CLASSNAME);
 		$userManager = $this->get('fos_user.user_manager');

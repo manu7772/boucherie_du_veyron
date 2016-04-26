@@ -9,7 +9,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Yaml\Parser;
 
-use site\adminBundle\Entity\media;
+use site\adminBundle\Entity\image;
 use site\adminBundle\Entity\message;
 use site\adminBundle\Entity\panier;
 use site\adminBundle\Entity\adresse;
@@ -347,10 +347,11 @@ class User extends BaseUser {
 
 	/**
 	 * Set avatar - PROPRIÉTAIRE
-	 * @param media $avatar
+	 * @param image $avatar
 	 * @return pageweb
 	 */
-	public function setAvatar(media $avatar = null) {
+	public function setAvatar(image $avatar = null) {
+		if($this->getAvatar() != null) $this->getAvatar()->setUserAvatar(null);
 		if($avatar != null) $avatar->setUserAvatar($this);
 		$this->avatar = $avatar;
 		return $this;
@@ -358,7 +359,7 @@ class User extends BaseUser {
 
 	/**
 	 * Get avatar
-	 * @return media 
+	 * @return image 
 	 */
 	public function getAvatar() {
 		return $this->avatar;

@@ -40,8 +40,8 @@ abstract class media extends baseSubEntity {
 
 	/**
 	 * @var integer
-	 * @ORM\Column(name="id", type="integer")
 	 * @ORM\Id
+	 * @ORM\Column(name="id", type="integer")
 	 * @ORM\GeneratedValue(strategy="AUTO")
 	 */
 	protected $id;
@@ -172,11 +172,12 @@ abstract class media extends baseSubEntity {
 	}
 
 	/**
-	 * @Assert\True(message="Le fichier ne contient aucune donnée.")
+	 * @Assert\IsTrue(message="Le fichier ne contient aucune donnée.")
 	 */
 	public function isValid() {
-		// return $this->format->getEnabled();
-		return $this->binaryFile != null ? true : false ;
+		$result = true;
+		if($this->getStockage() == $this->stockageList[0]) if($this->binaryFile == null) $result = false;
+		return $result;
 	}
 
 	public function getShemaBase($format = null) {

@@ -1,15 +1,22 @@
 {% extends 'siteadminBundle:entites:entiteShow.html.twig' %}
+{% set cssjsloads = 'TAB' %}
 {% import 'siteadminBundle:blocks:itemBloc.html.twig' as itemBloc %}
 {% import 'siteadminBundle:blocks:sortable_nested_categories.html.twig' as nestcat %}
 
-{% set cssjsloads = 'simple' %}
 {% set DEVMODE = (app.environment in ['DEV', 'TEST']) or (is_granted('ROLE_SUPER_ADMIN')) %}
 {% set style = '' %}
 {% set style = ' style="min-height: 200px; height:auto !important; height: 200px;"' %}
 
-{% block page_heading %}
-	{{ parent() }}
-{% endblock page_heading %}
+{% block breadcrumb %}
+	<ol class="breadcrumb ellipsis">
+		<li><a href="{{ path('siteadmin_homepage') }}"><strong>{{ UCfirst('administration'|trans) }}</strong></a></li>
+		<li><a href="{{ path('siteadmin_entite', {entite: entite_name}) }}"><strong>{{ UCfirst('name_s'|trans({}, entite.className)) }}</strong></a></li>
+		{% for parent in entite.parentsInverse %}
+			<li><a href="{{ actions.entiteLink(parent, 'show', type, type_value_joiner) }}"><strong>{{ parent.nom|trans({}, parent.className) }}</strong></a></li>
+		{% endfor %}
+		<li>{{ entite.nom|default('#' ~ entite.id)|trans({}, entite.className) }}</li>
+	</ol>
+{% endblock breadcrumb %}
 
 {% block content %}
 <div class="row">
@@ -18,7 +25,7 @@
 		<div class="ibox float-e-margins">
 			<div class="ibox-content">
 				<h2 class="row">
-					<div class="col-md-8 ellipsis">{{ entite.nom }}</div>
+					<div class="col-md-8 ellipsis">{{ actions.colorDot(entite.couleur, '1x') }} <i class="fa {{ actions.icon(entite) }} m-r-xs"></i>{{ entite.nom|trans({}, entite.className) }}</div>
 					<div class="col-md-4">
 						<!-- <a href="{{ path('siteadmin_entite', {entite: entite_name, id: entite.id, action: 'delete'}) }}" type="button" class="btn btn-xs btn-danger btn-outline pull-right need-confirmation" title="{{ UCfirst('actions.suppression'|trans) }}" data-message="{{ 'actions.suppQuestion'|trans({'%name%': entite.nom}) }}"><i class="fa fa-times icon-wait-on-click"></i> {{ 'actions.supprimer'|trans }}</a> -->
 						<!-- <a href="{{ path('siteadmin_entite', {entite: entite_name, id: entite.id, action: 'edit'}) }}" type="button" class="btn btn-xs btn-warning pull-right"><i class="fa fa-pencil icon-wait-on-click"></i> {{ UCfirst('actions.modifier'|trans) }}</a> -->
@@ -27,26 +34,44 @@
 				<hr class="m-t-none m-b-xs">
 				<div class="tabs-container">
 					<ul class="nav nav-tabs">
-						<li class="active"><a data-toggle="tab" href="#tab-1"><i class="fa fa-sitemap visible-xs"></i><span class="hidden-xs">{{ UCfirst('fields.parents'|trans({}, 'categorie')) }}</span></a></li>
-						<li><a data-toggle="tab" href="#tab-2"><i class="fa fa-sitemap visible-xs"></i><span class="hidden-xs">{{ UCfirst('fields.children'|trans({}, 'categorie')) }}</span></a></li>
-						<li><a data-toggle="tab" href="#tab-3"><i class="fa fa-file-o visible-xs"></i><span class="hidden-xs">{{ UCfirst('fields.subEntitys'|trans({}, 'categorie')) }}</span></a></li>
-						<li><a data-toggle="tab" href="#tab-4"><i class="fa fa-picture-o visible-xs"></i><span class="hidden-xs">{{ UCfirst('fields.image'|trans({}, 'categorie')) }}</span></a></li>
+						<li class="active"><a data-toggle="tab" href="#tab-0"><i class="fa fa-cog visible-xs"></i><span class="hidden-xs">{{ UCfirst('fields.technique'|trans({}, entite.className)) }}</span></a></li>
+						<li><a data-toggle="tab" href="#tab-1"><i class="fa fa-sitemap visible-xs"></i><span class="hidden-xs">{{ UCfirst('fields.children'|trans({}, entite.className)) }}</span></a></li>
+						<li><a data-toggle="tab" href="#tab-2"><i class="fa fa-sitemap visible-xs"></i><span class="hidden-xs">{{ UCfirst('fields.parents'|trans({}, entite.className)) }}</span></a></li>
+						<li><a data-toggle="tab" href="#tab-3"><i class="fa fa-file-o visible-xs"></i><span class="hidden-xs">{{ UCfirst('fields.subEntitys'|trans({}, entite.className)) }}</span></a></li>
+						<li><a data-toggle="tab" href="#tab-4"><i class="fa fa-picture-o visible-xs"></i><span class="hidden-xs">{{ UCfirst('fields.image'|trans({}, entite.className)) }}</span></a></li>
 					</ul>
 					<div class="tab-content">
 
-						<div id="tab-1" class="tab-pane active">
+						<div id="tab-0" class="tab-pane active">
 							<div class="panel-body"{{ style|raw }}>
-								<h3 class='text-navy visible-xs m-t-none'>{{ UCfirst('fields.parents'|trans({}, 'categorie')) }}</h3>
+								<h3 class='text-navy visible-xs m-t-none'>{{ UCfirst('fields.technique'|trans({}, entite.className)) }}</h3>
 								<hr class="m-t-xs m-b-xs visible-xs">
 								<div class="row">
 									<div class="col-xs-12">
-										{% if entite.parent != null %}
-										<!-- <h4>{{ entite.parent }}</h4> -->
-										{% for item in entite.parents %}
-										<label class="label{% if item == entite.parent %} label-primary{% endif %} m-b-xs" style="display: inline-block; height: 20px; line-height: 15px;">{{ item }}</label>
-										{% endfor %}
+										<p class="m-b-xs">{{ UCfirst('fields.icon'|trans({}, entite.className)) }} : <i class="fa {{ actions.icon(entite) }}"></i>{% if entite.icon == null %} <i class="text-muted"><em>({{ 'icons.default_icon'|trans }})</em></i>{% endif %}</p>
+										<p class="m-b-xs">
+											{{ ('types.' ~ entite.type)|trans({}, entite_name) }}
+											<p class="m-l-lg text-muted"><i>• {{ entite.accepts|join('<br>• ')|raw }}</i></p>
+										</p>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div id="tab-1" class="tab-pane">
+							<div class="panel-body"{{ style|raw }}>
+								<h3 class='text-navy visible-xs m-t-none'>{{ UCfirst('fields.children'|trans({}, entite.className)) }}</h3>
+								<hr class="m-t-xs m-b-xs visible-xs">
+								<div class="row">
+									<div class="col-xs-12">
+										{% if entite.allChildrens|length > 0 %}
+										{{ actions.labelLinkList(entite.allChildrens, entite.childrens, null, type, type_value_joiner, 'show') }}
+										<hr>
+										{# nestcat.nestedtree('jstree1', entite, 'open') #}
+										<hr>
+										{# nestcat.nestedlist(entite) #}
 										{% else %}
-										<h4><i class='text-muted'>Aucun parent</i></h4>
+										<h6><i class='text-muted'>{{ UCfirst('noChildren'|trans({}, entite.className)) }}</i></h6>
 										{% endif %}
 									</div>
 								</div>
@@ -55,16 +80,15 @@
 
 						<div id="tab-2" class="tab-pane">
 							<div class="panel-body"{{ style|raw }}>
-								<h3 class='text-navy visible-xs m-t-none'>{{ UCfirst('fields.children'|trans({}, 'categorie')) }}</h3>
+								<h3 class='text-navy visible-xs m-t-none'>{{ UCfirst('fields.parents'|trans({}, entite.className)) }}</h3>
 								<hr class="m-t-xs m-b-xs visible-xs">
 								<div class="row">
 									<div class="col-xs-12">
-										{% for item in entite.allChildren %}
-										<label class="label{% if item in entite.children %} label-primary{% endif %} m-b-xs" style="display: inline-block; height: 20px; line-height: 15px;">{{ item }}</label>
-										{% endfor %}
-										<hr>
-										<h3>{{ entite.nom }}</h3>
-										{{ nestcat.nestedlist(entite) }}
+										{% if entite.allParentsInverse != null %}
+										{{ actions.labelLinkList(entite.parentsInverse, entite.parent, null, type, type_value_joiner, 'show') }}
+										{% else %}
+										<h6><i class='text-muted'>{{ UCfirst('noParent'|trans({}, entite.className)) }}</i></h4>
+										{% endif %}
 									</div>
 								</div>
 							</div>
@@ -72,11 +96,32 @@
 
 						<div id="tab-3" class="tab-pane">
 							<div class="panel-body"{{ style|raw }}>
-								<h3 class='text-navy visible-xs m-t-none'>{{ UCfirst('fields.subEntitys'|trans({}, 'categorie')) }}</h3>
+								<h3 class='text-navy visible-xs m-t-none'>{{ UCfirst('fields.subEntitys'|trans({}, entite.className)) }}</h3>
 								<hr class="m-t-xs m-b-xs visible-xs">
 								<div class="row">
-									<div class="col-xs-12">
-										{% for item in entite.subEntitys %}{{ itemBloc.bloc1(item) }}{% endfor %}
+									<div class="col-md-12">
+										<h4>{{ UCfirst('fields.directSubEntity'|trans({}, entite.className)) }}</h4>
+										{% if entite.subEntitys|length > 0 %}
+										<div class="row">
+											<div class="col-xs-12">
+											{% for item in entite.subEntitys %}{{ itemBloc.bloc1(item) }}{% endfor %}
+											</div>
+										</div>
+										{% else %}
+										<h6><i class='text-muted'>{{ UCfirst('noDirectSubEntity'|trans({}, entite.className)) }}</i></h6>
+										{% endif %}
+									</div>
+									<div class="col-md-12">
+										<hr class="m-t-xs m-b-xs hidden-md hidden-lg">
+										<h4>{{ UCfirst('fields.childrenSubEntity'|trans({}, entite.className)) }}</h4>
+										{% for child in entite.allChildrens if child.subEntitys|length > 0 %}
+										<h6 class="m-l-sm m-t-md">{% for item in child.allParentsInverse(true) %}{{ item|trans({}, item.className) }}{% if not loop.last %} / {% endif %}{% endfor %}</h6>
+										<div class="row">
+											<div class="col-xs-12">
+											{% for item in child.subEntitys %}{{ itemBloc.bloc1(item) }}{% endfor %}
+											</div>
+										</div>
+										{% endfor %}
 									</div>
 								</div>
 							</div>
@@ -84,11 +129,15 @@
 
 						<div id="tab-4" class="tab-pane">
 							<div class="panel-body"{{ style|raw }}>
-								<h3 class='text-navy visible-xs m-t-none'>{{ UCfirst('fields.image'|trans({}, 'categorie')) }}</h3>
+								<h3 class='text-navy visible-xs m-t-none'>{{ UCfirst('fields.image'|trans({}, entite.className)) }}</h3>
 								<hr class="m-t-xs m-b-xs visible-xs">
 								<div class="row">
 									<div class="col-xs-12">
-										{{ itemBloc.bloc1(entite) }}
+										{% if entite.mainMedia|default(null) != null %}
+										<img src="{{ entite.mainMedia.img }}" class="img-responsive center-block img-rounded">
+										{% else %}
+										<i class="fa fa-ban fa-5x text-muted fa-border"></i>
+										{% endif %}
 									</div>
 								</div>
 							</div>
@@ -101,3 +150,10 @@
 	</div>
 </div>
 {% endblock content %}
+
+{% block end_javascripts %}
+{{ parent() }}
+{# nestcat.nestedtreeJavascript('jstree1') #}
+{% endblock end_javascripts %}
+
+

@@ -7,20 +7,134 @@
 </div>
 {% endmacro %}
 
-
 {% macro nestedItem(categorie) %}
 {% import _self as self %}
+{% import 'siteadminBundle:blocks:actions.html.twig' as actions %}
 <ol class="dd-list">
-    <li class="dd-item" data-id="1">
-        <div class="dd-handle">
-            <a href="{{ path('siteadmin_entite', {entite: categorie.className, action: 'show', id: categorie.id}) }}"><span class="label label-info"><i class="fa fa-eye icon-wait-on-click"></i></span></a>
-            <a href="{{ path('siteadmin_entite', {entite: categorie.className, action: 'edit', id: categorie.id}) }}"><span class="label label-info"><i class="fa fa-pencil icon-wait-on-click"></i></span></a>
-            <a href="{{ path('siteadmin_entite', {entite: categorie.className, action: 'delete', id: categorie.id}) }}" class="need-confirmation" data-title="{{ UCfirst('supprime.nom'|trans({}, categorie.className)) }}" data-message="{{ UCfirst('supprime.confirm-definitif'|trans({}, categorie.className)) }}"><span class="label label-danger icon-wait-on-click"><i class="fa fa-times"></i></span></a>
-            {{ categorie }}
-        </div>
-        {% for child in categorie.children -%}
-        {{- self.nestedItem(child) -}}
-        {%- endfor %}
-    </ol>
+	<li class="dd-item" data-id="1">
+		<div class="dd-handle">
+			<small>{{ actions.colorDot(categorie.couleur, '1x') }}</small>{{ categorie }}
+			<div class="pull-right">
+				<a class="btn btn-xs btn-white icon-wait-on-click" href="{{ path('siteadmin_entite', {entite: categorie.className, action: 'show', id: categorie.id}) }}"><i class="fa fa-eye icon-wait-on-click"></i></a>
+				<a class="btn btn-xs btn-white icon-wait-on-click" href="{{ path('siteadmin_entite', {entite: categorie.className, action: 'edit', id: categorie.id}) }}"><i class="fa fa-pencil icon-wait-on-click"></i></a>
+				<a class="btn btn-xs btn-danger icon-wait-on-click" href="{{ path('siteadmin_entite', {entite: categorie.className, action: 'delete', id: categorie.id}) }}" class="need-confirmation" data-title="{{ UCfirst('supprime.nom'|trans({}, categorie.className)) }}" data-message="{{ UCfirst('supprime.confirm-definitif'|trans({}, categorie.className)) }}"><i class="fa fa-times"></i></a>
+			</div>
+		</div>
+		{% for child in categorie.children -%}
+		{{- self.nestedItem(child) -}}
+		{%- endfor %}
+	</ol>
 </li>
 {% endmacro %}
+
+
+
+{% macro nestedtree(jstreeObjects, id, separate) %}
+{% import _self as self %}
+{% set id = id|default([]) %}
+{% if id is not iterable %}{% set id = [id] %}{% endif %}
+{%- for idItem,item in jstreeObjects.trees if (id|length == 0) or (idItem in id) %}
+<h3>{{ item.categorie|trans({}, item.categorie.className) }}</h3>
+<div id="{{ idItem }}">
+	<ul>
+		<li class="jstree-{{ item.categorie.openText|default('closed') }}" data-jstree='{"type": "{{ item.categorie.className }}"}' data-href="#">{{ item.categorie|trans({}, 'categorie') }}
+			{{ self.nestedtreeItem(item.categorie) }}
+		</li>
+	</ul>
+</div>
+{%- endfor %}
+{% endmacro %}
+
+{% macro nestedtreeItem(categorie) %}
+{% import _self as self %}
+	<ul>
+		{% for children in categorie.children %}
+		<li class="jstree-{{ children.openText|default('closed') }}" data-jstree='{"type": "{{ children.className }}"}' data-href="#">{{ children|trans({}, 'categorie') }}
+		{{ self.nestedtreeItem(children) }}
+		</li>
+		{% endfor %}
+		{% for subEntity in categorie.subEntitys %}
+		<li class="jstree-{{ subEntity.openText|default('closed') }}" data-jstree='{"type": "{{ subEntity.className }}"}' data-href="#">{{ subEntity|trans({}, 'categorie') }}</li>
+		{% endfor %}
+	</ul>
+{% endmacro %}
+
+{% macro nestedtreeJavascript(jstreeObjects, id) %}
+{% set id = id|default([]) %}
+{% if id is not iterable %}{% set id = [id] %}{% endif %}
+
+{% for idItem in jstreeObjects.ids if (id|length == 0) or (idItem in id) %}
+// jstree for #{{ idItem }}
+$("#{{ idItem }}").jstree({{ jstreeObjects.dataAsJson(idItem)|raw }})
+{%- if (app.environment in ['DEV', 'TEST']) or (is_granted('ROLE_SUPER_ADMIN')) -%}
+.on("changed.jstree", function (e, data) {
+  console.log('changed', data);
+})
+.on("open_node.jstree", function (e, data) {
+  console.log('open', data);
+})
+.on("close_node.jstree", function (e, data) {
+  console.log('close', data);
+})
+{%- endif -%}
+;
+{%- endfor %}
+{% endmacro %}
+
+{% macro nestedtreeAjax() %}
+$('.jstree-ajax').each(function (index) {
+	splt = $(this).attr('id').split('-');
+	var rootid = splt[1];
+	$.ajax({
+		// url: "{{ path('categorie_ajax_data') }}"+"/"+rootid,
+		url: "{{ path('categorie_ajax_data') }}",
+		data: {id: rootid},
+		method: "POST",
+	}).done(function (data) {
+		console.log("retour data : ", data);
+	});
+	$(this).jstree({
+		core: {
+			animation : 300,
+			check_callback : true,
+			themes: { "stripes" : true },
+			data: {
+				url: "{{ path('categorie_ajax_data') }}",
+				method: "POST",
+				data: function (node) {
+					if(node.id === "#") {
+						{%- if (app.environment in ['DEV', 'TEST']) or (is_granted('ROLE_SUPER_ADMIN')) -%}
+						console.log('Root build : ', rootid);
+						{%- endif -%}
+						return { "id" : rootid};
+					} else {
+						return { "id" : node.id };
+					}
+				},
+			},
+			strings: {
+				{% for it in ['Loading ...'] %}
+				"{{ it }}": "{{ it|trans({}, 'jstree') }}",
+				{% endfor %}
+			}
+		},
+		'plugins' : [ 'types','dnd','types','contextmenu' ],
+		'types' : {
+			'default' : {
+				'icon' : 'fa fa-file-o'
+			},
+			'categorie' : {
+				'icon' : 'fa fa-folder'
+			},
+			'image' : {
+				'icon' : 'fa fa-picture'
+			},
+			'forbidden' : {
+				'icon' : 'fa fa-ban'
+			}
+		},
+	});
+});
+{% endmacro %}
+
+

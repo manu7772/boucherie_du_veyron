@@ -74,6 +74,7 @@ class image extends media {
 
 	protected $cropperInfo;
 	protected $aeReponse;
+	protected $checked = false;
 
 	public function __construct() {
 		parent::__construct();
@@ -87,6 +88,13 @@ class image extends media {
 		$this->getCropperInfo();
 	}
 
+	public function memOldValues($addedfields = null) {
+		$fields = array('userAvatar');
+		if(count($addedfields) > 0 && is_array($addedfields)) $fields = array_unique(array_merge($fields, $addedfields));
+		parent::memOldValues($fields);
+		return $this;
+	}
+
     // public function getClassName(){
     //     return parent::CLASS_IMAGE;
     // }
@@ -97,83 +105,87 @@ class image extends media {
 		return $this->cropperInfo;
 	}
 
-	/**
-	 * @ORM\PrePersist()
-	 * @ORM\PreUpdate()
-	 */
-	public function upLoad(){
-		parent::upLoad();
-		// echo('<p style="color:red;">UPLOAD image</p>');
-		if(null == $this->upload_file) {
-			$info = $this->getInfoForPersist();
-			if(isset($info['dataType'])) {
-				if($info['dataType'] == "cropper") {
-					// cropper
-					if($this->getRawfile() == null) {
-						// ne possède pas de rawfile
-						// echo('<p style="color:orange;">Pas de RAWFILE ????</p>');
-					} else {
-						// possède un raw file
-						if(isset($info['getData'])) {
-							if(isset($info['ratioIndex'])) $this->setRatioIndex($info['ratioIndex']);
-								else $this->setRatioIndex(0);
-							if($info['file']['size'] != null) $this->setFileSize($info['file']['size']);
-							if($info['file']['type'] != null) {
-								$this->setFormat($info['file']['type']);
-								$this->setMediaType($this->getTypeOf($info['file']['type']));
-							}
-							$filehaschanged = false;
-							if($info['file']['name'] != null) {
-								$filehaschanged = true;
-								$this->setOriginalnom($info['file']['name']);
-								$ext = explode('.', $info['file']['name']);
-								$ext = end($ext);
-								if(!in_array($ext, $this->authorizedFormatsByType)) $this->setExtension($this->getExtByMime($info['file']['type']));
-								$this->setExtension($ext);
-							}
-							$notChanged = $this->setCroppingInfo($info['getData']);
-							if((!$notChanged) || $filehaschanged) {
-								// if(!$notChanged)
-									// echo('Changement de cadrage…');
-									// else
-									// echo('Changement d\'image…');
-								// echo('<p>Owner entity : '.$this->getOwnerEntity().'</p>');
-								// echo('<p>Owner field : '.$this->getOwnerField().'</p>');
-								// echo('<p>RatioIndex : '.$this->getRatioIndex().'</p>');
-								$this->getCropperInfo();
-								if(isset($this->cropperInfo['formats'][$this->getOwnerEntity()][$this->getOwnerField()][$this->getRatioIndex()])) {
-									$format = $this->cropperInfo['formats'][$this->getOwnerEntity()][$this->getOwnerField()][$this->getRatioIndex()];
-								} else {
-									$format = $this->cropperInfo['formats']['default'][$this->getRatioIndex()];
+	public function check() {
+		if($this->checked == false) {
+			$this->checked = true;
+			// echo('<p style="color:red;">UPLOAD image '.$this->getNom().'</p>');
+			if(null == $this->upload_file) {
+				$info = $this->getInfoForPersist();
+				if(isset($info['dataType'])) {
+					if($info['dataType'] == "cropper") {
+						// cropper
+						if($this->getRawfile() == null) {
+							// ne possède pas de rawfile
+							// echo('<p style="color:orange;">'.$this->getNom().' : pas de RAWFILE ????</p>');
+						} else {
+							// possède un raw file
+							if(isset($info['getData'])) {
+								if(isset($info['ratioIndex'])) $this->setRatioIndex($info['ratioIndex']);
+									else $this->setRatioIndex(0);
+								if($info['file']['size'] != null) $this->setFileSize($info['file']['size']);
+								if($info['file']['type'] != null) {
+									$this->setFormat($info['file']['type']);
+									$this->setMediaType($this->getTypeOf($info['file']['type']));
 								}
-								$this->aeReponse = $this->getRawfile()->getCropped($format[0], $format[1], $info);
-								// echo($this->aeReponse->getMessage());
-								if($this->aeReponse->getResult() == true) {
-									// SUCCESS
-									$image = $this->aeReponse->getData();
-									// echo('<h1>OK !!</h1>');
-									// echo('<img src="'.$this->getShemaBase().base64_encode($image).'">');
-									$img = imagecreatefromstring($image);
-									$this->setWidth(imagesx($img));
-									$this->setHeight(imagesy($img));
-									imagedestroy($img);
-									unset($img);
-									$this->setBinaryFile($image);
-								} else {
-									// ERROR
+								$filehaschanged = false;
+								if($info['file']['name'] != null) {
+									// echo('<p>Nouvelle image : '.$this->getNom().'</p>');
+									$filehaschanged = true;
+									$this->setOriginalnom($info['file']['name']);
+									$ext = explode('.', $info['file']['name']);
+									$ext = end($ext);
+									if(!in_array($ext, $this->authorizedFormatsByType)) $this->setExtension($this->getExtByMime($info['file']['type']));
+									$this->setExtension($ext);
 								}
+								$notChanged = $this->setCroppingInfo($info['getData']);
+								$notChanged = false;
+								if((!$notChanged) || $filehaschanged) {
+									// if(!$notChanged)
+										// echo('- '.$this->getNom().' : Changement de cadrage…');
+										// else
+										// echo('- '.$this->getNom().' : Changement d\'image…');
+									// echo('<p>Owner entity : '.$this->getOwnerEntity().'</p>');
+									// echo('<p>Owner field : '.$this->getOwnerField().'</p>');
+									// echo('<p>RatioIndex : '.$this->getRatioIndex().'</p>');
+									$this->getCropperInfo();
+									if(isset($this->cropperInfo['formats'][$this->getOwnerEntity()][$this->getOwnerField()][$this->getRatioIndex()])) {
+										$format = $this->cropperInfo['formats'][$this->getOwnerEntity()][$this->getOwnerField()][$this->getRatioIndex()];
+									} else {
+										$format = $this->cropperInfo['formats']['default'][$this->getRatioIndex()];
+									}
+									$this->aeReponse = $this->getRawfile()->getCropped($format[0], $format[1], $info);
+									// echo($this->aeReponse->getMessage());
+									if($this->aeReponse->getResult() == true) {
+										// SUCCESS
+										$image = $this->aeReponse->getData();
+										// echo('<h1>OK !!</h1>');
+										// echo('<img src="'.$this->getShemaBase().base64_encode($image).'">');
+										$img = imagecreatefromstring($image);
+										$this->setWidth(imagesx($img));
+										$this->setHeight(imagesy($img));
+										imagedestroy($img);
+										unset($img);
+										$this->setBinaryFile($image);
+									} else {
+										// ERROR
+									}
+								}
+								// else echo('<p>Aucun changement ????</p>');
+								$this->setStockage($this->stockageList[0]);
+								if($this->getNom() == null) $this->setNom($this->getOriginalnom());
+								$this->defineNom();
 							}
-							// else echo('<p>Aucun changement ????</p>');
-							$this->setStockage($this->stockageList[0]);
-							if($this->getNom() == null) $this->setNom($this->getOriginalnom());
-							$this->defineNom();
+							// else echo('<p>Pas de getData ????</p>');
 						}
-						// else echo('<p>Pas de getData ????</p>');
 					}
 				}
 			}
+		} else {
+			// echo('<p style="color:red;">Don\'t check again ! Thanks ! '.$this->getNom().'</p>');
 		}
 		// die();
+		// parent
+		parent::check();
 		return;
 	}
 

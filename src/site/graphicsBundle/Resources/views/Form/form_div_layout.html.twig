@@ -55,9 +55,9 @@
     {%- if required and placeholder is none and not placeholder_in_choices and not multiple -%}
         {% set required = false %}
     {%- endif -%}
-    <select {{ block('widget_attributes') }}{% if multiple %} multiple="multiple"{% endif %}>
+    <select {{ block('widget_attributes') }}{% if multiple %} multiple="multiple"{% endif %} data-allowClear={{ (not required|default(false))|json_encode }}>
         {%- if placeholder is not none -%}
-            <option value=""{% if required and value is empty %} selected="selected"{% endif %}>{{ UCfirst(placeholder|trans({}, translation_domain)|raw) }}</option>
+            <option value=""{% if required and value is empty %} selected="selected"{% endif %}>{{ placeholder|trans({}, translation_domain)|raw }}</option>
         {%- endif -%}
         {%- if preferred_choices|length > 0 -%}
             {% set options = preferred_choices %}
@@ -74,12 +74,12 @@
 {%- block choice_widget_options -%}
     {% for group_label, choice in options %}
         {%- if choice is iterable -%}
-            <optgroup label="{{ UCfirst(group_label|trans({}, translation_domain)) }}">
+            <optgroup label="{{ group_label|trans({}, translation_domain) }}">
                 {% set options = choice %}
                 {{- block('choice_widget_options') -}}
             </optgroup>
         {%- else -%}
-            <option value="{{ choice.value }}"{% if choice is selectedchoice(value) %} selected="selected"{% endif %}>{{ UCfirst(choice.label|trans({}, translation_domain)|raw) }}</option>
+            <option value="{{ choice.value }}"{% if choice is selectedchoice(value) %} selected="selected"{% endif %}>{{ choice.label|trans({}, translation_domain)|raw }}</option>
         {%- endif -%}
     {% endfor %}
 {%- endblock choice_widget_options -%}
@@ -186,7 +186,7 @@
             {% set label = name|humanize %}
         {%- endif -%}
     {%- endif -%}
-    <button type="{{ type|default('button') }}" {{ block('button_attributes') }}>{{ UCfirst(label|trans({}, translation_domain)|raw) }}</button>
+    <button type="{{ type|default('button') }}" {{ block('button_attributes') }}>{{ label|trans({}, translation_domain)|raw }}</button>
 {%- endblock button_widget -%}
 
 {%- block submit_widget -%}
@@ -227,7 +227,7 @@
                 {% set label = name|humanize %}
             {%- endif -%}
         {%- endif -%}
-        <label{% for attrname, attrvalue in label_attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}>{{ UCfirst(label|trans({}, translation_domain)|raw) }}{{ asterisque|default('')|raw }}</label>
+        <label{% for attrname, attrvalue in label_attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}>{{ label|trans({}, translation_domain|raw) }}{{ asterisque|default('')|raw }}</label>
     {%- endif -%}
 {%- endblock form_label -%}
 
@@ -327,7 +327,7 @@
     {%- for attrname, attrvalue in attr -%}
         {{- " " -}}
         {%- if attrname in ['placeholder', 'title'] -%}
-            {{- attrname }}="{{ UCfirst(attrvalue|trans({}, translation_domain)) }}"
+            {{- attrname }}="{{ attrvalue|trans({}, translation_domain) }}"
         {%- elseif attrvalue is sameas(true) -%}
             {{- attrname }}="{{ attrname }}"
         {%- elseif attrvalue is not sameas(false) -%}
@@ -341,7 +341,7 @@
     {%- for attrname, attrvalue in attr -%}
         {{- " " -}}
         {%- if attrname in ['placeholder', 'title'] -%}
-            {{- attrname }}="{{ UCfirst(attrvalue|trans({}, translation_domain)) }}"
+            {{- attrname }}="{{ attrvalue|trans({}, translation_domain) }}"
         {%- elseif attrvalue is sameas(true) -%}
             {{- attrname }}="{{ attrname }}"
         {%- elseif attrvalue is not sameas(false) -%}
@@ -355,7 +355,7 @@
     {%- for attrname, attrvalue in attr -%}
         {{- " " -}}
         {%- if attrname in ['placeholder', 'title'] -%}
-            {{- attrname }}="{{ UCfirst(attrvalue|trans({}, translation_domain)|raw) }}"
+            {{- attrname }}="{{ attrvalue|trans({}, translation_domain)|raw }}"
         {%- elseif attrvalue is sameas(true) -%}
             {{- attrname }}="{{ attrname|raw }}"
         {%- elseif attrvalue is not sameas(false) -%}

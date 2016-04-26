@@ -23,6 +23,10 @@
 					</thead>
 					<tbody>
 						<tr>
+							<td><strong>{{ UCfirst('fields.parents'|trans({}, entite_name)) }}</strong></td>
+							<td>{{ actions.labelList(entite.allParentsInverse, entite.parents) }}</td>
+						</tr>
+						<tr>
 							<td><strong>{{ UCfirst('fields.created'|trans({}, entite.className)) }}</strong></td>
 							<td>
 								{{ entite.created|date(formatDateHeure) }}

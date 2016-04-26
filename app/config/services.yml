@@ -18,6 +18,11 @@ services:
         class: %ae_services%aetools
         arguments: [@service_container]
 
+    # fonctionnalités de jstree
+    aetools.aeJstree:
+        class: %ae_services%aeJstree
+        arguments: [@service_container]
+
     # fonctionnalités d'entités
     # aetools.aeEntities:
     #     class: %ae_services%aeEntities
@@ -173,17 +178,17 @@ services:
     ###################################
 
     # Utilitaire de gestion sur les entités
-    # acmeGroup.entityUtils:
-    #     class: %ae_services%entityListener
-    #     arguments: [@service_container]
-    #     tags:
-    #         - { name: doctrine.event_listener, event: postLoad }
-    #         - { name: doctrine.event_listener, event: prePersist }
-    #         - { name: doctrine.event_listener, event: postPersist }
-    #         - { name: doctrine.event_listener, event: preUpdate }
-    #         - { name: doctrine.event_listener, event: postUpdate }
-    #         - { name: doctrine.event_listener, event: preRemove }
-    #         - { name: doctrine.event_listener, event: postRemove }
+    aetools.entityUtils:
+        class: %ae_services%entityListener
+        arguments: [@service_container]
+        tags:
+            - { name: doctrine.event_listener, event: postLoad }
+            - { name: doctrine.event_listener, event: prePersist }
+            - { name: doctrine.event_listener, event: postPersist }
+            - { name: doctrine.event_listener, event: preUpdate }
+            - { name: doctrine.event_listener, event: postUpdate }
+            - { name: doctrine.event_listener, event: preRemove }
+            - { name: doctrine.event_listener, event: postRemove }
 
     ######################
     ### EVENT LISTENER ###

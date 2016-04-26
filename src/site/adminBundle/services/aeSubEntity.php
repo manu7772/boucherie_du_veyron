@@ -20,22 +20,29 @@ class aeSubEntity extends aeEntity {
 	 * @param baseEntity $entity
 	 * @return aeSubEntity
 	 */
-	public function checkAfterChange(baseEntity &$entity) {
-		// check image
-		$image = $entity->getImage();
-		if(is_object($image)) {
-			// if($image->isValid()) {
-				$infoForPersist = $image->getInfoForPersist();
-				$this->container->get('aetools.debug')->debugFile($infoForPersist);
-				$service = $this->container->get('aetools.aeEntity')->getEntityService($image);
-				$service->checkAfterChange($image);
-				if($infoForPersist['removeImage'] === true || $infoForPersist['removeImage'] === 'true') {
-					// Supression de l'image
-					$entity->setImage(null);
-				}
-			// } else $entity->setImage(null);
-		}
-		parent::checkAfterChange($entity);
+	public function checkAfterChange(baseEntity &$entity, $butEntities = []) {
+        // check images
+        $fields = array('image');
+        foreach ($fields as $field) {
+            $get = $this->getMethodOfGetting($field, $entity);
+            $set = $this->getMethodOfSetting($field, $entity);
+            if(is_string($set) && is_string($get)) {
+	            $image = $entity->$get();
+	            if(is_object($image)) {
+	                $infoForPersist = $image->getInfoForPersist();
+	                // $this->container->get('aetools.debug')->debugFile($infoForPersist);
+	                if($infoForPersist['removeImage'] === true || $infoForPersist['removeImage'] === 'true') {
+	                    // Supression de l'image
+	                    $entity->$set(null);
+	                } else {
+	                    // Gestion de l'image
+	                    $service = $this->container->get('aetools.aeEntity')->getEntityService($image);
+	                    $service->checkAfterChange($image);
+	                }
+	            }
+            }
+        }
+		parent::checkAfterChange($entity, $butEntities);
 		return $this;
 	}
 

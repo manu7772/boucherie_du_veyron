@@ -1,0 +1,30 @@
+name_s: 'types de fichier'
+name: 'type de fichier'
+liste_icones: 'liste des icones'
+not_found: 'aucun type de fichier trouvé'
+x_found: '{0} aucun type trouvé|{1} 1 type trouvé|[2,+Inf] %count% types trouvés'
+create: 'créer un nouveau type'
+create_btn: 'nouveau type'
+backlist: 'retour à la liste des types'
+backlist_btn: 'retour liste'
+dontexist: 'ce type n''existe pas'
+suppression: 'le format de fichier %name% a été supprimé'
+moredetails: 'plus de détails sur %name%'
+existe: ce type de fichier existe déjà
+reset: réinitialiser tout
+reset_question: voulez-vous vraiment réinitialiser les types de fichiers ?
+contentType:
+    existe: ce type existe déjà
+form:
+    select: Sélectionnez…
+fields:
+    id: id
+    nom: nom
+    created: création
+    updated: mis à jour
+    jamais: aucune modification
+    subEntitys: éléments
+    parents: parents
+    parent: parent
+    elements: éléments
+    icon: icône

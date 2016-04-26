@@ -26,6 +26,7 @@ class AppKernel extends Kernel
             new site\translateBundle\sitetranslateBundle(),
             new site\editionBundle\siteeditionBundle(),
             new site\adminBundle\siteadminBundle(),
+            new site\adminsiteBundle\siteadminsiteBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {

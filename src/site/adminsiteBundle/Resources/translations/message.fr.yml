@@ -1,0 +1,31 @@
+name_s: messages
+name: message
+not_found: 'aucun message trouvé'
+x_found: '{0} aucun message trouvé|{1} 1 message trouvé|[2,+Inf] %count% messages trouvés'
+create: 'créer un nouveau message'
+create_btn: 'nouveau message'
+backlist: 'retour à la liste des messages'
+backlist_btn: 'retour liste'
+dontexist: 'ce message n''existe pas'
+moredetails: 'plus de détails sur %name%'
+existe: ce message existe déjà
+action:
+    consulter: consulter la messagerie
+    supprimer: supprimer
+    repondre: répondre à l'expéditeur
+    lu: marquer comme lu
+    nonlu: marquer comme non lu
+etat:
+    lu: lu
+    nonlu: non lu
+form:
+    select: Sélectionnez…
+fields:
+    id: id
+    nom: nom
+    jamais: aucune modification
+    subEntitys: éléments
+    parents: parents
+    parent: parent
+    elements: éléments
+    icon: icône

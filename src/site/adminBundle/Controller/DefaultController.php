@@ -2,7 +2,8 @@
 
 namespace site\adminBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use site\adminBundle\Controller\baseController;
+// use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -22,11 +23,7 @@ use \Exception;
  * DefaultController
  * @Security("has_role('ROLE_TRANSLATOR')")
  */
-class DefaultController extends Controller {
-
-	const TYPE_SELF 			= '_self';
-	const DEFAULT_ACTION 		= 'list';
-	const TYPE_VALUE_JOINER 	= '___';
+class DefaultController extends baseController {
 
 	/**
 	 * Page d'accueil adminstration
@@ -35,8 +32,9 @@ class DefaultController extends Controller {
 	public function indexAction() {
 		$this->get('aetools.aetools')->updateBundlesInConfig();
 		$data = array();
-		$data['sitedata'] = $this->get('aetools.aeSite')->getRepo()->findByDefault(true)[0];
+		$data['sitedata'] = $this->get('aetools.aeSite')->getDefaultSiteData();
 		$data['messages'] = $this->get('aetools.aeMessage')->getRepo()->findNotRead();
+		$data['bundle'] = $this->getBundle();
 		return $this->render('siteadminBundle:Default:index.html.twig', $data);
 	}
 
@@ -46,7 +44,8 @@ class DefaultController extends Controller {
 	 */
 	public function supportAction() {
 		$data = array();
-		$data['sitedata'] = $this->get('aetools.aeSite')->getRepo()->findByDefault(true)[0];
+		$data['sitedata'] = $this->get('aetools.aeSite')->getDefaultSiteData();
+		$data['bundle'] = $this->getBundle();
 		return $this->render('siteadminBundle:Default:support.html.twig', $data);
 	}
 
@@ -60,15 +59,18 @@ class DefaultController extends Controller {
 		$masterRequest = $stack->getMasterRequest();
 		$data['infoRoute']['_route'] = $masterRequest->get('_route');
 		$data['infoRoute']['_route_params'] = $masterRequest->get('_route_params');
+		$data['bundle'] = $this->getBundle();
 		return $this->render('siteadminBundle:blocks:header.html.twig', $data);
 	}
 
 	public function sidebarAction($option = null) {
 		$data = array();
+		$data['sitedata'] = $this->get('aetools.aeSite')->getDefaultSiteData();
 		$data['roles'] = $this->get('labo_user_roles')->getListOfRoles();
 		// variables diverses
 		$data['typeSelf'] = self::TYPE_SELF;
 		$data['type_value_joiner'] = self::TYPE_VALUE_JOINER;
+		$data['bundle'] = $this->getBundle();
 		return $this->render('siteadminBundle:blocks:sidebar.html.twig', $data);
 	}
 

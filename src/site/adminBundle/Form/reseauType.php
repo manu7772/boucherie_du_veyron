@@ -9,7 +9,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 // Transformer
 use Symfony\Component\Form\CallbackTransformer;
 // User
-use Symfony\Component\Security\Core\SecurityContext;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage as SecurityContext;
 // Paramétrage de formulaire
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormEvent;
@@ -64,6 +64,9 @@ class reseauType extends baseType {
 				'label' => 'fields.descriptif',
 				'translation_domain' => 'reseau',
 				'required' => false,
+				'attr' => array(
+					'data-height' => 140,
+					)
 				))
 			->add('image', new cropperType($this->controller, array('image' => $this->imagesData['image'])), array(
 				'label' => 'fields.image',

@@ -72,6 +72,12 @@ abstract class tier extends baseSubEntity {
 		return null;
 	}
 
+	public function memOldValues($addedfields = null) {
+		$fields = array('adresse');
+		if(count($addedfields) > 0 && is_array($addedfields)) $fields = array_unique(array_merge($fields, $addedfields));
+		parent::memOldValues($fields);
+		return $this;
+	}
 
 	/**
 	 * Set adresse - PROPRIÉTAIRE
@@ -79,7 +85,7 @@ abstract class tier extends baseSubEntity {
 	 * @return tier
 	 */
 	public function setAdresse(adresse $adresse = null) {
-		$adresse->setTier($this);
+		// $adresse->setTier($this);
 		$this->adresse = $adresse;
 		return $this;
 	}

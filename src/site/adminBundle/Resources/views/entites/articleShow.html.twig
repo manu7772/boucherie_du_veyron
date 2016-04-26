@@ -40,8 +40,12 @@
 							<td>{{ entite.keywords }}</td>
 						</tr>
 						<tr>
+							<td><strong>{{ UCfirst('fields.reseaus'|trans({}, entite.className)) }}</strong></td>
+							<td>{{ actions.labelLinkList(entite.reseaus, [], null, type, type_value_joiner, 'show') }}</td>
+						</tr>
+						<tr>
 							<td><strong>{{ UCfirst('fields.categories'|trans({}, entite.className)) }}</strong></td>
-							<td>{% for categorie in entite.categories %}<span class="label">{{ categorie.nom }}</span>&nbsp;{% endfor %}</td>
+							<td>{{ actions.labelLinkList(entite.allParents, entite.parents, null, type, type_value_joiner, 'show') }}</td>
 						</tr>
 						<tr>
 							<td><strong>{{ UCfirst('fields.created'|trans({}, entite.className)) }}</strong></td>
@@ -92,9 +96,7 @@
 				            	<h3 class='text-navy' style='margin-top:0px;'>{{ UCfirst('fields.artlink'|trans({}, entite.className)) }}</h3>
 				            	<hr class="m-t-xs m-b-xs">
 				            	{% if entite.articlesLies|length > 0 %}
-				            	{% for article in entite.articlesLies %}
-				                <label class="label">{{ article.nom }}</label>
-				                {% endfor %}
+				                {{ actions.labelLinkList(entite.articlesLies, [], null, type, type_value_joiner, 'show') }}
 				                {% else %}
 				                <p>{{ UCfirst('not_found'|trans({}, entite.className)) }}</p>
 				                {% endif %}
@@ -105,9 +107,7 @@
 				            	<h3 class='text-navy' style='margin-top:0px;'>{{ UCfirst('name_s'|trans({}, 'fiche')) }}</h3>
 				            	<hr class="m-t-xs m-b-xs">
 				            	{% if entite.fiches|length > 0 %}
-				            	{% for fiche in entite.fiches %}
-				                <label class="label">{{ fiche.nom }}</label>
-				                {% endfor %}
+				            	{{ actions.labelLinkList(entite.fiches, [], null, type, type_value_joiner, 'show') }}
 				                {% else %}
 				                <p>{{ UCfirst('not_found'|trans({}, 'fiche')) }}</p>
 				                {% endif %}
@@ -118,9 +118,7 @@
 				            	<h3 class='text-navy' style='margin-top:0px;'>{{ UCfirst('name_s'|trans({}, 'tag')) }}</h3>
 				            	<hr class="m-t-xs m-b-xs">
 				            	{% if entite.tags|length > 0 %}
-				            	{% for tag in entite.tags %}
-				                <label class="label">{{ tag.nom }}</label>
-				                {% endfor %}
+				            	{{ actions.labelLinkList(entite.tags, [], null, type, type_value_joiner, 'show') }}
 				                {% else %}
 				                <p>{{ UCfirst('not_found'|trans({}, 'tag')) }}</p>
 				                {% endif %}

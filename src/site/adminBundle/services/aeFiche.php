@@ -22,8 +22,8 @@ class aeFiche extends aeItem {
      * @param baseEntity $entity
      * @return aeFiche
      */
-    public function checkAfterChange(baseEntity &$entity) {
-        parent::checkAfterChange($entity);
+    public function checkAfterChange(baseEntity &$entity, $butEntities = []) {
+        parent::checkAfterChange($entity, $butEntities);
         return $this;
     }
 

@@ -79,7 +79,7 @@ class statutRepository extends EntityBaseRepository {
 	/*** CLOSURES                 ***/
 	/********************************/
 
-	public function defaultValsListClosure(aetools $aeEntities = null) {
+	public function defaultValsListClosure(aetools $aeEntities = null, $data = null) {
 		$qb = $this->findAllClosure($aeEntities);
 		return $qb;
 	}

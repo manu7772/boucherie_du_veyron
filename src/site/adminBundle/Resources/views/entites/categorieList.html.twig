@@ -1,5 +1,7 @@
 {% extends 'siteadminBundle:entites:entiteList.html.twig' %}
 {% set cssjsloads = 'TAB' %}
+{% import 'siteadminBundle:blocks:sortable_nested_categories.html.twig' as nestcat %}
+
 {% set DEVMODE = (app.environment in ['DEV', 'TEST']) or (is_granted('ROLE_SUPER_ADMIN')) %}
 
 {% block page_heading %}
@@ -15,44 +17,40 @@
 				<table class="table table-striped table-bordered table-hover dataTables dataTable dtr-inline" id="DataTables_Table_0" role="grid" aria-describedby="DataTables_Table_0_info">
 					<thead>
 						<tr>
-							{% if DEVMODE %}<th class="text-center">{{ UCfirst('fields.id'|trans({}, entite_name)) }}</th>{% endif %}
-							<th>{{ UCfirst('fields.nom'|trans({}, entite_name)) }}</th>
-							<th class="text-center" style="width:1%;">{{ UCfirst('fields.image'|trans({}, entite_name)) }}</th>
+							<th class="text-center">{{ UCfirst('fields.id'|trans({}, entite_name)) }}</th>
+							<th>{{ UCfirst('fields.nom'|trans({}, entite_name)) }}{# UCfirst('fields.image'|trans({}, entite_name)) #}</th>
 							<th>{{ UCfirst('actions.name'|trans) }}</th>
 							<th class="text-center">{{ UCfirst('fields.couleur'|trans({}, entite_name)) }}</th>
 							{# <th>{{ UCfirst('fields.descriptif'|trans({}, entite_name)) }}</th> #}
-							<th>{{ UCfirst('fields.accepts'|trans({}, entite_name)) }}</th>
+							{% if DEVMODE %}<th>{{ UCfirst('fields.type'|trans({}, entite_name)) }}</th>{% endif %}
+							{% if DEVMODE %}<th class="text-center">{{ UCfirst('fields.lvl'|trans({}, entite_name)) }}</th>{% endif %}
 							<th>{{ UCfirst('fields.parents'|trans({}, entite_name)) }}</th>
 							<th>{{ UCfirst('fields.children'|trans({}, entite_name)) }}</th>
-							<th>{{ UCfirst('fields.elements'|trans({}, entite_name)) }}</th>
+							<th>{{ UCfirst('fields.subEntitys'|trans({}, entite_name)) }}</th>
 						</tr>
 					</thead>
 					<tbody>
-						{% for entite in entites if(is_granted(entite.statut.niveau|default('ROLE_USER')) or DEVMODE) %}
+						{% for entite in entites %}
 						{% set bgcolor = ' style="background-color:' ~ entite.statut.couleur|default('transparent') ~ ';"' %}
 						<tr>
-							{% if DEVMODE %}<td{{ bgcolor|raw }} class="text-center">{{ entite.id }}</td>{% endif %}
+							<td{{ bgcolor|raw }} class="text-center">{{ entite.id }}</td>
 							<td{{ bgcolor|raw }}>
+								<i class="fa {{ actions.icon(entite) }} m-r-xs"></i>
 								{% if type.type_values|default(null) != null %}
-								<a href="{{ path('siteadmin_entite_type', {entite: entite.className, type_related: type.type_related, type_field: type.type_field, type_values: type.type_values|join(type_value_joiner)|url_encode, id: entite.id, action: 'show'}) }}" title="{{ (entite.className ~ '.moredetails')|trans({'%name%': entite.nom}) }}"><strong>{{ entite.nom }}</strong></a>
+								<a href="{{ path('siteadmin_entite_type', {entite: entite.className, type_related: type.type_related, type_field: type.type_field, type_values: type.type_values|join(type_value_joiner)|url_encode, id: entite.id, action: 'show'}) }}" title="{{ (entite.className ~ '.moredetails')|trans({'%name%': entite.nom}) }}"><strong>{{ entite.nom|trans({}, entite.className) }}</strong></a>
 								{% else %}
-								<a href="{{ path('siteadmin_entite', {entite: entite.className, id: entite.id, action: 'show'}) }}" title="{{ (entite.className ~ '.moredetails')|trans({'%name%': entite.nom}) }}"><strong>{{ entite.nom }}</strong></a>
+								<a href="{{ path('siteadmin_entite', {entite: entite.className, id: entite.id, action: 'show'}) }}" title="{{ (entite.className ~ '.moredetails')|trans({'%name%': entite.nom}) }}"><strong>{{ entite.nom|trans({}, entite.className) }}</strong></a>
 								{% endif %}
-								{% if entite.pageweb != null %}
-								<p class="text-muted"><em>{{ entite.pageweb }}</em></p>
-								{% endif %}
-							</td>
-							<td class="text-center"{{ bgcolor|raw }}>
+								<p>{{ ('types.' ~ entite.type)|trans({}, entite_name) }}</p>
 								{% if entite.image|default(null) != null %}
+								<br>
 								<a href="{{ path('siteadmin_entite', {entite: entite.image.className, id: entite.image.id, action: 'show'}) }}" class="docs-tooltip" data-toggle="tooltip" title="{{ UCfirst('moredetails'|trans({'%name%': entite.image.nom}, entite.className)) }}">
 									<img src="{{ entite.image.imgThumbnail(64, 64, 'cut')|raw }}" class="img-responsive img-thumbnail">
 								</a>
-								{% else %}
-								<i class="fa fa-ban fa-3x text-muted fa-border"></i>
 								{% endif %}
 							</td>
 							<td{{ bgcolor|raw }}>
-								{{ actions.entiteButtons(entite, ['show','edit','delete','default'], type) }}
+								{{ actions.entiteButtons(entite, ['show','edit','delete', 'active'], type) }}
 
 								{# - OFF ----------------------
 								{% if DEVMODE %}
@@ -71,10 +69,16 @@
 								{{ actions.colorDot(entite.couleur) }}
 							</td>
 							{# <td{{ bgcolor|raw }}>{{ entite.descriptif|raw }}</td> #}
-							<td{{ bgcolor|raw }}>{{ entite.accepts|join('<br>')|raw }}</td>
-							<td{{ bgcolor|raw }}>{{ entite.parents|join('<br>')|raw }}</td>
-							<td{{ bgcolor|raw }}>{{ entite.children|join('<br>')|raw }}</td>
-							<td{{ bgcolor|raw }}>{{ entite.subEntitys|join('<br>')|raw }}</td>
+							{% if DEVMODE %}
+							<td{{ bgcolor|raw }}>
+								{{ ('types.' ~ entite.type)|trans({}, entite_name) }}
+								<p class="text-muted"><i>• {{ entite.accepts|join('<br>• ')|raw }}</i></p>
+							</td>
+							{% endif %}
+							{% if DEVMODE %}<td{{ bgcolor|raw }} class="text-center">{{ entite.lvl|default('?') }}<br>{{ entite.parents|length }} parent(s)</td>{% endif %}
+							<td{{ bgcolor|raw }}>{{ actions.labelLinkList(entite.parentsInverse, [entite.parent], null, type, type_value_joiner, 'show', 12) }}</td>
+							<td{{ bgcolor|raw }}>{{ actions.labelLinkList(entite.allChildrens, entite.childrens, null, type, type_value_joiner, 'show', 12) }}</td>
+							<td{{ bgcolor|raw }}>{{ actions.labelLinkList(entite.allSubEntitys, entite.subEntitys, null, type, type_value_joiner, 'show', 12) }}</td>
 						</tr>
 						{% endfor %}
 					</tbody>
@@ -86,4 +90,27 @@
 		</div>
 	</div>
 </div>
+{#
+{% if entites|length > 0 %}
+<div class="row">
+	<div class="col-md-12">
+		<div class="ibox float-e-margins">
+			<div class="ibox-content">
+				{% for entite in entites %}
+				<h3>{{ entite|trans({}, entite.className) }}</h3>
+				<div id="jsajx-{{ entite.id }}" class="jstree-ajax"></div>
+				{% if not loop.last %}<hr>{% endif %}
+				{% endfor %}
+			</div>
+		</div>
+	</div>
+</div>
+{% endif %}
+#}
 {% endblock content %}
+
+{% block end_javascripts %}
+{{ nestcat.nestedtreeAjax() }}
+{% endblock end_javascripts %}
+
+

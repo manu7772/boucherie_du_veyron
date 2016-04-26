@@ -7,7 +7,9 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+
 use site\adminBundle\services\aeEntity;
+use site\adminBundle\services\aetools;
 
 use \DateTime;
 
@@ -21,6 +23,7 @@ class entityListener implements EventSubscriber {
 	protected $entityName;
 	protected $entityNameSpace;
 	protected $uow;
+	protected $debug;
 	//
 	protected $entityService;
 
@@ -29,19 +32,11 @@ class entityListener implements EventSubscriber {
 	public function __construct(ContainerInterface $container) {
 		// parent::__construct();
 		$this->container = $container;
-
-		$this->FILESPY = fopen(__DIR__."/../../../../web/images/filespy.txt", "a+");
-		$date = new DateTime;
-		$this->SPYwrite($date->format('d-m-Y H:i:s').' ------------------------------');
+		$this->debug = array();
+		$this->debug['action'] = 'constructeur';
 	}
 
 	public function __destruct() {
-		fclose($this->FILESPY);
-	}
-
-	protected function SPYwrite($t, $noEnd = true) {
-		if($noEnd === false) $EOL = ""; else $EOL = "\r\n";
-		fwrite($this->FILESPY, $t.$EOL);
 	}
 
 	public function getSubscribedEvents() {
@@ -56,32 +51,39 @@ class entityListener implements EventSubscriber {
 		);
 	}
 	public function postLoad(LifecycleEventArgs $eventArgs) {
-		$this->SPYwrite('postLoad : ', false);
+		// $this->debug['action'] = 'postLoad';
 		if($this->defineDefaultsTools($eventArgs)) $this->postLoadActions();
+		// $this->container->get('aetools.debug')->debugNamedFile('EntityListener', $this->debug);
 	}
 	public function prePersist(LifecycleEventArgs $eventArgs) {
-		$this->SPYwrite('prePersist : ', false);
+		// $this->debug['action'] = 'prePersist';
 		if($this->defineDefaultsTools($eventArgs)) $this->prePersistActions();
+		// $this->container->get('aetools.debug')->debugNamedFile('EntityListener', $this->debug);
 	}
 	public function postPersist(LifecycleEventArgs $eventArgs) {
-		$this->SPYwrite('postPersist : ', false);
+		// $this->debug['action'] = 'postPersist';
 		if($this->defineDefaultsTools($eventArgs)) $this->postPersistActions();
+		// $this->container->get('aetools.debug')->debugNamedFile('EntityListener', $this->debug);
 	}
 	public function preUpdate(PreUpdateEventArgs $eventArgs) {
-		$this->SPYwrite('preUpdate : ', false);
+		// $this->debug['action'] = 'preUpdate';
 		if($this->defineDefaultsTools($eventArgs)) $this->preUpdateActions();
+		// $this->container->get('aetools.debug')->debugNamedFile('EntityListener', $this->debug);
 	}
 	public function postUpdate(LifecycleEventArgs $eventArgs) {
-		$this->SPYwrite('postUpdate : ', false);
+		// $this->debug['action'] = 'postUpdate';
 		if($this->defineDefaultsTools($eventArgs)) $this->postUpdateActions();
+		// $this->container->get('aetools.debug')->debugNamedFile('EntityListener', $this->debug);
 	}
 	public function preRemove(LifecycleEventArgs $eventArgs) {
-		$this->SPYwrite('preRemove : ', false);
+		// $this->debug['action'] = 'preRemove';
 		if($this->defineDefaultsTools($eventArgs)) $this->preRemoveActions();
+		// $this->container->get('aetools.debug')->debugNamedFile('EntityListener', $this->debug);
 	}
 	public function postRemove(LifecycleEventArgs $eventArgs) {
-		$this->SPYwrite('postRemove : ', false);
+		// $this->debug['action'] = 'postRemove';
 		if($this->defineDefaultsTools($eventArgs)) $this->postRemoveActions();
+		// $this->container->get('aetools.debug')->debugNamedFile('EntityListener', $this->debug);
 	}
 
 	/**
@@ -93,29 +95,25 @@ class entityListener implements EventSubscriber {
 		$this->eventArgs = $eventArgs;
 		$this->_em = $this->eventArgs->getEntityManager();
 		$this->entityObject = $this->eventArgs->getEntity();
-
+		// $this->debug['Entity']['get_class'] = get_class($this->entityObject);
 		// service aeEntity -> avec EntityManager du Listener !!
 		$this->entityService = new aeEntity($this->container, $this->_em);
 
 		if(is_object($this->entityObject)) {
-			// info MetaData sur l'entité
-			// $this->info = $this->getMetaInfo($this->entityObject);
 			// namespace de l'entité
-			// $this->entityNameSpace = get_class($this->entityObject);
 			$this->entityNameSpace = $this->entityService->getEntityClassName($this->entityObject);
-			// $ex = explode("\\", $this->entityNameSpace);
+			if($this->entityNameSpace == false) return false;
 			// nom de l'entité
-			// $this->entityName = end($ex);
 			$this->entityName = $this->entityService->getEntityShortName($this->entityObject);
 			// Repository
 			$this->_repo = $this->_em->getRepository($this->entityNameSpace);
 			$this->uow = $this->_em->getUnitOfWork();
-
-			$this->SPYwrite($this->entityNameSpace.' / '.$this->entityName.' / id#'.$this->entityObject->getId());
+			// $this->debug['Entity']['className'] = $this->entityNameSpace;
+			// $this->debug['Entity']['shortName'] = $this->entityName;
+			// $this->debug['Entity']['id'] = $this->entityObject->getId();
 			return true;
-		} else {
-			return false;
 		}
+		return false;
 	}
 
 
@@ -127,7 +125,7 @@ class entityListener implements EventSubscriber {
 		return $this->_em;
 	}
 
-	public function getRepo($entity = null, $versionSlug = 'current') {
+	public function getRepo($entity) {
 		return $this->_repo;
 	}
 
@@ -136,9 +134,8 @@ class entityListener implements EventSubscriber {
 	 * UPDATE : recompute l'entité pour enregistrement
 	 */
 	protected function recomputeEntity() {
-		// $this->SPYwrite('- recomputeEntity() sur '.$this->entityName);
 		$this->uow->recomputeSingleEntityChangeSet(
-			$this->_em->getClassMetadata($this->entityNameSpace),
+			$this->_em->getClassMetadata(get_class($this->entityObject)),
 			$this->entityObject
 		);
 	}
@@ -155,7 +152,8 @@ class entityListener implements EventSubscriber {
 	 * Actions sur prePersist
 	 */
 	public function prePersistActions() {
-		//
+		// $this->entityService->checkStatuts($this->entityObject, false);
+		// $this->entityService->checkTva($this->entityObject, false);
 	}
 
 	/**
@@ -163,7 +161,7 @@ class entityListener implements EventSubscriber {
 	 * Actions sur postPersist
 	 */
 	public function postPersistActions() {
-		//
+		// $this->debug['Entity']['id'] = $this->entityObject->getId();
 	}
 
 	/**
@@ -173,6 +171,9 @@ class entityListener implements EventSubscriber {
 	 */
 	public function preUpdateActions() {
 		//
+		// $this->entityService->checkInversedLinks($this->entityObject, false);
+		// $this->entityService->checkStatuts($this->entityObject, false);
+		// $this->entityService->checkTva($this->entityObject, false);
 		//////////////////////////// IMPORTANT ///////////////////////////////
 		// Recompute suite modifs entity (nécessaire dans le cas d'Update) !!!
 		$this->recomputeEntity();
@@ -204,6 +205,10 @@ class entityListener implements EventSubscriber {
 	public function postRemoveActions() {
 		//
 	}
+
+
+
+
 
 
 

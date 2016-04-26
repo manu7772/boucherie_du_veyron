@@ -1,0 +1,335 @@
+categorie:
+    order: 4
+    data:
+    ### COLLECTIONS BASES
+        # menus
+        -
+            nom: 'menus'
+            descriptif: '<p>Menus du site</p>'
+            type: menu
+            open: true
+        # diaporamas
+        -
+            nom: 'diaporamas'
+            descriptif: '<p>Diaporamas multimédia</p>'
+            type: diapo
+            open: true
+        # multimedia
+        -
+            nom: 'multimedias'
+            descriptif: '<p>Diaporamas multimédia</p>'
+            type: multimedia
+            open: true
+        # pagewebs
+        -
+            nom: 'pages web'
+            descriptif: '<p>Collections de pages web</p>'
+            type: pageweb
+            open: true
+        # articles
+        -
+            nom: 'articles'
+            descriptif: '<p>Collections d''articles</p>'
+            type: article
+            open: true
+            couleur: 'rgba(35,170,179,1)'
+        # images
+        -
+            nom: 'images'
+            descriptif: '<p>Collections de photos</p>'
+            type: image
+            open: true
+        # fiches
+        -
+            nom: 'fiches'
+            descriptif: '<p>Collections de fiches recettes</p>'
+            type: fiche
+            open: true
+        # boutiques
+        -
+            nom: 'boutiques'
+            descriptif: '<p>Collections de boutiques</p>'
+            type: boutique
+            open: true
+        # pdfs
+        -
+            nom: 'types.pdf'
+            descriptif: '<p>Collections de fichiers PDF</p>'
+            type: pdf
+            open: true
+
+    ### COLLECTIONS / DIAPORAMAS
+        # menu haut
+        -
+            nom: 'menu haut'
+            descriptif: '<p>Menu haut du site</p>'
+            parents:
+                field: nom
+                value: 'menus'
+        # menu produits
+        -
+            nom: 'menu produits'
+            descriptif: '<p>Menu produits du site</p>'
+            parents:
+                field: nom
+                value: 'menus'
+        # menu footer
+        -
+            nom: 'menu footer'
+            descriptif: '<p>Menu de bas de page</p>'
+            parents:
+                field: nom
+                value: 'menus'
+        # pages web d'informations
+        -
+            nom: 'types.informations'
+            descriptif: '<p>Pages d''informations générales et légales</p>'
+            parents:
+                field: nom
+                value: 'pages web'
+        # diaporamas
+        -
+            nom: 'Diaporamas collections'
+            descriptif: '<p>Diaporamas</p>'
+            parents:
+                field: nom
+                value: 'images'
+        -
+            nom: 'Diaporama accueil'
+            descriptif: '<p>Diaporama de la page d''accueil du site</p>'
+            parents:
+                field: nom
+                value: 'images'
+        # Fiches
+        -
+            nom: 'Fiches collections'
+            descriptif: '<p>Collections de fiches recettes</p>'
+            parents:
+                field: nom
+                value: 'fiches'
+        -
+            nom: 'Recettes'
+            descriptif: '<p>Une sélection de recettes pour recevoir ou pour tous les jours</p>'
+            parents:
+                field: nom
+                value: 'fiches'
+        -
+            nom: 'Recettes de fêtes'
+            descriptif: '<p>Une sélection de savoureuses recettes pour vos repas de fêtes</p>'
+            parents:
+                field: nom
+                value: 'fiches'
+        -
+            nom: 'Recettes de Chefs'
+            descriptif: '<p>Les recettes élaborées par les grands Chefs de la gastronomie</p>'
+            parents:
+                field: nom
+                value: 'fiches'
+        # boutiques
+        -
+            nom: 'Boutiques Ain'
+            descriptif: "<p>Boutiques de l'Ain</p>"
+            parents:
+                field: nom
+                value: 'boutiques'
+        # articles
+        -
+            nom: 'Articles collections'
+            descriptif: '<p>Collections d''articles</p>'
+            parents:
+                field: nom
+                value: 'articles'
+        -
+            nom: 'Promotions'
+            descriptif: '<p>Promotions</p>'
+            parents:
+                field: nom
+                value: 'articles'
+        -
+            nom: 'Fêtes'
+            descriptif: '<p>Pour vos fêtes</p>'
+            parents:
+                field: nom
+                value: 'articles'
+        # articles : La boutique
+        -
+            nom: 'La boutique'
+            descriptif: '<p>La boutique du site avec articles classés</p>'
+            parents:
+                field: nom
+                value: 'articles'
+        # articles : LE BŒUF
+        -
+            nom: 'Bœuf'
+            descriptif: '<p>La viande de bœuf</p>'
+            parents:
+                field: nom
+                value: 'La boutique'
+        -
+            nom: 'Pièces du boucher'
+            descriptif: '<p>Pièces du boucher</p>'
+            parents:
+                field: nom
+                value: 'Bœuf'
+        -
+            nom: 'À rôtir'
+            descriptif: '<p>À rôtir</p>'
+            parents:
+                field: nom
+                value: 'Bœuf'
+        -
+            nom: 'À griller'
+            descriptif: '<p>À griller</p>'
+            parents:
+                field: nom
+                value: 'Bœuf'
+        -
+            nom: 'À braiser'
+            descriptif: '<p>À braiser</p>'
+            parents:
+                field: nom
+                value: 'Bœuf'
+        -
+            nom: 'Abats'
+            descriptif: '<p>Abats</p>'
+            parents:
+                field: nom
+                value: 'Bœuf'
+        # articles : LE VEAU
+        -
+            nom: 'Veau'
+            descriptif: '<p>Le veau</p>'
+            parents:
+                field: nom
+                value: 'La boutique'
+        -
+            nom: 'Pièces du boucher'
+            descriptif: '<p>Pièces du boucher</p>'
+            parents:
+                field: nom
+                value: 'Veau'
+        -
+            nom: 'À rôtir'
+            descriptif: '<p>À rôtir</p>'
+            parents:
+                field: nom
+                value: 'Veau'
+        -
+            nom: 'À griller'
+            descriptif: '<p>À griller</p>'
+            parents:
+                field: nom
+                value: 'Veau'
+        -
+            nom: 'À braiser'
+            descriptif: '<p>À braiser</p>'
+            parents:
+                field: nom
+                value: 'Veau'
+        -
+            nom: 'Abats'
+            descriptif: '<p>Abats</p>'
+            parents:
+                field: nom
+                value: 'Veau'
+        # articles : L'AGNEAU
+        -
+            nom: 'Agneau'
+            descriptif: '<p>L''agneau</p>'
+            parents:
+                field: nom
+                value: 'La boutique'
+        -
+            nom: 'Pièces du boucher'
+            descriptif: '<p>Pièces du boucher</p>'
+            parents:
+                field: nom
+                value: 'Agneau'
+        -
+            nom: 'À rôtir'
+            descriptif: '<p>À rôtir</p>'
+            parents:
+                field: nom
+                value: 'Agneau'
+        -
+            nom: 'À griller'
+            descriptif: '<p>À griller</p>'
+            parents:
+                field: nom
+                value: 'Agneau'
+        -
+            nom: 'À braiser'
+            descriptif: '<p>À braiser</p>'
+            parents:
+                field: nom
+                value: 'Agneau'
+        -
+            nom: 'Abats'
+            descriptif: '<p>Abats</p>'
+            parents:
+                field: nom
+                value: 'Agneau'
+
+        # articles : LE PORC
+        -
+            nom: 'Porc'
+            descriptif: '<p>La viande de porc</p>'
+            parents:
+                field: nom
+                value: 'La boutique'
+        -
+            nom: 'Pièces du boucher'
+            descriptif: '<p>Pièces du boucher</p>'
+            parents:
+                field: nom
+                value: 'Porc'
+        -
+            nom: 'À rôtir'
+            descriptif: '<p>À rôtir</p>'
+            parents:
+                field: nom
+                value: 'Porc'
+        -
+            nom: 'À griller'
+            descriptif: '<p>À griller</p>'
+            parents:
+                field: nom
+                value: 'Porc'
+        -
+            nom: 'À braiser'
+            descriptif: '<p>À braiser</p>'
+            parents:
+                field: nom
+                value: 'Porc'
+        -
+            nom: 'Abats'
+            descriptif: '<p>Abats</p>'
+            parents:
+                field: nom
+                value: 'Porc'
+        # articles : ÉPICERIE
+        -
+            nom: 'Épicerie'
+            descriptif: '<p>L''épicerie</p>'
+            parents:
+                field: nom
+                value: 'La boutique'
+        -
+            nom: 'Bocaux'
+            descriptif: '<p>Bocaux et conserves</p>'
+            parents:
+                field: nom
+                value: 'Épicerie'
+        -
+            nom: 'Les vins'
+            descriptif: '<p>Vins et spiritueux</p>'
+            parents:
+                field: nom
+                value: 'Épicerie'
+        -
+            nom: 'Produits frais'
+            descriptif: '<p>Les produits frais et artisanaux</p>'
+            parents:
+                field: nom
+                value: 'Épicerie'
+

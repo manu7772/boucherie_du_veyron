@@ -88,7 +88,7 @@ class EntityBaseRepository extends EntityRepository {
 		return $qb;		
 	}
 
-	public function defaultValsListClosure(aetools $aeEntities = null) {
+	public function defaultValsListClosure(aetools $aeEntities = null, $data = null) {
 		$qb = $this->findAllClosure($aeEntities);
 		// resultat
 		return $qb;
@@ -229,6 +229,34 @@ class EntityBaseRepository extends EntityRepository {
 	}
 
 	/**
+	 * Alias existe ? On peut préciser dans $types les types de jointures ('join'…)
+	 * @param QueryBuilder $qb
+	 * @param string $alias
+	 * @param string $types = array()
+	 * @return boolean
+	 */
+	protected function aliasExists(QueryBuilder $qb, $alias, $types = []) {
+		if(is_string($types)) $types = array($types);
+		$aliasAlreadyExists = false;
+		$DqlParts = $qb->getDQLParts();
+		// echo('<pre>');
+		// var_dump($DqlParts);
+		foreach ($DqlParts as $type => $DqlPart) if(is_array($DqlPart) && (count($types) == 0 || in_array($type, $types))) {
+			foreach ($DqlPart as $parts) {
+				foreach ($parts as $part) {
+					if($part->getAlias() === $alias) {
+						// echo('<p>'.$alias.' = '.$part->getJoin().'</p>');
+						$aliasAlreadyExists = true;
+						break 3;
+					}
+				}
+			}
+		}
+		// die('</pre>');
+		return $aliasAlreadyExists;
+	}
+
+	/**
 	 * defaultStatut
 	 * Sélect element de statut = actif uniquement
 	 * @param QueryBuilder &$qb
@@ -238,8 +266,8 @@ class EntityBaseRepository extends EntityRepository {
 		if(array_key_exists("statut", $this->getFields())) {
 			if($statut === null) $statut = array("Actif");
 			if(is_string($statut)) $statut = array($statut);
-			$qb->join(self::ELEMENT.'.statut', 'stat')
-				->andWhere($qb->expr()->in('stat.nom', $statut));
+			$qb->join(self::ELEMENT.'.statut', 'statut')
+				->andWhere($qb->expr()->in('statut.nom', $statut));
 		}
 		// return $qb;
 	}
@@ -253,18 +281,15 @@ class EntityBaseRepository extends EntityRepository {
 	protected function contextStatut(QueryBuilder &$qb, $elem = '_default') {
 		if($this->context == true) {
 			if($elem == '_default') $elem = self::ELEMENT;
-			// echo('<pre>');
-			// var_dump($this->getFields());
-			// echo('</pre>');
 			if(array_key_exists("statut", $this->getFields())) {
 				// ROLES
-				$qb->join($elem.'.statut', 'stat')
-					->andWhere($qb->expr()->in('stat.niveau', $this->roles))
-					->andWhere($qb->expr()->orX($qb->expr()->like('stat.bundles', $qb->expr()->literal('%'.$this->bundle.'%'))));
+				$qb->join($elem.'.statut', 'statut')
+					->andWhere($qb->expr()->in('statut.niveau', $this->roles))
+					->andWhere($qb->expr()->orX($qb->expr()->like('statut.bundles', $qb->expr()->literal('%'.$this->bundle.'%'))));
 				;
 			}
 		}
-		// return $qb;
+		return $qb;
 	}
 
 	/**

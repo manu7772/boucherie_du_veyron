@@ -1,0 +1,41 @@
+name_s: images
+name: image
+not_found: 'aucune image trouvée'
+x_found: '{0} aucune image trouvée|{1} 1 image trouvée|[2,+Inf] %count% images trouvées'
+create: 'créer une nouvelle image'
+create_btn: 'nouvelle image'
+backlist: 'retour à la liste des images'
+backlist_btn: 'retour liste'
+dontexist: 'cette image n''existe pas'
+moredetails: 'plus de détails sur %name%'
+existe: cette image existe déjà
+dimensionInconnue: (dim. inconnue)
+supprime:
+    nom: Supprimer image
+    confirm: 'Souhaitez-vous vraiment supprimer l''image ?'
+    confirm-definitif: 'Souhaitez-vous vraiment supprimer l''image ? Attention : elle sera définitivement supprimée.'
+owner:
+    'article:image': 'images articles'
+    'pageweb:image': 'images pages web'
+    'boutique:logo': 'logos boutiques'
+    'boutique:image': 'vitrines boutiques'
+    'marque:logo': 'logos marques'
+    'marque:image': 'images marques'
+    'reseau:logo': 'logos réseaux'
+    'reseau:image': 'images réseaux'
+    'User:avatar': 'photo utilisateur'
+form:
+    select: Sélectionnez…
+fields:
+    id: id
+    nom: nom
+    originalnom: nom original
+    binaryFile: image
+    created: création
+    updated: mise à jour
+    jamais: aucune modification
+    subEntitys: éléments
+    parents: parents
+    parent: parent
+    elements: éléments
+    icon: icône

@@ -29,23 +29,9 @@
 							{% set bgcolor = ' style="background-color:' ~ entite.statut.couleur|default('transparent') ~ ';"' %}
 							{% if DEVMODE %}<td class="text-center"{{ bgcolor|raw }}>{{ entite.id }}</td>{% endif %}
 							<td class="text-center"{{ bgcolor|raw }}>
-								{% if entite.image|default(null) != null %}
-								<a href="{{ path('siteadmin_entite', {entite: entite.image.className, id: entite.image.id, action: 'show'}) }}" class="docs-tooltip" data-toggle="tooltip" title="{{ UCfirst('moredetails'|trans({'%name%': entite.image.nom}, entite.className)) }}">
-									<img src="{{ entite.image.imgThumbnail(64, 64, 'cut')|raw }}" class="img-responsive img-thumbnail">
-								</a>
-								{% else %}
-								<i class="fa fa-ban fa-3x text-muted fa-border"></i>
-								{% endif %}
-								{% if entite.logo|default(null) != null %}
-								<a href="{{ path('siteadmin_entite', {entite: entite.logo.className, id: entite.logo.id, action: 'show'}) }}" class="docs-tooltip" data-toggle="tooltip" title="{{ UCfirst('moredetails'|trans({'%name%': entite.logo.nom}, entite.className)) }}">
-									<img src="{{ entite.logo.imgThumbnail(64, 64, 'cut')|raw }}" class="img-responsive img-thumbnail">
-								</a>
-								{% else %}
-								<i class="fa fa-ban fa-3x text-muted fa-border"></i>
-								{% endif %}
-								{% if entite.favicon|default(null) != null %}
-								<a href="{{ path('siteadmin_entite', {entite: entite.favicon.className, id: entite.favicon.id, action: 'show'}) }}" class="docs-tooltip" data-toggle="tooltip" title="{{ UCfirst('moredetails'|trans({'%name%': entite.favicon.nom}, entite.className)) }}">
-									<img src="{{ entite.favicon.imgThumbnail(64, 64, 'cut')|raw }}" class="img-responsive img-thumbnail">
+								{% if entite.mainMedia|default(null) != null %}
+								<a href="{{ path('siteadmin_entite', {entite: entite.mainMedia.className, id: entite.mainMedia.id, action: 'show'}) }}" class="docs-tooltip" data-toggle="tooltip" title="{{ UCfirst('moredetails'|trans({'%name%': entite.mainMedia.nom}, entite.className)) }}">
+									<img src="{{ entite.mainMedia.imgThumbnail(64, 64, 'cut')|raw }}" class="img-responsive img-thumbnail">
 								</a>
 								{% else %}
 								<i class="fa fa-ban fa-3x text-muted fa-border"></i>

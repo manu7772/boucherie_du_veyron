@@ -22,8 +22,15 @@ class aeArticle extends aeItem {
      * @param baseEntity $entity
      * @return aeArticle
      */
-    public function checkAfterChange(baseEntity &$entity) {
-        parent::checkAfterChange($entity);
+    public function checkAfterChange(baseEntity &$entity, $butEntities = []) {
+        // fiche inverse
+        // foreach($entity->getFiches() as $fiche) {
+        //     $fiche->addArticle($entity);
+        //     $service = $this->container->get('aetools.aeEntity')->getEntityService($fiche);
+        //     $service->checkAfterChange($fiche);
+        //     $service->save($fiche, false);
+        // }
+        parent::checkAfterChange($entity, $butEntities);
         return $this;
     }
 

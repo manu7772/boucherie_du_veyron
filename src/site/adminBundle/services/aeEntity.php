@@ -2,6 +2,7 @@
 namespace site\adminBundle\services;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\DBAL\Types\Type;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 // aetools
 use site\adminBundle\services\aetools;
@@ -131,22 +132,24 @@ class aeEntity extends aetools {
 			if($this->container->has($aeServiceName)) {
 				$service = $this->container->get($aeServiceName);
 				if($parent != $entityShortName) $service->defineEntity($entityShortName);
-				break 1;
+				return $service;
 			}
 		}
-		return $service;
+		return null;
 	}
 
     /**
      * Check entity after change (edit…)
+     * $butEntities permet d'éviter la récursion infinie !! Ne pas oublier !
      * @param baseEntity &$entity
+     * @param baseEntity $butEntities = []
 	 * @return aeEntity
      */
-    public function checkAfterChange(baseEntity &$entity) {
-    	if(method_exists($entity, 'check')) $entity->check();
+    public function checkAfterChange(baseEntity &$entity, $butEntities = []) {
+    	// if(method_exists($entity, 'check')) $entity->check();
         // Check statut… etc.
-        $this->checkStatuts($entity, false);
-        // $this->checkInversedLinks($entity, false);
+        // $this->checkStatuts($entity, false);
+        $this->checkInversedLinks($entity, false, $butEntities);
         return $this;
     }
 
@@ -196,7 +199,7 @@ class aeEntity extends aetools {
 	public function save(baseEntity &$entity, $flush = true) {
 		$response = true;
 		$message = 'Entité enregistrée.';
-		$this->_em->persist($entity);
+		if($entity->getId() == null) $this->_em->persist($entity);
 		if($flush === true) $this->_em->flush();
 		return $this
 			->container->get('aetools.aeReponse')
@@ -384,6 +387,7 @@ class aeEntity extends aetools {
 	 */
 	public function entityClassExists($name, $extended = false, $getShortName = false) {
 		if(is_bool($name)) return false;
+		if(is_string($name)) if(preg_match('#^Proxies#', $name)) return false;
 		// if(is_array($name)) $name = reset($name);
 		// echo('Type : '.gettype($name).'<br>');
 		if(is_object($name)) $name = get_class($name);
@@ -530,6 +534,9 @@ class aeEntity extends aetools {
 
 	public function getNewEntity($classname = null) {
 		$newEntity = new $classname();
+		// $service = $this->getEntityService($newEntity);
+		// $service->checkStatuts($newEntity, false);
+		// $service->checkTva($newEntity, false);
 		$this->fillAllAssociatedFields($newEntity);
 		return $newEntity;
 	}
@@ -847,9 +854,9 @@ class aeEntity extends aetools {
 						break;
 					default:
 						// autres…
-						// Typr::STRING
-						// Typr::TEXT
-						// Typr::BLOB
+						// Type::STRING
+						// Type::TEXT
+						// Type::BLOB
 						$set = $this->getMethodOfSetting($field, $object);
 						$this->isNullable($field, $object) ?
 							$object->$set(null):
@@ -968,14 +975,14 @@ class aeEntity extends aetools {
 								$entity2->$tar_SET($entity1);
 								// $this->writeConsole('     • Reverse Side ok : '.$this->getEntityShortName($entity2).'->'.$tar_SET.'('.$entity1->getSlug().')', 'succes');
 								return true;
-							}
-						}
+							} else return false;
+						} else return false;
 						// } else throw new Exception(self::TAB1."Données bidirectionnelles incomplètes : champ cible inconnu (\"".gettype($entity1)."::".$field."\" => \"".gettype($entity1)."::<INCONNU>\"). (".$this->getName()."::attachEachSides() / Ligne ".__LINE__.")", 1);
 					}
 					return true;
-				}
+				} else return false;
 				// } else throw new Exception(self::TAB1."Setter absent (\"".gettype($entity1)."::".$field."\"). (".$this->getName()."::attachEachSides() / Ligne ".__LINE__.")", 1);
-			}
+			} else return false;
 		}
 		// } else $this->writeConsole(self::TAB1."Versions incompatibles : association impossible.", "error");
 		return false;
@@ -1191,7 +1198,7 @@ class aeEntity extends aetools {
 						break;
 					case self::SINGLE_ASSOC_NAME: // single
 						// $this->writeConsole(self::TAB2.'Info '.__LINE__." : ".self::SINGLE_ASSOC_NAME, 'headline');
-						$methode = false;
+						$methode = $this->getMethodNameWith($field, 'set');
 						break;
 				}
 			}
@@ -1226,7 +1233,7 @@ class aeEntity extends aetools {
 				}
 			}
 			if(method_exists($entite, $methode)) return $methode;
-				else return null;
+				else return false;
 				// else throw new Exception("Getter (".$methode.") inexistant : VOUS DEVEZ LE CRÉER. (".$this->getName()."::getMethodOfGetting() / Ligne ".__LINE__.")", 1);
 		}
 		return false;
@@ -1307,80 +1314,106 @@ class aeEntity extends aetools {
 		// else throw new Exception("Entité (".gettype($entite)." : ".$entite.") inexistante. (".$this->getName()."::isBidirectional() / Ligne ".__LINE__.")", 1);
 	}
 
-	/**
-	 * Vérifie et associe les champs liés + bidirectionnels + inverseSide
-	 * @param object $entity
-	 * @param boolean $flush = true
-	 * @return boolean
-	 */
-	public function checkInversedLinks(&$entity, $flush = true) {
-		$r = true;
-		// $this->getEm()->persist($entity);
-		// $this->getEm()->flush(); // flush : sinon on obtient de objets Doctrine\ORM\PersistentCollection
-		$classname = get_class($entity);
-		$shortname = $this->getEntityShortName($classname);
-		// echo('<p><strong>Classe entité : '.$classname.' / '.$shortname.'</strong></p>');
-		$fields = $this->getInverseSideFields($classname);
-		foreach ($fields as $field) {
-			// uniquement si "mappedBy"…
-			// echo('<p>- field : '.$field.'</p>');
-			$otherSideSource = $this->get_OtherSide_sourceField($field, $classname);
-			if(is_string($otherSideSource)) {
-				// echo('<p>--> field mapped : '.$otherSideSource.'</p>');
-				// il faut rattacher…
-				$target = $this->getEntityClassName($this->getTargetEntity($field, $classname));
-				// $targetRepo = $this->getEm()->getRepository($target);
-				$get = $this->getMethodOfGetting($field, $classname);
-				// echo('<p>--> target : '.$target.' -> '.$get.'()</p>');
-				// return Doctrine\ORM\PersistentCollection->getValues()
-				$data = $entity->$get()->getValues();
-				// if(get_class($data) == $target) $data = array($data);
-				// if(gettype($data) == Type::TARRAY) $data = 
-				if(is_array($data)) {
-					// echo('<p>--> éléments : '.count($data).'</p>');
-					foreach ($data as $item) if($target != $classname) {
-						$targetClass = get_class($item);
-						$nom = $item->getId();
-						if(method_exists($item, 'getNom')) $nom .= '/'.$item->getNom();
-						// echo('<p style="color:green;">--> vérif : '.$target.' = '.$targetClass.' => '.$nom.'</p>');
-						$dataSet = $this->getMethodOfSetting($otherSideSource, $targetClass);
-						$dataGet = $this->getMethodOfGetting($otherSideSource, $targetClass);
-						$dataFromGet = $item->$dataGet();
-						if(method_exists($dataFromGet, 'getValues')) {
-							$entities = $dataFromGet->getValues();
-							if(is_object($entities)) $entities = array($entities);
-							$entities = new ArrayCollection($entities);
-							if(!$entities->contains($entity)) $item->$dataSet($entity);
-						}
-					}
-				} else {
-					// echo('<p>--> éléments : <span style="color:red;">'.get_class($data).'</span></p>');
-				}
-				// check les liens éventuellement perdus…
-				$this->checkLosts($field, $entity, $flush);
+	protected function EntityCollectionsToArray($data, $onlyArrays = true) {
+		if(is_null($data)) return $data;
+		$result = array();
+		foreach($data as $key => $value) {
+			if($onlyArrays && is_object($value)) {
+				if(get_class($value) == 'Doctrine\ORM\PersistentCollection') $value = $value->getValues();
+					else if(get_class($value) == 'Doctrine\Common\Collections\ArrayCollection') $value = $value->toArray();
+			}
+			if(is_array($value)) {
+				if(!isset($result[$key])) $result[$key] = array();
+				$result[$key] = array_merge($result[$key], $this->EntityCollectionsToArray($value));
+			} else {
+				$result[$key] = $value;
 			}
 		}
-		// die('<h3>fin :-)</h3>');
-		// flush…
-		if($flush == true) $r = $this->save($entity);
-		return $r;
+		return $result;
 	}
 
 	/**
-	 * Répare (supprime) les inverseSide manquants sur une entité
-	 * @param object $field
-	 * @param string $entity
+	 * Vérifie et associe les champs liés bidirectionnels
+	 * @param object $entity
 	 * @param boolean $flush = true
+     * @param baseEntity $butEntities = []
 	 * @return boolean
 	 */
-	public function checkLosts($field, $entity, $flush = true) {
+	public function checkInversedLinks(&$entity, $flush = true, $butEntities = []) {
 		$r = true;
 		$classname = get_class($entity);
-		// liste des champs liés + bidirectionnels + inverseSide
-		$fields = $this->getInverseSideFields($classname);
-		// flush…
-		if($flush == true) $r = $this->getEm()->flush();
-		// throw new Exception("checkLosts non encore programmé !", 1);
+		if($classname && method_exists($entity, 'getOldValues')) {
+			$shortname = $this->getEntityShortName($entity);
+			// $fields = $this->getAssociationNamesOfEntity($classname);
+			$compValues = array();
+			$compValues['info'][$shortname] = $classname;
+			$compValues['info']['id'] = json_encode($entity->getId());
+			$compValues['old'] = $this->EntityCollectionsToArray($entity->getOldValues());
+			$compValues['current'] = array();
+			foreach($compValues['old'] as $field => $values) {
+				$get = $this->getMethodOfGetting($field, $classname);
+				if($get) $compValues['current'][$field] = $entity->$get();
+			}
+			$compValues['current'] = $this->EntityCollectionsToArray($compValues['current']);
+			$compValues['new'] = $this->array_unique_in_array2_recursive($compValues['old'], $compValues['current']);
+			$compValues['delete'] = $this->array_unique_in_array2_recursive($compValues['current'], $compValues['old']);
+			// ajouts
+			foreach ($compValues['new'] as $field => $entities) {
+				if(is_object($entities)) $entities = array($entities);
+				if(is_array($entities)) {
+					foreach ($entities as $enti) if(is_object($enti) && !in_array($enti, $butEntities, true)) {
+						// $inverseClassname = $this->getEntityClassName($enti);
+						$inverseClassname = get_class($enti);
+						$otherSideSource = $this->get_OtherSide_sourceField($field, $classname);
+						if($inverseClassname && $otherSideSource) {
+							$dataSet = $this->getMethodOfSetting($otherSideSource, $inverseClassname);
+							// $enti = $this->getRepo($inverseClassname)->find($enti->getId());
+							if(is_string($dataSet)) {
+								$enti->$dataSet($entity);
+								$compValues['new']['result'][$field] = "Success : data added";
+								$service = $this->container->get('aetools.aeEntity')->getEntityService($enti);
+								$service->checkAfterChange($enti, [$entity]);
+							} else {
+								$compValues['new']['result'][$field] = "Error : not found ".json_encode($dataSet)." with source ".json_encode($otherSideSource)." on class ".json_encode($inverseClassname);
+							}
+						}
+					}
+				}
+			}
+			// suppressions
+			foreach ($compValues['delete'] as $field => $entities) {
+				if(is_object($entities)) $entities = array($entities);
+				if(is_array($entities)) {
+					foreach ($entities as $enti) if(is_object($enti) && !in_array($enti, $butEntities, true)) {
+						// $inverseClassname = $this->getEntityClassName($enti);
+						$inverseClassname = get_class($enti);
+						$otherSideSource = $this->get_OtherSide_sourceField($field, $classname);
+						if($inverseClassname) {
+							$dataRemove = $this->getMethodOfRemoving($otherSideSource, $inverseClassname);
+							if(is_string($dataRemove)) {
+								if(preg_match('#^remove#', $dataRemove)) {
+									// $enti = $this->getRepo($inverseClassname)->find($enti->getId());
+									$enti->$dataRemove($entity);
+								} else {
+									$enti->$dataRemove(null);
+								}
+								$compValues['delete']['result'][$field] = "Success : data added";
+								$service = $this->container->get('aetools.aeEntity')->getEntityService($enti);
+								$service->checkAfterChange($enti, [$entity]);
+							} else {
+								$compValues['delete']['result'][$field] = "Error : not found ".json_encode($dataRemove)." with source ".json_encode($otherSideSource)." on class ".json_encode($inverseClassname);
+							}
+						}
+					}
+				}
+			}
+			// flush…
+			$this->container->get('aetools.debug')->debugNamedFile('inverseLinks', $compValues);
+			// die('<p>End !</p>');
+			if($flush == true) $r = $this->save($entity);
+		} else {
+			$r = false;
+		}
 		return $r;
 	}
 
@@ -1637,8 +1670,50 @@ class aeEntity extends aetools {
 
 
 
-	// STATUT
+	// CHAMPS LIÉS NULLABLE FALSE
 
+	// ALL
+	/**
+	 * Vérifie le statut et l'attribue si null
+	 * @param object &$entity
+	 * @param string $inverse (nom de l'entité liée)
+	 * @param boolean $flush = true
+	 * @return boolean
+	 */
+	public function checkField(&$entity, $inverse, $flush = true) {
+		$set = $this->getMethodOfSetting($inverse, $entity);
+		$get = $this->getMethodOfGetting($inverse, $entity);
+		if(method_exists($entity, $set) && method_exists($entity, $get)) {
+			$repo = $this->getEm()->getRepository('site\adminBundle\Entity\\'.$inverse);
+			$attr = false;
+			if($entity->$get() == null) {
+				$attr = self::SINGLE_ASSOC_NAME;
+			} else if(method_exists($entity->$get(), 'toArray')) {
+				if(count($entity->$get()->toArray()) < 1) $attr = self::COLLECTION_ASSOC_NAME;
+			}
+			if($attr != false && method_exists($repo, self::VALUE_DEFAULT)) {
+				$default = $repo->{self::VALUE_DEFAULT}();
+				switch ($attr) {
+					case self::SINGLE_ASSOC_NAME:
+						if(is_array($default)) $default = reset($default);
+						if(is_object($default)) $entity->$set($default);
+						break;
+					case self::COLLECTION_ASSOC_NAME:
+						if(is_object($default)) $default = array($default);
+						if(is_array($default)) {
+							foreach ($default as $value) {
+								$entity->$set($default);
+							}
+						}
+						break;
+				}
+			}
+			if($flush == true) $this->save($entity);
+		}
+		return $entity;
+	}
+
+	// STATUT
 	/**
 	 * Vérifie le statut et l'attribue si null
 	 * @param object &$entity
@@ -1646,28 +1721,14 @@ class aeEntity extends aetools {
 	 * @return boolean
 	 */
 	public function checkStatuts(&$entity, $flush = true) {
-		$r = false;
-		// echo('<h4>Check statut sur '.get_class($entity).'</h4>');
-		if(method_exists($entity, 'getStatut')) {
-			// echo('<p>getStatut existe</p>');
-			$repoStatut = $this->getEm()->getRepository('site\adminBundle\Entity\statut');
-			$defaultVal = self::VALUE_DEFAULT;
-			if($entity->getStatut() == null && method_exists($repoStatut, $defaultVal)) {
-				// echo('<p>Statut NON rempli !!!</p>');
-				$statut = $repoStatut->$defaultVal();
-				// var_dump($statut);
-				if(is_array($statut)) $statut = reset($statut);
-				if(is_object($statut)) {
-					$entity->setStatut($statut);
-					// echo('<p>'.get_class($entity).' = statut ajouté : '.$statut->getNom().'</p>');
-					$r = true;
-				}
-			}
-			// else echo('<p>Statut déjà rempli : ok</p>');
-		}
-		if($flush == true && $entity->getId() != null) $this->save($entity);
-		return $r;
+		return $this->checkField($entity, 'statut', $flush);
 	}
+
+	// TVA
+	public function checkTva(&$entity, $flush = true) {
+		return $this->checkField($entity, 'tauxTva', $flush);
+	}
+
 
 
 	// ENTITY MANAGER ET REPOSITORY

@@ -24,7 +24,7 @@
 	<div class="col-sm-12 col-md-6 col-lg-4">
 		<div class="ibox float-e-margins">
 			<div class="ibox-content">
-				<h2><i class="fa fa-envelope"></i> Messages non lus <small><i>({{ messages|length }})</i></small></h2>
+				<h3><i class="fa fa-envelope"></i> Messages non lus <small><i>({{ messages|length }})</i></small></h3>
 				<small><a href="{{ path('siteadmin_entite', {entite: 'message'}) }}">{{ UCfirst('action.consulter'|trans({}, 'message')) }}</a></small>
 				<ul class="todo-list m-t small-list ui-sortable">
 					{% for message in messages if (fromNow(message.creation, "secondes") >= 0) %}
@@ -46,18 +46,18 @@
 			</div>
 		</div>
 	</div>
-	{% for entite in ['article', 'pageweb'] %}
+	{% for entite in ['article', 'pageweb', 'categorie', 'User', 'fiche'] %}
 	<div class="col-sm-12 col-md-6 col-lg-4">
 		<div class="ibox float-e-margins">
 			<div class="ibox-content">
-				<h2>{% if info_entites[entite].icon is defined %}<i class="fa {{ info_entites[entite].icon }}"></i> {% endif %}{{ UCfirst(('name_s')|trans({}, entite)) }}</h2>
+				<h3><i class="fa {{ ('entite.' ~ entite)|trans({}, 'icon') }} m-r-xs"></i>{{ UCfirst(('name_s')|trans({}, entite)) }}</h3>
 				<hr class="m-t-md m-b-sm">
 				<!-- Liste -->
-				<a href="{{ path('siteadmin_entite', {entite: entite, action:'list'}) }}" class="btn btn-primary btn-lg full-width"><i class="fa fa-eye fa-2x pull-left"></i> <strong class="m-t-xs pull-right">{{ UCfirst('actions.voir'|trans) }}</strong></a>
+				<a href="{{ path('siteadmin_entite', {entite: entite, action:'list'}) }}" class="btn btn-primary btn-sm full-width"><i class="fa fa-eye fa-2x pull-left"></i> <strong class="m-t-xs pull-right">{{ UCfirst('actions.voir'|trans) }}</strong></a>
 				<!-- Ajouter -->
-				<a href="{{ path('siteadmin_entite', {entite: entite, action:'create'}) }}" class="btn btn-info btn-lg full-width"><i class="fa fa-plus fa-2x pull-left"></i> <strong class="m-t-xs pull-right">{{ UCfirst('actions.creation'|trans) }}</strong></a>
+				<a href="{{ path('siteadmin_entite', {entite: entite, action:'create'}) }}" class="btn btn-info btn-sm full-width"><i class="fa fa-plus fa-2x pull-left"></i> <strong class="m-t-xs pull-right">{{ UCfirst('actions.creation'|trans) }}</strong></a>
 				<!-- Statistiques -->
-				<a href="{{ path('siteadmin_entite', {entite: entite, action:'list'}) }}" class="btn btn-warning btn-lg full-width{% if marketplace.statistiques == false %} disabled{% endif %}"><i class="fa fa-area-chart fa-2x pull-left"></i> <strong class="m-t-xs pull-right">{{ UCfirst('actions.analyse'|trans) }}</strong></a>
+				<a href="{{ path('siteadmin_entite', {entite: entite, action:'list'}) }}" class="btn btn-warning btn-sm full-width{% if marketplace.statistiques == false %} disabled{% endif %}"><i class="fa fa-area-chart fa-2x pull-left"></i> <strong class="m-t-xs pull-right">{{ UCfirst('actions.analyse'|trans) }}</strong></a>
 			</div>
 		</div>
 	</div>

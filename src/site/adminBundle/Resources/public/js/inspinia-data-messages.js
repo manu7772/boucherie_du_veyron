@@ -2,16 +2,16 @@ $(document).ready(function() {
 
 	var errorMessages = new Array();
 
+	var hiddenBalise = 'hiddendata';
 	// environnement (dev/prod/test)environnementMode
-	if($('#hiddendata #environnementMode').length) {
-		var environnementMode = $('#hiddendata #environnementMode').text();
+	if($('#'+hiddenBalise+' #environnementMode').length) {
+		var environnementMode = $('#'+hiddenBalise+' #environnementMode').text();
 		$('body').data('environnementMode', environnementMode);
 	} else {
 		alert("Erreur majeure : environnement non défini.");
 		errorMessages.push("Erreur : environnement non défini.");
 	}
 
-	var hiddenBalise = 'hiddendata';
 	var hiddendata = [
 		"typeMessages",			// types de messages/alertes
 		"defaultsMessages"		// paramètres par défaut de messages/alertes

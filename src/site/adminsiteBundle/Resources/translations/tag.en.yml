@@ -1,0 +1,25 @@
+name_s: tags
+name: tag
+not_found: 'no tag found'
+x_found: '{0} no tag found|{1} 1 tag found|[2,+Inf] %count% tags found'
+create: 'create new tag'
+create_btn: 'new tag'
+created: '{0} no tag created|{1} %count% tag have been created : %list%|[2,+Inf] %count% tags have been created : %list%'
+new: '{0,1}new tag|[2,+Inf] %count% new tags'
+backlist: 'back to list of tags'
+backlist_btn: 'back to list'
+dontexist: 'this tag does not exist'
+existe: 'this tag already exists'
+suppression: 'tag %name% have been deleted'
+moredetails: 'more details on %name%'
+index:
+    addSpeech: 'To add several tags at once, separate them with commas'
+form:
+    select: Select…
+fields:
+    id: id
+    nom: name
+    created: created
+    updated: updated
+    jamais: no modification
+    icon: icon

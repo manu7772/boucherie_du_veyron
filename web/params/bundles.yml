@@ -4,3 +4,4 @@ sitegraphicsBundle: site\graphicsBundle\sitegraphicsBundle
 sitetranslateBundle: site\translateBundle\sitetranslateBundle
 siteeditionBundle: site\editionBundle\siteeditionBundle
 siteadminBundle: site\adminBundle\siteadminBundle
+siteadminsiteBundle: site\adminsiteBundle\siteadminsiteBundle

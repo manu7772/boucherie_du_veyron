@@ -2,13 +2,13 @@
 namespace site\adminBundle\services;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use site\adminBundle\services\aeEntity;
+use site\adminBundle\services\aeSubEntity;
 
 use site\adminBundle\Entity\categorie;
 use site\adminBundle\Entity\baseEntity;
 
 // call in controller with $this->get('aetools.aeCategorie');
-class aeCategorie extends aeEntity {
+class aeCategorie extends aeSubEntity {
 
     public function __construct(ContainerInterface $container) {
         parent::__construct($container);
@@ -20,60 +20,23 @@ class aeCategorie extends aeEntity {
      * @param baseEntity $entity
      * @return aeCategorie
      */
-    public function checkAfterChange(baseEntity &$entity) {
-        // check image
-        $image = $entity->getImage();
-        if(is_object($image)) {
-            // if($image->isValid()) {
-                $infoForPersist = $image->getInfoForPersist();
-                $this->container->get('aetools.debug')->debugFile($infoForPersist);
-                $service = $this->container->get('aetools.aeEntity')->getEntityService($image);
-                $service->checkAfterChange($image);
-                $service->checkStatuts($image);
-                if($infoForPersist['removeImage'] === true || $infoForPersist['removeImage'] === 'true') {
-                    // Supression de l'image
-                    $entity->setImage(null);
-                }
-            // } else $entity->setImage(null);
-        }
-        // elements subEntitys ajoutés
+    public function checkAfterChange(baseEntity &$entity, $butEntities = []) {
+        // elements subEntitys ajoutés // inverses
         // echo('<pre>');
         // $list = $entity->getSubEntitys()->toArray();
         // echo(implode(', ', $list));
         // echo('</pre>');
-        $hasElements = false;
-        foreach($entity->getSubEntitys() as $subEntity) {
-            $subEntity->addCategorie($entity);
-            $service = $this->container->get('aetools.aeEntity')->getEntityService($subEntity);
-            $service->save($subEntity, false);
-            $hasElements = true;
-        }
-        // éléments subEntitys supprimés
-        // echo('<pre>');
-        // $list = $entity->getSubEntitysMem();
-        // echo(implode(', ', $list));
+        // echo('<pre><h4>All children of all types <i>('.$entity.' #'.$entity->getId().')</i> : </h4>');
+        // echo('<p>'.implode(', ', $entity->getChildrensOfAllTypes()->toArray()).'</p>');
         // echo('</pre>');
-        $deletedElements = false;
-        foreach($entity->getSubEntitysMem() as $removedSubEntity) {
-            if(!$entity->getSubEntitys()->contains($removedSubEntity)) {
-                $removedSubEntity->removeCategorie($entity);
-                $service = $this->container->get('aetools.aeEntity')->getEntityService($removedSubEntity);
-                $service->save($removedSubEntity, false);
-                $deletedElements = true;
-            }
-        }
-        // enfants
-        $hasChildren = false;
-        $accepts = $entity->getAccepts();
-        foreach($entity->getAllChildren() as $child) {
-            $child->setAccepts($accepts);
-            $this->save($child, false);
-            $hasChildren = true;
-        }
-        // save all
-        // if($hasChildren || $hasElements || $deletedElements) $this->_em->flush();
-        // die();
-        parent::checkAfterChange($entity);
+
+        // foreach($entity->getChildrensOfAllTypes() as $child) {
+        //     $child->addParent($entity);
+        //     $service = $this->container->get('aetools.aeEntity')->getEntityService($child);
+        //     $service->checkAfterChange($child);
+        //     $service->save($child, false);
+        // }
+        parent::checkAfterChange($entity, $butEntities);
         return $this;
     }
 

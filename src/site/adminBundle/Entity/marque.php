@@ -55,6 +55,13 @@ class marque extends tier {
 		$this->articles = new ArrayCollection();
 	}
 
+	public function memOldValues($addedfields = null) {
+		$fields = array('articles');
+		if(count($addedfields) > 0 && is_array($addedfields)) $fields = array_unique(array_merge($fields, $addedfields));
+		parent::memOldValues($fields);
+		return $this;
+	}
+
 	/**
 	 * Un élément par défaut dans la table est-il obligatoire ?
 	 * @return boolean

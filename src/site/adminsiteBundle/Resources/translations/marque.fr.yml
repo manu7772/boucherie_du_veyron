@@ -1,0 +1,30 @@
+name_s: marques
+name: marque
+not_found: 'aucune marque trouvée'
+x_found: '{0} aucune marque trouvée|{1} 1 marque trouvée|[2,+Inf] %count% marques trouvées'
+create: 'créer une nouvelle marque'
+create_btn: 'nouvelle marque'
+backlist: 'retour à la liste des marques'
+backlist_btn: 'retour liste'
+dontexist: 'cette marque n''existe pas'
+moredetails: 'plus de détails sur %name%'
+bydefault: 'définir comme marque par défaut'
+existe: cette marque existe déjà
+form:
+    select: Sélectionnez…
+fields:
+    id: id
+    nom: nom
+    descriptif: description
+    image: image
+    logo: logotype
+    created: création
+    updated: mise à jour
+    mainMedia: visuel
+    couleur: couleur
+    jamais: aucune modification
+    subEntitys: éléments
+    parents: parents
+    parent: parent
+    elements: éléments
+    icon: icône

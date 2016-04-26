@@ -1,0 +1,37 @@
+name_s: statuts
+name: statut
+not_found: 'aucun statut trouvé'
+x_found: '{0} aucun statut trouvé|{1} 1 statut trouvé|[2,+Inf] %count% statuts trouvés'
+create: 'créer un nouveau statut'
+create_btn: 'nouveau statut'
+created: '{0} Aucun statut créé|{1} %count% statut a été créé : %list%|[2,+Inf] %count% statuts ont été créés : %list%'
+new: '{0,1} nouveau statut|[2,+Inf] %count% nouveaux statuts'
+backlist: 'retour à la liste des statuts'
+backlist_btn: 'retour liste'
+dontexist: 'cet statut n''existe pas'
+existe: 'cet statut existe déjà'
+suppression: 'le statut %name% a été supprimé'
+moredetails: 'plus de détails sur %name%'
+bydefault: 'définir comme statut par défaut'
+grants:
+    no_access: Vous n'avez pas les droits pour accéder au statut<br>"%name%"
+form:
+    select: Sélectionnez…
+fields:
+    id: id
+    nom: nom
+    descriptif: descriptif
+    couleur: couleur
+    niveau: niveau
+    bundles: bundles
+    created: création
+    updated: mis à jour
+    jamais: aucune modification
+    icon: icône
+roles:
+    IS_AUTHENTICATED_ANONYMOUSLY: public
+    ROLE_USER: connecté
+    ROLE_TRANSLATOR: traducteur
+    ROLE_EDITOR: éditeur
+    ROLE_ADMIN: administrateur
+    ROLE_SUPER_ADMIN: webmaster

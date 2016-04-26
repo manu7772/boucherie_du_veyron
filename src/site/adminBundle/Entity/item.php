@@ -47,6 +47,13 @@ abstract class item extends baseSubEntity {
 	// 	parent::__construct();
 	// }
 
+	public function memOldValues($addedfields = null) {
+		$fields = array();
+		if(count($addedfields) > 0 && is_array($addedfields)) $fields = array_unique(array_merge($fields, $addedfields));
+		parent::memOldValues($fields);
+		return $this;
+	}
+
 
 
 }

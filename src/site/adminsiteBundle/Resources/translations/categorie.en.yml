@@ -1,0 +1,65 @@
+name_s: collections
+name: collection
+not_found: 'no collection found'
+x_found: '{0} no collection found|{1} 1 collection found|[2,+Inf] %count% collections found'
+create: 'create new collection'
+create_btn: 'new collection'
+backlist: 'back to list of collections'
+backlist_btn: 'back to list'
+dontexist: 'this collection does not exist'
+moredetails: 'more details on %name%'
+existe: this collection already exists
+noParent: no parent found
+noChildren: no children found
+noDirectChildren: no direct children found
+noChildrenChildren: no children found in children
+noDirectSubEntity: no direct element found
+noChildrenSubEntity: no element found in children
+supprime:
+    nom: delete collection
+    confirm: 'Do you realy want to delete this collection?'
+    confirm-definitif: 'Do you realy want to delete this collection? Beware : it will be finally deleted.'
+grants:
+    no_access: You are not granted to access to the collection<br>"%name%"
+form:
+    select: Select…
+fields:
+    id: id
+    nom: name
+    created: created
+    updated: updated
+    descriptif: description
+    jamais: no modification
+    pageweb: web page
+    image: picture
+    children: children
+    directChildren: direct children
+    childrenChildren: children in children
+    directSubEntity: direct elements
+    childrenSubEntity: elements in children
+    position: position
+    subEntitys: elements
+    couleur: color
+    url: url
+    type: type of collection
+    accepts: type of elements
+    parents: parents
+    parent: parent
+    elements: elements
+    lvl: level
+    technique: details
+    icon: icon
+types:
+    multimedia: multimedias
+    menu: menus
+    diapo: slides show
+    image: photographs
+    article: products
+    pdf: pdf files
+    menu: menus
+    fiche: notices
+    marque: brands
+    reseau: outlets
+    boutique: stores
+    pageweb: web pages
+    informations: informations

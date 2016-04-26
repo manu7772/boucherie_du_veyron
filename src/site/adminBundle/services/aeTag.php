@@ -20,8 +20,8 @@ class aeTag extends aeEntity {
      * @param baseEntity $entity
      * @return aeTag
      */
-    public function checkAfterChange(baseEntity &$entity) {
-        parent::checkAfterChange($entity);
+    public function checkAfterChange(baseEntity &$entity, $butEntities = []) {
+        parent::checkAfterChange($entity, $butEntities);
         return $this;
     }
 

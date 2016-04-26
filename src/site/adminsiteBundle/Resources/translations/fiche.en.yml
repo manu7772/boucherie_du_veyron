@@ -1,0 +1,35 @@
+name_s: notices
+name: notice
+not_found: 'no notice found'
+x_found: '{0} no notice found|{1} 1 notice found|[2,+Inf] %count% notices found'
+create: 'create new notice'
+create_btn: 'new notice'
+backlist: 'back to list of notices'
+backlist_btn: 'back to list'
+dontexist: 'this notice does not exist'
+moredetails: 'more details on %name%'
+existe: this notice already exists
+niveaux:
+    debutant: rookie
+    intermediaire: medium
+    confirme: chief
+form:
+    select: Select…
+fields:
+    id: id
+    nom: name
+    accroche: introduction
+    descriptif: recipe
+    duree: duration
+    niveau: skill
+    created: created
+    updated: updated
+    datePublication: publication date
+    dateExpiration: expiration date
+    image: picture
+    jamais: no modification
+    subEntitys: elements
+    parents: parents
+    parent: parent
+    elements: elements
+    icon: icon

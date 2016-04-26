@@ -1,25 +1,43 @@
-{% if sitedata is defined %}
+{% if sitedata.menuArticle|default(null) != null %}
 <div class="col-sm-3 col-md-3 padding-right-resp"><!--colonne left-->
 	<div class="left-sidebar"><!--left-sidebar-->
      	
 		<div class="panel-group category-products" id="accordian"><!--category-products-->
 
-			{% for item1 in sitedata.menuArticle.children %}
+			{% for item1 in sitedata.menuArticle.childrens %}
 			<div class="panel panel-default"><!--product {{ item1 }}-->
 				<div class="panel-heading">
 					<h4 class="panel-title">
+						{% if item1.childrens|length > 0 %}
 						<a data-toggle="collapse" data-parent="#accordian" href="#mainmenu-{{ item1.slug }}">
 							<span class="badge pull-right"><i class="fa fa-plus"></i></span>
 							{{ UCfirst(item1) }}
 						</a>
+						{% else %}
+							{% if item1.className == 'categorie' %}
+							<a href="{{ path('site_pageweb_categories', {categorieSlug: item1.slug }) }}">{{ UCfirst(item1) }}</a>
+							{% elseif item1.className == 'article' %}
+							<a href="{{ path('site_pageweb_categories', {categorieSlug: item1.slug }) }}">{{ UCfirst(item1) }}</a>
+							{% elseif item1.className == 'pageweb' %}
+							<a href="{{ path('site_pageweb_categories', {categorieSlug: item1.slug }) }}">{{ UCfirst(item1) }}</a>
+							{% endif %}
+						{% endif %}
 					</h4>
 				</div>
-				{% if item1.children is iterable %}
+				{% if item1.childrens|length > 0 %}
 				<div id="mainmenu-{{ item1.slug }}" class="panel-collapse collapse">
 					<div class="panel-body">
 						<ul>
-							{% for item2 in item1.children -%}
-							<li><a href="{{ path('site_pageweb_categories', {categorieSlug: item2.slug }) }}">{{ UCfirst(item2) }} </a></li>
+							{% for item2 in item1.childrens -%}
+							<li>
+								{% if item2.className == 'categorie' %}
+								<a href="{{ path('site_pageweb_categories', {categorieSlug: item2.slug }) }}">{{ UCfirst(item2) }}</a>
+								{% elseif item2.className == 'article' %}
+								<a href="{{ path('site_pageweb_categories', {categorieSlug: item2.slug }) }}">{{ UCfirst(item2) }}</a>
+								{% elseif item2.className == 'pageweb' %}
+								<a href="{{ path('site_pageweb_categories', {categorieSlug: item2.slug }) }}">{{ UCfirst(item2) }}</a>
+								{% endif %}
+							</li>
 							{%- endfor %}
 						</ul>
 					</div>

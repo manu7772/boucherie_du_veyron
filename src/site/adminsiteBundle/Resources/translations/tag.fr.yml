@@ -1,0 +1,25 @@
+name_s: tags
+name: tag
+not_found: 'aucun tag trouvé'
+x_found: '{0} aucun tag trouvé|{1} 1 tag trouvé|[2,+Inf] %count% tags trouvés'
+create: 'créer un nouveau tag'
+create_btn: 'nouveau tag'
+created: '{0} Aucun tag créé|{1} %count% tag a été créé : %list%|[2,+Inf] %count% tags ont été créés : %list%'
+new: '{0,1} nouveau tag|[2,+Inf] %count% nouveaux tags'
+backlist: 'retour à la liste des tags'
+backlist_btn: 'retour liste'
+dontexist: 'ce tag n''existe pas'
+existe: 'ce tag existe déjà'
+suppression: 'le tag %name% a été supprimé'
+moredetails: 'plus de détails sur %name%'
+index:
+    addSpeech: 'Pour ajouter plusieurs tags en une fois, séparez-les par des virgules'
+form:
+    select: Sélectionnez…
+fields:
+    id: id
+    nom: nom
+    created: création
+    updated: mis à jour
+    jamais: aucune modification
+    icon: icône

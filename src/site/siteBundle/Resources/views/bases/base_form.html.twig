@@ -1,61 +1,46 @@
-<!DOCTYPE html> <!-- HTML 5 -->
-<html lang="fr">
-	<head>
-		{% block entete %}
-		{{ include('sitesiteBundle:blocks:keywords.html.twig') }}
-		{% endblock entete %}
-		{% block favicon %}
-		{{ include('sitesiteBundle:blocks:favicon.html.twig') }}
-		{% endblock favicon %}
+{% extends 'sitesiteBundle:bases:base_simple.html.twig' %}
 
-		{% block css %}
-		{% stylesheets filter='cssrewrite, lessphp, ?yui_css'
-		'bundles/sitegraphics/bdv/css/bootstrap.min.css'
-		'bundles/sitegraphics/bdv/css/font-awesome.min.css'
-		'bundles/sitegraphics/framework_inspinia/font-awesome/less/font-awesome.less'
-		'bundles/sitegraphics/bdv/css/animate.css'
-		'bundles/sitegraphics/bdv/css/main.css'
-		'bundles/sitegraphics/bdv/css/responsive.css'
-		'bundles/siteadmin/framework_inspinia/cropper-master/dist/cropper.css'
-		 %}
-		<link rel="stylesheet" href="{{ asset_url }}" type="text/css" />
-		{% endstylesheets %}
-		{% block ielt9 %}
-		<!--[if lt IE 9]>
-		<script src="js/html5shiv.js"></script>
-		<script src="js/respond.min.js"></script>
-		<![endif]-->
-		{% endblock ielt9 %}
-		{% endblock css %}
-	</head>
-	<body>
-		{% block googleAnalyticScript %}
-		{{ include('sitesiteBundle:blocks:googleAnalyticScript.html.twig') }}
-		{% endblock googleAnalyticScript %}
+{% block css %}
+	{% stylesheets filter='cssrewrite, lessphp, ?yui_css'
+	'bundles/sitegraphics/bdv/css/bootstrap.min.css'
+	'bundles/sitegraphics/bdv/css/font-awesome.min.css'
+	'bundles/siteadmin/framework_inspinia/css/plugins/toastr/toastr.min.css'
+	'bundles/sitegraphics/framework_inspinia/font-awesome/less/font-awesome.less'
+	'bundles/sitegraphics/bdv/css/animate.css'
+	'bundles/sitegraphics/bdv/css/main.css'
+	'bundles/sitegraphics/bdv/css/responsive.css'
+	'bundles/siteadmin/framework_inspinia/cropper-master/dist/cropper.css'
+	'bundles/sitegraphics/fancyapps-fancyBox/source/jquery.fancybox.css'
+	 %}
+	<link rel="stylesheet" href="{{ asset_url }}" type="text/css" />
+	{% endstylesheets %}
+	{% block ielt9 %}
+	<!--[if lt IE 9]>
+	<script src="js/html5shiv.js"></script>
+	<script src="js/respond.min.js"></script>
+	<![endif]-->
+	{% endblock ielt9 %}
+{% endblock css %}
 
-		{% block body %}
-		<!-- CONTENU DE LA PAGE -->
-		{% endblock body %}
-
-		{% block js %}
-		{% javascripts filter='?yui_js'
-		'bundles/sitegraphics/bdv/js/jquery.js'
-		'bundles/sitegraphics/bdv/js/bootstrap.min.js'
-		'bundles/sitegraphics/bdv/js/jquery.scrollUp.min.js'
-		'bundles/sitegraphics/bdv/js/main.js'
-		'bundles/sitegraphics/bdv/js/specifics.js'
-		'bundles/siteadmin/framework_inspinia/cropper-master/dist/cropper.js'
-		'bundles/siteadmin/js/inspinia-cropper.js'
-		 %}
-		<script type="text/javascript" src="{{ asset_url }}"></script>
-		{% endjavascripts %}
-		<script type="text/javascript">
-		jQuery(document).ready(function($) {
-			{% block end_javascripts %}
-			{% endblock end_javascripts %}
-		});
-		</script>
-		{% endblock js %}
-
-	</body>
-</html>
+{% block js %}
+	{% javascripts filter='?yui_js'
+	'bundles/sitegraphics/bdv/js/jquery.js'
+	'bundles/sitegraphics/bdv/js/bootstrap.min.js'
+	'bundles/sitegraphics/bdv/js/jquery.scrollUp.min.js'
+	'bundles/siteadmin/framework_inspinia/js/plugins/toastr/toastr.min.js'
+	'bundles/sitegraphics/bdv/js/main.js'
+	'bundles/sitegraphics/bdv/js/specifics.js'
+	'bundles/siteadmin/framework_inspinia/cropper-master/dist/cropper.js'
+	'bundles/siteadmin/js/inspinia-cropper.js'
+	'bundles/siteadmin/js/inspinia-data-messages.js'
+	'bundles/sitegraphics/fancyapps-fancyBox/source/jquery.fancybox.js'
+	 %}
+	<script type="text/javascript" src="{{ asset_url }}"></script>
+	{% endjavascripts %}
+	<script type="text/javascript">
+	jQuery(document).ready(function($) {
+		{% block end_javascripts %}
+		{% endblock end_javascripts %}
+	});
+	</script>
+{% endblock js %}
