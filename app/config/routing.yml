@@ -1,14 +1,3 @@
-siteadminsite:
-    resource: "@siteadminsiteBundle/Resources/config/routing.yml"
-    prefix:   /
-
-main_admin:
-    path: /{_locale}
-    defaults: { _controller: siteadminsiteBundle:Default:index, _locale: %locale% }
-    host: "admin.boucherie-du-veyron.fr"
-    requirements:
-        _locale: %default_locales%
-
 main_home:
     path: /{_locale}
     host: "www.boucherie-du-veyron.{ext}"
@@ -16,6 +5,13 @@ main_home:
     requirements:
         _locale: %default_locales%
         ext: fr|com
+
+main_admin:
+    path: /{_locale}
+    defaults: { _controller: siteadminsiteBundle:Default:index, _locale: %locale% }
+    host: "admin.boucherie-du-veyron.fr"
+    requirements:
+        _locale: %default_locales%
 
 site_admin:
     resource: "@siteadminsiteBundle/Resources/config/routing.yml"
