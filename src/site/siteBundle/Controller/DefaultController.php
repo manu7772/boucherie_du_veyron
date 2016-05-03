@@ -42,7 +42,7 @@ class DefaultController extends Controller {
 					break;
 				default:
 					// WEB SITE
-					return $this->redirect('http://admin.boucherie-du-veyron.fr/'.$locale.'/generate');
+					return $this->redirect('http://admin.boucherie-du-veyron.fr/'.$locale.'/generate/create/statut');
 					break;
 			}
 		}
