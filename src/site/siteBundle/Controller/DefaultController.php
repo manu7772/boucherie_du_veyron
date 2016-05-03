@@ -29,6 +29,7 @@ class DefaultController extends Controller {
 			}
 		} else {
 			// si aucune page web… chargement de la page par défaut…
+			echo('<p>No data in base : user creation…</p>');
 			$userService = $this->get('service.users');
 			$userService->usersExist(true);
 			return $this->redirect($this->generateUrl('generate'));
