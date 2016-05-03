@@ -29,10 +29,22 @@ class DefaultController extends Controller {
 			}
 		} else {
 			// si aucune page web… chargement de la page par défaut…
+			$httpHost = $this->get('request')->getSchemeAndHttpHost();
+			$locale = $this->get('request')->getLocale();
 			echo('<p>No data in base : user creation…</p>');
+			echo('<p><strong>'.$httpHost.' / '.$locale.'</strong></p>');
 			$userService = $this->get('service.users');
 			$userService->usersExist(true);
-			return $this->redirect($this->generateUrl('generate'));
+			switch ($httpHost) {
+				case 'http://localhost':
+					// LOCALHOST
+					return $this->redirect($this->generateUrl('generate'));
+					break;
+				default:
+					// WEB SITE
+					return $this->redirect('http://admin.boucherie-du-veyron.fr/'.$locale.'/generate');
+					break;
+			}
 		}
 	}
 

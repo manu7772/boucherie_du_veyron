@@ -44,7 +44,6 @@ siteadminsiteBundle_bdv_path:
     host: "admin.boucherie-du-veyron.fr"
     requirements:
         _locale: %default_locales%
-        ext: fr|com
 
 siteadminsiteBundle_admin_bdv_fr:
     resource: "@siteadminsiteBundle/Resources/config/routing.yml"
