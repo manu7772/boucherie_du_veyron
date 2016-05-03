@@ -3,14 +3,14 @@ siteadminsite:
     prefix:   /
 
 main_admin:
-    pattern: /{_locale}
+    path: /{_locale}
     defaults: { _controller: siteadminBundle:Default:index, _locale: %locale% }
     host: "admin.boucherie-du-veyron.fr"
     requirements:
         _locale: %default_locales%
 
 main_home:
-    pattern: /{_locale}
+    path: /{_locale}
     host: "www.boucherie-du-veyron.{ext}"
     defaults: { _controller: sitesiteBundle:Default:index, _locale: %locale%, ext: fr }
     requirements:

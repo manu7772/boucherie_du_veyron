@@ -40,7 +40,7 @@ class aeSite extends aeEntity {
             $get = $this->getMethodOfSetting($field, $entity, true);
             $set = $this->getMethodOfGetting($field, $entity, true);
             $image = $entity->$get();
-            if(is_object($image)) {
+            if($image instanceOf site\adminBundle\Entity\image) {
                 $infoForPersist = $image->getInfoForPersist();
                 $this->container->get('aetools.debug')->debugFile($infoForPersist);
                 if($infoForPersist['removeImage'] === true || $infoForPersist['removeImage'] === 'true') {

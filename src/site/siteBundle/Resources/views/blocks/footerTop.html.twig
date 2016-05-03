@@ -12,7 +12,7 @@
 							<li><a href="{{ path('site_pageweb', {pageweb: item2.slug }) }}">{{ UCfirst(item2) }}</a></li>
 							{%- endfor -%}
 						{%- else -%}
-							{%- for item2 in item1.children -%}
+							{%- for item2 in item1.childrens -%}
 							<li><a href="{{ path('site_pageweb_categories', {categorieSlug: item2.slug }) }}">{{ UCfirst(item2) }}</a></li>
 							{%- endfor -%}
 						{%- endif %}
