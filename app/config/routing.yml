@@ -1,19 +1,44 @@
-main_home:
+# main_admin:
+#     path: /{_locale}
+#     defaults: { _controller: siteadminsiteBundle:Default:index, _locale: %locale% }
+#     host: "admin.boucherie-du-veyron.fr"
+#     requirements:
+#         _locale: %default_locales%
+
+# main_home:
+#     path: /{_locale}
+#     host: "www.boucherie-du-veyron.{ext}"
+#     defaults: { _controller: sitesiteBundle:Default:index, _locale: %locale%, ext: 'fr' }
+#     requirements:
+#         _locale: %default_locales%
+#         ext: fr|com
+
+
+
+
+
+#############################
+# boucherie-du-veyron
+#############################
+
+sitesiteBundle_bdv_path:
     path: /{_locale}
+    defaults: { _controller: sitesiteBundle:Default:index, _locale: %locale% }
     host: "www.boucherie-du-veyron.{ext}"
-    defaults: { _controller: sitesiteBundle:Default:index, _locale: %locale%, ext: fr }
     requirements:
         _locale: %default_locales%
         ext: fr|com
 
-main_admin:
-    path: /{_locale}
-    defaults: { _controller: siteadminsiteBundle:Default:index, _locale: %locale% }
-    host: "admin.boucherie-du-veyron.fr"
+sitesiteBundle_www_bdv_fr:
+    resource: "@sitesiteBundle/Resources/config/routing.yml"
+    prefix:   /{_locale}
+    defaults: { _locale: %locale%, ext: fr }
+    host: "www.boucherie-du-veyron.{ext}"
     requirements:
         _locale: %default_locales%
+        ext: fr|com
 
-site_admin:
+siteadminsiteBundle_admin_bdv_fr:
     resource: "@siteadminsiteBundle/Resources/config/routing.yml"
     prefix:   /{_locale}
     defaults: { _locale: %locale% }
@@ -21,14 +46,36 @@ site_admin:
     requirements:
         _locale: %default_locales%
 
-site_site:
-    resource: "@sitesiteBundle/Resources/config/routing.yml"
-    host: "www.boucherie-du-veyron.{ext}"
-    prefix:   /{_locale}
-    defaults: { _locale: %locale%, ext: fr }
+
+#############################
+# localhost
+#############################
+
+sitesiteBundle_local_path:
+    path: /{_locale}
+    defaults: { _controller: sitesiteBundle:Default:index, _locale: %locale% }
+    # host: "localhost"
     requirements:
         _locale: %default_locales%
-        ext: fr|com
+
+sitesiteBundle_local:
+    resource: "@sitesiteBundle/Resources/config/routing.yml"
+    prefix:   /{_locale}
+    defaults: { _locale: %locale% }
+    # host: "localhost"
+    requirements:
+        _locale: %default_locales%
+
+siteadminsiteBundle_local:
+    resource: "@siteadminsiteBundle/Resources/config/routing.yml"
+    prefix:   /{_locale}/admin
+    defaults: { _locale: %locale% }
+    # host: "localhost"
+    requirements:
+        _locale: %default_locales%
+
+
+
 
 site_translate:
     resource: "@sitetranslateBundle/Resources/config/routing.yml"

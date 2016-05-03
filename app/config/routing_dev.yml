@@ -17,22 +17,22 @@ _errors:
 _main:
     resource: routing.yml
 
-site_admin:
-    resource: "@siteadminBundle/Resources/config/routing.yml"
-    prefix:   /{_locale}/admin
-    defaults: { _locale: %locale% }
-    requirements:
-        _locale: %default_locales%
+# site_admin:
+#     resource: "@siteadminsiteBundle/Resources/config/routing.yml"
+#     prefix:   /{_locale}/admin
+#     defaults: { _locale: %locale% }
+#     requirements:
+#         _locale: %default_locales%
 
-main_home:
-    pattern: /{_locale}
-    defaults: { _controller: sitesiteBundle:Default:index, _locale: %locale% }
-    requirements:
-        _locale: %default_locales%
+# main_home:
+#     pattern: /{_locale}
+#     defaults: { _controller: sitesiteBundle:Default:index, _locale: %locale% }
+#     requirements:
+#         _locale: %default_locales%
 
-site_site:
-    resource: "@sitesiteBundle/Resources/config/routing.yml"
-    prefix:   /{_locale}
-    defaults: { _locale: %locale% }
-    requirements:
-        _locale: %default_locales%
+# site_site:
+#     resource: "@sitesiteBundle/Resources/config/routing.yml"
+#     prefix:   /{_locale}
+#     defaults: { _locale: %locale% }
+#     requirements:
+#         _locale: %default_locales%
