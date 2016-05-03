@@ -4,8 +4,10 @@ namespace site\adminBundle\services;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\DBAL\Types\Type;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Doctrine\ORM\EntityManager;
 // aetools
 use site\adminBundle\services\aetools;
+use site\adminBundle\services\aeReponse;
 
 // informations classes
 use Doctrine\ORM\Mapping\ClassMetadataInfo;
@@ -21,58 +23,42 @@ use \DateTime;
 use \Date;
 use \Time;
 
+/**
+ * @dev classe temporairement en travaux
+ */
 class aeEntity extends aetools {
 
-	const NOM_OBJET_TYPE 		= "objet_type";		// nom de l'objet type basique
-	const NOM_OBJET_READY 		= "objet_ready";	// nom de l'objet rempli avec les valeurs par défaut
+	const NAME					= 'aeEntity'; 		// nom du service
+	const CALL_NAME				= 'aetools.aeEntity'; // comment appeler le service depuis le controller/container
+
 	const REPO_DEFAULT_VAL		= "defaultVal";		// méthode repository pour récupération des entités par défaut
-	const ONLY_CONCRETE			= true;				// ne récupère que les entités concrètes (non abstract ou interface)
-	const CURRENT_ADDED			= 'current';		// paramètre pour new object : ajouter la version courante
-	const DEFAULT_ADDED			= 'defaultVersion';	// paramètre pour new object : ajouter la version par défaut (champ : 'defaultVersion' = 1)
-	const CHAMP_SUBSTVERSION	= 'slug';			// nom du champ substitutif pour version d'une entité (pour éviter une requête supplémentaire lors de la recherche de la version de l'entité)
-	const VALUE_DEFAULT			= "defaultVal";
 
 	const COLLECTION_ASSOC_NAME	= "collection";		// nom pour le type collection
 	const SINGLE_ASSOC_NAME		= "single";			// nom pour le type single
-	const MULTI_ASSOC 			= "";				// ajout au getter de relation type collection
-	// VERSION
-	const ALLVERSIONS_NAME		= "allVersions";
-	const CURRENTVERSION_NAME	= "currentVersion";
+
 
 	// ENTITÉS / ENTITÉ COURANTE
 	protected $entity = array();			// tableau des entités
 	protected $current = null;				// className (nom long) de l'entité courante
 	protected $onlyConcrete;
 
-	protected $currentVersion;				// objet version courante
-
 	protected $CMD;							// array de classMetaData
 	protected $_em = false;					// entity_manager
 	protected $repo;						// repository
 
-	protected $version;						// données de version en session (array)
-	protected $versionClassName = false;	// className de l'entité servant de version
-	protected $versionsActives = null;		// boolean : système de version actif ou non
-	protected $champSubstitutifForVersion;	// champ substitutif contenant le slug (ou autre) de la version de l'entité
-
 	protected $listOfEnties = null;			// liste des entités de src
-	protected $completeListOfEnties = null;	// liste des entités complète
-
-
-	public function __construct(ContainerInterface $container = null, $em = null) {
-		parent::__construct($container);
-		$this->_em = $em; // ---> IMPORTANT : l'entityListener fournit SON entityManager !!
-		$this->initDataaeEntities();
-		return $this;
-	}
+	protected $listOfExtendedEnties = null;	// liste des entités complète
 
 	/**
-	 * Initialise les données pour le service
+	 * Constructeur
+	 * @valid méthode validée
+	 * @param ContainerInterface $container = null
+	 * @param EntityManager $em = null
 	 * @return aeEntity
 	 */
-	protected function initDataaeEntities() {
-		// echo("<p style='color:red'>SERVICE classe : ".$this->getShortName()."</p>");
-		// autres données sans controller
+	public function __construct(ContainerInterface $container = null, EntityManager $em = null) {
+		parent::__construct($container);
+		$this->_em = $em; // ---> IMPORTANT : l'entityListener fournit SON entityManager !!
 		$this->getEm();
 		$this->repo = array();
 		$this->CMD = array();
@@ -80,32 +66,35 @@ class aeEntity extends aetools {
 		if($this->isControllerPresent() === true) {
 			// autre données dépendant du controller
 		}
-		$this->setOnlyConcrete();
-		// Versions
-		$this->currentVersion = false;
-		if($this->isVersionActive() !== false) {
-			$this->getCurrentVersion();
-			$this->champSubstitutifForVersion = $this->getMethodNameWith(self::CHAMP_SUBSTVERSION, $this->getVersionEntityShortName());
-		}
+
+		$this->setOnlyConcrete(true);
+		$this->container->get('aetools.debug')->debugNamedFile('listOfEntities', array("onlyConcrete" => $this->getOnlyConcrete()), true, true);
+		$this->getListOfEnties(true, true);
 		return $this;
 	}
 
+	public function getNom() {
+		return self::NAME;
+	}
 
+	public function callName() {
+		return self::CALL_NAME;
+	}
 
 
 
 	/**
 	 * Renvoie le service de l'entité
-	 * Renvoie les services/entités parents dans l'ordre, puis aeEntity par défaut si non trouvé
-	 * @param mixed $entityShortName
-	 * @return object
+	 * Renvoie les services/entités parents dans l'ordre, puis aeEntity en dernier recours
+	 * @param mixed $entity
+	 * @return object / null
 	 */
 	public function getEntityService($entity) {
 		if(is_object($entity)) {
 			$entityClassName = get_class($entity);
 			$entityShortName = $entity->getClassName();
 		} else if(is_string($entity)) {
-			if(preg_match('#([a-zA-Z_-]+\/)+Entity\/[a-zA-Z_-]{2,}$#', $entity)) {
+			if($this->isLongName($entity)) {
 				// $entity = nom long
 				$entityClassName = $entity;
 				$entityShortName = $this->getEntityShortName($entity);
@@ -138,333 +127,170 @@ class aeEntity extends aetools {
 		return null;
 	}
 
-    /**
-     * Check entity after change (edit…)
-     * $butEntities permet d'éviter la récursion infinie !! Ne pas oublier !
-     * @param baseEntity &$entity
-     * @param baseEntity $butEntities = []
-	 * @return aeEntity
-     */
-    public function checkAfterChange(baseEntity &$entity, $butEntities = []) {
-    	// if(method_exists($entity, 'check')) $entity->check();
-        // Check statut… etc.
-        // $this->checkStatuts($entity, false);
-        $this->checkInversedLinks($entity, false, $butEntities);
-        return $this;
-    }
-
-	/**
-	 * Persist en flush a baseEntity
-	 * @param baseEntity $entity
-	 * @return aeReponse
-	 */
-	public function NOsave(baseEntity &$entity, $flush = true) {
-		$aeReponse = $this->container->get('aetools.aeReponse');
-		$response = true;
-		$sadmin = false;
-		$user = $this->container->get('security.context')->getToken()->getUser();
-		if(is_object($user)) if($user->getBestRole() == 'ROLE_SUPER_ADMIN') $sadmin = true;
-		$message = 'Entité enregistrée.';
-		try {
-			$this->_em->persist($entity);
-		} catch (Exception $e) {
-			$response = false;
-			if(($this->isDev() && $sadmin) === true)
-				$message = $e->getMessage();
-				else $message = 'Erreur système.';
-		}
-		if($flush === true) {
-			try {
-				$this->_em->flush();
-			} catch (Exception $e) {
-				$response = false;
-				if(($this->isDev() && $sadmin) === true)
-					$message = $e->getMessage();
-					else $message = 'Erreur système.';
-			}
-		}
-		return $aeReponse
-			->setResult($response)
-			->setMessage($message)
-			->setData(array('id' => $entity->getId()))
-			;
-		// return $this;
-	}
-
-	/**
-	 * Persist en flush a baseEntity / pour tests
-	 * @param baseEntity $entity
-	 * @return aeReponse
-	 */
-	public function save(baseEntity &$entity, $flush = true) {
-		$response = true;
-		$message = 'Entité enregistrée.';
-		if($entity->getId() == null) $this->_em->persist($entity);
-		if($flush === true) $this->_em->flush();
-		return $this
-			->container->get('aetools.aeReponse')
-			->setResult($response)
-			->setMessage($message)
-			->setData(array('id' => $entity->getId()))
-			;
-	}
-
 
 
 
 
 
 	/**
-	 * Définit le mode de récupération de la liste des entités
-	 * @param boolean $val - true : ne récupère que les entités concrètes / false : récupère tout
+	 * Set mode de récupération de la liste des entités
+	 * @param boolean $onlyConcrete - true : ne récupère que les entités concrètes / false : récupère tout
 	 * @return boolean
 	 */
-	public function setOnlyConcrete($val = null) {
-		$val !== false ? $this->onlyConcrete = self::ONLY_CONCRETE : $this->onlyConcrete = !self::ONLY_CONCRETE;
+	public function setOnlyConcrete($onlyConcrete = true) {
+		$this->onlyConcrete = (boolean) $onlyConcrete;
+		return $this;
+	}
+
+	/**
+	 * Get mode de récupération de la liste des entités
+	 * @return boolean
+	 */
+	public function getOnlyConcrete() {
 		return $this->onlyConcrete;
 	}
 
-	/**
-	 * Appel direct à une méthode du repository de l'entité courante
-	 * @param string $methode
-	 * @param mixed $params
-	 * @return mixed
-	 */
-	// public function __call($methode, $params = null) {
-	// 	return $this->callRepo($methode, $params);
-	// }
 
-	// public function callRepo($methode, $params = null) {
-	// 	$repo = $this->getRepo($this->current);
-	// 	if($repo !== false) {
-	// 		if(method_exists($repo, $methode)) {
-	// 			$reFunc = new ReflectionMethod($repo, $methode);
-	// 			$funParams = $reFunc->getParameters();
-	// 			// var_dump($reFunc->getParameters());
-	// 			$required = 0;
-	// 			$optional = 0;
-	// 			$nbparams = 0;
-	// 			foreach($funParams as $RP) {
-	// 				$RP->isOptional() === true ? $optional++ : $required++;
-	// 				$nbparams++;
-	// 				// echo($RP->getPosition().' Nom : '.$RP->getName()."<br>");
-	// 				// echo(' - Position : '.$RP->getPosition()."<br>");
-	// 				// echo(' - Default : '.$RP->isDefaultValueAvailable()." (".gettype($RP->isDefaultValueAvailable()).")<br>");
-	// 				// if($RP->isDefaultValueAvailable()) echo(' - Valeur default : '.$RP->getDefaultValue()."<br>");
-	// 				// echo(' - Optionnel : '.$RP->isOptional()." (".gettype($RP->isOptional()).")<br>");
-	// 				// echo("<br>");
-	// 			}
-	// 			if($params < $required) throw new Exception("Nombre de paramètres insuffisant : ".$required." requis, seulement ".$params." fournis.", 1);
-	// 			switch(count($params)) {
-	// 				case 1: $result = $this->getRepo()->$methode($params[0]); break;					
-	// 				case 2: $result = $this->getRepo()->$methode($params[0], $params[1]); break;					
-	// 				case 3: $result = $this->getRepo()->$methode($params[0], $params[1], $params[2]); break;					
-	// 				case 4: $result = $this->getRepo()->$methode($params[0], $params[1], $params[2], $params[3]); break;					
-	// 				case 5: $result = $this->getRepo()->$methode($params[0], $params[1], $params[2], $params[3], $params[4]); break;					
-	// 				case 6: $result = $this->getRepo()->$methode($params[0], $params[1], $params[2], $params[3], $params[4], $params[5]); break;					
-	// 				case 7: $result = $this->getRepo()->$methode($params[0], $params[1], $params[2], $params[3], $params[4], $params[5], $params[6]); break;					
-	// 				default: $result = $this->getRepo()->$methode(); break;
-	// 			}
-	// 			return $result;
-	// 		} else throw new Exception("Méthode \"".$methode."\" inconnue (Repository : \"".get_class($this->getRepo())."\")", 1);
-	// 	}
-	// 	return false;
-	// }
+
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////////
-	// VERSIONS
+	// CLASSES D'ENTITES
 	////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-	/**
-	 * Renvoie si le système de versions est actif (si une entité de type version existe)
-	 * @return boolean
-	 */
-	public function isVersionActive() {
-		if($this->versionsActives === null) {
-			$this->versionsActives = false;
-			$this->setOnlyConcrete(true);
-			foreach($this->getListOfEnties(false) as $entity => $shortname) {
-				$entity = new $entity;
-				if(method_exists($entity, "__call")) {
-					if($entity->isVersion()) {
-						$this->versionClassName = get_class($entity);
-						$this->versionsActives = true;
-					}
-				}
-			}
-			if($this->versionsActives === false) $this->writeConsole(">>>>> SYSTÈME DE VERSIONS INACTIF ! <<<<<", 'error');
-		}
-		// throw new Exception("Service version : aucune entité de version n'existe.");
-		return $this->versionsActives;
-	}
-
-	/**
-	 * Renvoie les données sur la version courante
-	 * Données stockées en session
-	 * @return array
-	 */
-	public function getCurrentVersion() {
-		// // pas de version en activité
-		// if($this->isVersionActive() !== true) return false;
-		// // version mémorisée, on la renvoie
-		// if($this->currentVersion !== false) return $this->currentVersion;
-		// // récupération de la version si elle n'était pas mémorisée
-		// if($this->isControllerPresent()) {
-		// 	// controller présent
-		// 	$ver = $this->getEm()
-		// 		->getRepository($this->getVersionEntityClassName())
-		// 		->findVersionWithLinks($ver, 'slug', $this->getConfig('version_in_session'));
-		// 	if(count($ver) > 0) $this->currentVersion = reset($ver);
-		// }
-		return $this->currentVersion;
-	}
-
-	/**
-	 * Renvoie le slug la version courante
-	 * @return string
-	 */
-	public function getCurrentVersionSlug() {
-		if($this->isVersionActive() !== true) return false;
-		if($this->getCurrentVersion() !== false) {
-			return $this->currentVersion->getSlug();
-		}
-		return false;
-	}
-
-	/**
-	 * Renvoie le nom la version courante
-	 * @return string
-	 */
-	public function getCurrentVersionNom() {
-		if($this->isVersionActive() !== true) return false;
-		if($this->getCurrentVersion() !== false) {
-			return $this->currentVersion->getNom();
-		}
-		return false;
-	}
-
-	/**
-	 * Renvoie le nom de la classe servant de version
-	 * @return string - false si aucune entité version
-	 */
-	public function getVersionEntityClassName() {
-		if($this->isVersionActive() !== true) return false;
-		return $this->versionClassName;
-	}
-
-	/**
-	 * Renvoie le nom court de la classe servant de version
-	 * @return string - false si aucune entité version
-	 */
-	public function getVersionEntityShortName() {
-		if($this->isVersionActive() !== true) return false;
-		return $this->getClassShortName($this->getVersionEntityClassName());
-	}
-
-	/**
-	 * Renvoie le nom de la classe
-	 * @return string
-	 */
-	public function getName() {
-		return get_class($this);
-		// return get_called_class();
-	}
-
-	/**
-	 * Renvoie le nom de la classe
-	 * @return string
-	 */
-	public function getShortName() {
-		return $this->getClassShortName($this->getName());
-	}
 
 	/**
 	 * Vérifie si une entité existe : si oui, renvoie le className
-	 * @param mixed $name - nom long ou court (ou objet)
+	 * @param string $name - className ou shortName
 	 * @param boolean $extended - recherche étendue à toutes ou uniquement /src
 	 * @param boolean $getShortName - true = renvoie le nom court plutôt que le className
 	 * @return string / false si l'entité n'existe pas
 	 */
 	public function entityClassExists($name, $extended = false, $getShortName = false) {
-		if(is_bool($name)) return false;
-		if(is_string($name)) if(preg_match('#^Proxies#', $name)) return false;
-		// if(is_array($name)) $name = reset($name);
-		// echo('Type : '.gettype($name).'<br>');
 		if(is_object($name)) $name = get_class($name);
-		if(in_array($name, $this->getListOfEnties($extended))) {
-			$find = array_keys($this->completeListOfEnties, $name);
-			return $getShortName === true ? $name : reset($find);
+		if(!is_string($name)) return false;
+		if($this->isProxyClass($name)) {
+			// Proxies
+			return false;
+		}
+		// Extended
+		$extended ? $list = $this->getListOfAllEntities() : $list = $this->getListOfEnties() ;
+		// search…
+		if(in_array($name, $list)) {
+			$find = array_keys($list, $name)[0];
+			return $getShortName === true ? $name : $find;
 		}
 		// le nom est déjà un nom long : on le renvoie tel quel
-		if(array_key_exists($name, $this->getListOfEnties($extended))) {
-			return $getShortName === true ? $this->completeListOfEnties[$name] : $name;
+		if(array_key_exists($name, $list)) {
+			return $getShortName === true ? $list[$name] : $name;
 		}
 		// sinon, renvoie false : l'entité n'existe pas
 		return false;
 	}
 
 	/**
-	 * Renvoie le className de l'entité courante (ou de l'entité passée en paramètre) si elle existe
-	 * @param mixed $entity
+	 * Vérifie si une entité proxy existe dans le dossier /src
+	 * Si oui, renvoie le className de l'entité (non proxy, donc)
+	 * @dev Méthode à développer
+	 * @param string $proxyName - className de type proxy
+	 * @param boolean $getShortName - true = renvoie le nom court plutôt que le className
 	 * @return string / false si l'entité n'existe pas
 	 */
-	public function getEntityClassName($entity = null) {
+	public function isProxyInSrcEntities($proxyName, $getShortName = false) {
+		return $proxyName;
+	}
+
+	/**
+	 * Renvoie le className de l'entité courante (ou de l'entité passée en paramètre) si elle existe
+	 * @param mixed $entity
+	 * @param boolean $extended - recherche étendue à toutes ou uniquement /src
+	 * @return string / false si l'entité n'existe pas
+	 */
+	public function getEntityClassName($entity = null, $extended = false) {
 		if($entity === null) $entity = $this->current;
 		if(is_object($entity)) $entity = get_class($entity);
-		return $this->entityClassExists($entity, false, false);
+		return $this->entityClassExists($entity, $extended, false);
 	}
 
 	/**
 	 * Renvoie le nom court de l'entité courante (ou de l'entité passée en paramètre) si elle existe
 	 * @param mixed $entity
+	 * @param boolean $extended - recherche étendue à toutes ou uniquement /src
 	 * @return string / false si l'entité n'existe pas
 	 */
-	public function getEntityShortName($entity = null) {
+	public function getEntityShortName($entity = null, $extended = false) {
 		if($entity === null) $entity = $this->current;
 		if(is_object($entity)) $entity = get_class($entity);
-		return $this->entityClassExists($entity, false, true);
+		return $this->entityClassExists($entity, $extended, true);
 	}
 
 	/**
-	 * Renvoie un array des entités contenues dans src (ou toutes les entités, si $extended = true)
-	 * Sous la forme liste[shortName] = nameSpace
-	 * @param boolean $extended
-	 * @param boolean $force
+	 * Get array des entités contenues dans src (ou toutes les entités, si $extended = true)
+	 * Sous la forme liste[nameSpace] = shortName (ou inverse si $fliped = true)
+	 * @param boolean $extended = false
+	 * @param boolean $force = false
+	 * @param fliped $force = false
 	 * @return array
 	 */
-	public function getListOfEnties($extended = false, $force = false) {
-		if($this->listOfEnties === null || $this->completeListOfEnties === null || $force === true) {
+	public function getListOfEnties($extended = false, $force = false, $fliped = false) {
+		if($this->listOfEnties === null || $this->listOfExtendedEnties === null || $force === true) {
 			$this->listOfEnties = array();
-			$this->completeListOfEnties = array();
+			$this->listOfExtendedEnties = array();
 			$entitiesNameSpaces = $this->getEm()->getConfiguration()->getMetadataDriverImpl()->getAllClassNames();
-			// $this->writeTableConsole('Configuration > MetadataDriverImpl > AllClassNames > ', $entitiesNameSpaces);
 			// recherche de tous les dossiers de src/ (donc tous les groupes de bundles)
-			$groupesSRC = $this->exploreDir("src/", null, "dossiers", false);
-			$groupes = array();
-			foreach($groupesSRC as $nom) $groupes[] = $nom['nom'];
-			// var_dump($groupes);die();
+			$groupes = $this->getSrcGroupes(false);
 			foreach($entitiesNameSpaces as $ENS) {
-				$do_it = true;
-				if($this->onlyConcrete === true) {
-					// supprime les classes abstraites et les interfaces
-					$CMD = $this->getClassMetadata($ENS, true);
-					if(is_object($CMD)) {
-						$reflectionClass = $CMD->getReflectionClass();
-						if($reflectionClass->isAbstract() || $reflectionClass->isInterface()) $do_it = false;
-					} else $do_it = false;
-				}
-				if($do_it === true) {
-					$EE = $this->getClassShortName($ENS);
-					$exp = explode(self::ASLASH, $ENS);
-					$group = reset($exp);
-					if(in_array($group, $groupes)) $this->listOfEnties[$ENS] = $EE;
-					$this->completeListOfEnties[$ENS] = $EE;
+				// $this->onlyConcrete : supprime les classes abstraites et les interfaces
+				$CMD = $this->getClassMetadata($ENS);
+				if(is_object($CMD)) {
+					$reflectionClass = $CMD->getReflectionClass();
+					if(!($reflectionClass->isAbstract() || $reflectionClass->isInterface()) || $this->onlyConcrete == false) {
+						$EE = $this->getClassShortName($CMD->getName());
+						if(preg_match("#^(".implode('|', $groupes).")#", $ENS)) $this->listOfEnties[$ENS] = $EE;
+							else $this->listOfExtendedEnties[$ENS] = $EE;
+					}
 				}
 			}
-			// affichage terminal des listes d'entités
+			// DEBUG
+			$this->container->get('aetools.debug')->debugNamedFile(
+				'listOfEntities',
+				array(
+					"call" => "Fist call : define data.",
+					'groupes' => $groupes,
+					'listOfExtendedEnties' => $this->listOfExtendedEnties,
+					'listOfEnties' => $this->listOfEnties,
+					'entitiesNameSpaces' => $entitiesNameSpaces,
+					'ClassMetadatas' => $this->CMD,
+					)
+				);
+		} else {
+			$this->container->get('aetools.debug')->debugNamedFile(
+				'listOfEntities',
+				array(
+					"call" => "data allready defined.",
+					'listOfExtendedEnties' => $this->listOfExtendedEnties,
+					'listOfEnties' => $this->listOfEnties,
+					'ClassMetadatas' => $this->CMD,
+					)
+				);
 		}
-		// var_dump($this->listOfEnties);die();
-		return $extended === false ? $this->listOfEnties : $this->completeListOfEnties ;
+		if($fliped == true) {
+			return $extended == false ? array_flip($this->listOfEnties) : array_flip($this->listOfExtendedEnties) ;
+		} else {
+			return $extended == false ? $this->listOfEnties : $this->listOfExtendedEnties ;
+		}
+	}
+
+	/**
+	 * Get array de toutes les entités
+	 * Sous la forme liste[nameSpace] = shortName
+	 * ATTENTION : impossible de faire un flip, car certaines entités ont le même shortName
+	 * @param boolean $force = false
+	 * @return array
+	 */
+	public function getListOfAllEntities($force = false) {
+		return array_merge(
+			$this->getListOfEnties(false, $force), // site
+			$this->getListOfEnties(true, $force) // extendeds/system
+			);
 	}
 
 	/**
@@ -472,24 +298,19 @@ class aeEntity extends aetools {
 	 * @param string $classEntite
 	 */
 	public function defineEntity($classEntite) {
-		// $this->consoleLog("defineEntity 1 : ".$classEntite);
+		// $this->getListOfEnties();
+		// echo('<p>'.json_encode($classEntite).'</p>');
 		// récupère le nom long s'il est en version courte
-		$classEntite = $this->entityClassExists($classEntite);
-		// $this->consoleLog("defineEntity 2 : ".$classEntite);
-		$shortName = $this->getEntityShortName($classEntite);
-		// $this->consoleLog("defineEntity 3 : ".$shortName);
+		$classEntite = $this->entityClassExists($classEntite, true);
+		$shortName = $this->getEntityShortName($classEntite, true);
 		if($classEntite !== false) {
 			// l'entité existe
 			// $this->writeConsole('***** Changement d\'entité : '.$classEntite." *****", 'error');
 			$this->current = $classEntite;
 			$this->serviceNom = $shortName;
-			// $this->consoleLog("defineEntity 4 : ".$this->current);
 			if(!$this->isDefined($this->current)) {
-				// $this->consoleLog("defineEntity 5 : ".$this->current." - non définie…");
 				// l'entité n'est pas initialisée, on la crée
 				$this->entity[$this->current] = array();
-				// $this->entity[$this->current][self::NOM_OBJET_TYPE] = $this->newObject($classEntite, false);
-				// $this->entity[$this->current][self::NOM_OBJET_READY] = $this->newObject($classEntite, true);
 				$this->entity[$this->current]['className'] = $this->current;
 				$this->entity[$this->current]['name'] = $shortName;
 			}
@@ -497,6 +318,7 @@ class aeEntity extends aetools {
 			$this->getRepo($this->current);
 		} else {
 			// l'entité n'existe pas
+			// throw new Exception("L'entité ".json_encode($classEntite)." n'existe pas dans la liste ".json_encode($this->getListOfEnties(false)), 1);
 			return false;
 		}
 		return $this;
@@ -542,84 +364,6 @@ class aeEntity extends aetools {
 	}
 
 	/**
-	 * Renvoie un nouvel objet entité
-	 * si $loadDefaults = true, charge les valeurs par défaut des entités liées
-	 * $version -> si string, préciser le champ, puis la valeur, séparés par un pipe "|" (ex. : "cible|v1")
-	 *			-> objet version
-	 *          -> pour la version courante, mettre aeEntity::CURRENT_ADDED ou true
-	 *          -> pour la version par défaut, mettre aeEntity::DEFAULT_ADDED (version par défaut (champ : 'defaultVersion' = 1))
-	 *          -> pour ne pas ajouter de version, mettre false
-	 * $loadDefaults
-	 *          -> boolean ou array de booleans/repoMethodes des champs à remplir avec entités par défaut
-	 *          (ex. : ['version'] = true / ['version'] = 'defaultVal' / ['version'] = aeEntity::CURRENT_ADDED / ['version'] = false)
-	 * @param string $classEntite
-	 * @param mixed $loadDefaults
-	 * @param mixed $version - champ|valeur ou objet de la version
-	 * @return object
-	 */
-	public function newObject($classEntite = null, $loadDefaults = false, $version = true) {
-		if($version === true) $version = self::CURRENT_ADDED;
-		if($version === false) $version = null;
-		// entité par défaut si non précisée
-		$classEntite = $this->getEntityClassName($classEntite);
-		if($classEntite !== false) {
-			// l'entité existe… on la crée
-			$newObject = new $classEntite();
-			$associationFieldNames = $this->getAssociationNamesOfEntity($newObject);
-			// version par défaut demandée
-			if(in_array($this->getVersionEntityShortName(), $associationFieldNames) && $this->isVersionActive()) {
-				$versionClassName = $this->getVersionEntityClassName();
-				// un champ "version" existe…
-				if($version === self::CURRENT_ADDED) {
-					// version courante
-					if($this->getCurrentVersionSlug() !== false) {
-						$version = 'slug|'.$this->getCurrentVersionSlug();
-					} else $version = null;
-				} else if($version === self::CURRENT_ADDED) {
-					// version par défaut
-					$version .= '|true';
-				}
-				// IMPORTANT : ATTRIBUTION DE LA VERSION EN PREMIER LIEU !!
-				// recherche de la version si précisée en texte…
-				if(is_string($version)) {
-					$versionFind = explode('|', $version);
-					if($versionFind[1] == "true") $versionFind[1] = true;
-					if($versionFind[1] == "false") $versionFind[1] = false;
-					if(count($versionFind) == 2) {
-						$this->fillAssociatedField($this->getVersionEntityShortName(), $newObject, array($versionFind[0] => $versionFind[1]), false);
-					}
-				} else if($version instanceOf $versionClassName) {
-					$this->fillAssociatedField($this->getVersionEntityShortName(), $newObject, $version, false);
-				}
-			}
-			if($loadDefaults !== false) {
-				// ajout des relations par défaut
-				$defaultFields = array();
-				if(!is_array($loadDefaults)) {
-					// création du tableau des entités
-					foreach($associationFieldNames as $field) $defaultFields[$field] = self::REPO_DEFAULT_VAL;
-				} else {
-					// tableau fourni en paramètre
-					foreach ($loadDefaults as $field => $repoMethod) {
-						if($repoMethod === true) $repoMethod = self::REPO_DEFAULT_VAL;
-						if(is_string($repoMethod) && in_array($field, $associationFieldNames)) $defaultFields[$field] = $repoMethod;
-					}
-				}
-				// load…
-				// echo('<h3>Entite : '.$classEntite.'</h3>');
-				foreach($defaultFields as $field => $value) {
-					// echo('Field : '.$field.' / val. : '.$value.'<br>');
-					$this->fillAssociatedField($field, $newObject, array($field => $value), true);
-				}
-			}
-		} else {
-			$tp = 'type ';if(!is_string($classEntite)) $classEntite = gettype($classEntite);else $tp = '';
-			throw new Exception("Entité non reconnue (".$tp."\"".$classEntite."\"). (".$this->getName()."::newObject() / Ligne ".__LINE__.")", 1);
-		}
-		return $newObject;
-	}
-
-	/**
 	 * Remplit les données d'une entité $object 
 	 * Gère les relations bidirectionnelles si elles ne sont pas gérées par les entités elles-mêmes
 	 * $what : éléments à ajouter : ARRAY de :
@@ -631,72 +375,20 @@ class aeEntity extends aetools {
 	 * @param string $field
 	 * @param object &$object
 	 * @param mixed $what
-	 * @param boolean $testVersions
+	 * @return aeEntity
 	 */
-	public function fillAllAssociatedFields(&$object, $what = null, $testVersions = true) {
-		if($what === null) $what = self::VALUE_DEFAULT;
-		if($this->isVersionActive() !== true) $testVersions = false;
+	public function fillAllAssociatedFields(&$object, $what = null) {
+		if($what === null) $what = self::REPO_DEFAULT_VAL;
 		if($this->entityClassExists($object) !== false && is_object($object)) {
-			$this->writeConsole('Remplissage de l\'entité '.get_class($object), 'succes');
-			// echo('<h2>'.$object->getClassName().'</h2>');
 			foreach($this->getAssociationNamesOfEntity($object) as $field) {
-				// echo('- '.$field.' :');
 				$whatFor = $what;
 				if(is_array($what)) {
 					if(isset($what[$field])) $whatFor = $what[$field];
 				}
-				$testVersionsFor = $testVersions;
-				if(is_array($testVersions)) {
-					if(isset($testVersions[$field])) if(is_bool($testVersions[$field])) $testVersionsFor = $testVersions[$field];
-				}
-				// echo(' '.$whatFor.'<br>');
-				$this->fillAssociatedField($field, $object, $whatFor, $testVersionsFor);
+				$this->fillAssociatedField($field, $object, $whatFor);
 			}
-		} else $this->writeConsole(self::TAB1."L'entité ".get_class($object)." n'existe pas. (".$this->getName()."::fillAllAssociatedFields() / Ligne ".__LINE__.")", 'error');
-	}
-
-	/**
-	 * Teste si deux entités on des versions compatibles
-	 * @param object $obj1
-	 * @param object $obj2
-	 * @return boolean (ou array des classnames des objet n'ayant pas de version)
-	 */
-	public function isVersionComptatible($obj1, $obj2) {
-		if($this->isVersionActive() !== true) return true;
-		// test si les objets sont bien des entités…
-		if(is_object($obj1) && is_object($obj2)) {
-			$verMethode1 = $this->getEntityVersionSlug($obj1);
-			$verMethode2 = $this->getEntityVersionSlug($obj2);
-			if($verMethode1 !== false && $verMethode2 !== false) {
-				if($verMethode1 === $verMethode2) {
-					return true;
-				} else {
-					$this->writeConsole('Versions incompatibles : '.$verMethode1.' < = > '.$verMethode2.' ', 'error');
-					return false;
-				}
-			} else return true;
-		} else {
-			$error = array();
-			if(!is_object($obj1)) $error[] = "obj1 (".gettype($obj1).")";
-			if(!is_object($obj2)) $error[] = "obj2 (".gettype($obj2).")";
-			throw new Exception("Entité(s) ".implode(' / ', $error)." non reconnue(s) (".$this->getName()."::isVersionComptatible() / Ligne ".__LINE__.")", 1);
-		}
-	}
-
-	/**
-	 * Renvoie le slug de version d'une entité
-	 * @param object $entity
-	 * @return string / false si aucun
-	 */
-	public function getEntityVersionSlug($entity) {
-		if(is_object($entity) && $this->entityClassExists($entity)) {
-			$verMethode = $this->getMethodOfGetting($this->champSubstitutifForVersion, $entity);
-			if($verMethode !== false) {
-				$versionSlug = $entity->$verMethode();
-				if(is_string($versionSlug)) return $versionSlug;
-			}
-		}
-		return false;
+		} else return false;
+		return $this;
 	}
 
 	/**
@@ -711,13 +403,11 @@ class aeEntity extends aetools {
 	 * @param string $field
 	 * @param object &$object
 	 * @param mixed $what
-	 * @param boolean $testVersions
 	 * @return boolean (true si au moins une association a pu être réalisée)
 	 */
-	public function fillAssociatedField($field, &$object, $what = null, $testVersions = true) {
-		if($what === null) $what = self::VALUE_DEFAULT;
+	public function fillAssociatedField($field, &$object, $what = null) {
+		if($what === null) $what = self::REPO_DEFAULT_VAL;
 		// $this->writeTableConsole("Recherches :", $what);
-		if($this->isVersionActive() !== true) $testVersions = false;
 		$result = false;
 		if($this->entityClassExists($object) !== false) {
 			// l'objet est bien une entité existante…
@@ -725,24 +415,16 @@ class aeEntity extends aetools {
 				// récupère la classe associée : $targetClass
 				$targetClass = $this->getTargetEntity($field, $object);
 
-				$verMeth = false;
-				if($testVersions === true) $verMeth = $this->getEntityVersionSlug($object);
-				$add = "<inconnu>";
-				if(is_string($verMeth)) $add = $verMeth;
-				if($verMeth === false) $add = "* pas de test de version * ";
-				if($verMeth === null) $add = "* version courante en session * ";
-				$this->writeConsole(self::TAB1.'Vérification de version -> versionSlug : '.$add);
 				// Repository
-				$this->writeConsole(self::TAB1."repository d'entité target : ".$targetClass);
-				$tar_repo = $this->getRepo($targetClass, $verMeth);
+				$tar_repo = $this->getRepo($targetClass);
 
 				if($tar_repo != false) {
 					$associates = array();
 					// valeurs par défaut
-					if($what === self::VALUE_DEFAULT || isset($what[self::VALUE_DEFAULT])) {
+					if($what === self::REPO_DEFAULT_VAL || isset($what[self::REPO_DEFAULT_VAL])) {
 						$defaultMethod = self::REPO_DEFAULT_VAL;
-						if(isset($what[self::VALUE_DEFAULT])) if(is_string($what[self::VALUE_DEFAULT])) {
-							if(method_exists($tar_repo, $what[self::VALUE_DEFAULT])) $defaultMethod = $what[self::VALUE_DEFAULT];
+						if(isset($what[self::REPO_DEFAULT_VAL])) if(is_string($what[self::REPO_DEFAULT_VAL])) {
+							if(method_exists($tar_repo, $what[self::REPO_DEFAULT_VAL])) $defaultMethod = $what[self::REPO_DEFAULT_VAL];
 						}
 						$this->writeConsole(self::TAB1.'Ajout des valeurs par défaut : (->'.$defaultMethod.'())', 'normal');
 						if(method_exists($tar_repo, $defaultMethod)) {
@@ -762,7 +444,7 @@ class aeEntity extends aetools {
 					if(is_object($what)) $what = array($what);
 					if(is_array($what)) {
 						// + valeurs précisées (strings et/ou objets…)
-						foreach($what as $tar_field => $tar_Entite) if(!in_array($tar_field, array(self::VALUE_DEFAULT))) {
+						foreach($what as $tar_field => $tar_Entite) if(!in_array($tar_field, array(self::REPO_DEFAULT_VAL))) {
 							if($tar_Entite  instanceOf $targetClass) {
 								$associates[] = $tar_Entite;
 							}
@@ -779,24 +461,20 @@ class aeEntity extends aetools {
 					}
 					if(count($associates) > 0) {
 						// on a des résultats
-						$this->writeConsole(self::TAB2.$field." : ".count($associates)." objet(s) \"".$this->getEntityShortName($targetClass)."\" à associer : ", 'normal');
-						// associes les entités (avec/sans test de versions)
+						// associes les entités
 						$compte = 0;
 						foreach($associates as $key => $value) if($value instanceOf $targetClass) {
 							// $this->writeConsole("Self entity : ".gettype($object)." / Target entity : ".gettype($value), 'error');
-							if($this->attachEachSides($field, $object, $value, $testVersions)) {
+							if($this->attachEachSides($field, $object, $value)) {
 								// echo('<p> - Attachement : '.$field.' -> '.$value->getNom().'</p>');
 								// l'association a eu lieu avec succès
 								$compte++;
 								if($this->getTypeOfAssociation($field) == self::SINGLE_ASSOC_NAME) break;
 							}
-						} else $this->writeConsole('Association incompatible : '.get_class($value).' < = > '.$targetClass, 'error');
-						if($compte != count($associates)) { $style = 'error';$add = ' ('.(count($associates) - $compte).' manquants)'; } else { $style = 'normal';$add = ''; }
-						$this->writeConsole(" ---> ".$compte." objet(s) associés.".$add, $style);
-					} else $this->writeConsole(self::TAB2.$field." : aucun objet \"".$this->getEntityShortName($targetClass)."\" à associer.");
+						}
+					}
 				}
-			} // else throw new Exception("Ce champ ".$field." n'a pas d'association.", 1);
-			else $this->writeConsole(self::TAB2."Ce champ ".$field." n'a pas d'association (ligne ".__LINE__.").", 'error');
+			}
 		}
 		return $result;
 	}
@@ -935,12 +613,12 @@ class aeEntity extends aetools {
 									}
 								}
 							}
-						} else throw new Exception("Getter et/ou Setter absent (\"".gettype($oneOtherObj)."::".$otherSideField."\"). (".$this->getName()."::detachEachSides() / Ligne ".__LINE__.")", 1);
+						}
 					}
 					// on flush…
 					// $this->getEm()->flush();
 				}
-			} else throw new Exception("Getter et/ou Setter absent (\"".gettype($entity)."::".$field."\"). (".$this->getName()."::detachEachSides() / Ligne ".__LINE__.")", 1);
+			}
 		}
 	}
 
@@ -950,41 +628,36 @@ class aeEntity extends aetools {
 	 * @param string $field
 	 * @param object $entity1
 	 * @param object $entity2
-	 * @param boolean $testVersions
 	 * @return boolean (true = association réussie)
 	 */
-	public function attachEachSides($field, &$entity1, &$entity2, $testVersions = true) {
-		// if($this->isVersionActive() !== true) return true;
-		if($this->isVersionComptatible($entity1, $entity2)) {
-			if($this->hasAssociation($field, $entity1)) {
-				$obj_SET = $this->getMethodOfSetting($field, $entity1);
-				// echo('<p>setter : '.$obj_SET.'</p>');
-				$obj_GET = $this->getMethodOfGetting($field, $entity1);
-				if(is_string($obj_SET)) {
-					// setting pour $entity1
-					$entity1->$obj_SET($entity2);
-					// echo('<p style="color:orange;">- Attached '.$field.' : '.$entity1->$obj_GET().'</p>');
-					// $this->writeConsole('     • Association ok : '.$this->getEntityShortName($entity1).'->'.$obj_SET.'('.$entity2->getSlug().')', 'succes');
-					if($this->isBidirectional($field, $entity1)) {
-						// oui, bidirectionnelle
-						$otherSideField = $this->get_OtherSide_sourceField($field, $entity1);
-						if(is_string($otherSideField)) {
-							$tar_SET = $this->getMethodOfSetting($otherSideField, $entity2);
-							// setting pour $entity2
-							if(is_string($tar_SET)) {
-								$entity2->$tar_SET($entity1);
-								// $this->writeConsole('     • Reverse Side ok : '.$this->getEntityShortName($entity2).'->'.$tar_SET.'('.$entity1->getSlug().')', 'succes');
-								return true;
-							} else return false;
+	public function attachEachSides($field, &$entity1, &$entity2) {
+		if($this->hasAssociation($field, $entity1)) {
+			$obj_SET = $this->getMethodOfSetting($field, $entity1);
+			// echo('<p>setter : '.$obj_SET.'</p>');
+			$obj_GET = $this->getMethodOfGetting($field, $entity1);
+			if(is_string($obj_SET)) {
+				// setting pour $entity1
+				$entity1->$obj_SET($entity2);
+				// echo('<p style="color:orange;">- Attached '.$field.' : '.$entity1->$obj_GET().'</p>');
+				// $this->writeConsole('     • Association ok : '.$this->getEntityShortName($entity1).'->'.$obj_SET.'('.$entity2->getSlug().')', 'succes');
+				if($this->isBidirectional($field, $entity1)) {
+					// oui, bidirectionnelle
+					$otherSideField = $this->get_OtherSide_sourceField($field, $entity1);
+					if(is_string($otherSideField)) {
+						$tar_SET = $this->getMethodOfSetting($otherSideField, $entity2);
+						// setting pour $entity2
+						if(is_string($tar_SET)) {
+							$entity2->$tar_SET($entity1);
+							// $this->writeConsole('     • Reverse Side ok : '.$this->getEntityShortName($entity2).'->'.$tar_SET.'('.$entity1->getSlug().')', 'succes');
+							return true;
 						} else return false;
-						// } else throw new Exception(self::TAB1."Données bidirectionnelles incomplètes : champ cible inconnu (\"".gettype($entity1)."::".$field."\" => \"".gettype($entity1)."::<INCONNU>\"). (".$this->getName()."::attachEachSides() / Ligne ".__LINE__.")", 1);
-					}
-					return true;
-				} else return false;
-				// } else throw new Exception(self::TAB1."Setter absent (\"".gettype($entity1)."::".$field."\"). (".$this->getName()."::attachEachSides() / Ligne ".__LINE__.")", 1);
+					} else return false;
+					// } else throw new Exception(self::TAB1."Données bidirectionnelles incomplètes : champ cible inconnu (\"".gettype($entity1)."::".$field."\" => \"".gettype($entity1)."::<INCONNU>\"). (".$this->getName()."::attachEachSides() / Ligne ".__LINE__.")", 1);
+				}
+				return true;
 			} else return false;
-		}
-		// } else $this->writeConsole(self::TAB1."Versions incompatibles : association impossible.", "error");
+			// } else throw new Exception(self::TAB1."Setter absent (\"".gettype($entity1)."::".$field."\"). (".$this->getName()."::attachEachSides() / Ligne ".__LINE__.")", 1);
+		} else return false;
 		return false;
 	}
 
@@ -996,7 +669,7 @@ class aeEntity extends aetools {
 	 * @return boolean
 	 */
 	public function hasField($field, $entite = null) {
-		$CMD = $this->getClassMetadata($entite);
+		$CMD = $this->getClassMetadata($this->getEntityClassName($entite));
 		if(is_object($CMD)) {
 			$isAbstract = $CMD->getReflectionClass()->isAbstract();
 			return !$isAbstract ? $CMD->hasField($field) : false;
@@ -1010,7 +683,7 @@ class aeEntity extends aetools {
 	 * @return array
 	 */
 	public function getFieldNamesOfEntity($entite) {
-		$CMD = $this->getClassMetadata($entite);
+		$CMD = $this->getClassMetadata($this->getEntityClassName($entite));
 		if(is_object($CMD)) {
 			$isAbstract = $CMD->getReflectionClass()->isAbstract();
 			return !$isAbstract ? $CMD->getFieldNames(): array();
@@ -1023,7 +696,7 @@ class aeEntity extends aetools {
 	 * @return array
 	 */
 	public function getAssociationNamesOfEntity($entite) {
-		$CMD = $this->getClassMetadata($entite);
+		$CMD = $this->getClassMetadata($this->getEntityClassName($entite));
 		if(is_object($CMD)) {
 			$isAbstract = $CMD->getReflectionClass()->isAbstract();
 			return !$isAbstract ? $CMD->getAssociationNames(): array();
@@ -1050,11 +723,12 @@ class aeEntity extends aetools {
 	/**
 	 * Renvoie le className l'entité associée
 	 * @param string $field
+	 * @param object $entite = null
 	 * @param object $entite
 	 * @return string
 	 */
-	public function getTargetEntity($field, $entite = null) {
-		$CMD = $this->getClassMetadata($entite);
+	public function getTargetEntity($field, $entite = null, $shortname = false) {
+		$CMD = $this->getClassMetadata($this->getEntityClassName($entite));
 		if(is_object($CMD)) {
 			if($this->hasAssociation($field, $entite)) {
 				$obj_mapping = $CMD->getAssociationMapping($field);
@@ -1072,7 +746,7 @@ class aeEntity extends aetools {
 	 * @return boolean
 	 */
 	public function isUniqueField($field, $entite = null) {
-		$CMD = $this->getClassMetadata($entite);
+		$CMD = $this->getClassMetadata($this->getEntityClassName($entite));
 		if(is_object($CMD)) {
 			if($this->hasField($field, $entite)) {//throw new Exception("Champ (".$entite."::".$field.") inexistant. (".$this->getName()."::isUniqueField() / Ligne ".__LINE__.")", 1);
 				return $CMD->isUniqueField($field);
@@ -1096,7 +770,7 @@ class aeEntity extends aetools {
 	 * @return boolean
 	 */
 	public function isNullableField($field, $entite = null) {
-		$CMD = $this->getClassMetadata($entite);
+		$CMD = $this->getClassMetadata($this->getEntityClassName($entite));
 		if(is_object($CMD)) {
 			if($this->hasField($field, $entite)) {//throw new Exception("Champ (".$entite."::".$field.") inexistant. (".$this->getName()."::isNullableField() / Ligne ".__LINE__.")", 1);
 				return $CMD->isNullable($field);
@@ -1120,7 +794,7 @@ class aeEntity extends aetools {
 	 * @return string
 	 */
 	public function getTypeOfField($field, $entite = null) {
-		$CMD = $this->getClassMetadata($entite);
+		$CMD = $this->getClassMetadata($this->getEntityClassName($entite));
 		// $this->writeConsole(self::TAB2.'Info '.__LINE__." : "."getTypeOfField = ", 'headline', false);
 		if(is_object($CMD)) {
 			if($this->hasField($field, $entite)) { // throw new Exception("Champ (".$entite."::".$field.") inexistant. (".$this->getName()."::getTypeOfField() / Ligne ".__LINE__.")", 1);
@@ -1134,110 +808,105 @@ class aeEntity extends aetools {
 	}
 
 	/**
-	 * Renvoie le nom de la méthode d'attribution / false si la méthode est manquante
+	 * Renvoie le nom du setter / false si la méthode est manquante
 	 * @param string $field
 	 * @param object $entite
-	 * @return string
+	 * @return string / false
 	 */
-	public function getMethodOfSetting($field, $entite = null) {
-		// $this->writeConsole(self::TAB2.'Info '.__LINE__." : "."getMethodOfSetting", 'headline');
-		$methode = false;
-		if($this->getClassMetadata($entite) !== false) {
+	public function getMethodOfSetting($field, $entite = null, $testIfExists = true) {
+		$test = $testIfExists ? $entite : null;
+		$class = $this->entityClassExists($entite, true);
+		if($class) {
 			$TOF = $this->getTypeOfField($field, $entite);
 			if($TOF !== false) {
 				if($TOF === Type::TARRAY) {
 					// Type arrayCollection
-					$methode = $this->getMethodNameWith($field, 'add');
+					return $this->getMethodNameWith($field, 'add', $test);
 				} else {
-					$methode = $this->getMethodNameWith($field, 'set');
+					return $this->getMethodNameWith($field, 'set', $test);
 				}
 			} else {
 				switch ($this->getTypeOfAssociation($field, $entite)) {
-					case self::COLLECTION_ASSOC_NAME: // collection
-						// $this->writeConsole(self::TAB2.'Info '.__LINE__." : ".self::COLLECTION_ASSOC_NAME, 'headline');
-						$methode = $this->getMethodNameWith($field, 'add');
+					case self::COLLECTION_ASSOC_NAME:
+						// collection
+						return $this->getMethodNameWith($field, 'add', $test);
 						break;
-					case self::SINGLE_ASSOC_NAME: // single
-						// $this->writeConsole(self::TAB2.'Info '.__LINE__." : ".self::SINGLE_ASSOC_NAME, 'headline');
-						$methode = $this->getMethodNameWith($field, 'set');
-						break;
-				}
-			}
-			// $this->writeConsole(self::TAB2.'Info '.__LINE__." : ".$methode, 'headline');
-			if(method_exists($entite, $methode)) return $methode;
-				else return null;
-				// else throw new Exception("Setter (".$methode.") inexistant : VOUS DEVEZ LE CRÉER. (".$this->getName()."::getMethodOfSetting() / Ligne ".__LINE__.")", 1);
-		}
-		return null;
-		// else throw new Exception("Entité (".gettype($entite)." : ".$entite.") inexistante. (".$this->getName()."::getMethodOfSetting() / Ligne ".__LINE__.")", 1);
-	}
-
-	/**
-	 * Renvoie le nom de la méthode de suppression / false si la méthode est manquante
-	 * @param string $field
-	 * @param object $entite
-	 * @return string
-	 */
-	public function getMethodOfRemoving($field, $entite = null) {
-		// $this->writeConsole(self::TAB2.'Info '.__LINE__." : "."getMethodOfSetting", 'headline');
-		$methode = false;
-		if($this->getClassMetadata($entite) !== false) {
-			$TOF = $this->getTypeOfField($field, $entite);
-			if($TOF !== false) {
-				if($TOF === Type::TARRAY) {
-					// Type arrayCollection
-					$methode = $this->getMethodNameWith($field, 'remove');
-				} else {
-					$methode = false;
-				}
-			} else {
-				switch ($this->getTypeOfAssociation($field, $entite)) {
-					case self::COLLECTION_ASSOC_NAME: // collection
-						// $this->writeConsole(self::TAB2.'Info '.__LINE__." : ".self::COLLECTION_ASSOC_NAME, 'headline');
-						$methode = $this->getMethodNameWith($field, 'remove');
-						break;
-					case self::SINGLE_ASSOC_NAME: // single
-						// $this->writeConsole(self::TAB2.'Info '.__LINE__." : ".self::SINGLE_ASSOC_NAME, 'headline');
-						$methode = $this->getMethodNameWith($field, 'set');
+					case self::SINGLE_ASSOC_NAME:
+						// single
+						return $this->getMethodNameWith($field, 'set', $test);
 						break;
 				}
 			}
-			// $this->writeConsole(self::TAB2.'Info '.__LINE__." : ".$methode, 'headline');
-			if(method_exists($entite, $methode)) return $methode;
-				else return null;
-				// else throw new Exception("Setter (".$methode.") inexistant : VOUS DEVEZ LE CRÉER. (".$this->getName()."::getMethodOfSetting() / Ligne ".__LINE__.")", 1);
 		}
 		return false;
-		// else throw new Exception("Entité (".gettype($entite)." : ".$entite.") inexistante. (".$this->getName()."::getMethodOfRemoving() / Ligne ".__LINE__.")", 1);
 	}
 
 	/**
-	 * Renvoie le nom de la méthode de récupération / false si la méthode est manquante
+	 * Renvoie le nom du remover / false si la méthode est manquante
 	 * @param string $field
 	 * @param object $entite
-	 * @return string
+	 * @return string / false
 	 */
-	public function getMethodOfGetting($field, $entite = null) {
-		$methode = false;
-		if($this->getClassMetadata($entite) !== false) {
-			if($this->hasField($field, $entite)) { // throw new Exception("Champ (".$entite."::".$field.") inexistant. (".$this->getName()."::getMethodOfGetting() / Ligne ".__LINE__.")", 1);
-				$methode = $this->getMethodNameWith($field, 'get');
+	public function getMethodOfRemoving($field, $entite = null, $testIfExists = true) {
+		$test = $testIfExists ? $entite : null;
+		$class = $this->entityClassExists($entite, true);
+		if($class) {
+			$TOF = $this->getTypeOfField($field, $entite);
+			if($TOF !== false) {
+				if($TOF === Type::TARRAY) {
+					// Type arrayCollection
+					return $this->getMethodNameWith($field, 'remove', $test);
+				} else {
+					return $this->getMethodNameWith($field, 'set', $test);
+				}
+			} else {
+				switch ($this->getTypeOfAssociation($field, $entite)) {
+					case self::COLLECTION_ASSOC_NAME:
+						// collection
+						return $this->getMethodNameWith($field, 'remove', $test);
+						break;
+					case self::SINGLE_ASSOC_NAME:
+						// single
+						return $this->getMethodNameWith($field, 'set', $test);
+						break;
+				}
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Renvoie le nom du getter / false si la méthode est manquante
+	 * @param string $field
+	 * @param object $entite
+	 * @return string / false
+	 */
+	public function getMethodOfGetting($field, $entite = null, $testIfExists = true) {
+		$test = $testIfExists ? $entite : null;
+		$class = $this->entityClassExists($entite, true);
+		if($class) {
+			$TOF = $this->getTypeOfField($field, $entite);
+			if($TOF !== false) {
+				if($TOF === Type::TARRAY) {
+					// Type arrayCollection
+					return $this->getMethodNameWith($field, 'get', $test); // s !
+				} else {
+					return $this->getMethodNameWith($field, 'get', $test);
+				}
 			} else if($this->hasAssociation($field, $entite)) {
 				switch ($this->getTypeOfAssociation($field, $entite)) {
-					case self::COLLECTION_ASSOC_NAME: // collection
-						$methode = $this->getMethodNameWith($field, 'get');
+					case self::COLLECTION_ASSOC_NAME:
+						// collection
+						return $this->getMethodNameWith($field, 'get', $test); // s !
 						break;
-					case self::SINGLE_ASSOC_NAME: // single
-						$methode = $this->getMethodNameWith($field, 'get');
+					case self::SINGLE_ASSOC_NAME:
+						// single
+						return $this->getMethodNameWith($field, 'get', $test);
 						break;
 				}
 			}
-			if(method_exists($entite, $methode)) return $methode;
-				else return false;
-				// else throw new Exception("Getter (".$methode.") inexistant : VOUS DEVEZ LE CRÉER. (".$this->getName()."::getMethodOfGetting() / Ligne ".__LINE__.")", 1);
 		}
 		return false;
-		// else throw new Exception("Entité (".gettype($entite)." : ".$entite.") inexistante. (".$this->getName()."::getMethodOfGetting() / Ligne ".__LINE__.")", 1);
 	}
 
 	/**
@@ -1247,15 +916,11 @@ class aeEntity extends aetools {
 	 * @return boolean
 	 */
 	public function isAssociationWithSingleJoinColumn($field, $entite = null) {
-		$CMD = $this->getClassMetadata($entite);
+		$CMD = $this->getClassMetadata($this->getEntityClassName($entite));
 		if(is_object($CMD)) {
-			// $this->writeConsole(self::TAB2.'Info '.__LINE__.' : isAssociationWithSingleJoinColumn ? '.$field." ---> ".get_class($entite), 'headline');
-			// if(!$this->hasField($field, $entite)) throw new Exception("Champ (".$entite."::".$field.") inexistant. (".$this->getName()."::isAssociationWithSingleJoinColumn() / Ligne ".__LINE__.")", 1);
-			// $this->isAssociationWithSingleJoinColumn($field) ? $this->writeConsole('OUI !') : $this->writeConsole('NON !');
 			return $CMD->isAssociationWithSingleJoinColumn($field, $entite);
 		}
 		return false;
-		// else throw new Exception("Entité (".gettype($entite)." : ".$entite.") inexistante. (".$this->getName()."::isAssociationWithSingleJoinColumn() / Ligne ".__LINE__.")", 1);
 	}
 
 	/**
@@ -1265,15 +930,11 @@ class aeEntity extends aetools {
 	 * @return boolean
 	 */
 	public function hasAssociation($field, $entite = null) {
-		$CMD = $this->getClassMetadata($entite);
+		$CMD = $this->getClassMetadata($this->getEntityClassName($entite));
 		if(is_object($CMD)) {
-			// $this->writeConsole(self::TAB2.'Info '.__LINE__.' : hasAssociation ? '.$field." ---> ".get_class($entite), 'headline');
-			// if(!$this->hasField($field, $entite)) throw new Exception("Champ (".$entite."::".$field.") inexistant. (".$this->getName()."::hasAssociation() / Ligne ".__LINE__.")", 1);
-			// $CMD->hasAssociation($field) ? $this->writeConsole('OUI !') : $this->writeConsole('NON !');
 			return $CMD->hasAssociation($field);
 		}
 		return false;
-		// else throw new Exception("Entité (".gettype($entite)." : ".$entite.") inexistante. (".$this->getName()."::hasAssociation() / Ligne ".__LINE__.")", 1);
 	}
 
 	/**
@@ -1285,12 +946,11 @@ class aeEntity extends aetools {
 	 * @return boolean
 	 */
 	public function isIdentifier($field, $entite = null) {
-		$CMD = $this->getClassMetadata($entite);
+		$CMD = $this->getClassMetadata($this->getEntityClassName($entite));
 		if(is_object($CMD)) {
 			return $CMD->isIdentifier($field);
 		}
 		return false;
-		// else throw new Exception("Entité (".gettype($entite)." : ".$entite.") inexistante. (".$this->getName()."::isBidirectional() / Ligne ".__LINE__.")", 1);
 	}
 
 	/**
@@ -1302,16 +962,14 @@ class aeEntity extends aetools {
 	 * @return boolean
 	 */
 	public function isBidirectional($field, $entite = null) {
-		$CMD = $this->getClassMetadata($entite);
+		$CMD = $this->getClassMetadata($this->getEntityClassName($entite));
 		if(is_object($CMD)) {
-			// if(!$this->hasField($field, $entite)) throw new Exception("Champ (".$entite."::".$field.") inexistant. (".$this->getName()."::isBidirectional() / Ligne ".__LINE__.")", 1);
 			if(!$this->hasAssociation($field, $entite)) return false;
 			$tar_entity = $this->getTargetEntity($field, $entite);
 			$tar_field = $this->get_OtherSide_sourceField($field, $entite);
 			return ($this->isAssociationInverseSide($field, $entite) || $this->isAssociationInverseSide($tar_field, $tar_entity));
 		}
 		return false;
-		// else throw new Exception("Entité (".gettype($entite)." : ".$entite.") inexistante. (".$this->getName()."::isBidirectional() / Ligne ".__LINE__.")", 1);
 	}
 
 	protected function EntityCollectionsToArray($data, $onlyArrays = true) {
@@ -1336,7 +994,7 @@ class aeEntity extends aetools {
 	 * Vérifie et associe les champs liés bidirectionnels
 	 * @param object $entity
 	 * @param boolean $flush = true
-     * @param baseEntity $butEntities = []
+	 * @param baseEntity $butEntities = []
 	 * @return boolean
 	 */
 	public function checkInversedLinks(&$entity, $flush = true, $butEntities = []) {
@@ -1472,12 +1130,10 @@ class aeEntity extends aetools {
 	 * @return boolean
 	 */
 	public function isAssociationInverseSide($field, $entite = null) {
-		$CMD = $this->getClassMetadata($entite);
+		$CMD = $this->getClassMetadata($this->getEntityClassName($entite));
 		if(is_object($CMD)) {
-			// if(!$this->hasField($field, $entite)) throw new Exception("Champ (".$entite."::".$field.") inexistant. (".$this->getName()."::isAssociationInverseSide() / Ligne ".__LINE__.")", 1);
-			// if(!$this->isBidirectional($field, $entite)) return false;
 			return $CMD->isAssociationInverseSide($field);
-		} else throw new Exception("Entité (".gettype($entite)." : ".$entite.") inexistante. (".$this->getName()."::isAssociationInverseSide() / Ligne ".__LINE__.")", 1);
+		}
 	}
 
 	/**
@@ -1487,11 +1143,8 @@ class aeEntity extends aetools {
 	 * @return string / false si aucune association
 	 */
 	public function getTypeOfAssociation($field, $entite = null) {
-		// $this->writeConsole(self::TAB2.'Info '.__LINE__.' : getTypeOfAssociation ? '.$field." ---> ".get_class($entite), 'headline');
-		$CMD = $this->getClassMetadata($entite);
+		$CMD = $this->getClassMetadata($this->getEntityClassName($entite));
 		if(is_object($CMD)) {
-			// $this->writeConsole(self::TAB2.'Info '.__LINE__.' : getTypeOfAssociation ? '.$field." ---> ".get_class($entite), 'headline');
-			// if(!$this->hasField($field, $entite)) throw new Exception("Champ (".$entite."::".$field.") inexistant. (".$this->getName()."::getTypeOfAssociation() / Ligne ".__LINE__.")", 1);
 			// Champ non associatif
 			if(!$this->hasAssociation($field, $entite)) return false;
 			// Champ associatif : renvoie le type : "single" / "collection"
@@ -1499,7 +1152,6 @@ class aeEntity extends aetools {
 			if($CMD->isSingleValuedAssociation($field)) return self::SINGLE_ASSOC_NAME;
 		}
 		return false;
-		// else throw new Exception("Entité (".gettype($entite)." : ".$entite.") inexistante. (".$this->getName()."::getTypeOfAssociation() / Ligne ".__LINE__.")", 1);
 	}
 
 	// ASSOCIATION : ENTITÉS INVERSES OU MAPPED
@@ -1512,7 +1164,7 @@ class aeEntity extends aetools {
 	 * @return string
 	 */
 	public function get_OtherSide_sourceField($field, $entite = null) {
-		$CMD = $this->getClassMetadata($entite);
+		$CMD = $this->getClassMetadata($this->getEntityClassName($entite));
 		if(is_object($CMD)) {
 			// if($this->hasField($field, $entite)) {
 				if($this->hasAssociation($field, $entite)) {
@@ -1524,7 +1176,6 @@ class aeEntity extends aetools {
 			return false;
 		}
 		return false;
-		// else throw new Exception("Entité (".gettype($entite)." : ".$entite.") inexistante. (".$this->getName()."::getFieldNamesOfEntity() / Ligne ".__LINE__.")", 1);
 	}
 
 
@@ -1534,22 +1185,17 @@ class aeEntity extends aetools {
 		if($entite->getDefault() === $set) return;
 		if($set === false || ($set == null && $entite->getDefault() === true)) {
 			// set false
-			// echo('- Default '.$entite.' : false !<br>');
 			$entite->setDefault(false);
 		} else {
 			// set true => vérification
 			$entite->setDefault(true);
 			$dm = $entite->isDefaultMultiple();
-			// echo('nb max : '.$dm.'<br>');
 			if($dm !== true) {
 				$items = $this->getRepo($entite->getClassName())->findByDefault(true);
-				// echo('Trouvés : '.count($items).' = '.implode(', ', $items).'<br>');
 				if(count($items) > 0) foreach ($items as $key => $oneItem) if($entite->getId() == $oneItem->getId()) unset($items[$key]);
-				// echo('Retenus : '.count($items).' = '.implode(', ', $items).'<br>');
 				if(is_int($dm)) {
 					if($dm < 1) $dm = 1;
 				} else $dm = 1;
-				// echo('nb max : '.$dm.'<br>');
 				if($dm == 1) {
 					$cpt = count($items) - $dm + 1;
 					if($cpt > 0) foreach ($items as $oneItem) {
@@ -1562,7 +1208,7 @@ class aeEntity extends aetools {
 					$message = $this->container->get('flash_messages')->send(array(
 						'title'		=> 'Default max. dépassé',
 						'type'		=> flashMessage::MESSAGES_ERROR,
-						'text'		=> 'Vous ne pouvez plus attribuer d\'élément supplémentaire. Désactivez un autre pour pouvoir attribuer celui-ci.',
+						'text'		=> $this->trans->trans('default.nomore'),
 					));
 					// annule les changements sur $entite
 					$this->getEm()->refresh($entite);
@@ -1570,7 +1216,6 @@ class aeEntity extends aetools {
 			}
 		}
 		// flush
-		// die('END');
 		$this->getEm()->flush();
 	}
 
@@ -1670,6 +1315,25 @@ class aeEntity extends aetools {
 
 
 
+	////////////////////////////////////////////////////////////////////////////////////////////////////////
+	// CHECKS ON ENTITIES
+	////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	/**
+	 * Check entity after change (edit…)
+	 * $butEntities permet d'éviter la récursion infinie !! Ne pas oublier !
+	 * @param baseEntity &$entity
+	 * @param baseEntity $butEntities = []
+	 * @return aeEntity
+	 */
+	public function checkAfterChange(baseEntity &$entity, $butEntities = []) {
+		// if(method_exists($entity, 'check')) $entity->check();
+		// Check statut… etc.
+		// $this->checkStatuts($entity, false);
+		$this->checkInversedLinks($entity, false, $butEntities);
+		return $this;
+	}
+
 	// CHAMPS LIÉS NULLABLE FALSE
 
 	// ALL
@@ -1684,15 +1348,15 @@ class aeEntity extends aetools {
 		$set = $this->getMethodOfSetting($inverse, $entity);
 		$get = $this->getMethodOfGetting($inverse, $entity);
 		if(method_exists($entity, $set) && method_exists($entity, $get)) {
-			$repo = $this->getEm()->getRepository('site\adminBundle\Entity\\'.$inverse);
+			$repo = $this->getRepo($inverse);
 			$attr = false;
 			if($entity->$get() == null) {
 				$attr = self::SINGLE_ASSOC_NAME;
 			} else if(method_exists($entity->$get(), 'toArray')) {
 				if(count($entity->$get()->toArray()) < 1) $attr = self::COLLECTION_ASSOC_NAME;
 			}
-			if($attr != false && method_exists($repo, self::VALUE_DEFAULT)) {
-				$default = $repo->{self::VALUE_DEFAULT}();
+			if($attr != false && method_exists($repo, self::REPO_DEFAULT_VAL)) {
+				$default = $repo->{self::REPO_DEFAULT_VAL}();
 				switch ($attr) {
 					case self::SINGLE_ASSOC_NAME:
 						if(is_array($default)) $default = reset($default);
@@ -1731,14 +1395,89 @@ class aeEntity extends aetools {
 
 
 
-	// ENTITY MANAGER ET REPOSITORY
+	////////////////////////////////////////////////////////////////////////////////////////////////////////
+	// FLUSH/PERSIST ENTITY
+	////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	/**
-	 * Renvoie l'Entity Manager
-	 * @return manager
+	 * Persist en flush a baseEntity
+	 * @param baseEntity $entity
+	 * @return aeReponse
+	 */
+	// public function NOsave(baseEntity &$entity, $flush = true) {
+	// 	$aeReponse = $this->container->get('aetools.aeReponse');
+	// 	$response = true;
+	// 	$sadmin = false;
+	// 	$user = $this->container->get('security.context')->getToken()->getUser();
+	// 	if(is_object($user)) if($user->getBestRole() == 'ROLE_SUPER_ADMIN') $sadmin = true;
+	// 	$message = 'Entité enregistrée.';
+	// 	try {
+	// 		$this->_em->persist($entity);
+	// 	} catch (Exception $e) {
+	// 		$response = false;
+	// 		if(($this->isDev() && $sadmin) === true)
+	// 			$message = $e->getMessage();
+	// 			else $message = 'Erreur système.';
+	// 	}
+	// 	if($flush === true) {
+	// 		try {
+	// 			$this->_em->flush();
+	// 		} catch (Exception $e) {
+	// 			$response = false;
+	// 			if(($this->isDev() && $sadmin) === true)
+	// 				$message = $e->getMessage();
+	// 				else $message = 'Erreur système.';
+	// 		}
+	// 	}
+	// 	return $aeReponse
+	// 		->setResult($response)
+	// 		->setMessage($message)
+	// 		->setData(array('id' => $entity->getId()))
+	// 		;
+	// 	// return $this;
+	// }
+
+	/**
+	 * Persist en flush a baseEntity / pour tests
+	 * @param baseEntity $entity
+	 * @return aeReponse
+	 */
+	public function save(baseEntity &$entity, $flush = true) {
+		$response = true;
+		$message = 'Entité enregistrée.';
+		if($entity->getId() == null) $this->_em->persist($entity);
+		if($flush === true) $this->_em->flush();
+		return $this
+			->container->get('aetools.aeReponse')
+			->setResult($response)
+			->setMessage($message)
+			->setData(array('id' => $entity->getId()))
+			;
+	}
+
+
+
+	////////////////////////////////////////////////////////////////////////////////////////////////////////
+	// ENTITY MANAGER ET REPOSITORY
+	////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	/**
+	 * set EntityManager
+	 * @param EntityManager $em
+	 * @return aeEntity
+	 */
+	public function setEm($em) {
+		if($em instanceOf EntityManager) $this->_em = $em;
+			else throw new Exception("aeEntity::setEm() : l'objet n'est pas une instance de EntityManager !", 1);		
+		return $this;
+	}
+
+	/**
+	 * get EntityManager
+	 * @return EntityManager
 	 */
 	public function getEm() {
-		if($this->_em == null) {
+		if(!$this->_em instanceOf EntityManager) {
 			if(is_object($this->container)) $this->_em = $this->container->get('doctrine')->getManager();
 		}
 		return $this->_em;
@@ -1746,27 +1485,22 @@ class aeEntity extends aetools {
 
 	/**
 	 * Renvoie le Repository de l'entité courante (ou fournie)
-	 * $version -> null : version par défaut (defaultVersion = true)
-	 *          -> false = pas de test de version
-	 *          -> string = slug de la version à recherche
-	 *          -> 'current' = version courante
 	 * @param mixed $entity - shortname, classeName ou objet entité
-	 * @param string $versionSlug / si false, ne teste pas la version
+	 * @param boolean $context = true
 	 * @return repository / false
 	 */
-	public function getRepo($entity = null, $versionSlug = 'current') {
-		if($this->isVersionActive() !== true) $versionSlug = false;
+	public function getRepo($entity = null, $context = true) {
 		if(is_object($entity)) $entity = get_class($entity);
+		// classe de l'entité ou de l'entité courante si null
 		$entity = $this->getEntityClassName($entity);
-		if($entity !== false) {
-			$this->repo[$entity] = $this->getEm()->getRepository($entity);
+		if($entity) {
+			try {
+				$this->repo[$entity] = $this->getEm()->getRepository($entity);
+			} catch (Exception $e) {
+				return false;
+			}
 			// initialisation du repository
-			if(method_exists($this->repo[$entity], "setVersion")) {
-				if($versionSlug === 'current') $versionSlug = $this->getCurrentVersionSlug();
-				$this->repo[$entity]->setVersion($versionSlug);
-			} // else $this->writeConsole('Aucune méthode de version prévue dans le repository !!!', 'error');
-			// $this->writeConsole('Repository défini pour '.$entity.' : OK.');
-			if(method_exists($this->repo[$entity], "declareContext")) {
+			if(method_exists($this->repo[$entity], "declareContext") && $context) {
 				$this->repo[$entity]->declareContext($this);
 			}
 			return $this->repo[$entity];
@@ -1776,114 +1510,50 @@ class aeEntity extends aetools {
 
 	/**
 	 * Renvoie la ClassMetadataInfo de l'entité / ou de l'entité courante
-	 * @param mixed &$entity (nom ou objet)
-	 * @return ClassMetadata
+	 * ATTENTION : on ne peut pas mettre de shortName pour $entity !!!
+	 * @param mixed $entity (classname ou objet)
+	 * @param boolean $extended = false
+	 * @return ClassMetadata ou false
 	 */
-	public function getClassMetadata(&$entity = null, $extended = false) {
-		$entityCopy = $this->getEntityClassName($entity);
-		if($extended === true) $entityCopy = $entity;
-		if($entityCopy !== false) {
-			if(!isset($this->CMD[$entityCopy])) {
-				$this->CMD[$entityCopy] = $this->getEm()->getClassMetadata($entityCopy);
+	public function getClassMetadata($entity = null, $extended = false) {
+		if(is_object($entity)) $entity = get_class($entity);
+		if(is_string($entity)) {
+			if($this->isLongName($entity)) {
+				$shortEntity = $this->getClassShortName($entity);
+				if(class_exists($entity)) {
+					if(!isset($this->CMD[$shortEntity])) {
+						try {
+							$this->CMD[$shortEntity] = $this->getEm()->getClassMetadata($entity);
+						} catch (Exception $e) {
+							$message = "Echec lors de l'appel de la classe classMetaData.";
+							$this->container->get('aetools.debug')->debugNamedFile('getClassMetadata', array("classname" => $entity, "Error" => $message));
+							// throw new Exception($message, 1);
+							return false;
+						}
+					}
+					// $this->container->get('aetools.debug')->debugNamedFile('getClassMetadata', array("classname" => $entity, "ClassMetadata" => $this->CMD[$shortEntity]));
+					return $this->CMD[$shortEntity];
+				} else {
+					$message = "Cette classe n'existe pas.";
+					$this->container->get('aetools.debug')->debugNamedFile('getClassMetadata', array("classname" => $entity, "Error" => $message));
+					// throw new Exception($message, 1);
+					return false;
+				}
+			} else {
+				$message = "aeEntity::getClassMetadata() : entity ".json_encode($entity)." doit être un nom long de classe. ShortName n'est pas accepté !";
+				$this->container->get('aetools.debug')->debugNamedFile('getClassMetadata', array("classname" => $entity, "Error" => $message));
+				// throw new Exception($message, 1);
+				return false;
 			}
-			// renvoie la classe dans l'objet entity SI ça n'est pas un objet. Sinon on la garde telle quelle.
-			if(!is_object($entity)) $entity = $entityCopy;
-			// Renvoie l'objet ClassMetadata
-			return $this->CMD[$entityCopy];
 		} else {
-			return null;
-			// return throw new Exception("Entité \"".$entity."\" inexistante. (".$this->getName()."::getClassMetadata() / Ligne ".__LINE__.")", 1);
+			$message = "aeEntity::getClassMetadata() : entity doit être une class (nom de classe) ou un objet Entity !";
+			$this->container->get('aetools.debug')->debugNamedFile('getClassMetadata', array("classname" => $entity, "Error" => $message));
+			// throw new Exception($message, 1);
+			return false;
 		}
+		return false;
 	}
 
-	// /**
-	//  * Renvoie la description de l'entité
-	//  * @param mixed $entityClassName (nom ou objet)
-	//  * @return array
-	//  */
-
-	// public function getMetaInfo($className) {
-	// 	$r = array();
-	// 	$r['CMData'] = $this->getClassMetadata($className);
-	// 	if($r['CMData'] !== false) {
-	// 		// informations sur la classe (entité)
-	// 		$r['classInfo']['className'] = $r['CMData']->getName();
-	// 		$r['classInfo']['tableName'] = $r['CMData']->getTableName();
-	// 		$r['classInfo']['repoName'] = $r['CMData']->customRepositoryClassName;
-	// 		$r['classInfo']['reflexProp'] = $r['CMData']->getReflectionProperties();
-	// 		// $r['classInfo']['lifecycleCallbacks'] = $r['CMData']->getLifecycleCallbacks(!!!!!!!argument!!!!!!!!);
-	// 		// $r['CMDataMethods'] = get_class_methods($r['CMData']);
-	// 		// $colNoAssoc = $r['CMData']->getColumnNames();
-	// 		$colNoAssoc = $r['CMData']->getFieldNames();
-	// 		$colWtAssoc = $r['CMData']->getAssociationNames();
-	// 		foreach(array_merge($colNoAssoc, $colWtAssoc) as $nom) {
-	// 			// if((substr($nom, -1) == "s" && substr($nom, -2, -1) != "s") || (substr($nom, -2) == "ss")) $nom = substr($nom, 0, -1);
-	// 			$r['listColumns'][$r['CMData']->getFieldName($nom)] = $this->getMetaInfoField($className, $r['CMData']->getFieldName($nom));
-	// 		}
-	// 		// Liste des libellés du tableau -> pour admin
-	// 		$rr = array();
-	// 		foreach($r['listColumns'] as $val) {
-	// 			foreach($val as $nom => $val2) {
-	// 				$rr[$nom] = $nom;
-	// 			}
-	// 		}
-	// 		$r['libelles'] = $rr;
-	// 	} else return false;
-	// 	// $r['entiteName'] = $className;
-	// 	return $r;
-	// }
-
-	// /**
-	//  * Renvoie la description d'un champ de l'entité
-	//  * @param mixed $entityClassName (nom ou objet)
-	//  * @param string $field
-	//  * @return array
-	//  */
-	// public function getMetaInfoField($className, $field) {
-	// 	$CMD = $this->getClassMetadata($className);
-	// 	if(is_object($CMD)) {
-	// 		$r = array();
-	// 		// $field = $CMD->getFieldForColumn($column);
-	// 		if($CMD->hasAssociation($field) === false) {
-	// 			// Sans association
-	// 			$r = $CMD->getFieldMapping($field);
-	// 			$r['Association'] = "aucune";
-	// 		} else {
-	// 			// Avec association
-	// 			$r = $CMD->getAssociationMapping($field);
-	// 			if($CMD->isSingleValuedAssociation($field)) {
-	// 				$r['Association'] = self::SINGLE_ASSOC_NAME;
-	// 				$r['unique'] = $r["joinColumns"][0]["unique"];
-	// 				$r['nullable'] = $r["joinColumns"][0]["nullable"];
-	// 			} else if($CMD->isCollectionValuedAssociation($field)) {
-	// 				$r['Association'] = self::COLLECTION_ASSOC_NAME;
-	// 				// $r['nullable'] = $CMD->isNullable($field);
-	// 				// $r['unique'] = $CMD->isUniqueField($field);
-	// 			} else {
-	// 				// Association inconnue !!!
-	// 				$r['Association'] = "[inconnue]";
-	// 			}
-	// 		}
-	// 	} else return false;
-	// 	return $r;
-	// }
-
-
-	// AFFICHAGE DES INFORMATIONS
-
-	/**
-	 * Affiche la liste des entités
-	 */
-	protected function afficheEntities() {
-		$this->writeTableConsole('Liste des entités présentes utilisées pour Fixtures', $this->entitiesList);
-	}
-
-	/**
-	 * Affiche la liste des entités
-	 */
-	protected function afficheEntitiesFound() {
-		$this->writeTableConsole('Liste des entités présentes détectées par Doctrine2', $this->completeListOfEnties);
-	}
 
 
 

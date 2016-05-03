@@ -1,5 +1,6 @@
 {% extends 'siteadminBundle::page_admin_generic.html.twig' %}
 {% set cssjsloads = 'TAB' %}
+{% import 'siteadminBundle:blocks:actions.html.twig' as actions %}
 
 {% block page_heading %}
 <div class="row wrapper border-bottom white-bg page-heading">
@@ -34,14 +35,12 @@
 					<thead>
 						<tr>
 							<th>Nom / classe</th>
-							<th>Champs</th>
 						</tr>
 					</thead>
 					<tbody>
 						{% for name,data in entities %}
 						<tr>
 							<td><strong><a href="{{ path('siteadmin_sadmin_entities', {entity: name}) }}">{{ name }}</a></strong><br><i class="text-muted">{{ data.classname }}</i></td>
-							<td>{{ data.fields|length }}</td>
 						</tr>
 						{% endfor %}
 					<tbody>
@@ -55,4 +54,5 @@
 	</div>
 	{% endif %}
 </div>
+{{ dump() }}
 {% endblock content %}

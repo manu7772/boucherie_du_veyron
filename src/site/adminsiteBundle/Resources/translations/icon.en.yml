@@ -26,20 +26,24 @@ fields:
 entite:
     home: fa-home
     unknown: fa-question
+    default: fa-file-o
     # entités
     site: fa-bank
     article: fa-shopping-cart
+    panier: fa-shopping-cart
     adresse: fa-envelope-o
     pageweb: fa-desktop
     fiche: fa-file-text-o
     marque: fa-trophy
     boutique: fa-building-o
     reseau: fa-share-alt
-    categorie: fa-sitemap
+    categorie: fa-folder
     tauxTva: fa-calculator
     User: fa-user
     message: fa-paper-plane
     media: fa-film
+    multimedia: fa-film
+    rawfile: fa-file-o
     image: fa-file-image-o
     pdf: fa-file-pdf-o
     tag: fa-tag

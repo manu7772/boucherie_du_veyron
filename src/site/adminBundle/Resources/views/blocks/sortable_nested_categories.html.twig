@@ -85,6 +85,7 @@ $("#{{ idItem }}").jstree({{ jstreeObjects.dataAsJson(idItem)|raw }})
 $('.jstree-ajax').each(function (index) {
 	splt = $(this).attr('id').split('-');
 	var rootid = splt[1];
+	{%- if (app.environment in ['DEV', 'TEST']) or (is_granted('ROLE_SUPER_ADMIN')) -%}
 	$.ajax({
 		// url: "{{ path('categorie_ajax_data') }}"+"/"+rootid,
 		url: "{{ path('categorie_ajax_data') }}",
@@ -93,6 +94,10 @@ $('.jstree-ajax').each(function (index) {
 	}).done(function (data) {
 		console.log("retour data : ", data);
 	});
+	{%- endif -%}
+	var plugins = ['types'];
+	if($(this).hasClass('jstree-menu-all')) plugins.push('contextmenu');
+	if($(this).hasClass('jstree-dnd')) plugins.push('dnd');
 	$(this).jstree({
 		core: {
 			animation : 300,
@@ -118,21 +123,8 @@ $('.jstree-ajax').each(function (index) {
 				{% endfor %}
 			}
 		},
-		'plugins' : [ 'types','dnd','types','contextmenu' ],
-		'types' : {
-			'default' : {
-				'icon' : 'fa fa-file-o'
-			},
-			'categorie' : {
-				'icon' : 'fa fa-folder'
-			},
-			'image' : {
-				'icon' : 'fa fa-picture'
-			},
-			'forbidden' : {
-				'icon' : 'fa fa-ban'
-			}
-		},
+		'plugins' : plugins,
+		'types' : {{ iconsAsJson()|raw }},
 	});
 });
 {% endmacro %}

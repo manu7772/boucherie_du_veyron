@@ -10,9 +10,22 @@ use site\adminBundle\Entity\baseEntity;
 // call in controller with $this->get('aetools.aeSite');
 class aeSite extends aeEntity {
 
-    public function __construct(ContainerInterface $container) {
-        parent::__construct($container);
-        $this->defineEntity('site\adminBundle\Entity\site');
+    const NAME                  = 'aeSite';        // nom du service
+    const CALL_NAME             = 'aetools.aeSite'; // comment appeler le service depuis le controller/container
+    const CLASS_ENTITY          = 'site\adminBundle\Entity\site';
+
+    public function __construct(ContainerInterface $container = null, $em = null) {
+        parent::__construct($container, $em);
+        $this->defineEntity(self::CLASS_ENTITY);
+        return $this;
+    }
+
+    public function getNom() {
+        return self::NAME;
+    }
+
+    public function callName() {
+        return self::CALL_NAME;
     }
 
     /**
@@ -24,8 +37,8 @@ class aeSite extends aeEntity {
         // check images
         $fields = array('image', 'logo', 'favicon', 'adminLogo');
         foreach ($fields as $field) {
-            $get = 'get'.ucfirst($field);
-            $set = 'set'.ucfirst($field);
+            $get = $this->getMethodOfSetting($field, $entity, true);
+            $set = $this->getMethodOfGetting($field, $entity, true);
             $image = $entity->$get();
             if(is_object($image)) {
                 $infoForPersist = $image->getInfoForPersist();

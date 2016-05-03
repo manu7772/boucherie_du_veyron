@@ -69,5 +69,16 @@ class baseController extends Controller {
 		return $this->redirect($this->generateUrl('siteadmin_homepage'));
 	}
 
+	/**
+	 * Get service de l'entité (ou le parent le plus proche, jusqu'à aeEntity en dernier recours)
+	 * @param string $entity
+	 * @return object
+	 */
+	public function getEntityService($entity) {
+		$ES = $this->get('aetools.aeEntity');
+		if($ES->entityClassExists($ES->getEntityClassName($entity)))
+			return $ES->getEntityService($entity);
+			else return $ES;
+	}
 
 }

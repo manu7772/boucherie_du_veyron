@@ -1,5 +1,6 @@
 {% extends 'siteadminBundle::page_admin_generic.html.twig' %}
 {% set cssjsloads = 'TAB' %}
+{% import 'siteadminBundle:blocks:actions.html.twig' as actions %}
 
 {% block page_heading %}
 <div class="row wrapper border-bottom white-bg page-heading">
@@ -24,9 +25,7 @@
 		<div class="ibox float-e-margins">
 			<div class="ibox-content">
 				<h2 class="row">
-					<div class="col-md-8 ellipsis">Description <strong><i>ClassMetaData</i></strong> des entités Doctrine</div>
-					<div class="col-md-4">
-					</div>
+					<div class="col-md-12 ellipsis">Description <strong>Doctrine <i>ClassMetaData</i></strong> des entités du site</div>
 				</h2>
 				<hr>
 				<table class="table table-striped table-bordered table-hover dataTables dataTable dtr-inline" id="DataTables_Table_0" role="grid" aria-describedby="DataTables_Table_0_info">
@@ -34,19 +33,52 @@
 						<tr>
 							<th>Nom / classe</th>
 							<th>Parents</th>
-							<th>All</th>
-							<th>Fields</th>
+							<th>All fields</th>
+							<th>Single</th>
 							<th>Assoc.</th>
 						</tr>
 					</thead>
 					<tbody>
-						{% for name,data in entities %}
+						{% for name,data in entities if data.object is defined %}
 						<tr>
-							<td><strong><a href="{{ path('siteadmin_sadmin_entities', {entity: name}) }}">{{ name }}</a></strong><br><i class="text-muted">{{ data.object.className|default('?') }}</i></td>
+							<td><strong><a href="{{ path('siteadmin_sadmin_entities', {entity: data.shortname}) }}">{{ actions.htmlicon(data.object, 1, ['m-r-xs']) }}{{ data.shortname }}</a></strong><br><i class="text-muted">Class {{ data.object.class|default('<small><i class="text-warning">(sys.)</i></small>' ~ objectClassname(data.object, false))|raw }}</i></td>
 							<td>{{ data.object.parentsClassNames(true)|default({})|join('<br>')|raw }}</td>
-							<td>{{ data.fields|length +  data.assoc|length }}</td>
-							<td>{{ data.fields|length }}</td>
-							<td>{{ data.assoc|length }}</td>
+							<td>{{ data.single|length + data.association|length }}</td>
+							<td>{{ data.single|length }}</td>
+							<td>{{ data.association|length }}</td>
+						</tr>
+						{% endfor %}
+					<tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+	<div class="col-md-12">
+		<div class="ibox float-e-margins">
+			<div class="ibox-content">
+				<h2 class="row">
+					<div class="col-md-12 ellipsis">Description <strong>Doctrine <i>ClassMetaData</i></strong> des entités système</div>
+				</h2>
+				<hr>
+				<table class="table table-striped table-bordered table-hover dataTables dataTable dtr-inline" id="DataTables_Table_0" role="grid" aria-describedby="DataTables_Table_0_info">
+					<thead>
+						<tr>
+							<th>Nom / classe</th>
+							<th>All fields</th>
+							<th>Single</th>
+							<th>Assoc.</th>
+						</tr>
+					</thead>
+					<tbody>
+						{% for name,data in entities if data.object is not defined %}
+						<tr>
+							<td>
+								<strong><a href="#">{{ data.shortname }}</a></strong><br>
+								<i class="text-muted">Class {{ name }}</i>
+							</td>
+							<td>{{ data.single|length + data.association|length }}</td>
+							<td>{{ data.single|length }}</td>
+							<td>{{ data.association|length }}</td>
 						</tr>
 						{% endfor %}
 					<tbody>

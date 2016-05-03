@@ -22,7 +22,7 @@ use \Exception;
  * adresse
  *
  * @ORM\Entity
- * @ORM\Table(name="adresse")
+ * @ORM\Table(name="adresse", options={"comment":"adresses du site"})
  * @ORM\HasLifecycleCallbacks
  * @ORM\Entity(repositoryClass="site\adminBundle\Entity\adresseRepository")
  */

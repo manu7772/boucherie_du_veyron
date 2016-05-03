@@ -10,9 +10,14 @@ use site\adminBundle\Entity\baseEntity;
 // call in controller with $this->get('aetools.aeSubEntity');
 class aeSubEntity extends aeEntity {
 
-	public function __construct(ContainerInterface $container) {
-		parent::__construct($container);
-		$this->defineEntity('site\adminBundle\Entity\item');
+	const NAME                  = 'aeSubEntity';        // nom du service
+	const CALL_NAME             = 'aetools.aeSubEntity'; // comment appeler le service depuis le controller/container
+	const CLASS_ENTITY          = 'site\adminBundle\Entity\baseSubEntity';
+
+	public function __construct(ContainerInterface $container = null, $em = null) {
+	    parent::__construct($container, $em);
+	    $this->defineEntity(self::CLASS_ENTITY);
+	    return $this;
 	}
 
 	/**
@@ -42,12 +47,21 @@ class aeSubEntity extends aeEntity {
 	            }
             }
         }
-		parent::checkAfterChange($entity, $butEntities);
+        parent::checkAfterChange($entity, $butEntities);
 		return $this;
+	}
+
+	public function getNom() {
+		return self::NAME;
+	}
+
+	public function callName() {
+		return self::CALL_NAME;
 	}
 
 	/**
 	 * Persist and flush a item
+     * @dev désactivée
 	 * @param baseEntity $entity
 	 * @return aeReponse
 	 */

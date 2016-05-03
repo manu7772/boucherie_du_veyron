@@ -64,12 +64,16 @@ class categorieRepository extends EntityBaseRepository {
 		foreach ($elements as $key => $element) {
 			// opened
 			// $fields = $this->getFields();
-			$fields = array('opened','bundles');
+			$fields = array('opened','bundles','element_class_name');
 			foreach ($fields as $field) {
 				switch ($field) {
 					case 'opened':
 						if(isset($elements[$key][$field])) $elements[$key]['state'] = array($field => (boolean) $elements[$key][$field]);
 							else $elements[$key]['state'] = array($field => false);
+						unset($elements[$key][$field]);
+						break;
+					case 'element_class_name':
+						$elements[$key]['type'] = $elements[$key][$field];
 						unset($elements[$key][$field]);
 						break;
 					default:
@@ -88,8 +92,8 @@ class categorieRepository extends EntityBaseRepository {
 			$qb->where(self::ELEMENT.'.parent = :parentId')->setParameter('parentId', $element['id']);
 			$this->selectForTree($qb, self::ELEMENT, $shortCutContext);
 			// subEntities
-			$qb->leftJoin(self::ELEMENT.'.subEntitys', 'subEntitys');
-			$qb->addSelect('subEntitys.id subId');
+			$qb->leftJoin(self::ELEMENT.'.childrens', 'childrens');
+			$qb->addSelect('childrens.id subId');
 			// result
 			// echo('<h6 style="color:blue;">'.$qb->getQuery()->getSQL().'</h6>');
 			$results = $qb->getQuery()->getScalarResult();
@@ -111,16 +115,13 @@ class categorieRepository extends EntityBaseRepository {
 		// context by statut
 		if($shortCutContext == false) $this->contextStatut($qb, $elem);
 		$validFields = $this->getFields();
-		// echo('<pre>');
-		// var_dump($validFields);
-		// die('</pre>');
 		$fields = array(
 			// single
 			// 'id' => 'id', // id inutile / déjà précisé en début de méthode
 			'nom' => 'text',
 			'open' => 'opened',
 			'couleur' => 'color',
-			'class_name' => 'type',
+			'type' => 'type_accept',
 			// association
 			// 'subEntitys' => array('id' => 'subEntitysId'),
 			'statut' => array('niveau' => 'niveau', 'bundles' => 'bundles'),
@@ -148,6 +149,8 @@ class categorieRepository extends EntityBaseRepository {
 				throw new Exception("- ".$elem." : champ \"".$field."\" indéfini !", 1);
 			}
 		}
+		// add class_name column
+		$qb->addSelect($elem.' class_name');
 		// groupBy
 		$qb->addGroupBy($elem.'.id');
 	}
@@ -183,14 +186,31 @@ class categorieRepository extends EntityBaseRepository {
 
 	/**
 	 * Renvoie les éléments root de catégories
+	 * @param string/array $types = null
 	 * @param boolean $shortCutContext = false
 	 * @return array
 	 */
 	public function findRoots($types = null, $shortCutContext = false) {
 		$qb = $this->createQueryBuilder(self::ELEMENT);
-		if($types != null) $this->getElementsBySubType($types, $qb);
-		if($shortCutContext == false) $this->contextStatut($qb);
+		if($types != null) $this->getElementsBySubType($types, $qb, $shortCutContext);
+		// if($shortCutContext == false) $this->contextStatut($qb);
 		$this->getRoots($qb);
+		return $qb->getQuery()->getResult();
+	}
+
+	/**
+	 * Renvoie les collections (niveau 2) de type
+	 * @param string/array $types = null
+	 * @param boolean $shortCutContext = false
+	 * @return array
+	 */
+	public function findCollectionsByType($type = null, $shortCutContext = false) {
+		$qb = $this->createQueryBuilder(self::ELEMENT);
+		// if($types != null) $this->getElementsBySubType($types, $qb, $shortCutContext);
+		$qb->where(self::ELEMENT.'.type = :type')
+			->setParameter('type', $type);
+		$this->getByLevel(1, $qb);
+		if($shortCutContext == false) $this->contextStatut($qb);
 		return $qb->getQuery()->getResult();
 	}
 
@@ -201,7 +221,7 @@ class categorieRepository extends EntityBaseRepository {
 	 */
 	public function findLevel($level = 0, $types = null, $shortCutContext = false) {
 		$qb = $this->createQueryBuilder(self::ELEMENT);
-		if($types != null) $this->getElementsBySubType($types, $qb);
+		if($types != null) $this->getElementsBySubType($types, $qb, $shortCutContext);
 		if($shortCutContext == false) $this->contextStatut($qb);
 		$this->getByLevel($level, $qb);
 		return $qb->getQuery()->getResult();
@@ -247,18 +267,18 @@ class categorieRepository extends EntityBaseRepository {
 	/*** CLOSURES                 ***/
 	/********************************/
 
-	public function getElementsBySubTypeButRoot($types, &$qb = null) {
-		$qb = $this->getElementsBySubType($types, $qb);
+	public function getElementsBySubTypeButRoot($types, &$qb = null, $shortCutContext = false) {
+		$qb = $this->getElementsBySubType($types, $qb, $shortCutContext);
 		return $this->getNotRoots($qb);
 	}
 
-	public function getElementsBySubType($types, &$qb = null) {
+	public function getElementsBySubType($types, &$qb = null, $shortCutContext = false) {
 		if($qb == null) $qb = $this->createQueryBuilder(self::ELEMENT);
 		if(is_string($types)) $types = array($types);
 		foreach ($types as $type) {
 			$qb->orWhere($qb->expr()->orX($qb->expr()->like(self::ELEMENT.'.accepts', $qb->expr()->literal('%'.$type.'%'))));
 		}
-		$this->contextStatut($qb);
+		if($shortCutContext == false) $this->contextStatut($qb);
 		// resultat
 		return $qb;
 	}
@@ -267,7 +287,7 @@ class categorieRepository extends EntityBaseRepository {
 	public function getElementsButCategories($categories, &$qb = null) {
 		if($qb == null) $qb = $this->createQueryBuilder(self::ELEMENT);
 		if(is_object($categories)) $categories = array($categories);
-		foreach ($categories as $categorie) {
+		foreach ($categories as $categorie) if($categorie->getId() != null) {
 			$qb->andWhere(self::ELEMENT.'.id != :id')
 				->setParameter('id', $categorie->getId())
 			;

@@ -9,6 +9,12 @@
 
 {% macro entiteButton(entite, action, type, type_value_joiner) %}
 	{% import _self as self %}
+	{% if action == "list" %}
+		<a href="{{ self.entiteLink(entite, action, type) }}" type="button" class="btn btn-white btn-xs" data-toggle="tooltip" data-placement="bottom" title="{{ UCfirst('backlist'|trans({}, entite.className)) }}"><i class="fa fa-bars icon-wait-on-click"></i></a>
+	{% endif %}
+	{% if action == "create" %}
+		<a href="{{ self.entiteLink(entite, action, type) }}" type="button" class="btn btn-white btn-xs" data-toggle="tooltip" data-placement="bottom" title="{{ UCfirst('backlist'|trans({}, entite.className)) }}"><i class="fa fa-bars icon-wait-on-click"></i></a>
+	{% endif %}
 	{% if action == "show" %}
 		<a href="{{ self.entiteLink(entite, action, type) }}" type="button" class="btn btn-white btn-xs" data-toggle="tooltip" data-placement="bottom" title="{{ UCfirst('moredetails'|trans({'%name%': entite.nom}, entite.className)) }}"><i class="fa fa-eye icon-wait-on-click"></i></a>
 	{% endif %}
@@ -25,7 +31,7 @@
 			{% set defcol = 'primary' %}
 			{% if entite.isDefaultNullable|default(false) == false %}{% set disabled = ' disabled="disabled"' %}{% endif %}
 		{% endif %}
-		<a href="{{ self.entiteLink(entite, action, type) }}"{{ disabled|raw }} type="button" class="btn btn-{{ defcol }} btn-xs" data-toggle="tooltip" data-placement="bottom" title="{{ 'bydefault'|trans({}, entite.className) }}"><i class="fa fa-star icon-wait-on-click"></i></a>
+		<a href="{{ self.entiteLink(entite, action, type) }}"{{ disabled|raw }} type="button" class="btn btn-{{ defcol }} btn-xs" data-toggle="tooltip" data-placement="bottom" title="{{ 'default.bydefault'|trans }}"><i class="fa fa-star icon-wait-on-click"></i></a>
 	{% endif %}
 	{% if (action == "active" and (entite.statut.slug|default('actif') != 'actif') and (entite.deletable|default(true) == true or (app.environment in ['DEV', 'TEST']) or (is_granted('ROLE_SUPER_ADMIN')))) %}
 		<a href="{{ self.entiteLink(entite, action, type) }}" type="button" class="btn btn-white btn-xs" title="{{ UCfirst('actions.activer'|trans) }}"><i class="fa fa-check icon-wait-on-click"></i></a>
@@ -33,6 +39,20 @@
 {% endmacro %}
 
 {% macro entiteLink(entite, action, type, type_value_joiner) -%}
+	{%- if action in ['list'] -%}
+		{%- if type.type_values|default(null) != null -%}
+			{{- path('siteadmin_entite_type', {entite: entite.className, type_related: type.type_related, type_field: type.type_field, type_values: type.type_values|join(type_value_joiner)|url_encode, action: action}) -}}
+		{%- else -%}
+			{{- path('siteadmin_entite', {entite: entite.className, action: action}) -}}
+		{%- endif -%}
+	{%- endif -%}
+	{%- if action in ['create'] -%}
+		{%- if type.type_values|default(null) != null -%}
+			{{- path('siteadmin_entite_type', {entite: entite, type_related: type.type_related, type_field: type.type_field, type_values: type.type_values|join(type_value_joiner)|url_encode, action: action}) -}}
+		{%- else -%}
+			{{- path('siteadmin_entite', {entite: entite.className, action: action}) -}}
+		{%- endif -%}
+	{%- endif -%}
 	{%- if action in ['show','edit','delete', 'active'] -%}
 		{%- if type.type_values|default(null) != null -%}
 			{{- path('siteadmin_entite_type', {entite: entite.className, type_related: type.type_related, type_field: type.type_field, type_values: type.type_values|join(type_value_joiner)|url_encode, id: entite.id, action: action}) -}}
@@ -62,14 +82,33 @@
 	{{ item.icon|default(('entite.' ~ item.className|default('unknown'))|trans({}, 'icon')) }}
 {%- endmacro %}
 
+{%- macro htmlicon(item, size, classes) %}
+	{% if item.className is defined %}
+	<i class="fa {{ ('entite.' ~ item.icon|default(item.className|default('unknown')))|trans({}, 'icon') }} fa-{{ size|default(1) }}x {{ classes|default([])|join(' ') }}"></i>
+	{% else %}
+	<i class="fa {{ ('entite.' ~ item)|trans({}, 'icon') }} fa-{{ size|default(1) }}x {{ classes|default([])|join(' ') }}"></i>
+	{% endif %}
+{%- endmacro %}
+
 
 {%- macro labelList(list, highlight, classe, limit) %}
 	{% import _self as self %}
 	{% set limit = limit|default(0) %}
 	{% set classe = classe|default('label-primary') %}
+	{% set classeRoot = classeRoot|default('label-warning') %}
 	{% for item in list|default([]) %}
 		{% if loop.index0 < limit or limit == 0 %}
-		<span class="label m-r-xs m-b-xs inline{% if item in highlight|default([]) %} {{ classe|raw }}{% endif %}" style="display: height: 20px; line-height: 15px;"><i class="fa {{ self.icon(item) }} m-r-xs"></i>{{ item|trans({}, item.className) }}</span>
+			{% if item.className == 'categorie' and item.lvl|default(null) == 0 %}
+			<span class="label m-r-xs m-b-xs inline {{ classeRoot|raw }}" style="display: height: 20px; line-height: 15px;">
+				<i class="fa {{ self.icon(item) }} m-r-xs"></i>
+				{{ ('types.' ~ item.type)|trans({}, item.className) }}
+			</span>
+			{% else %}
+			<span class="label m-r-xs m-b-xs inline{% if item in highlight|default([]) %} {{ classe|raw }}{% endif %}" style="display: height: 20px; line-height: 15px;">
+				<i class="fa {{ self.icon(item) }} m-r-xs"></i>
+				{{ item|trans({}, item.className) }}
+			</span>
+			{% endif %}
 		{% elseif loop.index0 == limit %}
 		<p>…</p>
 		{% endif %}
@@ -80,13 +119,247 @@
 	{% import _self as self %}
 	{% set limit = limit|default(0) %}
 	{% set classe = classe|default('label-primary') %}
+	{% set classeRoot = classeRoot|default('label-warning') %}
 	{% set action = action|default('show') %}
 	{% for item in list|default([]) %}
 		{% if loop.index0 < limit or limit == 0 %}
-		<a href="{{ self.entiteLink(item, action, type, type_value_joiner) }}" class="label inline{% if item in highlight|default([]) %} {{ classe|raw }}{% endif %} m-b-xs" style="display: height: 20px; line-height: 15px;"><i class="fa {{ self.icon(item) }} m-r-xs"></i>{{ item|trans({}, item.className) }}</a>
+			{% if item.className == 'categorie' and item.lvl|default(null) == 0 %}
+			<span class="label inline {{ classeRoot|raw }} m-b-xs" style="display: height: 20px; line-height: 15px;">
+				<i class="fa {{ self.icon(item) }} m-r-xs"></i>
+				{{ ('types.' ~ item.type)|trans({}, item.className) }}
+			</span>
+			{% else %}
+			<a href="{{ self.entiteLink(item, action, type, type_value_joiner) }}" class="label inline{% if item in highlight|default([]) %} {{ classe|raw }}{% endif %} m-b-xs" style="display: height: 20px; line-height: 15px;">
+				<i class="fa {{ self.icon(item) }} m-r-xs"></i>
+				{{ item|trans({}, item.className) }}
+			</a>
+			{% endif %}
 		{% elseif loop.index0 == limit %}
-		<p>…</p>
+			<p>…</p>
 		{% endif %}
 	{% endfor %}
 {%- endmacro %}
+
+
+
+{%- macro objectViewer(service_info, idBlock, showCode) %}
+	{% set idBlock = idBlock|default('id_' ~ random(100000)) %}
+	{% set colorsKeys = ['dev','error','valid'] %}
+	{% set colors = {dev: 'warning', error: 'danger', valid: 'success'} %}
+	{% set showCode = showCode|default(true) %}
+	<div class="row">
+		<div class="col-md-12">
+			<h4><strong>File name : {{ service_info.class.filename|default('?') }}</strong></h4>
+			{% for line in service_info.class.comments|default([]) %}
+			<p class="m-b-none
+				{%- for key,color in colors -%}
+				{%- if line matches('#^@' ~ key ~ ' #') %} text-{{ colors[key] }}{% endif -%}
+				{%- endfor -%}
+				">{{ line|raw }}</p>
+			{% endfor %}
+		</div>
+	</div>
+	<div class="panel-body">
+		<div class="panel-group" id="{{ idBlock }}_accordion">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h5 class="panel-title">
+						<a data-toggle="collapse" data-parent="#{{ idBlock }}_accordion" href="#{{ idBlock }}_collapse_0"><strong>{{ service_info.object.nom|default(service_info.object.className|default(service_info.object)) }}</strong> <i class="text-muted"><small>Niv. {{ service_info.object.level|default('0') }} / {{ service_info.object.parentClassName(true)|default('aucun parent') }}</small></i></a>
+					</h5>
+				</div>
+				<div id="{{ idBlock }}_collapse_0" class="panel-collapse collapse in">
+					<div class="panel-body">
+						<p class="m-b-none">• Nom : {{ service_info.object.nom|default(service_info.object.className|default(service_info.object)) }}</p>
+						<p class="m-b-none">• Call : {{ service_info.object.callName|default(null) }}</p>
+						<p class="m-b-none">• Name : {{ service_info.object.name|default(null) }}</p>
+						<p class="m-b-none">• ClassName : {{ service_info.object.class(false)|default(null) }}</p>
+						<p class="m-b-none">• ShortName : {{ service_info.object.class(true)|default(null) }}</p>
+						<p class="m-b-none">• Parent classes : <i><p class="m-l-lg m-b-none">{{ service_info.object.parentsClassNames|default([])|join('<p class="m-l-lg m-b-none"> ')|raw }}</p></p></i>
+						<p class="m-b-none">• Parent names : <i><p class="m-l-lg m-b-none">{{ service_info.object.parentsShortNames|default([])|join('<p class="m-l-lg m-b-none"> ')|raw }}</p></p></i>
+					</div>
+				</div>
+			</div>
+			<!-- PANEL CONSTANTS : begin -->
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h5 class="panel-title">
+						<a data-toggle="collapse" data-parent="#{{ idBlock }}_accordion" href="#{{ idBlock }}_collapse_1"><strong>Constants</strong></a>
+					</h5>
+				</div>
+				<div id="{{ idBlock }}_collapse_1" class="panel-collapse collapse">
+					<div class="panel-body">
+						<div class="row">
+							<div class="col-md-12">
+								<!-- TABLE CONSTANTS : begin -->
+								<table class="table small table-striped table-bordered table-hover dataTables dataTable dtr-inline" id="DataTables_Table_0" role="grid" aria-describedby="DataTables_Table_0_info">
+									<thead>
+										<tr>
+											<th>Name</th>
+										</tr>
+									</thead>
+									<tbody>
+										{% for name,value in service_info.constants %}
+										<tr>
+											<td><i class="text-muted">{{ service_info.object.nom|default(service_info.object.className|default(service_info.object)) }}::</i><strong>{{ name }}</strong> = {{ value|raw|json_encode }}</td>
+										</tr>
+										{% endfor %}
+									</tbody>
+								</table>
+								<!-- TABLE CONSTANTS : end -->
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- PANEL CONSTANTS : end -->
+			<!-- PANEL PROPERTIES : begin -->
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h5 class="panel-title">
+						<a data-toggle="collapse" data-parent="#{{ idBlock }}_accordion" href="#{{ idBlock }}_collapse_2"><strong>Properties</strong></a>
+					</h5>
+				</div>
+				<div id="{{ idBlock }}_collapse_2" class="panel-collapse collapse">
+					<div class="panel-body">
+						<div class="row">
+							<div class="col-md-12">
+								<!-- TABLE PROPERTIES : begin -->
+								<table class="table small table-striped table-bordered table-hover dataTables dataTable dtr-inline" id="DataTables_Table_1" role="grid" aria-describedby="DataTables_Table_1_info">
+									<thead>
+										<tr>
+											<th>Name</th>
+											<th>Comments</th>
+											<th>Parameters</th>
+										</tr>
+									</thead>
+									<tbody>
+										{% for name,lines in service_info.properties %}
+										<tr>
+											<td>
+												<strong>{{ lines.access|join(' ') }}</strong> <i class="text-muted">{{ service_info.object.nom|default(service_info.object.className|default(service_info.object)) }}::</i><strong>{{ name }}</strong>
+											</td>
+											<td>
+												{% for line in lines.comments.texts|default([]) %}
+												<p class="m-b-xs">{{ line|raw }}</p>
+												{% endfor %}
+											</td>
+											<td>
+												{% for key in lines.comments.keys|default([]) %}
+												<p class="m-b-xs"><strong>@{{ key.key|raw }}</strong> <i class="text-muted">{{ key.type|default('')|raw }}</i> {{ key.var|default('')|raw }}</p>
+												{% endfor %}
+											</td>
+										</tr>
+										{% endfor %}
+									</tbody>
+								</table>
+								<!-- TABLE PROPERTIES : end -->
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- PANEL PROPERTIES : end -->
+			<!-- PANEL METHODS : begin -->
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h5 class="panel-title">
+						<a data-toggle="collapse" data-parent="#{{ idBlock }}_accordion" href="#{{ idBlock }}_collapse_3"><strong>Methods</strong></a>
+					</h5>
+				</div>
+				<div id="{{ idBlock }}_collapse_3" class="panel-collapse collapse">
+					<div class="panel-body">
+						<div class="row">
+							<div class="col-md-12">
+								<!-- TABLE METHODS : begin -->
+								<table class="table small table-striped table-bordered table-hover dataTables dataTable dtr-inline" id="DataTables_Table_2" role="grid" aria-describedby="DataTables_Table_2_info">
+									<thead>
+										<tr>
+											<th>Name</th>
+											<th>Comments</th>
+											<th>Parameters</th>
+										</tr>
+									</thead>
+									<tbody>
+										{% for name,lines in service_info.methods %}
+											{% set annotations = [] %}
+											{% for key in lines.comments.keys|default([]) %}
+												{% for annot,color in colors %}
+													{% if annot == key.key %}
+														{% set annotations = annotations|merge({annot: colors[annot]}) %}
+													{% endif %}
+												{% endfor %}
+											{% endfor %}
+										<tr class="{{ annotations|join(' ') }}">
+											<td>
+												<strong>{{ lines.access|join(' ') }}</strong> <i class="text-muted">{{ service_info.object.nom|default(service_info.object.className|default(service_info.object)) }}::</i><strong>{{ name }}()</strong>
+												{% if lines.constructor == true %}
+												<p class="m-b-none text-warning">* Constructor *</p>
+												{% endif %}
+												{% if lines.destructor == true %}
+												<p class="m-b-none text-warning">* Destructor *</p>
+												{% endif %}
+											</td>
+											<td>
+												{% for line in lines.comments.texts|default([]) %}
+												<p class="m-b-xs">{{ line|raw }}</p>
+												{% endfor %}
+											</td>
+											<td>
+												{% for key in lines.comments.keys|default([]) %}
+												<p class="m-b-xs text-{{ colors[key.key]|default('primary') }}">
+													<strong class="m-r-xs">@{{ key.key|raw }}</strong>
+													{% if key.key in colorsKeys %}
+													<span class="text-muted">{% if key.type|default('') != '' %}{{ key.type|raw }} {% endif %}{{ key.var|default('')|raw }}</span>
+													{% else %}
+													<i class="text-muted m-r-xs">{{ key.type|default('')|raw }}</i>
+													{{ key.var|default('')|raw }}
+													{% endif %}
+												</p>
+												{% endfor %}
+											</td>
+										</tr>
+										{% endfor %}
+									</tbody>
+								</table>
+								<!-- TABLE METHODS : end -->
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- PANEL METHODS : end -->
+			{% if showCode %}
+			{% if service_info.class.filename|default('')|length > 0 %}
+			<!-- PANEL FILE CONTENT : begin -->
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h5 class="panel-title">
+						<a data-toggle="collapse" data-parent="#{{ idBlock }}_accordion" href="#{{ idBlock }}_collapse_4"><strong>#CODE</strong> <small><i>{{ service_info.class.filename }}</i></small></a>
+					</h5>
+				</div>
+				<div id="{{ idBlock }}_collapse_4" class="panel-collapse collapse">
+					<div class="panel-body">
+						<div class="row">
+							<div class="col-md-12">
+
+								{% set file = fileGetContent(service_info.class.filename) %}
+								{% if file != false %}
+								<textarea id="code1">{{ file|raw }}</textarea>
+								{% else %}
+								<p class="text-danger"><i class="fa fa-times m-r-sm"></i>Contenu du fichier illisible.</p>
+								{% endif %}
+
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- PANEL FILE CONTENT : end -->
+			{% endif %}
+			{% endif %}
+		</div>
+	</div>
+{%- endmacro %}
+
+
 

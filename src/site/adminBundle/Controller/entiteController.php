@@ -65,16 +65,74 @@ class entiteController extends baseController {
 		return $type_values;
 	}
 
+	protected function fillEntityWithData(&$data) {
+		$service = $this->getEntityService($data['entite']);
+		// echo('<pre>');
+		// var_dump($data['type']);
+		if(is_array($data['type']['type_values']) && count($data['type']['type_values']) > 0) {
+			switch ($data['type']['type_related']) {
+				case self::TYPE_SELF:
+					// field
+					if(!$service->hasAssociation($data['type']['type_field'], $data['entite'])) {
+						$set = $service->getMethodOfSetting($data['type']['type_field'], $data['entite'], true);
+						if(is_string($set)) {
+							// ok setter
+							if(preg_match('#^set#', $set)) $data['entite']->$set(reset($data['type']['type_values']));
+							if(preg_match('#^add#', $set)) foreach($data['type']['type_values'] as $value) {
+								$data['entite']->$set($value);
+							}
+						}
+					} else {
+						throw new Exception("Ce champ est de type association : field ".json_encode($data['type']['type_field'])." fourni !", 1);
+					}
+					break;
+				default:
+					// association
+					if($service->hasAssociation($data['type']['type_field'], $data['entite'])) {
+						$set = $service->getMethodOfSetting($data['type']['type_field'], $data['entite'], true);
+						$related = explode(self::TYPE_VALUE_JOINER, $data['type']['type_related']);
+						if(is_string($set) && count($related) == 2) {
+							// ok setter
+							$related_service = $this->getEntityService($related[0]);
+							// echo("<h3>".$related_service." (Repository : ".get_class($related_service->getRepo()).")</h3>");
+							// var_dump($related);
+							foreach ($data['type']['type_values'] as $value) {
+								// find relateds
+								$findMethod = $related_service->getMethodNameWith($related[1], 'findBy');
+								if($findMethod != false) {
+									$related_objects = $related_service->getRepo()->$findMethod($value);
+								} else $related_objects = array();
+								// echo('<h4>Related as '.$related[0]."::".$related[1].' = '.$value.' ('.json_encode($findMethod).')</h4>');
+								// var_dump(count($related_objects));
+								foreach ($related_objects as $rel_object) {
+									$data['entite']->$set($rel_object);
+									if(preg_match('#^set#', $set)) break 2;
+								}
+							}
+						}
+					} else {
+						throw new Exception("Ce champ n'est pas de type association : field ".json_encode($data['type']['type_field'])." fourni !", 1);
+					}
+					break;
+			}
+		}
+		// echo('</pre>');
+		return $data;
+	}
+
 	public function entitePageAction($entite, $type_related = null, $type_field = null, $type_values = null, $method = null, $params = null, $repository = null, $action = null, $id = null) {
 		if($action == null) $action = self::DEFAULT_ACTION;
 		
 		$data = $this->getEntiteData($entite, $type_related, $type_field, $type_values, $method, $params, $repository, $action, $id);
-		$entityService = $this->get('aetools.aeEntity')->getEntityService($data['entite_name']);
+		$entityService = $this->getEntityService($data['entite_name']);
 
 		// page générique entités
 		switch ($data['action']) {
 			case self::CREATE_ACTION :
 				$data['entite'] = $entityService->getNewEntity($data['classname']);
+				// ajout de valeurs si types sont définis…
+				$this->fillEntityWithData($data);
+				// Get form
 				$data[$data['action'].'_form'] = $this->getEntityFormView($data);
 				if($data[$data['action'].'_form'] == false) {
 					// erreur formulaire
@@ -240,7 +298,21 @@ class entiteController extends baseController {
 				$method = $data['repo']['method'];
 				$repo = $entityService->getRepo($data['repo']['repository']);
 				if(method_exists($repo, $method)) {
-					$data['entites'] = $repo->$method();
+					// if($data['params'] != null && !is_array($data['params'])) $data['params'] = array($data['params']);
+					if(is_array($data['params'])) {
+						switch (count($data['params'])) {
+							case 1: $data['entites'] = $repo->$method(reset($data['params'])); break;
+							case 2: $data['entites'] = $repo->$method(reset($data['params']), next($data['params'])); break;
+							case 3: $data['entites'] = $repo->$method(reset($data['params']), next($data['params']), next($data['params'])); break;
+							case 4: $data['entites'] = $repo->$method(reset($data['params']), next($data['params']), next($data['params']), next($data['params'])); break;
+							default:
+								$data['entites'] = $repo->$method();
+								break;
+						}
+					} else {
+						if($data['params'] == null) $data['entites'] = $repo->$method();
+							else $data['entites'] = $repo->$method($data['params']);
+					}
 				} else throw new Exception("Method \"".$method."\" does not exist in Repository \"".$data['repo']['repository']."\"", 1);
 			} else {
 				// findForList par défaut sinon findAll
@@ -281,7 +353,7 @@ class entiteController extends baseController {
 	}
 
 	protected function addContextData(&$data) {
-		$entityService = $this->get('aetools.aeEntity')->getEntityService($data['entite_name']);
+		$entityService = $this->getEntityService($data['entite_name']);
 		switch ($data['entite_name']) {
 			case 'categorie':
 				$jstreeObjects = $this->get('aetools.aeJstree');
@@ -368,7 +440,7 @@ class entiteController extends baseController {
 			$data = json_decode(urldecode($req["hiddenData"]), true);
 		} 
 		// Entity service
-		$entityService = $this->get('aetools.aeEntity')->getEntityService($data['entite_name']);
+		$entityService = $this->getEntityService($data['entite_name']);
 
 		if($data['action'] == "create") {
 			// create

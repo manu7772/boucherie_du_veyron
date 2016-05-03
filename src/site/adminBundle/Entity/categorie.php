@@ -20,7 +20,7 @@ use \DateTime;
  * categorie
  *
  * @ORM\Entity
- * @ORM\Table(name="categorie")
+ * @ORM\Table(name="categorie", options={"comment":"collections hiérarchisables d'éléments. Diaporamas, catégories, etc."})
  * @ORM\HasLifecycleCallbacks
  * @ORM\Entity(repositoryClass="site\adminBundle\Entity\categorieRepository")
  */
@@ -291,20 +291,22 @@ class categorie extends baseSubEntity {
 		return $this->childrens;
 	}
 
-	public function getAllChildrens() {
+	public function getAllChildrens($unique = false) {
 		$allChildren = $this->getChildrens();
 		foreach($allChildren as $children) {
 			$allChildren = array_merge($allChildren, $children->getAllChildrens());
 		}
-		return array_unique($allChildren);
+		if($unique) return array_unique($allChildren);
+		return $allChildren;
 	}
 
-	public function getAllChildrensOfAllTypes() {
+	public function getAllChildrensOfAllTypes($unique = false) {
 		$allChildren = $this->getChildrensOfAllTypes()->toArray();
 		foreach($allChildren as $children) {
 			if(method_exists($children, 'getAllChildrensOfAllTypes')) $allChildren = array_merge($allChildren, $children->getAllChildrensOfAllTypes());
 		}
-		return array_unique($allChildren);
+		if($unique) return array_unique($allChildren);
+		return $allChildren;
 	}
 
 	public function addChildren(baseSubEntity $children) {

@@ -7,8 +7,11 @@ use Symfony\Component\Yaml\Parser;
 use Symfony\Component\Yaml\Dumper;
 use Doctrine\DBAL\Types\Type;
 
+use site\adminBundle\services\aeReponse;
+
 use \Exception;
 use \DateTime;
+use \ReflectionObject;
 use \ReflectionClass;
 use \ReflectionMethod;
 
@@ -19,6 +22,9 @@ use \ReflectionMethod;
  * - Gestion services Symfony : router / tamplating / etc.
  */
 class aetools {
+
+	const NAME					= 'aetools'; 		// nom du service
+	const CALL_NAME				= 'aetools.aetools'; // comment appeler le service depuis le controller/container
 
 	const SERVEUR_TYPE			= 'UNIX/LINUX';		// Type de serveur
 	const SLASH					= '/';				// slash
@@ -43,11 +49,25 @@ class aetools {
 	// YAML
 	const MAX_YAML_LEVEL 		= 100;
 
-	protected $ctrlDefined 		= null;				// boolean : controller dénini ?
-	protected $container;							// container
-	// autres services
-	protected $router;								// router
-	protected $asset;								// asset
+	const PROXIES_NAME			= "Proxies";
+
+
+	/**
+	 * boolean : controller dénini ?
+	 */
+	protected $ctrlDefined 		= null;
+	/**
+	 * container autres services
+	 */
+	protected $container;
+	/**
+	 * router
+	 */
+	protected $router;
+	/**
+	 * asset
+	 */
+	protected $asset;
 
 	protected $controller;
 	protected $requAttributes;
@@ -57,18 +77,50 @@ class aetools {
 	protected $flashBag;
 	protected $securityContext;
 	protected $route;
-	protected $texttools;							// outils de texte
+	/**
+	 * outils de texte
+	 */
+	protected $texttools;
 
-	protected $controllerPath;						// chemin complet du controller
-	protected $ctrlFolder;							// dossier du controller
-	protected $controllerName;						// nom du controller
-	protected $actionName;							// nom de la méthode appelée
-	protected $singleActionName;					// nom de la méthode appelée, sans "Action"
+	/**
+	 * chemin complet du controller
+	 */
+	protected $controllerPath;
+	/**
+	 * dossier du controller
+	 */
+	protected $ctrlFolder;
+	/**
+	 * nom du controller
+	 */
+	protected $controllerName;
+	/**
+	 * nom de la méthode appelée
+	 */
+	protected $actionName;
+	/**
+	 * nom de la méthode appelée, sans "Action"
+	 */
+	protected $singleActionName;
 
-	protected $memo = '__self';						// memo pour savePath pour ce service
-	protected $pathMemo = array();					// contenu des mémo pour savePath
+	/**
+	 * memo pour savePath pour ce service
+	 */
+	protected $memo = '__self';
+	/**
+	 * contenu des mémo pour savePath
+	 */
+	protected $pathMemo = array();
 
-	protected $labo_parameters = array();			// paramètres du bundle / aetools
+	/**
+	 * service tranlator
+	 */
+	protected $trans = null;
+
+	/**
+	 * paramètres du bundle / aetools
+	 */
+	protected $labo_parameters = array();
 
 	protected $user;
 
@@ -80,8 +132,14 @@ class aetools {
 	protected $nofiles = '^\.';
 	protected $liste;
 	protected $service = array();
-	protected $groupeName;			// nom du groupe
-	protected $bundleName;			// nom du bundle
+	/**
+	 * nom du groupe
+	 */
+	protected $groupeName;
+	/**
+	 * nom du bundle
+	 */
+	protected $bundleName;
 	protected $gotoroot;
 	protected $console;
 
@@ -99,25 +157,6 @@ class aetools {
 
 	public function __destruct() {
 		$this->close();
-		// $this->printConsole();
-	}
-
-	protected function printConsole() {
-		if(count($this->console) > 0) {
-			print('<script type="text/javascript">');
-			foreach ($this->console as $console) print($console);
-			print('</script>');
-		}
-	}
-
-	public function consoleLog($ind, $txt = null) {
-		if($this->isDev()) {
-			if($txt === null) {
-				$txt = $ind;
-				$ind = 'info';
-			}
-			$this->console[] = "console.log('".key($this->console).":".$ind." =', '".$txt."');";
-		}
 	}
 
 	/**
@@ -126,7 +165,6 @@ class aetools {
 	 * @return string
 	 */
 	protected function initAllData() {
-		$this->consoleLog(">>> Load Service", "SERVICE classe : ".$this->getShortName());
 		$this->gotoroot 			= __DIR__.self::GO_TO_ROOT;
 		if($this->container !== null) {
 			$this->router 			= $this->container->get('router');
@@ -143,6 +181,7 @@ class aetools {
 			$this->sessionData			= $this->container->get("session");
 			$this->flashBag 			= $this->sessionData->getFlashBag();
 			$this->securityContext 		= $this->container->get('security.context');
+			$this->trans 				= $this->container->get('translator');
 			// $this->setWebPath();
 		}
 		// slashes
@@ -154,6 +193,28 @@ class aetools {
 		// $this->aslash = DIRECTORY_SEPARATOR;
 		// nom du mémo
 		$this->memo = $this->getName().$this->memo;
+	}
+
+
+	////////////////////////////////////////////////////////////////////////////////////////////////////////
+	// IDENTIFICATION CLASSE
+	////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	public function __toString() {
+		try {
+			$string = $this->getNom();
+		} catch (Exception $e) {
+			$string = '…';
+		}
+		return $string;
+	}
+
+	public function getNom() {
+		return self::NAME;
+	}
+
+	public function callName() {
+		return self::CALL_NAME;
 	}
 
 	/**
@@ -172,6 +233,63 @@ class aetools {
 		return $this->getClassShortName($this->getName());
 	}
 
+    // abstract public function getClassName();
+    public function getClassName() {
+        return $this->getClass(true);
+    }
+
+	/**
+	 * Renvoie la liste (array) des classes des parents de l'entité
+	 * @param boolean $short = false
+	 * @return array
+	 */
+	public function getParentClassName($short = false) {
+		$class = new ReflectionClass($this->getClass());
+		$class = $class->getParentClass();
+		if($class)
+			return (boolean) $short ?
+				$class->getShortName():
+				$class->getName();
+			else return null;
+	}
+
+	/**
+	 * Renvoie la liste (array) des classes des parents de l'entité
+	 * @param boolean $short = false
+	 * @return array
+	 */
+	public function getParentsClassNames($short = false) {
+		$class = new ReflectionClass($this->getClass());
+		$parents = array();
+		while($class = $class->getParentClass()) {
+			(boolean) $short ?
+				$parents[] = $class->getShortName():
+				$parents[] = $class->getName();
+		}
+		return $parents;
+	}
+
+	/**
+	 * Renvoie la liste (array) des classes des parents de l'entité
+	 * @param boolean $short = false
+	 * @return array
+	 */
+	public function getParentsShortNames() {
+		return $this->getParentsClassNames(true);
+	}
+
+	/**
+	 * Renvoie le nom de la classe (short name par défaut)
+	 * @param boolean $short = false
+	 * @return string
+	 */
+	public function getClass($short = false) {
+		$class = new ReflectionClass(get_called_class());
+		return (boolean) $short ?
+			$class->getShortName():
+			$class->getName();
+	}
+
 	/**
 	 * Renvoie le nom court de la classe
 	 * @return string
@@ -184,6 +302,24 @@ class aetools {
 		}
 		return false;
 	}
+
+	public function getLevel() {
+		return count($this->getParentsClassNames());
+	}
+
+	public function isLongName($name) {
+		return preg_match('#^.+(Entity|Model).+$#', $name);
+	}
+
+	public function isProxyClass($name) {
+		return preg_match('#^'.self::PROXIES_NAME.'#', $name);
+	}
+
+
+
+	////////////////////////////////////////////////////////////////////////////////////////////////////////
+	// CONTROLLER / CONTAINER
+	////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	/**
 	 * Renvoie true si le controller est présent
@@ -751,10 +887,16 @@ class aetools {
 
 	/**
 	 * Renvoie la liste des dossiers de src (donc la liste des groupes)
+	 * @param boolean $path = true
 	 * @return array
 	 */
-	public function getSrcGroupes() {
-		return $this->getDirs("/src/");
+	public function getSrcGroupes($path = true) {
+		// return $this->getDirs("/src/");
+		$groupesPaths = $this->exploreDir("src/", null, "dossiers", false);
+		if($path) return $groupesPaths;
+		$groupesNames = array();
+		foreach($groupesPaths as $name) $groupesNames[] = $name['nom'];
+		return $groupesNames;
 	}
 
 	public function getDirs($path = null) {
@@ -1088,6 +1230,27 @@ class aetools {
 		return $content['parameters'];
 	}
 
+	// languages
+
+	/**
+	 * @dev voir pour charger la locale par défaut via Parser sur le fichier app/config.yml si le controller est absent
+	 * Get parsed translation files
+	 * @param string $domain = "messages"
+	 * @param string $lang = null
+	 * @param string $path = "src"
+	 * @return array
+	 */
+	public function getTranslations($domain = "messages", $lang = null, $path = "src") {
+		if($lang == null) 
+			$this->isControllerPresent() ? $lang = $this->container->get('request')->getLocale() : $lang = "fr";
+		$files = $this->exploreDir($this->gotoroot.$path, $domain.'.'.$lang.'.yml', 'fichiers', true, true);
+		$result = array();
+		$yaml = new Parser();
+		foreach ($files as $file) {
+			$result[] = $yaml->parse(file_get_contents($file['full']));
+		}
+		return $result;
+	}
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// USER
@@ -1252,13 +1415,24 @@ class aetools {
 
 	/**
 	 * Renvoie le nom de la méthode en fonction de l'attribut et du préfix
+	 * On peut vérifier si la méthode est dans l'objet $testEntity en ajoutant cet objet ou sa classe (pas de shortname)
 	 * @param string $attribute
-	 * @param string $prefix
-	 * @return string
+	 * @param string $prefix = "set"
+	 * @param mixed $testEntity = null
+	 * @return string / false
 	 */
-	public function getMethodNameWith($attribute, $prefix = "set") {
+	public function getMethodNameWith($attribute, $prefix = "set", $testEntity = null) {
 		if(in_array($prefix, array("remove", "add"))) $attribute = preg_replace("#s$#i", "", $attribute);
-		return $prefix.ucfirst($attribute);
+		if(is_string($testEntity)) {
+			try {
+				$testEntity = new $testEntity();
+			} catch (Exception $e) {
+				throw new Exception('aetools:getMethodNameWith() : $testEntity ne correspond pas à un objet valide ! '.$e->getMessage(), 1);
+			}
+		}
+		$method = $prefix.ucfirst($attribute);
+		if(is_object($testEntity) && !method_exists($testEntity, $method)) $method = false;
+		return $method;
 	}
 
 	/**
@@ -1425,6 +1599,8 @@ class aetools {
 							}
 						} else if(preg_match('#^set#', $method)) {
 							$data[get_class($input)]['Public:'.$method]['setter:params'] = $this->dump_debug_recursive($parameters, $limit - 1);
+						} else if(preg_match('#^(is|has)#', $method)) {
+							$data[get_class($input)]['Public:'.$method]['test:params'] = $this->dump_debug_recursive($parameters, $limit - 1);
 						} else {
 							$data[get_class($input)]['Public:'.$method]['divers:params'] = $this->dump_debug_recursive($parameters, $limit - 1);
 						}
@@ -1449,145 +1625,169 @@ class aetools {
 		} else return '…';
 	}
 
-	public function dump_debug_x($input, $collapse = false) {
-		$recursive = function($data, $level = 0) use (&$recursive, $collapse) {
-			global $argv;
+	public function getListOfServices() {
+		return array(
+			// Entities
+			'aetools.aetools',
+			'aetools.aeEntity',
+			'aetools.aeSubEntity',
+			// subEntity
+			'aetools.aeItem',
+			'aetools.aeMedia',
+			'aetools.aeTier',
+			// entités "libres"
+			'aetools.aeTag',
+			'aetools.aeStatut',
+			'aetools.aePanier',
+			'aetools.aeMessage',
+			// entités à niveaux
+			'aetools.aeCategorie',
+			'aetools.aeSite',
+			'aetools.aeArticle',
+			'aetools.aePageweb',
+			'aetools.aeFiche',
+			'aetools.aeImage',
+			'aetools.aePdf',
+			'aetools.aeRawfile',
+			// listener Entities
+			'aetools.entityUtils',
+			// autres services
+			'aetools.debug',
+			'aetools.aefixtures',
+			'aetools.textutilities',
+			'aetools.aeReponse',
+			// JsTree
+			'aetools.aeJstree',
+			);
+	}
 
-			$isTerminal = isset($argv);
+	public function getReflexionMethodConstants() {
+		return array(
+			ReflectionMethod::IS_STATIC => 'static',
+			ReflectionMethod::IS_PUBLIC => 'public',
+			ReflectionMethod::IS_PROTECTED => 'protected',
+			ReflectionMethod::IS_PRIVATE => 'private',
+			ReflectionMethod::IS_ABSTRACT => 'abstract',
+			ReflectionMethod::IS_FINAL => 'final',
+			);
+	}
 
-			if (!$isTerminal && $level == 0 && !defined("DUMP_DEBUG_SCRIPT")) {
-				define("DUMP_DEBUG_SCRIPT", true);
+	public function getReflexionClassConstants() {
+		return array(
+			ReflectionClass::IS_IMPLICIT_ABSTRACT => 'implicit abstract',
+			ReflectionClass::IS_EXPLICIT_ABSTRACT => 'explicit abstract',
+			ReflectionClass::IS_FINAL => 'final',
+			);
+	}
 
-				echo '<script language="Javascript">function toggleDisplay(id) {';
-				echo 'var state = document.getElementById("container"+id).style.display;';
-				echo 'document.getElementById("container"+id).style.display = state == "inline" ? "none" : "inline";';
-				echo 'document.getElementById("plus"+id).style.display = state == "inline" ? "inline" : "none";';
-				echo '}</script>'."\n";
+	public function getObjectReflectionClass($object) {
+		if(is_object($object)) {
+			return new ReflectionObject($object);
+		} else {
+			throw new Exception("aetools::getObjectReflectionClass() : le paramètre $object doit être un objet ! Type ".json_encode(gettype($object))." fourni en paramètre.", 1);
+		}
+	}
+
+	public function getObjectProperties($object) {
+			$result = array();
+			if(is_object($object)) {
+				$result['object'] = $object;
+				$ReflectionClass = new ReflectionObject($object);
+			} else if(is_string($object)) {
+				$result['object'] = new $object();
+				$ReflectionClass = new ReflectionClass($object);
 			}
-
-			$type = !is_string($data) && is_callable($data) ? "Callable" : ucfirst(gettype($data));
-			$type_data = null;
-			$type_color = null;
-			$type_length = null;
-
-			switch ($type) {
-				case "String": 
-					$type_color = "green";
-					$type_length = strlen($data);
-					$type_data = "\"" . htmlentities($data) . "\""; break;
-
-				case "Double": 
-				case "Float": 
-					$type = "Float";
-					$type_color = "#0099c5";
-					$type_length = strlen($data);
-					$type_data = htmlentities($data); break;
-
-				case "Integer": 
-					$type_color = "red";
-					$type_length = strlen($data);
-					$type_data = htmlentities($data); break;
-
-				case "Boolean": 
-					$type_color = "#92008d";
-					$type_length = strlen($data);
-					$type_data = $data ? "TRUE" : "FALSE"; break;
-
-				case "NULL": 
-					$type_length = 0; break;
-
-				case "Array": 
-					$type_length = count($data);
+			$result['class']['comments'] = $this->commentsParser($ReflectionClass->getDocComment(), false);
+			$result['class']['filename'] = $ReflectionClass->getFileName();
+			$methods = $ReflectionClass->getMethods();
+			foreach ($methods as $key => $method) {
+				// access
+				$result['methods'][$method->getName()]['comments'] = $this->commentsParser($method->getDocComment());
+				$result['methods'][$method->getName()]['access'] = array();
+				if($method->isStatic()) $result['methods'][$method->getName()]['access'][] = 'static';
+				if($method->isPublic()) $result['methods'][$method->getName()]['access'][] = 'public';
+				if($method->isProtected()) $result['methods'][$method->getName()]['access'][] = 'protected';
+				if($method->isPrivate()) $result['methods'][$method->getName()]['access'][] = 'private';
+				if($method->isAbstract()) $result['methods'][$method->getName()]['access'][] = 'abstract';
+				if($method->isFinal()) $result['methods'][$method->getName()]['access'][] = 'final';
+				// constructor
+				$result['methods'][$method->getName()]['constructor'] = false;
+				if($method->isConstructor()) $result['methods'][$method->getName()]['constructor'] = true;
+				// desctructor
+				$result['methods'][$method->getName()]['destructor'] = false;
+				if($method->isDestructor()) $result['methods'][$method->getName()]['destructor'] = true;
 			}
+			$properties = $ReflectionClass->getProperties();
+			foreach ($properties as $key => $property) {
+				// access
+				$result['properties'][$property->getName()]['comments'] = $this->commentsParser($property->getDocComment());
+				$result['properties'][$property->getName()]['access'] = array();
+				if($property->isStatic()) $result['properties'][$property->getName()]['access'][] = 'static';
+				if($property->isPublic()) $result['properties'][$property->getName()]['access'][] = 'public';
+				if($property->isProtected()) $result['properties'][$property->getName()]['access'][] = 'protected';
+				if($property->isPrivate()) $result['properties'][$property->getName()]['access'][] = 'private';
+				if($property->isDefault()) $result['properties'][$property->getName()]['access'][] = 'default';
+				// if($property->isAbstract()) $result['properties'][$property->getName()]['access'][] = 'abstract';
+				// if($property->Final()) $result['properties'][$property->getName()]['access'][] = 'final';
+			}
+			$constants = $ReflectionClass->getConstants();
+			foreach ($constants as $key => $constant) {
+				$result['constants'][$key] = $constant;
+			}
+			return $result;
+	}
 
-			if (in_array($type, array("Object", "Array"))) {
-				$notEmpty = false;
-
-				foreach($data as $key => $value) {
-					if (!$notEmpty) {
-						$notEmpty = true;
-
-						if ($isTerminal) {
-							echo $type . ($type_length !== null ? "(" . $type_length . ")" : "")."\n";
-
-						} else {
-							$id = substr(md5(rand().":".$key.":".$level), 0, 8);
-
-							echo "<a href=\"javascript:toggleDisplay('". $id ."');\" style=\"text-decoration:none\">";
-							echo "<span style='color:#666666'>" . $type . ($type_length !== null ? "(" . $type_length . ")" : "") . "</span>";
-							echo "</a>";
-							echo "<span id=\"plus". $id ."\" style=\"display: " . ($collapse ? "inline" : "none") . ";\">&nbsp;&#10549;</span>";
-							echo "<div id=\"container". $id ."\" style=\"display: " . ($collapse ? "" : "inline") . ";\">";
-							echo "<br />";
-						}
-
-						for ($i=0; $i <= $level; $i++) {
-							echo $isTerminal ? "|    " : "<span style='color:black'>|</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
-						}
-
-						echo $isTerminal ? "\n" : "<br />";
-					}
-
-					for ($i=0; $i <= $level; $i++) {
-						echo $isTerminal ? "|    " : "<span style='color:black'>|</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
-					}
-
-					echo $isTerminal ? "[" . $key . "] => " : "<span style='color:black'>[" . $key . "]&nbsp;=>&nbsp;</span>";
-
-					call_user_func($recursive, $value, $level+1);
-				}
-
-				if ($notEmpty) {
-					for ($i=0; $i <= $level; $i++) {
-						echo $isTerminal ? "|    " : "<span style='color:black'>|</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
-					}
-
-					if (!$isTerminal) {
-						echo "</div>";
-					}
-
+	/**
+	 * Parse des commentaires PHP    		
+	 * @param string $comments
+	 * @param boolean $findKeys = true
+	 * @return array
+	 */
+	public function commentsParser($comments, $findKeys = true) {
+		$comments = preg_split('#(\\r|\\n)#', $comments);
+		$lines = array();
+		foreach ($comments as $comment) {
+			if(!preg_match('#^[[:space:]]*(\/\*\*|\*\/)[[:space:]]*#', $comment)) {
+				// ligne ok
+				$line = trim(preg_replace('#^[[:space:]]*\*[[:space:]]*#', '', $comment));
+				if(strlen($line) > 0) $lines[] = $line;
+			}
+		}
+		if(!$findKeys) return $lines;
+		$result = array();
+		$result['texts'] = array();
+		$result['keys'] = array();
+		foreach ($lines as $line) {
+			if(preg_match('#^@[A-Za-z]{2,}\s*#', $line)) {
+				// clé détectée
+				$split = preg_split('#[[:space:]]+#', $line, 3);
+				if(!isset($split[1])) $split[1] = '';
+				if(!isset($split[2])) $split[2] = '';
+				$tmp = array();
+				$tmp['key'] = '';
+				$tmp['var'] = '';
+				$tmp['type'] = '';
+				// key
+				$tmp['key'] = preg_replace('#^@#', '', $split[0]);
+				unset($split[0]);
+				// type
+				if(preg_match('#^\$#', $split[2])) {
+					$tmp['var'] = $split[2];
+					$tmp['type'] = $split[1];
+				} else if(preg_match('#^\$#', $split[1])) {
+					// pas de type mais une var
+					$tmp['var'] = implode(' ', $split);
 				} else {
-					echo $isTerminal ? 
-							$type . ($type_length !== null ? "(" . $type_length . ")" : "") . "  " : 
-							"<span style='color:#666666'>" . $type . ($type_length !== null ? "(" . $type_length . ")" : "") . "</span>&nbsp;&nbsp;";
+					// ni type ni var, juste un commentaire
+					$tmp['var'] = implode(' ', $split);
 				}
-
+				$result['keys'][] = $tmp;
 			} else {
-				echo $isTerminal ? 
-						$type . ($type_length !== null ? "(" . $type_length . ")" : "") . "  " : 
-						"<span style='color:#666666'>" . $type . ($type_length !== null ? "(" . $type_length . ")" : "") . "</span>&nbsp;&nbsp;";
-
-				if ($type_data != null) {
-					echo $isTerminal ? $type_data : "<span style='color:" . $type_color . "'>" . $type_data . "</span>";
-				}
+				$result['texts'][] = preg_replace('#(\\t|\\s)+#', ' ', $line);
 			}
-
-			echo $isTerminal ? "\n" : "<br />";
-		};
-
-		call_user_func($recursive, $input);
+		}
+		return $result;
 	}
 
 }
-
-
-// Grâce à PHP, il est possible d'afficher le contenu d'un répertoire et de ses sous-répertoires. Voici ci-dessous une fonction permettant de parcourir récursivement les répertoires et sous-répertoires et d'en afficher les fichiers :
-
-// function ScanDirectory($Directory){
-
-//   $MyDirectory = opendir($Directory) or die('Erreur');
-//  while($Entry = @readdir($MyDirectory)) {
-//   if(is_dir($Directory.'/'.$Entry)&& $Entry != '.' && $Entry != '..') {
-//                          echo '<ul>'.$Directory;
-//    ScanDirectory($Directory.'/'.$Entry);
-//                         echo '</ul>';
-//   }
-//   else {
-//    echo '<li>'.$Entry.'</li>';
-//                 }
-//  }
-//   closedir($MyDirectory);
-// }
-
-// ScanDirectory('.');
 

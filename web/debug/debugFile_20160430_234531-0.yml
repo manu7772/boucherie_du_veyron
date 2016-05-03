@@ -1,0 +1,13 @@
+height: '0'
+width: '0'
+ratioIndex: '0'
+file:
+    type: image/jpeg
+    name: 10868093_836448496393271_2082464354330139564_n.jpg
+    size: '12589'
+removeImage: 'true'
+dataType: cropper
+rawfiles:
+    actual: ''
+    list: {  }
+raw: 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAgAAAQABAAD/7QA2UGhvdG9zaG9wIDMuMAA4QklNBAQAAAAAABkcAmcAFEw3Sl9kSXdnODFTOVJsMWxxT (16811 char.)'

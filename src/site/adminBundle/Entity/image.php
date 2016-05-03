@@ -27,7 +27,7 @@ use \Exception;
  * image
  *
  * @ORM\Entity
- * @ORM\Table(name="image")
+ * @ORM\Table(name="image", options={"comment":"images du site"})
  * @ORM\HasLifecycleCallbacks
  * @ORM\Entity(repositoryClass="site\adminBundle\Entity\imageRepository")
  * @ExclusionPolicy("all")

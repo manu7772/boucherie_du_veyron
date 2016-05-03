@@ -46,25 +46,8 @@
 							</td>
 							{% endif %}
 							<td{{ bgcolor|raw }}>
-								{{ actions.entiteButtons(entite, ['show','edit','delete','active', 'default'], type) }}
-								{# - OFF ----------------------
-								{% if DEVMODE %}
-								<hr class="m-b-sm m-t-xs">
-								<div class="btn-group">
-									{% if type.type_values|default(null) != null %}
-									<a href="{{ path('siteadmin_entite_type', {entite: entite_name, type_related: type.type_related, type_field: type.type_field, type_values: type.type_values|join(type_value_joiner)|url_encode, id: entite.id, action: 'check'}) }}" type="button" class="btn btn-danger btn-xs" title="Checker article {{ entite.nom|default('#' ~ entite.id) }}"><i class="fa fa-check"></i></a>
-									{% else %}
-									<a href="{{ path('siteadmin_entite', {entite: entite_name, id: entite.id, action: 'check'}) }}" type="button" class="btn btn-danger btn-xs" title="Checker article {{ entite.nom|default('#' ~ entite.id) }}"><i class="fa fa-check"></i></a>
-									{% endif %}
-								</div>
-								{% endif %}
-								- OFF ---------------------- #}
+								{{ actions.entiteButtons(entite, ['show','edit','delete','active','default'], type) }}
 							</td>
-							{#
-							<td{{ bgcolor|raw }}>{{ phraseCut(entite.pagewebs|join(', '), 140) }}</td>
-							<td{{ bgcolor|raw }}>{{ phraseCut(entite.articles|join(', '), 140) }}</td>
-							<td{{ bgcolor|raw }}>{{ phraseCut(entite.fiches|join(', '), 140) }}</td>
-							#}
 						</tr>
 						{% endfor %}
 					</tbody>

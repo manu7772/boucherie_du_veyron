@@ -211,12 +211,13 @@ abstract class baseSubEntity extends baseEntity {
 	 * @param boolean $includeThis = false
 	 * @return array
 	 */
-	public function getAllParents($includeThis = false) {
+	public function getAllParents($includeThis = false, $unique = false) {
 		$parents = array();
 		if($includeThis === true) $parents = array($this);
 		foreach ($this->getParents() as $parent) {
-			$parents = array_merge($parents, $parent->getAllParents(true));
+			$parents = array_merge($parents, $parent->getAllParents(true, $unique));
 		}
+		if($unique) return array_unique($parents);
 		return $parents;
 	}
 
@@ -236,8 +237,8 @@ abstract class baseSubEntity extends baseEntity {
 	 * @param boolean $includeThis = false
 	 * @return array
 	 */
-	public function getAllParentsInverse($includeThis = false) {
-		return array_reverse($this->getAllParents($includeThis));
+	public function getAllParentsInverse($includeThis = false, $unique = false) {
+		return array_reverse($this->getAllParents($includeThis, $unique));
 	}
 
 	/**

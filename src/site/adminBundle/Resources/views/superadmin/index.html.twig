@@ -20,38 +20,116 @@
 {% block content %}
 <div class="row">
 	{% if is_granted('ROLE_SUPER_ADMIN') %}
-	<div class="col-md-12">
-		<h1>Test panier : {{ app.user }}</h1>
-		<!-- panier_user -->
-		<!-- panier_info -->
-		{% for article in panier_user %}
-		<p>{{ article }}</p>
-		{% endfor %}
-		<p>Articles : {{ panier_info.total }}</p>
-		<p>Prix Total : {{ panier_info.prixtotal }}</p>
-		<p>Nombre d'articles différents : {{ panier_info.bytype }}</p>
-
-		<p>Ajouter 1</p>
-		{% for article in articles %}
-		<a href="{{ path('panier_action', {action: 'add', id: article.id, param: 1}) }}" class="btn btn-xs btn-primary"><i class="fa fa-plus"></i> {{ article }}</a>
-		{% endfor %}
-		<br>
-
-		<p>Supprimer 1</p>
-		{% for article in articles %}
-		<a href="{{ path('panier_action', {action: 'supp', id: article.id, param: 1}) }}" class="btn btn-xs btn-info"><i class="fa fa-minus"></i> {{ article }}</a>
-		{% endfor %}
-		<br>
-
-		<p>Supprimer article</p>
-		{% for article in articles %}
-		<a href="{{ path('panier_action', {action: 'remove', id: article.id}) }}" class="btn btn-xs btn-warning"><i class="fa fa-times"></i> {{ article }}</a>
-		{% endfor %}
-		<br>
-
-		<p>Vider le panier</p>
-		<a href="{{ path('panier_action', {action: 'empty'}) }}" class="btn btn-xs btn-danger"><i class="fa fa-ban"></i> Vider</a>
-
+	{% set collapsed = " collapsed" %}
+	{% set collapsed = "" %}
+	{% set partname = 'service' %}
+	<div class="col-lg-6">
+		<div class="ibox{{ collapsed }}">
+			<div class="ibox-title">
+				<h5><small>Liste des</small> <strong>services</strong></h5>
+				<div class="ibox-tools">
+					<a class="collapse-link">
+						<i class="fa fa-chevron-up"></i>
+					</a>
+					<a class="close-link">
+						<i class="fa fa-times"></i>
+					</a>
+				</div>
+			</div>
+			<div class="ibox-content">
+				<div class="panel-body">
+					<div class="panel-group" id="{{ partname }}_accordion">
+						{% for name,service in services %}
+						<div class="panel panel-default">
+							<div class="panel-heading">
+								<h5 class="panel-title">
+									<a data-toggle="collapse" data-parent="#{{ partname }}_accordion" href="#{{ partname }}_collapse_{{ loop.index0 }}"><strong>{{ service.nom|default(name ~ ' <i><small>(non défini)</small></i>')|raw }}</strong> <i class="text-muted"><small>Niv. {{ service.level|default('0') }} / {{ service.parentClassName(true)|default('aucun parent') }}</small></i></a>
+									{% if service.callName|default(null) != null %}
+									<a href="{{ path('siteadmin_sadmin_services', {service: service.callName}) }}" class="pull-right"><i class="fa fa-eye"></i></a>
+									{% endif %}
+								</h5>
+							</div>
+							<div id="{{ partname }}_collapse_{{ loop.index0 }}" class="panel-collapse collapse{% if loop.first %} in{% endif %}">
+								<div class="panel-body">
+									<p class="m-b-none">• Nom : {{ service.nom }}</p>
+									<p class="m-b-none">• Call : {{ service.callName|default(null) }}</p>
+									<p class="m-b-none">• Class : {{ service.name }}</p>
+									<p class="m-b-none">• ClassName : {{ service.className }}</p>
+									<p class="m-b-none">• ShortName : {{ service.shortName }}</p>
+									<p class="m-b-none">• Parent classes : <i><p class="m-l-lg m-b-none">{{ service.parentsClassNames|join('</p><p class="m-l-lg m-b-none"> ')|raw }}</p></i></p>
+									<p class="m-b-none">• Parent names : <i><p class="m-l-lg m-b-none">{{ service.parentsShortNames|join('</p><p class="m-l-lg m-b-none"> ')|raw }}</p></i></p>
+								</div>
+							</div>
+						</div>
+						{% endfor %}
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	{% set partname = 'route' %}
+	<div class="col-lg-6">
+		<div class="ibox{{ collapsed }}">
+			<div class="ibox-title">
+				<h5><small>Liste des</small> <strong>routes</strong></h5>
+				<div class="ibox-tools">
+					<a class="collapse-link">
+						<i class="fa fa-chevron-up"></i>
+					</a>
+					<a class="close-link">
+						<i class="fa fa-times"></i>
+					</a>
+				</div>
+			</div>
+			<div class="ibox-content">
+				<div class="panel-body">
+					<div class="panel-group" id="{{ partname }}_accordion">
+						<div class="panel panel-default">
+							<div class="panel-heading">
+								<h5 class="panel-title">
+									<a data-toggle="collapse" data-parent="#{{ partname }}_accordion" href="#{{ partname }}_collapse_0"><strong>Routes website/webadmin</strong></a>
+								</h5>
+							</div>
+							<div id="{{ partname }}_collapse_0" class="panel-collapse collapse">
+								<div class="panel-body">
+									{% for route in aetools_service.allRoutes if not (route matches('/^(_|fos_user_)/i')) %}
+									<p class="m-b-none">{{ route }}</p>
+									{% endfor %}
+								</div>
+							</div>
+						</div>
+						<div class="panel panel-default">
+							<div class="panel-heading">
+								<h5 class="panel-title">
+									<a data-toggle="collapse" data-parent="#{{ partname }}_accordion" href="#{{ partname }}_collapse_1"><strong>Routes FOS UserBundle</strong></a>
+								</h5>
+							</div>
+							<div id="{{ partname }}_collapse_1" class="panel-collapse collapse">
+								<div class="panel-body">
+									{% for route in aetools_service.allRoutes if route matches('/^fos_user_/i') %}
+									<p class="m-b-none">{{ route }}</p>
+									{% endfor %}
+								</div>
+							</div>
+						</div>
+						<div class="panel panel-default">
+							<div class="panel-heading">
+								<h5 class="panel-title">
+									<a data-toggle="collapse" data-parent="#{{ partname }}_accordion" href="#{{ partname }}_collapse_2"><strong>Routes Assetic</strong></a>
+								</h5>
+							</div>
+							<div id="{{ partname }}_collapse_2" class="panel-collapse collapse">
+								<div class="panel-body">
+									{% for route in aetools_service.allRoutes if route matches('/^_assetic/i') %}
+									<p class="m-b-none">{{ route }}</p>
+									{% endfor %}
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
 	</div>
 	{% else %}
 	<div class="col-md-8 col-md-offset-2 alert alert-danger text-center">

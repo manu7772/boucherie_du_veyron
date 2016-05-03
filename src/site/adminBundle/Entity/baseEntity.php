@@ -84,6 +84,37 @@ abstract class baseEntity {
     }
 
 	/**
+	 * Renvoie la liste (array) des classes des parents de l'entité
+	 * @param boolean $short = false
+	 * @return array
+	 */
+	public function getParentsClassNames($short = false) {
+		$class = new ReflectionClass($this->getClass());
+		$short ?
+			$him = $class->getShortName():
+			$him = $class->getName();
+		$parents = array($him);
+		while($class = $class->getParentClass()) {
+			$short ?
+				$parents[] = $class->getShortName():
+				$parents[] = $class->getName();
+		}
+		return $parents;
+	}
+
+	/**
+	 * Renvoie le nom de la classe (short name par défaut)
+	 * @param boolean $short = false
+	 * @return string
+	 */
+	public function getClass($short = false) {
+		$class = new ReflectionClass(get_called_class());
+		return $short ?
+			$class->getShortName():
+			$class->getName();
+	}
+
+	/**
 	 * @ORM\PrePersist
 	 * @ORM\PreUpdate
 	 */
@@ -142,25 +173,6 @@ abstract class baseEntity {
 	}
 
 	/**
-	 * Renvoie la liste (array) des classes des parents de l'entité
-	 * @param boolean $short = false
-	 * @return array
-	 */
-	public function getParentsClassNames($short = false) {
-		$class = new ReflectionClass($this->getClass());
-		$short ?
-			$him = $class->getShortName():
-			$him = $class->getName();
-		$parents = array($him);
-		while($class = $class->getParentClass()) {
-			$short ?
-				$parents[] = $class->getShortName():
-				$parents[] = $class->getName();
-		}
-		return $parents;
-	}
-
-	/**
 	 * Un élément par défaut dans la table est-il obligatoire ?
 	 * @return boolean
 	 */
@@ -177,18 +189,6 @@ abstract class baseEntity {
 	 */
 	public function isDefaultMultiple() {
 		return false;
-	}
-
-	/**
-	 * Renvoie le nom de la classe (short name par défaut)
-	 * @param boolean $short = false
-	 * @return string
-	 */
-	public function getClass($short = false) {
-		$class = new ReflectionClass(get_called_class());
-		return $short ?
-			$class->getShortName():
-			$class->getName();
 	}
 
 	/**

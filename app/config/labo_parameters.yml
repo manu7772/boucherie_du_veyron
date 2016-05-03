@@ -30,6 +30,8 @@ parameters:
         siteedition:        %default_locales%
         siteUser:           %default_locales%
         siteadmin:          %default_locales%
+        siteadminsite:      %default_locales%
+        sitegraphics:       %default_locales%
     messages:
         types:
             success: success

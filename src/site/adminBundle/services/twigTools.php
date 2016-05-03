@@ -7,8 +7,16 @@ use site\adminBundle\services\primarydata;
 use \Twig_Extension;
 use \Twig_SimpleFunction;
 use \Datetime;
+use \ReflectionClass;
 
 class twigTools extends Twig_Extension {
+
+    const NAME                  = 'twigTools';        // nom du service
+    const CALL_NAME             = 'aetools.textutilities'; // comment appeler le service depuis le controller/container
+
+	const PATH_CUT				= 'src/';			// découpage path sur /src
+	const SLASH					= '/';				// slash
+	const ASLASH 				= '\\';				// anti-slashes
 
 	private $decal;
 	private $html;
@@ -58,12 +66,120 @@ class twigTools extends Twig_Extension {
 			new Twig_SimpleFunction('arrayNomSlug', array($this, 'arrayNomSlug')),
 			new Twig_SimpleFunction('arraySlugNom', array($this, 'arraySlugNom')),
 			new Twig_SimpleFunction('fileExists', array($this, 'fileExists')),
+			new Twig_SimpleFunction('fileGetContent', array($this, 'fileGetContent')),
+			new Twig_SimpleFunction('objectClassname', array($this, 'objectClassname')),
+			new Twig_SimpleFunction('iconsAsJson', array($this, 'iconsAsJson')),
 			);
 	}
 
-	public function getName() {
-		return 'twigTools';
+
+	public function __toString() {
+		try {
+			$string = $this->getNom();
+		} catch (Exception $e) {
+			$string = '…';
+		}
+		return $string;
 	}
+
+    public function getNom() {
+        return self::NAME;
+    }
+
+    public function callName() {
+        return self::CALL_NAME;
+    }
+
+	/**
+	 * Renvoie le nom de la classe
+	 * @return string
+	 */
+	public function getName() {
+		// return get_called_class();
+		return self::NAME;
+	}
+
+	/**
+	 * Renvoie le nom de la classe
+	 * @return string
+	 */
+	public function getShortName() {
+		return $this->getClassShortName($this->getName());
+	}
+
+    // abstract public function getClassName();
+    public function getClassName() {
+        return $this->getClass(true);
+    }
+
+	/**
+	 * Renvoie la liste (array) des classes des parents de l'entité
+	 * @param boolean $short = false
+	 * @return array
+	 */
+	public function getParentClassName($short = false) {
+		$class = new ReflectionClass($this->getClass());
+		$class = $class->getParentClass();
+		if($class)
+			return (boolean) $short ?
+				$class->getShortName():
+				$class->getName();
+			else return null;
+	}
+
+	/**
+	 * Renvoie la liste (array) des classes des parents de l'entité
+	 * @param boolean $short = false
+	 * @return array
+	 */
+	public function getParentsClassNames($short = false) {
+		$class = new ReflectionClass($this->getClass());
+		$parents = array();
+		while($class = $class->getParentClass()) {
+			(boolean) $short ?
+				$parents[] = $class->getShortName():
+				$parents[] = $class->getName();
+		}
+		return $parents;
+	}
+
+	/**
+	 * Renvoie la liste (array) des classes des parents de l'entité
+	 * @param boolean $short = false
+	 * @return array
+	 */
+	public function getParentsShortNames() {
+		return $this->getParentsClassNames(true);
+	}
+
+	/**
+	 * Renvoie le nom de la classe (short name par défaut)
+	 * @param boolean $short = false
+	 * @return string
+	 */
+	public function getClass($short = false) {
+		$class = new ReflectionClass(get_called_class());
+		return (boolean) $short ?
+			$class->getShortName():
+			$class->getName();
+	}
+
+	/**
+	 * Renvoie le nom court de la classe
+	 * @return string
+	 */
+	public function getClassShortName($class) {
+		if(is_object($class)) $class = get_class($class);
+		if(is_string($class)) {
+			$shortName = explode(self::ASLASH, $class);
+			return end($shortName);
+		}
+		return false;
+	}
+
+
+
+
 
 	public function datatables_hidden($language = null) {
 		$aeTrans = $this->container->get('aetools.translate');
@@ -780,10 +896,62 @@ class twigTools extends Twig_Extension {
 
 	public function fileExists($file) {
 		$file = $this->container->get('aetools.aetools')->setRootPath()->getCurrentPath().'../'.preg_replace('#^/#', '', $file);
-		// if(@file_exists($file)) $a = 'OK'; else $a = 'non';
-		// echo('<p>'.$file.' : '.$a.'</p>');
 		return @file_exists($file);
 	}
 
+	public function fileGetContent($file) {
+		$root = explode(self::PATH_CUT, $this->container->get('aetools.aetools')->setRootPath()->getCurrentPath());
+		$path = explode(self::PATH_CUT, $file, 2);
+		$file = $root[0].self::PATH_CUT.$path[1];
+		if(!@file_exists($file)) return false;
+		return @file_get_contents($file);
+	}
+
+	public function objectClassname($object, $short = false) {
+		if(is_object($object)) {
+			if($short) {
+				$aeEntite = $this->container->get('aetools.aetools');
+				$object = $aeEntite->getClassShortName($object);
+				return $object ? $object : null;
+			} else {
+				return get_class($object);
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * Get liste des icones
+	 * @return json string
+	 */
+	public function iconsAsJson() {
+		$icons = $this->container->get('aetools.aetools')->getTranslations('icon', null, 'src/site/adminsiteBundle');
+		if(count($icons) > 0) {
+			$icons = reset($icons);
+			$list = $icons['entite'];
+			$icons = array();
+			foreach ($list as $type => $faicon) {
+				$icons[$type] = array('icon' => 'fa '.$faicon);
+			}
+		} else {
+			$icons = array(
+				'default' => array('icon' => 'fa fa-file-o'),
+				'forbidden' => array('icon' => 'fa fa-ban'),
+				);
+		}
+		return json_encode($icons);
+	}
+
+
+
+
 
 }
+
+
+
+
+
+
+
+

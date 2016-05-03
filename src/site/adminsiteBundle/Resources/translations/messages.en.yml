@@ -37,6 +37,9 @@ marketplace:
     name: e-commerce
 icons:
     default_icon: default icon
+default:
+    bydefault: Set as default element
+    nomore: You can not either add element. Disable some other element if you want to attribute this one.
 actions:
     name: actions
     voir: view

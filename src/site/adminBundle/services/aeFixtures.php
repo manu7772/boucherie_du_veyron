@@ -26,6 +26,9 @@ class aeFixtures extends aeEntity {
 	const GO_TO_ROOT = '/../../../../';
 	const MAX_YAML_LEVEL = 10;
 
+	const NAME                  = 'aeFixtures';        // nom du service
+	const CALL_NAME             = 'aetools.aeFixtures'; // comment appeler le service depuis le controller/container
+
 	protected $languages; 			// array des langues disponibles --> config.yml --> default_locales: "fr|en|en_US|es|it|de"
 	protected $bundlesLanguages;	// array des langues disponibles par bundles --> config.yml --> list_locales: "fr|en", etc.
 	protected $default_locale; 		// string locale par défaut --> config.yml --> locale: "en"
@@ -43,6 +46,14 @@ class aeFixtures extends aeEntity {
 		// récupération de fichiers et check
 		$this->initFiles();
 		// $this->verifData();
+	}
+
+	public function getNom() {
+		return self::NAME;
+	}
+
+	public function callName() {
+		return self::CALL_NAME;
 	}
 
 	protected function initFiles() {
@@ -204,7 +215,7 @@ class aeFixtures extends aeEntity {
 				$number = $this->container->get('aetools.media')->eraseAllFormats();
 				break;
 			default:
-				$entities = $em->getRepository($this->getClassname($entite))->findAll();
+				$entities = $em->getRepository($this->getClassOfEntity($entite))->findAll();
 				foreach ($entities as $ent) {
 					$em->remove($ent);
 					$number++;
@@ -224,10 +235,9 @@ class aeFixtures extends aeEntity {
 	 * @return array
 	 */
 	protected function fillEntity($data, $entite, $empty = true) {
-		$classname = $this->getClassname($entite);
+		$classname = $this->getClassOfEntity($entite);
 		if($empty === true) $this->emptyEntity($entite);
 		$em = $this->container->get('doctrine')->getManager();
-		$defaultTaux = ;
 		$newdata = array();
 		foreach ($data as $key => $dat) {
 			$newdata[$key] = new $classname();
@@ -236,7 +246,7 @@ class aeFixtures extends aeEntity {
 			$service->checkTva($newdata[$key], false);
 			foreach ($dat as $attribute => $value) {
 				$m = $this->getMethodOfSetting($attribute, $newdata[$key]);
-				if(method_exists($newdata[$key], $m)) {
+				if(is_string($m)) {
 					if(!$this->hasAssociation($attribute, $newdata[$key])) {
 						// champ simple
 						switch ($this->getTypeOfField($attribute, $newdata[$key])) {
@@ -284,13 +294,8 @@ class aeFixtures extends aeEntity {
 		return $newdata;
 	}
 
-	protected function getEntities() {
-		$this->classnames = array_flip($this->getListOfEnties());
-		return $this->classnames;
-	}
-
-	protected function getClassname($entite) {
-		$this->getEntities();
+	protected function getClassOfEntity($entite) {
+		$this->classnames = $this->getListOfEnties(false, false, true);
 		return isset($this->classnames[$entite]) ? $this->classnames[$entite] : false;
 	}
 

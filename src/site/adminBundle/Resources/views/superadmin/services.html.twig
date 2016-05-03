@@ -1,16 +1,18 @@
 {% extends 'siteadminBundle::page_admin_generic.html.twig' %}
-{% set cssjsloads = 'simple' %}
+{% set cssjsloads = 'CODE' %}
 {% set DEVMODE = (app.environment in ['dev', 'test']) or (is_granted('ROLE_SUPER_ADMIN')) %}
+{% import 'siteadminBundle:blocks:actions.html.twig' as actions %}
 
 {% block page_heading %}
 <div class="row wrapper border-bottom white-bg page-heading">
 	<div class="col-lg-12 m-t-xs">
 		<div class="row">
 			<div class="col-md-9">
-				<h2>Routes</h2>
+				<h2>Services</h2>
 				<ol class="breadcrumb">
 					<li><a href="{{ path('siteadmin_sadmin_index') }}"><strong>{{ UCfirst('superadmin.name'|trans) }}</strong></a></li>
-					<li>Routes</li>
+					<li>service</li>
+					<li>{{ service_info.object.nom }}</li>
 				</ol>
 			</div>
 		</div>
@@ -21,19 +23,25 @@
 {% block content %}
 <div class="row">
 	{% if is_granted('ROLE_SUPER_ADMIN') %}
-	<div class="col-md-12">
-		<h1>Routes website/webadmin</h1>
-		{% for route in aetools_service.allRoutes if not (route matches('/^(_|fos_user_)/i')) %}
-		<p class="m-b-none">{{ route }}</p>
-		{% endfor %}
-		<h1>Routes FOS UserBundle</h1>
-		{% for route in aetools_service.allRoutes if route matches('/^fos_user_/i') %}
-		<p class="m-b-none">{{ route }}</p>
-		{% endfor %}
-		<h1>Routes Assetic</h1>
-		{% for route in aetools_service.allRoutes if route matches('/^_assetic/i') %}
-		<p class="m-b-none">{{ route }}</p>
-		{% endfor %}
+	{% set collapsed = " collapsed" %}
+	{% set collapsed = "" %}
+	<div class="col-lg-12">
+		<div class="ibox{{ collapsed }}">
+			<div class="ibox-title">
+				<h5><small>Service</small> <strong>{{ service_info.object.nom }}</strong></h5>
+				<div class="ibox-tools">
+					<a class="collapse-link">
+						<i class="fa fa-chevron-up"></i>
+					</a>
+					<a class="close-link">
+						<i class="fa fa-times"></i>
+					</a>
+				</div>
+			</div>
+			<div class="ibox-content">
+				{{ actions.objectViewer(service_info, 'service') }}
+			</div>
+		</div>
 	</div>
 	{% else %}
 	<div class="col-md-8 col-md-offset-2 alert alert-danger text-center">

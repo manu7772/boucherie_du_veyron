@@ -19,7 +19,7 @@ use \DateTime;
  * fiche
  *
  * @ORM\Entity
- * @ORM\Table(name="fiche")
+ * @ORM\Table(name="fiche", options={"comment":"fiches : modes d'emplois, recettes, notices, bricolage, etc."})
  * @ORM\HasLifecycleCallbacks
  * @ORM\Entity(repositoryClass="site\adminBundle\Entity\ficheRepository")
  * @ExclusionPolicy("all")

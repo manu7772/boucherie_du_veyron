@@ -1,0 +1,62 @@
+{% extends 'siteadminBundle::page_admin_generic.html.twig' %}
+{% set cssjsloads = 'simple' %}
+{% set DEVMODE = (app.environment in ['dev', 'test']) or (is_granted('ROLE_SUPER_ADMIN')) %}
+
+{% block page_heading %}
+<div class="row wrapper border-bottom white-bg page-heading">
+	<div class="col-lg-12 m-t-xs">
+		<div class="row">
+			<div class="col-md-9">
+				<h2>{{ UCfirst('superadmin.name'|trans) }}{% if type.type_values|default(null) != null %} - {{ type.type_values|join('/') }}{% endif %}</h2>
+				<ol class="breadcrumb">
+					<li>{{ UCfirst('superadmin.name'|trans) }}</li>
+				</ol>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock page_heading %}
+
+{% block content %}
+<div class="row">
+	{% if is_granted('ROLE_SUPER_ADMIN') %}
+	<div class="col-md-12">
+		<h1>Test panier / User <strong>{{ app.user }}</strong></h1>
+		<!-- panier_user -->
+		<!-- panier_info -->
+		{% for article in panier_user|default([]) %}
+		<p>{{ article }}</p>
+		{% endfor %}
+		<p class="m-b-none">• Articles : {{ panier_info.total }}</p>
+		<p class="m-b-none">• Prix Total : {{ panier_info.prixtotal }}</p>
+		<p class="m-b-none">• Nombre d'articles différents : {{ panier_info.bytype }}</p>
+
+		<p class="m-t-sm m-b-none">Ajouter 1</p>
+		{% for article in articles %}
+		<a href="{{ path('panier_action', {action: 'add', id: article.id, param: 1}) }}" class="btn btn-xs btn-primary"><i class="fa fa-plus"></i> {{ article }}</a>
+		{% endfor %}
+		<br>
+
+		<p class="m-t-sm m-b-none">Supprimer 1</p>
+		{% for article in articles if article in panier_articles|default([]) %}
+		<a href="{{ path('panier_action', {action: 'supp', id: article.id, param: 1}) }}" class="btn btn-xs btn-info"><i class="fa fa-minus"></i> {{ article }}</a>
+		{% endfor %}
+		<br>
+
+		<p class="m-t-sm m-b-none">Supprimer article</p>
+		{% for article in articles if article in panier_articles|default([]) %}
+		<a href="{{ path('panier_action', {action: 'remove', id: article.id}) }}" class="btn btn-xs btn-warning"><i class="fa fa-times"></i> {{ article }}</a>
+		{% endfor %}
+		<br>
+
+		<p>Vider le panier</p>
+		<a href="{{ path('panier_action', {action: 'empty'}) }}" class="btn btn-xs btn-danger"><i class="fa fa-ban"></i> Vider</a>
+
+	</div>
+	{% else %}
+	<div class="col-md-8 col-md-offset-2 alert alert-danger text-center">
+		<h2><i class="fa fa-times"></i> Vous n'êtes pas autorisé à accéder à cette section.</h2>
+	</div>
+	{% endif %}
+</div>
+{% endblock content %}

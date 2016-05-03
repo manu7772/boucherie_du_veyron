@@ -11,9 +11,17 @@ siteadmin_sadmin_index:
     path:     /superadmin
     defaults: { _controller: siteadminsiteBundle:superadmin:index }
 
+siteadmin_sadmin_panier:
+    path:     /superadmin/panier/tests
+    defaults: { _controller: siteadminsiteBundle:superadmin:panierTest }
+
 siteadmin_sadmin_routes:
     path:     /superadmin/routes
     defaults: { _controller: siteadminsiteBundle:superadmin:routes }
+
+siteadmin_sadmin_services:
+    path:     /superadmin/services/{service}
+    defaults: { _controller: siteadminsiteBundle:superadmin:services }
 
 siteadmin_sadmin_bundles:
     path:     /superadmin/bundles

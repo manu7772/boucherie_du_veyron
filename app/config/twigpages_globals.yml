@@ -33,86 +33,87 @@ twig:
                 trans_domain: categorie
                 icon: 'entite.categorie'
                 level2: 
-                    cat_mixed:
-                        nom: 'types.multimedia'
-                        trans_domain: categorie
-                        path:
-                            path: 'siteadmin_entite_type'
-                            params:
-                                entite: categorie
-                                type_related: parent
-                                type_field: nom
-                                type_values: 'types.multimedia'
-                    cat_article:
-                        nom: 'article'
-                        trans_domain: article
-                        path:
-                            path: 'siteadmin_entite_type'
-                            params:
-                                entite: categorie
-                                type_related: _self
-                                type_field: type
-                                type_values: article
-                    cat_fiche:
-                        nom: 'fiche'
-                        trans_domain: fiche
-                        path:
-                            path: 'siteadmin_entite_type'
-                            params:
-                                entite: categorie
-                                type_related: _self
-                                type_field: type
-                                type_values: fiche
-                    cat_images:
-                        nom: 'image'
-                        trans_domain: image
-                        path:
-                            path: 'siteadmin_entite_type'
-                            params:
-                                entite: categorie
-                                type_related: _self
-                                type_field: type
-                                type_values: image
-                    cat_boutiques:
-                        nom: 'boutique'
-                        trans_domain: boutique
-                        path:
-                            path: 'siteadmin_entite_type'
-                            params:
-                                entite: categorie
-                                type_related: _self
-                                type_field: type
-                                type_values: boutique
-                    cat_pdfs:
-                        nom: 'pdf'
-                        trans_domain: pdf
-                        path:
-                            path: 'siteadmin_entite_type'
-                            params:
-                                entite: categorie
-                                type_related: _self
-                                type_field: type
-                                type_values: pdf
                     roots:
-                        nom: 'groupes'
+                        nom: 'types.all'
                         trans_domain: categorie
                         role: 'ROLE_SUPER_ADMIN'
+                        icon: 'entite.categorie'
                         path: 
                             path: 'siteadmin_entite_repo'
                             params:
                                 entite: categorie
                                 method: findRoots
                                 # repository: ~
-                    level1:
-                        nom: 'tous types'
+                    cat_mixed:
+                        nom: 'types.multimedia'
                         trans_domain: categorie
-                        role: 'ROLE_SUPER_ADMIN'
-                        path: 
+                        icon: 'entite.multimedia'
+                        path:
                             path: 'siteadmin_entite_repo'
                             params:
                                 entite: categorie
-                                method: findLevel
-                                # repository: ~
+                                method: findCollectionsByType
+                                params: multimedia
+                    cat_article:
+                        nom: 'types.article'
+                        trans_domain: categorie
+                        icon: 'entite.article'
+                        path:
+                            path: 'siteadmin_entite_repo'
+                            params:
+                                entite: categorie
+                                method: findCollectionsByType
+                                params: article
+                    cat_pageweb:
+                        nom: 'types.pageweb'
+                        trans_domain: categorie
+                        icon: 'entite.pageweb'
+                        path:
+                            path: 'siteadmin_entite_repo'
+                            params:
+                                entite: categorie
+                                method: findCollectionsByType
+                                params: pageweb
+                    cat_fiche:
+                        nom: 'types.fiche'
+                        trans_domain: categorie
+                        icon: 'entite.fiche'
+                        path:
+                            path: 'siteadmin_entite_repo'
+                            params:
+                                entite: categorie
+                                method: findCollectionsByType
+                                params: fiche
+                    cat_images:
+                        nom: 'types.image'
+                        trans_domain: categorie
+                        icon: 'entite.image'
+                        path:
+                            path: 'siteadmin_entite_repo'
+                            params:
+                                entite: categorie
+                                method: findCollectionsByType
+                                params: image
+                    cat_boutiques:
+                        nom: 'types.boutique'
+                        trans_domain: categorie
+                        icon: 'entite.boutique'
+                        path:
+                            path: 'siteadmin_entite_repo'
+                            params:
+                                entite: categorie
+                                method: findCollectionsByType
+                                params: boutique
+                    cat_pdfs:
+                        nom: 'types.pdf'
+                        trans_domain: categorie
+                        icon: 'entite.pdf'
+                        path:
+                            path: 'siteadmin_entite_repo'
+                            params:
+                                entite: categorie
+                                method: findCollectionsByType
+                                params: pdf
             marketplace:
                 role: 'ROLE_ADMIN'
                 nom: 'marketplace.name'
@@ -181,15 +182,15 @@ twig:
                             params:
                                 entite: pageweb
                     cat_pageweb:
-                        nom: 'pageweb_coll'
-                        trans_domain: pageweb
+                        nom: 'types.pageweb'
+                        trans_domain: categorie
+                        icon: 'entite.categorie'
                         path:
-                            path: 'siteadmin_entite_type'
+                            path: 'siteadmin_entite_repo'
                             params:
                                 entite: categorie
-                                type_related: _self
-                                type_field: type
-                                type_values: pageweb
+                                method: findCollectionsByType
+                                params: pageweb
                     menus:
                         role: %restrict_admin%
                         nom: 'menu.name_s'
@@ -482,3 +483,6 @@ twig:
                     entities:
                         nom: 'superadmin.entites'
                         path: 'siteadmin_sadmin_entities'
+                    panier:
+                        nom: 'Tests panier'
+                        path: 'siteadmin_sadmin_panier'

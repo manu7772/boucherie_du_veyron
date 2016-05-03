@@ -7,11 +7,17 @@ use site\adminBundle\services\aeEntity;
 use site\adminBundle\Entity\rawfile;
 use site\adminBundle\Entity\baseEntity;
 
+// call in controller with $this->get('aetools.aeRawfile');
 class aeRawfile extends aeEntity {
 
-    public function __construct(ContainerInterface $container) {
-        parent::__construct($container);
-        $this->defineEntity('site\adminBundle\Entity\rawfile');
+    const NAME                  = 'aeRawfile';        // nom du service
+    const CALL_NAME             = 'aetools.aeRawfile'; // comment appeler le service depuis le controller/container
+    const CLASS_ENTITY          = 'site\adminBundle\Entity\rawfile';
+
+    public function __construct(ContainerInterface $container = null, $em = null) {
+        parent::__construct($container, $em);
+        $this->defineEntity(self::CLASS_ENTITY);
+        return $this;
     }
 
     /**
@@ -24,8 +30,17 @@ class aeRawfile extends aeEntity {
         return $this;
     }
 
+    public function getNom() {
+        return self::NAME;
+    }
+
+    public function callName() {
+        return self::CALL_NAME;
+    }
+
     /**
      * Persist and flush a rawfile
+     * @dev désactivée
      * @param baseEntity $entity
      * @return aeReponse
      */

@@ -4,11 +4,78 @@
 
 {% set DEVMODE = (app.environment in ['DEV', 'TEST']) or (is_granted('ROLE_SUPER_ADMIN')) %}
 
-{% block page_heading %}
-	{{ parent() }}
-{% endblock page_heading %}
+{% block breadcrumb %}
+	<ol class="breadcrumb ellipsis">
+		<li><a href="{{ path('siteadmin_homepage') }}"><strong>{{ UCfirst('administration'|trans) }}</strong></a></li>
+		{% if repo.method|default(null) == 'findRoots' %}
+		<li>{{ UCfirst('name_s'|trans({}, entite_name)) }}</li>
+		{% elseif repo.method|default(null) == 'findCollectionsByType' %}
+		<li><a href="{{ path('siteadmin_entite_repo', {entite: entite_name, method: 'findRoots'}) }}"><strong>{{ UCfirst('name_s'|trans({}, entite_name)) }}</strong></a></li>
+		<li>{{ UCfirst(('types.' ~ params)|trans({}, entite_name)) }}</li>
+		{% else %}
+		<li><a href="{{ path('siteadmin_entite_repo', {entite: entite_name, method: 'findRoots'}) }}"><strong>{{ UCfirst('name_s'|trans({}, entite_name)) }}</strong></a></li>
+		{% if type.type_values|default(null) != null %}
+		<li>{% for typename in type.type_values %}{{ ('types.' ~ typename)|trans({}, entite_name) }}{% if not loop.last %}+{% endif %}{% endfor %}</li>
+		{% else %}
+		<li>{{ UCfirst('name_s'|trans({}, entite_name)) }}</li>
+		{% endif %}
+		{% endif %}
+	</ol>
+{% endblock breadcrumb %}
+
+{% block buttons %}
+{% if form_pre_create is not defined %}
+	{% if type.type_values|default([])|length > 0 %}
+		{% for typ in type.type_values %}
+		<a href="{{ actions.entiteLink(entite_name, 'create', {type_related: type.type_related, type_values: [typ], type_field: type.type_field}, type_value_joiner) }}" type="button" class="btn btn-xs btn-warning pull-right m-r-xs"><i class="fa fa-plus icon-wait-on-click m-r-sm"></i>{{ UCfirst('create_btn'|trans({}, entite_name)) }} {{ typ }}</a>
+		{% endfor %}
+	{% else %}
+	<a href="{{ path('siteadmin_entite', {entite: entite_name, action: 'create'}) }}" type="button" class="btn btn-xs btn-warning pull-right"><i class="fa fa-plus icon-wait-on-click m-r-sm"></i>{{ UCfirst('create_btn'|trans({}, entite_name)) }}</a>
+	{% endif %}
+{% else %}
+<div class="btn-group pull-right">
+	<button data-toggle="dropdown" type="button" class="btn btn-xs btn-warning dropdown-toggle"><i class="fa fa-plus m-r-sm"></i>{{ UCfirst('create_btn'|trans({}, entite_name)) }} <span class="caret"></span></button>
+	<ul class="dropdown-menu">
+		{% if type.type_values|default([])|length > 0 %}
+		{% for typename in type.type_values %}
+		<li class="dropdown-header">{{ typename|trans({}, entite_name) }}</li>
+		{% endfor %}
+		<li class="divider"></li>
+		{% endif %}
+		<li class="dropdown-header">{{ form(form_pre_create) }}</li>
+	</ul>
+</div>
+{% endif %}
+{% endblock buttons %}
 
 {% block content %}
+{% if repo.method|default(null) == 'findRoots' %}
+<div class="row">
+	<div class="col-md-12">
+		{% if entites|length > 0 %}
+		{% for entite in entites %}
+		<div class="col-lg-4 col-sm-6">
+			<a href="{{ path('siteadmin_entite_repo', {entite: entite.className, method: 'findCollectionsByType', params: entite.type}) }}">
+				<div class="widget style1 white-bg">
+					<div class="row">
+						<div class="col-xs-3">
+							{{ actions.htmlicon(entite, 4, ['text-muted']) }}
+						</div>
+						<div class="col-xs-9 text-right">
+							<h2 class="font-bold text-muted ellipsis">{{ ('types.' ~ entite.type)|trans({}, entite.className) }}</h2>
+							<span class="text-muted">{{ actions.colorDot(entite.couleur, '1x') }} {{ entite.childrens|length }}</span>
+						</div>
+					</div>
+				</div>
+			</a>
+		</div>
+		{% endfor %}
+		{% else %}
+		<h3><i class="fa fa-ban"></i> {{ UCfirst('not_found'|trans({}, entite_name)) }}</h3>
+		{% endif %}
+	</div>
+</div>
+{% else %}
 <div class="row">
 	<div class="col-md-12">
 		<div class="ibox float-e-margins">
@@ -51,19 +118,6 @@
 							</td>
 							<td{{ bgcolor|raw }}>
 								{{ actions.entiteButtons(entite, ['show','edit','delete', 'active'], type) }}
-
-								{# - OFF ----------------------
-								{% if DEVMODE %}
-								<hr class="m-b-xs m-t-xs">
-								<div class="btn-group">
-									{% if type.type_values|default(null) != null %}
-									<a href="{{ path('siteadmin_entite_type', {entite: entite.className, type_related: type.type_related, type_field: type.type_field, type_values: type.type_values|join(type_value_joiner)|url_encode, id: entite.id, action: 'check'}) }}" type="button" class="btn btn-danger btn-xs" title="Checker article {{ entite.nom }}"><i class="fa fa-check"></i></a>
-									{% else %}
-									<a href="{{ path('siteadmin_entite', {entite: entite.className, id: entite.id, action: 'check'}) }}" type="button" class="btn btn-danger btn-xs" title="Checker article {{ entite.nom }}"><i class="fa fa-check"></i></a>
-									{% endif %}
-								</div>
-								{% endif %}
-								- OFF ---------------------- #}
 							</td>
 							<td{{ bgcolor|raw }} class="text-center">
 								{{ actions.colorDot(entite.couleur) }}
@@ -75,7 +129,7 @@
 								<p class="text-muted"><i>• {{ entite.accepts|join('<br>• ')|raw }}</i></p>
 							</td>
 							{% endif %}
-							{% if DEVMODE %}<td{{ bgcolor|raw }} class="text-center">{{ entite.lvl|default('?') }}<br>{{ entite.parents|length }} parent(s)</td>{% endif %}
+							{% if DEVMODE %}<td{{ bgcolor|raw }} class="text-center">{{ entite.lvl|default('?') }}<br>{{ entite.parents|length }}&nbsp;parent(s)</td>{% endif %}
 							<td{{ bgcolor|raw }}>{{ actions.labelLinkList(entite.parentsInverse, [entite.parent], null, type, type_value_joiner, 'show', 12) }}</td>
 							<td{{ bgcolor|raw }}>{{ actions.labelLinkList(entite.allChildrens, entite.childrens, null, type, type_value_joiner, 'show', 12) }}</td>
 							<td{{ bgcolor|raw }}>{{ actions.labelLinkList(entite.allSubEntitys, entite.subEntitys, null, type, type_value_joiner, 'show', 12) }}</td>
@@ -90,15 +144,19 @@
 		</div>
 	</div>
 </div>
-{#
-{% if entites|length > 0 %}
+{% endif %}
+
+
+{% if DEVMODE and entites|length > 0 %}
+<br>
+<br>
 <div class="row">
 	<div class="col-md-12">
 		<div class="ibox float-e-margins">
 			<div class="ibox-content">
 				{% for entite in entites %}
-				<h3>{{ entite|trans({}, entite.className) }}</h3>
-				<div id="jsajx-{{ entite.id }}" class="jstree-ajax"></div>
+				<h3>{{ ('types.' ~ entite.type)|trans({}, entite.className) }}</h3>
+				<div id="jsajx-{{ entite.id }}" class="jstree-ajax jstree-menu-all jstree-dnd"></div>
 				{% if not loop.last %}<hr>{% endif %}
 				{% endfor %}
 			</div>
@@ -106,10 +164,10 @@
 	</div>
 </div>
 {% endif %}
-#}
 {% endblock content %}
 
 {% block end_javascripts %}
+{{ parent() }}
 {{ nestcat.nestedtreeAjax() }}
 {% endblock end_javascripts %}
 

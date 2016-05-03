@@ -23,7 +23,7 @@ use \DateTime;
  * boutique
  *
  * @ORM\Entity
- * @ORM\Table(name="boutique")
+ * @ORM\Table(name="boutique", options={"comment":"boutiques du site"})
  * @ORM\HasLifecycleCallbacks
  * @ORM\Entity(repositoryClass="site\adminBundle\Entity\boutiqueRepository")
  * @UniqueEntity(fields={"nom"}, message="Cette boutique est déjà enregistrée")

@@ -53,7 +53,7 @@ categorie:
             open: true
         # pdfs
         -
-            nom: 'types.pdf'
+            nom: 'pdf'
             descriptif: '<p>Collections de fichiers PDF</p>'
             type: pdf
             open: true
@@ -82,7 +82,7 @@ categorie:
                 value: 'menus'
         # pages web d'informations
         -
-            nom: 'types.informations'
+            nom: 'informations'
             descriptif: '<p>Pages d''informations générales et légales</p>'
             parents:
                 field: nom

@@ -39,6 +39,7 @@
 							</td>
 							<td{{ bgcolor|raw }}>
 								<p class="m-b-none">
+									{{ actions.htmlicon(entite, 1, ['m-r-xs']) -}}
 									{% if type.type_values|default(null) != null %}
 									<a href="{{ path('siteadmin_entite_type', {entite: entite.className, type_related: type.type_related, type_field: type.type_field, type_values: type.type_values|join(type_value_joiner)|url_encode, id: entite.id, action: 'show'}) }}" title="{{ UCfirst('moredetails'|trans({'%name%': entite.nom}, entite.className)) }}"><strong>{{ entite.nom }}</strong></a>
 									{% else %}
@@ -78,9 +79,4 @@
 		</div>
 	</div>
 </div>
-{% if entites|length > 0 and DEVMODE %}
-{% for entite in entites %}
-	{{ dump(entite.oldValues|default('aucune')) }}
-{% endfor %}
-{% endif %}
 {% endblock content %}

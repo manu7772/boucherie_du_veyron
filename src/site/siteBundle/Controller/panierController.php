@@ -35,7 +35,7 @@ class panierController extends Controller {
 		}
 		
 		//
-		return $this->redirect($this->generateUrl('siteadmin_sadmin_index'));
+		return $this->redirect($this->generateUrl('siteadmin_sadmin_panier'));
 	}
 
 }

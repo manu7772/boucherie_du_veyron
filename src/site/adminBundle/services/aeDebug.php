@@ -114,7 +114,9 @@ class aeDebug extends aetools {
 	 * @param array $array
 	 * @return boolean (nb d'octets si success)
 	 */
-	public function debugNamedFile($name, $array, $testEnv = true) {
+	public function debugNamedFile($name, $array, $testEnv = true, $erase = false) {
+		// (boolean) $erase === true ? $mode = 'w' : $mode = 'c'; // c = ajout en début de fichier (et non à la fin, avec 'a')
+		(boolean) $erase === true ? $mode = 'w' : $mode = 'a';
 		$launch = true;
 		$r = true;
 		if($this->container !== null && $testEnv === true) {
@@ -129,7 +131,7 @@ class aeDebug extends aetools {
 			$file = $this->gotoroot.'web/debug/'.$name.'.yml';
 			if(file_exists($file)) {
 				if(is_writable($file)) {
-					$fop = @fopen($file, 'a');
+					$fop = @fopen($file, $mode);
 					$r = $r && $fop;
 					$r = $r && fwrite($fop, $dumper->dump($this->nameObjectcsInArray($array), self::YAML_LEVELS));
 					$r = $r && fclose($fop);
@@ -152,7 +154,7 @@ class aeDebug extends aetools {
 	 * @param integer $maxSize = 50
 	 * @return array
 	 */
-	protected function reduceArray(&$array, $maxSize = 50) {
+	protected function reduceArray(&$array, $maxSize = 120) {
 		foreach ($array as $key => $item) {
 			if(is_string($item)) if(strlen($item) > $maxSize) $array[$key] = substr($item, 0, $maxSize).' ('.strlen($item).' char.)';
 			if(is_array($item)) $array[$key] = $this->reduceArray($array[$key]);

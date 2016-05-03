@@ -50,6 +50,7 @@ fields:
     technique: détails
     icon: icône
 types:
+    all: types
     multimedia: multimedias
     menu: menus
     diapo: diaporamas
@@ -57,9 +58,9 @@ types:
     article: articles
     pdf: fichiers PDF
     menu: menus
-    fiche: fiches
+    fiche: recettes
     marque: marques
     reseau: reseaux
     boutique: boutiques
-    pageweb: pagewebs
+    pageweb: pages web
     informations: informations

@@ -12,8 +12,15 @@ use site\adminBundle\services\aeEntity;
 use site\adminBundle\services\aetools;
 
 use \DateTime;
+use \ReflectionClass;
 
 class entityListener implements EventSubscriber {
+
+    const NAME                  = 'entityListener';        // nom du service
+    const CALL_NAME             = 'aetools.entityUtils'; // comment appeler le service depuis le controller/container
+
+	const SLASH					= '/';				// slash
+	const ASLASH 				= '\\';				// anti-slashes
 
 	protected $eventArgs;
 	protected $_em;
@@ -37,6 +44,109 @@ class entityListener implements EventSubscriber {
 	}
 
 	public function __destruct() {
+	}
+
+	public function __toString() {
+		try {
+			$string = $this->getNom();
+		} catch (Exception $e) {
+			$string = '…';
+		}
+		return $string;
+	}
+
+    public function getNom() {
+        return self::NAME;
+    }
+
+    public function callName() {
+        return self::CALL_NAME;
+    }
+
+	/**
+	 * Renvoie le nom de la classe
+	 * @return string
+	 */
+	public function getName() {
+		return get_called_class();
+	}
+
+	/**
+	 * Renvoie le nom de la classe
+	 * @return string
+	 */
+	public function getShortName() {
+		return $this->getClassShortName($this->getName());
+	}
+
+    // abstract public function getClassName();
+    public function getClassName() {
+        return $this->getClass(true);
+    }
+
+	/**
+	 * Renvoie la liste (array) des classes des parents de l'entité
+	 * @param boolean $short = false
+	 * @return array
+	 */
+	public function getParentClassName($short = false) {
+		$class = new ReflectionClass($this->getClass());
+		$class = $class->getParentClass();
+		if($class)
+			return (boolean) $short ?
+				$class->getShortName():
+				$class->getName();
+			else return null;
+	}
+
+	/**
+	 * Renvoie la liste (array) des classes des parents de l'entité
+	 * @param boolean $short = false
+	 * @return array
+	 */
+	public function getParentsClassNames($short = false) {
+		$class = new ReflectionClass($this->getClass());
+		$parents = array();
+		while($class = $class->getParentClass()) {
+			(boolean) $short ?
+				$parents[] = $class->getShortName():
+				$parents[] = $class->getName();
+		}
+		return $parents;
+	}
+
+	/**
+	 * Renvoie la liste (array) des classes des parents de l'entité
+	 * @param boolean $short = false
+	 * @return array
+	 */
+	public function getParentsShortNames() {
+		return $this->getParentsClassNames(true);
+	}
+
+	/**
+	 * Renvoie le nom de la classe (short name par défaut)
+	 * @param boolean $short = false
+	 * @return string
+	 */
+	public function getClass($short = false) {
+		$class = new ReflectionClass(get_called_class());
+		return (boolean) $short ?
+			$class->getShortName():
+			$class->getName();
+	}
+
+	/**
+	 * Renvoie le nom court de la classe
+	 * @return string
+	 */
+	public function getClassShortName($class) {
+		if(is_object($class)) $class = get_class($class);
+		if(is_string($class)) {
+			$shortName = explode(self::ASLASH, $class);
+			return end($shortName);
+		}
+		return false;
 	}
 
 	public function getSubscribedEvents() {

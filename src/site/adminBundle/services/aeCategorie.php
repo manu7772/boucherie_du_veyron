@@ -10,9 +10,15 @@ use site\adminBundle\Entity\baseEntity;
 // call in controller with $this->get('aetools.aeCategorie');
 class aeCategorie extends aeSubEntity {
 
-    public function __construct(ContainerInterface $container) {
-        parent::__construct($container);
-        $this->defineEntity('site\adminBundle\Entity\categorie');
+
+    const NAME                  = 'aePanier';        // nom du service
+    const CALL_NAME             = 'aetools.aePanier'; // comment appeler le service depuis le controller/container
+    const CLASS_ENTITY          = 'site\adminBundle\Entity\categorie';
+
+    public function __construct(ContainerInterface $container = null, $em = null) {
+        parent::__construct($container, $em);
+        $this->defineEntity(self::CLASS_ENTITY);
+        return $this;
     }
 
     /**
@@ -38,6 +44,14 @@ class aeCategorie extends aeSubEntity {
         // }
         parent::checkAfterChange($entity, $butEntities);
         return $this;
+    }
+
+    public function getNom() {
+        return self::NAME;
+    }
+
+    public function callName() {
+        return self::CALL_NAME;
     }
 
     /**

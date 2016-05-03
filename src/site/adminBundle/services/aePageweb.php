@@ -10,43 +10,40 @@ use site\adminBundle\Entity\baseEntity;
 
 class aePageweb extends aeItem {
 
-    const FOLD_PAGEWEB = 'pages_web';
 
     protected $rootPath;            // Dossier root du site
     protected $bundles_list;
     protected $files_list;
 
-    public function __construct(ContainerInterface $container) {
-        parent::__construct($container);
-        $this->defineEntity('site\adminBundle\Entity\pageweb');
-        $this->rootPath = __DIR__.self::GO_TO_ROOT;
-        $this->setRootPath("/");
-        // récupération de fichiers et check
-        $this->initFiles();
+    const NAME                  = 'aePageweb';        // nom du service
+    const CALL_NAME             = 'aetools.aePageweb'; // comment appeler le service depuis le controller/container
+    const CLASS_ENTITY          = 'site\adminBundle\Entity\pageweb';
+    const FOLD_PAGEWEB          = 'pages_web';
+
+    public function __construct(ContainerInterface $container = null, $em = null) {
+        parent::__construct($container, $em);
+        $this->defineEntity(self::CLASS_ENTITY);
+        return $this;
+    }
+
+    public function getNom() {
+        return self::NAME;
+    }
+
+    public function callName() {
+        return self::CALL_NAME;
     }
 
     /**
      * Check entity after change (edit…)
      * @param baseEntity $entity
-     * @return aePageweb
+     * @return aeArticle
      */
     public function checkAfterChange(baseEntity &$entity, $butEntities = []) {
         parent::checkAfterChange($entity, $butEntities);
         return $this;
     }
 
-    /**
-     * Persist and flush a pageweb
-     * @param baseEntity $entity
-     * @return aeReponse
-     */
-    // public function save(baseEntity &$entity, $flush = true) {
-    //  return parent::save($entity, $flush);
-    // }
-
-    // public function getRepository() {
-    //     return $this->getRepo();
-    // }
 
     public function getDefaultPage() {
         return $this->getRepo()->findOneByDefault(1);
@@ -71,14 +68,6 @@ class aePageweb extends aeItem {
                 }
             }
         }
-        // echo('<pre>');
-        // echo('<h2>bundles</h2>');
-        // var_dump($bundles);
-        // echo('<h2>folders</h2>');
-        // var_dump($folders);
-        // echo('<h2>this->files_list</h2>');
-        // var_dump($this->files_list);
-        // die('</pre>');
         return $this->files_list;
     }
 

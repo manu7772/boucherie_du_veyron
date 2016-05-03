@@ -1,6 +1,7 @@
 {% set current_locale = 'siteadmin' %}
 {% set LANGUESITE = list_locales[current_locale]|default(list_locales['default'])|split('|') %}
 <nav class="navbar navbar-static-top m-b-none" role="navigation">
+	{% if searchswitcher %}
 	<div class="navbar-header">
 		<a class="navbar-minimalize minimalize-styl-2 btn btn-danger " href="#"><i class="fa fa-bars"></i> </a>
 		<form role="search" class="navbar-form-custom" action="#">
@@ -9,6 +10,7 @@
 			</div>
 		</form>
 	</div>
+	{% endif %}
 	<ul class="nav navbar-top-links navbar-right">
 		{% if app.environment in ['dev', 'test'] %}
 		<div class="label label-warning">{{ app.environment }}</div>

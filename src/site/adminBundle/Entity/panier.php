@@ -73,14 +73,14 @@ class panier {
 		$this->quantite = 0;
 	}
 
-	/**
-	 * Renvoie le nom court de la classe
-	 * @return media
-	 */
-	public function getClassName() {
-		$class = new ReflectionClass(get_called_class());
-		return $class->getShortName();
+	public function __toString() {
+		return $this->getQuantite()." x ".$this->getArticle()->getNom();
 	}
+
+    // abstract public function getClassName();
+    public function getClassName() {
+        return $this->getClass(true);
+    }
 
 	/**
 	 * Renvoie la liste (array) des classes des parents de l'entité
@@ -88,7 +88,7 @@ class panier {
 	 * @return array
 	 */
 	public function getParentsClassNames($short = false) {
-		$class = new ReflectionClass(get_called_class());
+		$class = new ReflectionClass($this->getClass());
 		$short ?
 			$him = $class->getShortName():
 			$him = $class->getName();
@@ -101,12 +101,20 @@ class panier {
 		return $parents;
 	}
 
-	public function getId() {
-		return 'User#'.$this->getUser()->getId().'/Article#'.$this->getArticle()->getId();
+	/**
+	 * Renvoie le nom de la classe (short name par défaut)
+	 * @param boolean $short = false
+	 * @return string
+	 */
+	public function getClass($short = false) {
+		$class = new ReflectionClass(get_called_class());
+		return $short ?
+			$class->getShortName():
+			$class->getName();
 	}
 
-	public function __toString() {
-		return $this->getQuantite()." x ".$this->getArticle()->getNom();
+	public function getId() {
+		return 'User#'.$this->getUser()->getId().'/Article#'.$this->getArticle()->getId();
 	}
 
 	/**

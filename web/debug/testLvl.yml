@@ -82,3 +82,3927 @@
             Level:
                 old: '0'
                 new: '2'
+-
+    '2016-04-28 01:53:32':
+        menu-haut:
+            Entity:
+                id: 115
+                parent: 'null'
+                parents:
+                    count: 0
+                    names: ''
+            Level:
+                old: '1'
+                new: '0'
+-
+    '2016-04-28 01:53:32':
+        menu-produits:
+            Entity:
+                id: 116
+                parent: 'null'
+                parents:
+                    count: 0
+                    names: ''
+            Level:
+                old: '1'
+                new: '0'
+-
+    '2016-04-28 01:53:32':
+        menu-footer:
+            Entity:
+                id: 117
+                parent: 'null'
+                parents:
+                    count: 0
+                    names: ''
+            Level:
+                old: '1'
+                new: '0'
+-
+    '2016-04-28 01:53:32':
+        types-informations:
+            Entity:
+                id: 118
+                parent: 'null'
+                parents:
+                    count: 0
+                    names: ''
+            Level:
+                old: '1'
+                new: '0'
+-
+    '2016-04-28 01:53:32':
+        diaporamas-collections:
+            Entity:
+                id: 119
+                parent: 'null'
+                parents:
+                    count: 0
+                    names: ''
+            Level:
+                old: '1'
+                new: '0'
+-
+    '2016-04-28 01:53:32':
+        diaporama-accueil:
+            Entity:
+                id: 120
+                parent: 'null'
+                parents:
+                    count: 0
+                    names: ''
+            Level:
+                old: '1'
+                new: '0'
+-
+    '2016-04-28 01:53:32':
+        fiches-collections:
+            Entity:
+                id: 121
+                parent: 'null'
+                parents:
+                    count: 0
+                    names: ''
+            Level:
+                old: '1'
+                new: '0'
+-
+    '2016-04-28 01:53:32':
+        recettes:
+            Entity:
+                id: 122
+                parent: 'null'
+                parents:
+                    count: 0
+                    names: ''
+            Level:
+                old: '1'
+                new: '0'
+-
+    '2016-04-28 01:53:32':
+        recettes-de-fetes:
+            Entity:
+                id: 123
+                parent: 'null'
+                parents:
+                    count: 0
+                    names: ''
+            Level:
+                old: '1'
+                new: '0'
+-
+    '2016-04-28 01:53:32':
+        recettes-de-chefs:
+            Entity:
+                id: 124
+                parent: 'null'
+                parents:
+                    count: 0
+                    names: ''
+            Level:
+                old: '1'
+                new: '0'
+-
+    '2016-04-28 01:53:32':
+        boutiques-ain:
+            Entity:
+                id: 125
+                parent: 'null'
+                parents:
+                    count: 0
+                    names: ''
+            Level:
+                old: '1'
+                new: '0'
+-
+    '2016-04-28 01:53:32':
+        articles-collections:
+            Entity:
+                id: 126
+                parent: 'null'
+                parents:
+                    count: 0
+                    names: ''
+            Level:
+                old: '1'
+                new: '0'
+-
+    '2016-04-28 01:53:32':
+        promotions:
+            Entity:
+                id: 127
+                parent: 'null'
+                parents:
+                    count: 0
+                    names: ''
+            Level:
+                old: '1'
+                new: '0'
+-
+    '2016-04-28 01:53:32':
+        fetes:
+            Entity:
+                id: 128
+                parent: 'null'
+                parents:
+                    count: 0
+                    names: ''
+            Level:
+                old: '1'
+                new: '0'
+-
+    '2016-04-28 01:53:32':
+        pieces-du-boucher:
+            Entity:
+                id: 131
+                parent: boeuf
+                parents:
+                    count: 2
+                    names: 'La boutique > Bœuf'
+            Level:
+                old: '3'
+                new: '2'
+-
+    '2016-04-28 01:53:32':
+        a-rotir:
+            Entity:
+                id: 132
+                parent: boeuf
+                parents:
+                    count: 2
+                    names: 'La boutique > Bœuf'
+            Level:
+                old: '3'
+                new: '2'
+-
+    '2016-04-28 01:53:32':
+        a-griller:
+            Entity:
+                id: 133
+                parent: boeuf
+                parents:
+                    count: 2
+                    names: 'La boutique > Bœuf'
+            Level:
+                old: '3'
+                new: '2'
+-
+    '2016-04-28 01:53:32':
+        a-braiser:
+            Entity:
+                id: 134
+                parent: boeuf
+                parents:
+                    count: 2
+                    names: 'La boutique > Bœuf'
+            Level:
+                old: '3'
+                new: '2'
+-
+    '2016-04-28 01:53:32':
+        abats:
+            Entity:
+                id: 135
+                parent: boeuf
+                parents:
+                    count: 2
+                    names: 'La boutique > Bœuf'
+            Level:
+                old: '3'
+                new: '2'
+-
+    '2016-04-28 01:53:32':
+        boeuf:
+            Entity:
+                id: 130
+                parent: la-boutique
+                parents:
+                    count: 1
+                    names: 'La boutique'
+            Level:
+                old: '2'
+                new: '1'
+-
+    '2016-04-28 01:53:32':
+        pieces-du-boucher:
+            Entity:
+                id: 131
+                parent: boeuf
+                parents:
+                    count: 2
+                    names: 'La boutique > Bœuf'
+            Level:
+                old: '2'
+                new: '2'
+-
+    '2016-04-28 01:53:32':
+        pieces-du-boucher-1:
+            Entity:
+                id: 137
+                parent: veau
+                parents:
+                    count: 2
+                    names: 'La boutique > Veau'
+            Level:
+                old: '3'
+                new: '2'
+-
+    '2016-04-28 01:53:32':
+        a-rotir-1:
+            Entity:
+                id: 138
+                parent: veau
+                parents:
+                    count: 2
+                    names: 'La boutique > Veau'
+            Level:
+                old: '3'
+                new: '2'
+-
+    '2016-04-28 01:53:32':
+        a-griller-1:
+            Entity:
+                id: 139
+                parent: veau
+                parents:
+                    count: 2
+                    names: 'La boutique > Veau'
+            Level:
+                old: '3'
+                new: '2'
+-
+    '2016-04-28 01:53:32':
+        a-braiser-1:
+            Entity:
+                id: 140
+                parent: veau
+                parents:
+                    count: 2
+                    names: 'La boutique > Veau'
+            Level:
+                old: '3'
+                new: '2'
+-
+    '2016-04-28 01:53:32':
+        abats-1:
+            Entity:
+                id: 141
+                parent: veau
+                parents:
+                    count: 2
+                    names: 'La boutique > Veau'
+            Level:
+                old: '3'
+                new: '2'
+-
+    '2016-04-28 01:53:32':
+        veau:
+            Entity:
+                id: 136
+                parent: la-boutique
+                parents:
+                    count: 1
+                    names: 'La boutique'
+            Level:
+                old: '2'
+                new: '1'
+-
+    '2016-04-28 01:53:32':
+        pieces-du-boucher-2:
+            Entity:
+                id: 143
+                parent: agneau
+                parents:
+                    count: 2
+                    names: 'La boutique > Agneau'
+            Level:
+                old: '3'
+                new: '2'
+-
+    '2016-04-28 01:53:32':
+        a-rotir-2:
+            Entity:
+                id: 144
+                parent: agneau
+                parents:
+                    count: 2
+                    names: 'La boutique > Agneau'
+            Level:
+                old: '3'
+                new: '2'
+-
+    '2016-04-28 01:53:32':
+        a-griller-2:
+            Entity:
+                id: 145
+                parent: agneau
+                parents:
+                    count: 2
+                    names: 'La boutique > Agneau'
+            Level:
+                old: '3'
+                new: '2'
+-
+    '2016-04-28 01:53:32':
+        a-braiser-2:
+            Entity:
+                id: 146
+                parent: agneau
+                parents:
+                    count: 2
+                    names: 'La boutique > Agneau'
+            Level:
+                old: '3'
+                new: '2'
+-
+    '2016-04-28 01:53:32':
+        abats-2:
+            Entity:
+                id: 147
+                parent: agneau
+                parents:
+                    count: 2
+                    names: 'La boutique > Agneau'
+            Level:
+                old: '3'
+                new: '2'
+-
+    '2016-04-28 01:53:32':
+        agneau:
+            Entity:
+                id: 142
+                parent: la-boutique
+                parents:
+                    count: 1
+                    names: 'La boutique'
+            Level:
+                old: '2'
+                new: '1'
+-
+    '2016-04-28 01:53:32':
+        a-griller-2:
+            Entity:
+                id: 145
+                parent: agneau
+                parents:
+                    count: 2
+                    names: 'La boutique > Agneau'
+            Level:
+                old: '2'
+                new: '2'
+-
+    '2016-04-28 01:53:32':
+        pieces-du-boucher-3:
+            Entity:
+                id: 149
+                parent: porc
+                parents:
+                    count: 2
+                    names: 'La boutique > Porc'
+            Level:
+                old: '3'
+                new: '2'
+-
+    '2016-04-28 01:53:32':
+        a-rotir-3:
+            Entity:
+                id: 150
+                parent: porc
+                parents:
+                    count: 2
+                    names: 'La boutique > Porc'
+            Level:
+                old: '3'
+                new: '2'
+-
+    '2016-04-28 01:53:32':
+        a-griller-3:
+            Entity:
+                id: 151
+                parent: porc
+                parents:
+                    count: 2
+                    names: 'La boutique > Porc'
+            Level:
+                old: '3'
+                new: '2'
+-
+    '2016-04-28 01:53:32':
+        a-braiser-3:
+            Entity:
+                id: 152
+                parent: porc
+                parents:
+                    count: 2
+                    names: 'La boutique > Porc'
+            Level:
+                old: '3'
+                new: '2'
+-
+    '2016-04-28 01:53:32':
+        abats-3:
+            Entity:
+                id: 153
+                parent: porc
+                parents:
+                    count: 2
+                    names: 'La boutique > Porc'
+            Level:
+                old: '3'
+                new: '2'
+-
+    '2016-04-28 01:53:32':
+        porc:
+            Entity:
+                id: 148
+                parent: la-boutique
+                parents:
+                    count: 1
+                    names: 'La boutique'
+            Level:
+                old: '2'
+                new: '1'
+-
+    '2016-04-28 01:53:32':
+        bocaux:
+            Entity:
+                id: 155
+                parent: epicerie
+                parents:
+                    count: 2
+                    names: 'La boutique > Épicerie'
+            Level:
+                old: '3'
+                new: '2'
+-
+    '2016-04-28 01:53:32':
+        les-vins:
+            Entity:
+                id: 156
+                parent: epicerie
+                parents:
+                    count: 2
+                    names: 'La boutique > Épicerie'
+            Level:
+                old: '3'
+                new: '2'
+-
+    '2016-04-28 01:53:32':
+        produits-frais:
+            Entity:
+                id: 157
+                parent: epicerie
+                parents:
+                    count: 2
+                    names: 'La boutique > Épicerie'
+            Level:
+                old: '3'
+                new: '2'
+-
+    '2016-04-28 01:53:32':
+        epicerie:
+            Entity:
+                id: 154
+                parent: la-boutique
+                parents:
+                    count: 1
+                    names: 'La boutique'
+            Level:
+                old: '2'
+                new: '1'
+-
+    '2016-04-28 01:53:32':
+        a-rotir:
+            Entity:
+                id: 132
+                parent: boeuf
+                parents:
+                    count: 2
+                    names: 'La boutique > Bœuf'
+            Level:
+                old: '2'
+                new: '2'
+-
+    '2016-04-28 01:53:32':
+        a-braiser:
+            Entity:
+                id: 134
+                parent: boeuf
+                parents:
+                    count: 2
+                    names: 'La boutique > Bœuf'
+            Level:
+                old: '2'
+                new: '2'
+-
+    '2016-04-28 01:53:32':
+        abats:
+            Entity:
+                id: 135
+                parent: boeuf
+                parents:
+                    count: 2
+                    names: 'La boutique > Bœuf'
+            Level:
+                old: '2'
+                new: '2'
+-
+    '2016-04-28 01:53:32':
+        bocaux:
+            Entity:
+                id: 155
+                parent: epicerie
+                parents:
+                    count: 2
+                    names: 'La boutique > Épicerie'
+            Level:
+                old: '2'
+                new: '2'
+-
+    '2016-04-28 01:53:32':
+        les-vins:
+            Entity:
+                id: 156
+                parent: epicerie
+                parents:
+                    count: 2
+                    names: 'La boutique > Épicerie'
+            Level:
+                old: '2'
+                new: '2'
+-
+    '2016-04-28 01:53:32':
+        produits-frais:
+            Entity:
+                id: 157
+                parent: epicerie
+                parents:
+                    count: 2
+                    names: 'La boutique > Épicerie'
+            Level:
+                old: '2'
+                new: '2'
+-
+    '2016-04-28 01:53:32':
+        la-boutique:
+            Entity:
+                id: 129
+                parent: 'null'
+                parents:
+                    count: 0
+                    names: ''
+            Level:
+                old: '1'
+                new: '0'
+-
+    '2016-04-28 01:53:32':
+        pieces-du-boucher:
+            Entity:
+                id: 131
+                parent: boeuf
+                parents:
+                    count: 1
+                    names: Bœuf
+            Level:
+                old: '2'
+                new: '1'
+-
+    '2016-04-28 01:53:32':
+        a-rotir:
+            Entity:
+                id: 132
+                parent: boeuf
+                parents:
+                    count: 1
+                    names: Bœuf
+            Level:
+                old: '2'
+                new: '1'
+-
+    '2016-04-28 01:53:32':
+        a-griller:
+            Entity:
+                id: 133
+                parent: boeuf
+                parents:
+                    count: 1
+                    names: Bœuf
+            Level:
+                old: '2'
+                new: '1'
+-
+    '2016-04-28 01:53:32':
+        a-braiser:
+            Entity:
+                id: 134
+                parent: boeuf
+                parents:
+                    count: 1
+                    names: Bœuf
+            Level:
+                old: '2'
+                new: '1'
+-
+    '2016-04-28 01:53:32':
+        abats:
+            Entity:
+                id: 135
+                parent: boeuf
+                parents:
+                    count: 1
+                    names: Bœuf
+            Level:
+                old: '2'
+                new: '1'
+-
+    '2016-04-28 01:53:32':
+        boeuf:
+            Entity:
+                id: 130
+                parent: 'null'
+                parents:
+                    count: 0
+                    names: ''
+            Level:
+                old: '1'
+                new: '0'
+-
+    '2016-04-28 01:53:32':
+        pieces-du-boucher:
+            Entity:
+                id: 131
+                parent: 'null'
+                parents:
+                    count: 0
+                    names: ''
+            Level:
+                old: '1'
+                new: '0'
+-
+    '2016-04-28 01:53:32':
+        a-rotir:
+            Entity:
+                id: 132
+                parent: 'null'
+                parents:
+                    count: 0
+                    names: ''
+            Level:
+                old: '1'
+                new: '0'
+-
+    '2016-04-28 01:53:32':
+        a-griller:
+            Entity:
+                id: 133
+                parent: 'null'
+                parents:
+                    count: 0
+                    names: ''
+            Level:
+                old: '1'
+                new: '0'
+-
+    '2016-04-28 01:53:32':
+        a-braiser:
+            Entity:
+                id: 134
+                parent: 'null'
+                parents:
+                    count: 0
+                    names: ''
+            Level:
+                old: '1'
+                new: '0'
+-
+    '2016-04-28 01:53:32':
+        abats:
+            Entity:
+                id: 135
+                parent: 'null'
+                parents:
+                    count: 0
+                    names: ''
+            Level:
+                old: '1'
+                new: '0'
+-
+    '2016-04-28 01:53:32':
+        pieces-du-boucher-1:
+            Entity:
+                id: 137
+                parent: veau
+                parents:
+                    count: 1
+                    names: Veau
+            Level:
+                old: '2'
+                new: '1'
+-
+    '2016-04-28 01:53:32':
+        a-rotir-1:
+            Entity:
+                id: 138
+                parent: veau
+                parents:
+                    count: 1
+                    names: Veau
+            Level:
+                old: '2'
+                new: '1'
+-
+    '2016-04-28 01:53:32':
+        a-griller-1:
+            Entity:
+                id: 139
+                parent: veau
+                parents:
+                    count: 1
+                    names: Veau
+            Level:
+                old: '2'
+                new: '1'
+-
+    '2016-04-28 01:53:32':
+        a-braiser-1:
+            Entity:
+                id: 140
+                parent: veau
+                parents:
+                    count: 1
+                    names: Veau
+            Level:
+                old: '2'
+                new: '1'
+-
+    '2016-04-28 01:53:32':
+        abats-1:
+            Entity:
+                id: 141
+                parent: veau
+                parents:
+                    count: 1
+                    names: Veau
+            Level:
+                old: '2'
+                new: '1'
+-
+    '2016-04-28 01:53:32':
+        veau:
+            Entity:
+                id: 136
+                parent: 'null'
+                parents:
+                    count: 0
+                    names: ''
+            Level:
+                old: '1'
+                new: '0'
+-
+    '2016-04-28 01:53:32':
+        pieces-du-boucher-1:
+            Entity:
+                id: 137
+                parent: 'null'
+                parents:
+                    count: 0
+                    names: ''
+            Level:
+                old: '1'
+                new: '0'
+-
+    '2016-04-28 01:53:32':
+        a-rotir-1:
+            Entity:
+                id: 138
+                parent: 'null'
+                parents:
+                    count: 0
+                    names: ''
+            Level:
+                old: '1'
+                new: '0'
+-
+    '2016-04-28 01:53:32':
+        a-griller-1:
+            Entity:
+                id: 139
+                parent: 'null'
+                parents:
+                    count: 0
+                    names: ''
+            Level:
+                old: '1'
+                new: '0'
+-
+    '2016-04-28 01:53:32':
+        a-braiser-1:
+            Entity:
+                id: 140
+                parent: 'null'
+                parents:
+                    count: 0
+                    names: ''
+            Level:
+                old: '1'
+                new: '0'
+-
+    '2016-04-28 01:53:32':
+        abats-1:
+            Entity:
+                id: 141
+                parent: 'null'
+                parents:
+                    count: 0
+                    names: ''
+            Level:
+                old: '1'
+                new: '0'
+-
+    '2016-04-28 01:53:32':
+        pieces-du-boucher-2:
+            Entity:
+                id: 143
+                parent: agneau
+                parents:
+                    count: 1
+                    names: Agneau
+            Level:
+                old: '2'
+                new: '1'
+-
+    '2016-04-28 01:53:32':
+        a-rotir-2:
+            Entity:
+                id: 144
+                parent: agneau
+                parents:
+                    count: 1
+                    names: Agneau
+            Level:
+                old: '2'
+                new: '1'
+-
+    '2016-04-28 01:53:32':
+        a-griller-2:
+            Entity:
+                id: 145
+                parent: agneau
+                parents:
+                    count: 1
+                    names: Agneau
+            Level:
+                old: '2'
+                new: '1'
+-
+    '2016-04-28 01:53:32':
+        a-braiser-2:
+            Entity:
+                id: 146
+                parent: agneau
+                parents:
+                    count: 1
+                    names: Agneau
+            Level:
+                old: '2'
+                new: '1'
+-
+    '2016-04-28 01:53:32':
+        abats-2:
+            Entity:
+                id: 147
+                parent: agneau
+                parents:
+                    count: 1
+                    names: Agneau
+            Level:
+                old: '2'
+                new: '1'
+-
+    '2016-04-28 01:53:32':
+        agneau:
+            Entity:
+                id: 142
+                parent: 'null'
+                parents:
+                    count: 0
+                    names: ''
+            Level:
+                old: '1'
+                new: '0'
+-
+    '2016-04-28 01:53:32':
+        pieces-du-boucher-2:
+            Entity:
+                id: 143
+                parent: 'null'
+                parents:
+                    count: 0
+                    names: ''
+            Level:
+                old: '1'
+                new: '0'
+-
+    '2016-04-28 01:53:32':
+        a-rotir-2:
+            Entity:
+                id: 144
+                parent: 'null'
+                parents:
+                    count: 0
+                    names: ''
+            Level:
+                old: '1'
+                new: '0'
+-
+    '2016-04-28 01:53:32':
+        a-griller-2:
+            Entity:
+                id: 145
+                parent: 'null'
+                parents:
+                    count: 0
+                    names: ''
+            Level:
+                old: '1'
+                new: '0'
+-
+    '2016-04-28 01:53:33':
+        a-braiser-2:
+            Entity:
+                id: 146
+                parent: 'null'
+                parents:
+                    count: 0
+                    names: ''
+            Level:
+                old: '1'
+                new: '0'
+-
+    '2016-04-28 01:53:33':
+        abats-2:
+            Entity:
+                id: 147
+                parent: 'null'
+                parents:
+                    count: 0
+                    names: ''
+            Level:
+                old: '1'
+                new: '0'
+-
+    '2016-04-28 01:53:33':
+        pieces-du-boucher-3:
+            Entity:
+                id: 149
+                parent: porc
+                parents:
+                    count: 1
+                    names: Porc
+            Level:
+                old: '2'
+                new: '1'
+-
+    '2016-04-28 01:53:33':
+        a-rotir-3:
+            Entity:
+                id: 150
+                parent: porc
+                parents:
+                    count: 1
+                    names: Porc
+            Level:
+                old: '2'
+                new: '1'
+-
+    '2016-04-28 01:53:33':
+        a-griller-3:
+            Entity:
+                id: 151
+                parent: porc
+                parents:
+                    count: 1
+                    names: Porc
+            Level:
+                old: '2'
+                new: '1'
+-
+    '2016-04-28 01:53:33':
+        a-braiser-3:
+            Entity:
+                id: 152
+                parent: porc
+                parents:
+                    count: 1
+                    names: Porc
+            Level:
+                old: '2'
+                new: '1'
+-
+    '2016-04-28 01:53:33':
+        abats-3:
+            Entity:
+                id: 153
+                parent: porc
+                parents:
+                    count: 1
+                    names: Porc
+            Level:
+                old: '2'
+                new: '1'
+-
+    '2016-04-28 01:53:33':
+        porc:
+            Entity:
+                id: 148
+                parent: 'null'
+                parents:
+                    count: 0
+                    names: ''
+            Level:
+                old: '1'
+                new: '0'
+-
+    '2016-04-28 01:53:33':
+        pieces-du-boucher-3:
+            Entity:
+                id: 149
+                parent: 'null'
+                parents:
+                    count: 0
+                    names: ''
+            Level:
+                old: '1'
+                new: '0'
+-
+    '2016-04-28 01:53:33':
+        a-rotir-3:
+            Entity:
+                id: 150
+                parent: 'null'
+                parents:
+                    count: 0
+                    names: ''
+            Level:
+                old: '1'
+                new: '0'
+-
+    '2016-04-28 01:53:33':
+        a-griller-3:
+            Entity:
+                id: 151
+                parent: 'null'
+                parents:
+                    count: 0
+                    names: ''
+            Level:
+                old: '1'
+                new: '0'
+-
+    '2016-04-28 01:53:33':
+        a-braiser-3:
+            Entity:
+                id: 152
+                parent: 'null'
+                parents:
+                    count: 0
+                    names: ''
+            Level:
+                old: '1'
+                new: '0'
+-
+    '2016-04-28 01:53:33':
+        abats-3:
+            Entity:
+                id: 153
+                parent: 'null'
+                parents:
+                    count: 0
+                    names: ''
+            Level:
+                old: '1'
+                new: '0'
+-
+    '2016-04-28 01:53:33':
+        bocaux:
+            Entity:
+                id: 155
+                parent: epicerie
+                parents:
+                    count: 1
+                    names: Épicerie
+            Level:
+                old: '2'
+                new: '1'
+-
+    '2016-04-28 01:53:33':
+        les-vins:
+            Entity:
+                id: 156
+                parent: epicerie
+                parents:
+                    count: 1
+                    names: Épicerie
+            Level:
+                old: '2'
+                new: '1'
+-
+    '2016-04-28 01:53:33':
+        produits-frais:
+            Entity:
+                id: 157
+                parent: epicerie
+                parents:
+                    count: 1
+                    names: Épicerie
+            Level:
+                old: '2'
+                new: '1'
+-
+    '2016-04-28 01:53:33':
+        epicerie:
+            Entity:
+                id: 154
+                parent: 'null'
+                parents:
+                    count: 0
+                    names: ''
+            Level:
+                old: '1'
+                new: '0'
+-
+    '2016-04-28 01:53:33':
+        bocaux:
+            Entity:
+                id: 155
+                parent: 'null'
+                parents:
+                    count: 0
+                    names: ''
+            Level:
+                old: '1'
+                new: '0'
+-
+    '2016-04-28 01:53:33':
+        les-vins:
+            Entity:
+                id: 156
+                parent: 'null'
+                parents:
+                    count: 0
+                    names: ''
+            Level:
+                old: '1'
+                new: '0'
+-
+    '2016-04-28 01:53:33':
+        produits-frais:
+            Entity:
+                id: 157
+                parent: 'null'
+                parents:
+                    count: 0
+                    names: ''
+            Level:
+                old: '1'
+                new: '0'
+-
+    '2016-04-30 16:34:02':
+        '':
+            Entity:
+                id: null
+                parent: menus
+                parents:
+                    count: 1
+                    names: menus
+            Level:
+                old: '0'
+                new: '1'
+-
+    '2016-04-30 16:34:03':
+        '':
+            Entity:
+                id: null
+                parent: menus
+                parents:
+                    count: 1
+                    names: menus
+            Level:
+                old: '0'
+                new: '1'
+-
+    '2016-04-30 16:34:04':
+        '':
+            Entity:
+                id: null
+                parent: menus
+                parents:
+                    count: 1
+                    names: menus
+            Level:
+                old: '0'
+                new: '1'
+-
+    '2016-04-30 16:34:04':
+        '':
+            Entity:
+                id: null
+                parent: pages-web
+                parents:
+                    count: 1
+                    names: 'pages web'
+            Level:
+                old: '0'
+                new: '1'
+-
+    '2016-04-30 16:34:05':
+        '':
+            Entity:
+                id: null
+                parent: images
+                parents:
+                    count: 1
+                    names: images
+            Level:
+                old: '0'
+                new: '1'
+-
+    '2016-04-30 16:34:06':
+        '':
+            Entity:
+                id: null
+                parent: images
+                parents:
+                    count: 1
+                    names: images
+            Level:
+                old: '0'
+                new: '1'
+-
+    '2016-04-30 16:34:06':
+        '':
+            Entity:
+                id: null
+                parent: fiches
+                parents:
+                    count: 1
+                    names: fiches
+            Level:
+                old: '0'
+                new: '1'
+-
+    '2016-04-30 16:34:07':
+        '':
+            Entity:
+                id: null
+                parent: fiches
+                parents:
+                    count: 1
+                    names: fiches
+            Level:
+                old: '0'
+                new: '1'
+-
+    '2016-04-30 16:34:08':
+        '':
+            Entity:
+                id: null
+                parent: fiches
+                parents:
+                    count: 1
+                    names: fiches
+            Level:
+                old: '0'
+                new: '1'
+-
+    '2016-04-30 16:34:09':
+        '':
+            Entity:
+                id: null
+                parent: fiches
+                parents:
+                    count: 1
+                    names: fiches
+            Level:
+                old: '0'
+                new: '1'
+-
+    '2016-04-30 16:34:09':
+        '':
+            Entity:
+                id: null
+                parent: boutiques
+                parents:
+                    count: 1
+                    names: boutiques
+            Level:
+                old: '0'
+                new: '1'
+-
+    '2016-04-30 16:34:10':
+        '':
+            Entity:
+                id: null
+                parent: articles-1
+                parents:
+                    count: 1
+                    names: articles
+            Level:
+                old: '0'
+                new: '1'
+-
+    '2016-04-30 16:34:11':
+        '':
+            Entity:
+                id: null
+                parent: articles-1
+                parents:
+                    count: 1
+                    names: articles
+            Level:
+                old: '0'
+                new: '1'
+-
+    '2016-04-30 16:34:12':
+        '':
+            Entity:
+                id: null
+                parent: articles-1
+                parents:
+                    count: 1
+                    names: articles
+            Level:
+                old: '0'
+                new: '1'
+-
+    '2016-04-30 16:34:12':
+        '':
+            Entity:
+                id: null
+                parent: articles-1
+                parents:
+                    count: 1
+                    names: articles
+            Level:
+                old: '0'
+                new: '1'
+-
+    '2016-04-30 16:34:13':
+        '':
+            Entity:
+                id: null
+                parent: la-boutique
+                parents:
+                    count: 2
+                    names: 'articles > La boutique'
+            Level:
+                old: '0'
+                new: '2'
+-
+    '2016-04-30 16:34:14':
+        '':
+            Entity:
+                id: null
+                parent: boeuf
+                parents:
+                    count: 3
+                    names: 'articles > La boutique > Bœuf'
+            Level:
+                old: '0'
+                new: '3'
+-
+    '2016-04-30 16:34:15':
+        '':
+            Entity:
+                id: null
+                parent: boeuf
+                parents:
+                    count: 3
+                    names: 'articles > La boutique > Bœuf'
+            Level:
+                old: '0'
+                new: '3'
+-
+    '2016-04-30 16:34:15':
+        '':
+            Entity:
+                id: null
+                parent: boeuf
+                parents:
+                    count: 3
+                    names: 'articles > La boutique > Bœuf'
+            Level:
+                old: '0'
+                new: '3'
+-
+    '2016-04-30 16:34:16':
+        '':
+            Entity:
+                id: null
+                parent: boeuf
+                parents:
+                    count: 3
+                    names: 'articles > La boutique > Bœuf'
+            Level:
+                old: '0'
+                new: '3'
+-
+    '2016-04-30 16:34:17':
+        '':
+            Entity:
+                id: null
+                parent: boeuf
+                parents:
+                    count: 3
+                    names: 'articles > La boutique > Bœuf'
+            Level:
+                old: '0'
+                new: '3'
+-
+    '2016-04-30 16:34:18':
+        '':
+            Entity:
+                id: null
+                parent: la-boutique
+                parents:
+                    count: 2
+                    names: 'articles > La boutique'
+            Level:
+                old: '0'
+                new: '2'
+-
+    '2016-04-30 16:34:18':
+        '':
+            Entity:
+                id: null
+                parent: veau
+                parents:
+                    count: 3
+                    names: 'articles > La boutique > Veau'
+            Level:
+                old: '0'
+                new: '3'
+-
+    '2016-04-30 16:34:19':
+        '':
+            Entity:
+                id: null
+                parent: veau
+                parents:
+                    count: 3
+                    names: 'articles > La boutique > Veau'
+            Level:
+                old: '0'
+                new: '3'
+-
+    '2016-04-30 16:34:20':
+        '':
+            Entity:
+                id: null
+                parent: veau
+                parents:
+                    count: 3
+                    names: 'articles > La boutique > Veau'
+            Level:
+                old: '0'
+                new: '3'
+-
+    '2016-04-30 16:34:21':
+        '':
+            Entity:
+                id: null
+                parent: veau
+                parents:
+                    count: 3
+                    names: 'articles > La boutique > Veau'
+            Level:
+                old: '0'
+                new: '3'
+-
+    '2016-04-30 16:34:21':
+        '':
+            Entity:
+                id: null
+                parent: veau
+                parents:
+                    count: 3
+                    names: 'articles > La boutique > Veau'
+            Level:
+                old: '0'
+                new: '3'
+-
+    '2016-04-30 16:34:22':
+        '':
+            Entity:
+                id: null
+                parent: la-boutique
+                parents:
+                    count: 2
+                    names: 'articles > La boutique'
+            Level:
+                old: '0'
+                new: '2'
+-
+    '2016-04-30 16:34:23':
+        '':
+            Entity:
+                id: null
+                parent: agneau
+                parents:
+                    count: 3
+                    names: 'articles > La boutique > Agneau'
+            Level:
+                old: '0'
+                new: '3'
+-
+    '2016-04-30 16:34:24':
+        '':
+            Entity:
+                id: null
+                parent: agneau
+                parents:
+                    count: 3
+                    names: 'articles > La boutique > Agneau'
+            Level:
+                old: '0'
+                new: '3'
+-
+    '2016-04-30 16:34:25':
+        '':
+            Entity:
+                id: null
+                parent: agneau
+                parents:
+                    count: 3
+                    names: 'articles > La boutique > Agneau'
+            Level:
+                old: '0'
+                new: '3'
+-
+    '2016-04-30 16:34:25':
+        '':
+            Entity:
+                id: null
+                parent: agneau
+                parents:
+                    count: 3
+                    names: 'articles > La boutique > Agneau'
+            Level:
+                old: '0'
+                new: '3'
+-
+    '2016-04-30 16:34:26':
+        '':
+            Entity:
+                id: null
+                parent: agneau
+                parents:
+                    count: 3
+                    names: 'articles > La boutique > Agneau'
+            Level:
+                old: '0'
+                new: '3'
+-
+    '2016-04-30 20:49:11':
+        menu-haut:
+            Entity:
+                id: 174
+                parent: 'null'
+                parents:
+                    count: 0
+                    names: ''
+            Level:
+                old: '1'
+                new: '0'
+-
+    '2016-04-30 20:49:11':
+        menu-produits:
+            Entity:
+                id: 175
+                parent: 'null'
+                parents:
+                    count: 0
+                    names: ''
+            Level:
+                old: '1'
+                new: '0'
+-
+    '2016-04-30 20:49:11':
+        menu-footer:
+            Entity:
+                id: 176
+                parent: 'null'
+                parents:
+                    count: 0
+                    names: ''
+            Level:
+                old: '1'
+                new: '0'
+-
+    '2016-04-30 20:49:11':
+        types-informations:
+            Entity:
+                id: 177
+                parent: 'null'
+                parents:
+                    count: 0
+                    names: ''
+            Level:
+                old: '1'
+                new: '0'
+-
+    '2016-04-30 20:49:12':
+        diaporamas-collections:
+            Entity:
+                id: 178
+                parent: 'null'
+                parents:
+                    count: 0
+                    names: ''
+            Level:
+                old: '1'
+                new: '0'
+-
+    '2016-04-30 20:49:12':
+        diaporama-accueil:
+            Entity:
+                id: 179
+                parent: 'null'
+                parents:
+                    count: 0
+                    names: ''
+            Level:
+                old: '1'
+                new: '0'
+-
+    '2016-04-30 20:49:12':
+        fiches-collections:
+            Entity:
+                id: 180
+                parent: 'null'
+                parents:
+                    count: 0
+                    names: ''
+            Level:
+                old: '1'
+                new: '0'
+-
+    '2016-04-30 20:49:12':
+        recettes:
+            Entity:
+                id: 181
+                parent: 'null'
+                parents:
+                    count: 0
+                    names: ''
+            Level:
+                old: '1'
+                new: '0'
+-
+    '2016-04-30 20:49:12':
+        recettes-de-fetes:
+            Entity:
+                id: 182
+                parent: 'null'
+                parents:
+                    count: 0
+                    names: ''
+            Level:
+                old: '1'
+                new: '0'
+-
+    '2016-04-30 20:49:12':
+        recettes-de-chefs:
+            Entity:
+                id: 183
+                parent: 'null'
+                parents:
+                    count: 0
+                    names: ''
+            Level:
+                old: '1'
+                new: '0'
+-
+    '2016-04-30 20:49:12':
+        boutiques-ain:
+            Entity:
+                id: 184
+                parent: 'null'
+                parents:
+                    count: 0
+                    names: ''
+            Level:
+                old: '1'
+                new: '0'
+-
+    '2016-04-30 20:49:12':
+        articles-collections:
+            Entity:
+                id: 185
+                parent: 'null'
+                parents:
+                    count: 0
+                    names: ''
+            Level:
+                old: '1'
+                new: '0'
+-
+    '2016-04-30 20:49:12':
+        promotions:
+            Entity:
+                id: 186
+                parent: 'null'
+                parents:
+                    count: 0
+                    names: ''
+            Level:
+                old: '1'
+                new: '0'
+-
+    '2016-04-30 20:49:12':
+        fetes:
+            Entity:
+                id: 187
+                parent: 'null'
+                parents:
+                    count: 0
+                    names: ''
+            Level:
+                old: '1'
+                new: '0'
+-
+    '2016-04-30 20:49:12':
+        pieces-du-boucher:
+            Entity:
+                id: 190
+                parent: boeuf
+                parents:
+                    count: 2
+                    names: 'La boutique > Bœuf'
+            Level:
+                old: '3'
+                new: '2'
+-
+    '2016-04-30 20:49:12':
+        a-rotir:
+            Entity:
+                id: 191
+                parent: boeuf
+                parents:
+                    count: 2
+                    names: 'La boutique > Bœuf'
+            Level:
+                old: '3'
+                new: '2'
+-
+    '2016-04-30 20:49:12':
+        a-griller:
+            Entity:
+                id: 192
+                parent: boeuf
+                parents:
+                    count: 2
+                    names: 'La boutique > Bœuf'
+            Level:
+                old: '3'
+                new: '2'
+-
+    '2016-04-30 20:49:12':
+        a-braiser:
+            Entity:
+                id: 193
+                parent: boeuf
+                parents:
+                    count: 2
+                    names: 'La boutique > Bœuf'
+            Level:
+                old: '3'
+                new: '2'
+-
+    '2016-04-30 20:49:12':
+        abats:
+            Entity:
+                id: 194
+                parent: boeuf
+                parents:
+                    count: 2
+                    names: 'La boutique > Bœuf'
+            Level:
+                old: '3'
+                new: '2'
+-
+    '2016-04-30 20:49:12':
+        boeuf:
+            Entity:
+                id: 189
+                parent: la-boutique
+                parents:
+                    count: 1
+                    names: 'La boutique'
+            Level:
+                old: '2'
+                new: '1'
+-
+    '2016-04-30 20:49:12':
+        pieces-du-boucher-1:
+            Entity:
+                id: 196
+                parent: veau
+                parents:
+                    count: 2
+                    names: 'La boutique > Veau'
+            Level:
+                old: '3'
+                new: '2'
+-
+    '2016-04-30 20:49:12':
+        a-rotir-1:
+            Entity:
+                id: 197
+                parent: veau
+                parents:
+                    count: 2
+                    names: 'La boutique > Veau'
+            Level:
+                old: '3'
+                new: '2'
+-
+    '2016-04-30 20:49:12':
+        a-griller-1:
+            Entity:
+                id: 198
+                parent: veau
+                parents:
+                    count: 2
+                    names: 'La boutique > Veau'
+            Level:
+                old: '3'
+                new: '2'
+-
+    '2016-04-30 20:49:12':
+        a-braiser-1:
+            Entity:
+                id: 199
+                parent: veau
+                parents:
+                    count: 2
+                    names: 'La boutique > Veau'
+            Level:
+                old: '3'
+                new: '2'
+-
+    '2016-04-30 20:49:12':
+        abats-1:
+            Entity:
+                id: 200
+                parent: veau
+                parents:
+                    count: 2
+                    names: 'La boutique > Veau'
+            Level:
+                old: '3'
+                new: '2'
+-
+    '2016-04-30 20:49:12':
+        veau:
+            Entity:
+                id: 195
+                parent: la-boutique
+                parents:
+                    count: 1
+                    names: 'La boutique'
+            Level:
+                old: '2'
+                new: '1'
+-
+    '2016-04-30 20:49:12':
+        pieces-du-boucher-2:
+            Entity:
+                id: 202
+                parent: agneau
+                parents:
+                    count: 2
+                    names: 'La boutique > Agneau'
+            Level:
+                old: '3'
+                new: '2'
+-
+    '2016-04-30 20:49:12':
+        a-rotir-2:
+            Entity:
+                id: 203
+                parent: agneau
+                parents:
+                    count: 2
+                    names: 'La boutique > Agneau'
+            Level:
+                old: '3'
+                new: '2'
+-
+    '2016-04-30 20:49:12':
+        a-griller-2:
+            Entity:
+                id: 204
+                parent: agneau
+                parents:
+                    count: 2
+                    names: 'La boutique > Agneau'
+            Level:
+                old: '3'
+                new: '2'
+-
+    '2016-04-30 20:49:12':
+        a-braiser-2:
+            Entity:
+                id: 205
+                parent: agneau
+                parents:
+                    count: 2
+                    names: 'La boutique > Agneau'
+            Level:
+                old: '3'
+                new: '2'
+-
+    '2016-04-30 20:49:12':
+        agneau:
+            Entity:
+                id: 201
+                parent: la-boutique
+                parents:
+                    count: 1
+                    names: 'La boutique'
+            Level:
+                old: '2'
+                new: '1'
+-
+    '2016-04-30 20:49:12':
+        pieces-du-boucher:
+            Entity:
+                id: 190
+                parent: boeuf
+                parents:
+                    count: 2
+                    names: 'La boutique > Bœuf'
+            Level:
+                old: '2'
+                new: '2'
+-
+    '2016-04-30 20:49:12':
+        a-rotir:
+            Entity:
+                id: 191
+                parent: boeuf
+                parents:
+                    count: 2
+                    names: 'La boutique > Bœuf'
+            Level:
+                old: '2'
+                new: '2'
+-
+    '2016-04-30 20:49:12':
+        a-griller:
+            Entity:
+                id: 192
+                parent: boeuf
+                parents:
+                    count: 2
+                    names: 'La boutique > Bœuf'
+            Level:
+                old: '2'
+                new: '2'
+-
+    '2016-04-30 20:49:12':
+        a-braiser:
+            Entity:
+                id: 193
+                parent: boeuf
+                parents:
+                    count: 2
+                    names: 'La boutique > Bœuf'
+            Level:
+                old: '2'
+                new: '2'
+-
+    '2016-04-30 20:49:12':
+        abats:
+            Entity:
+                id: 194
+                parent: boeuf
+                parents:
+                    count: 2
+                    names: 'La boutique > Bœuf'
+            Level:
+                old: '2'
+                new: '2'
+-
+    '2016-04-30 20:49:12':
+        la-boutique:
+            Entity:
+                id: 188
+                parent: 'null'
+                parents:
+                    count: 0
+                    names: ''
+            Level:
+                old: '1'
+                new: '0'
+-
+    '2016-04-30 20:49:12':
+        pieces-du-boucher:
+            Entity:
+                id: 190
+                parent: boeuf
+                parents:
+                    count: 1
+                    names: Bœuf
+            Level:
+                old: '2'
+                new: '1'
+-
+    '2016-04-30 20:49:12':
+        a-rotir:
+            Entity:
+                id: 191
+                parent: boeuf
+                parents:
+                    count: 1
+                    names: Bœuf
+            Level:
+                old: '2'
+                new: '1'
+-
+    '2016-04-30 20:49:12':
+        a-griller:
+            Entity:
+                id: 192
+                parent: boeuf
+                parents:
+                    count: 1
+                    names: Bœuf
+            Level:
+                old: '2'
+                new: '1'
+-
+    '2016-04-30 20:49:12':
+        a-braiser:
+            Entity:
+                id: 193
+                parent: boeuf
+                parents:
+                    count: 1
+                    names: Bœuf
+            Level:
+                old: '2'
+                new: '1'
+-
+    '2016-04-30 20:49:12':
+        abats:
+            Entity:
+                id: 194
+                parent: boeuf
+                parents:
+                    count: 1
+                    names: Bœuf
+            Level:
+                old: '2'
+                new: '1'
+-
+    '2016-04-30 20:49:12':
+        boeuf:
+            Entity:
+                id: 189
+                parent: 'null'
+                parents:
+                    count: 0
+                    names: ''
+            Level:
+                old: '1'
+                new: '0'
+-
+    '2016-04-30 20:49:12':
+        pieces-du-boucher:
+            Entity:
+                id: 190
+                parent: 'null'
+                parents:
+                    count: 0
+                    names: ''
+            Level:
+                old: '1'
+                new: '0'
+-
+    '2016-04-30 20:49:12':
+        a-rotir:
+            Entity:
+                id: 191
+                parent: 'null'
+                parents:
+                    count: 0
+                    names: ''
+            Level:
+                old: '1'
+                new: '0'
+-
+    '2016-04-30 20:49:12':
+        a-griller:
+            Entity:
+                id: 192
+                parent: 'null'
+                parents:
+                    count: 0
+                    names: ''
+            Level:
+                old: '1'
+                new: '0'
+-
+    '2016-04-30 20:49:12':
+        a-braiser:
+            Entity:
+                id: 193
+                parent: 'null'
+                parents:
+                    count: 0
+                    names: ''
+            Level:
+                old: '1'
+                new: '0'
+-
+    '2016-04-30 20:49:12':
+        abats:
+            Entity:
+                id: 194
+                parent: 'null'
+                parents:
+                    count: 0
+                    names: ''
+            Level:
+                old: '1'
+                new: '0'
+-
+    '2016-04-30 20:49:12':
+        pieces-du-boucher-1:
+            Entity:
+                id: 196
+                parent: veau
+                parents:
+                    count: 1
+                    names: Veau
+            Level:
+                old: '2'
+                new: '1'
+-
+    '2016-04-30 20:49:12':
+        a-rotir-1:
+            Entity:
+                id: 197
+                parent: veau
+                parents:
+                    count: 1
+                    names: Veau
+            Level:
+                old: '2'
+                new: '1'
+-
+    '2016-04-30 20:49:12':
+        a-griller-1:
+            Entity:
+                id: 198
+                parent: veau
+                parents:
+                    count: 1
+                    names: Veau
+            Level:
+                old: '2'
+                new: '1'
+-
+    '2016-04-30 20:49:12':
+        a-braiser-1:
+            Entity:
+                id: 199
+                parent: veau
+                parents:
+                    count: 1
+                    names: Veau
+            Level:
+                old: '2'
+                new: '1'
+-
+    '2016-04-30 20:49:12':
+        abats-1:
+            Entity:
+                id: 200
+                parent: veau
+                parents:
+                    count: 1
+                    names: Veau
+            Level:
+                old: '2'
+                new: '1'
+-
+    '2016-04-30 20:49:12':
+        veau:
+            Entity:
+                id: 195
+                parent: 'null'
+                parents:
+                    count: 0
+                    names: ''
+            Level:
+                old: '1'
+                new: '0'
+-
+    '2016-04-30 20:49:12':
+        pieces-du-boucher-1:
+            Entity:
+                id: 196
+                parent: 'null'
+                parents:
+                    count: 0
+                    names: ''
+            Level:
+                old: '1'
+                new: '0'
+-
+    '2016-04-30 20:49:12':
+        a-rotir-1:
+            Entity:
+                id: 197
+                parent: 'null'
+                parents:
+                    count: 0
+                    names: ''
+            Level:
+                old: '1'
+                new: '0'
+-
+    '2016-04-30 20:49:12':
+        a-griller-1:
+            Entity:
+                id: 198
+                parent: 'null'
+                parents:
+                    count: 0
+                    names: ''
+            Level:
+                old: '1'
+                new: '0'
+-
+    '2016-04-30 20:49:12':
+        a-braiser-1:
+            Entity:
+                id: 199
+                parent: 'null'
+                parents:
+                    count: 0
+                    names: ''
+            Level:
+                old: '1'
+                new: '0'
+-
+    '2016-04-30 20:49:13':
+        abats-1:
+            Entity:
+                id: 200
+                parent: 'null'
+                parents:
+                    count: 0
+                    names: ''
+            Level:
+                old: '1'
+                new: '0'
+-
+    '2016-04-30 20:49:13':
+        pieces-du-boucher-2:
+            Entity:
+                id: 202
+                parent: agneau
+                parents:
+                    count: 1
+                    names: Agneau
+            Level:
+                old: '2'
+                new: '1'
+-
+    '2016-04-30 20:49:13':
+        a-rotir-2:
+            Entity:
+                id: 203
+                parent: agneau
+                parents:
+                    count: 1
+                    names: Agneau
+            Level:
+                old: '2'
+                new: '1'
+-
+    '2016-04-30 20:49:13':
+        a-griller-2:
+            Entity:
+                id: 204
+                parent: agneau
+                parents:
+                    count: 1
+                    names: Agneau
+            Level:
+                old: '2'
+                new: '1'
+-
+    '2016-04-30 20:49:13':
+        a-braiser-2:
+            Entity:
+                id: 205
+                parent: agneau
+                parents:
+                    count: 1
+                    names: Agneau
+            Level:
+                old: '2'
+                new: '1'
+-
+    '2016-04-30 20:49:13':
+        agneau:
+            Entity:
+                id: 201
+                parent: 'null'
+                parents:
+                    count: 0
+                    names: ''
+            Level:
+                old: '1'
+                new: '0'
+-
+    '2016-04-30 20:49:13':
+        pieces-du-boucher-2:
+            Entity:
+                id: 202
+                parent: 'null'
+                parents:
+                    count: 0
+                    names: ''
+            Level:
+                old: '1'
+                new: '0'
+-
+    '2016-04-30 20:49:13':
+        a-rotir-2:
+            Entity:
+                id: 203
+                parent: 'null'
+                parents:
+                    count: 0
+                    names: ''
+            Level:
+                old: '1'
+                new: '0'
+-
+    '2016-04-30 20:49:13':
+        a-griller-2:
+            Entity:
+                id: 204
+                parent: 'null'
+                parents:
+                    count: 0
+                    names: ''
+            Level:
+                old: '1'
+                new: '0'
+-
+    '2016-04-30 20:49:13':
+        a-braiser-2:
+            Entity:
+                id: 205
+                parent: 'null'
+                parents:
+                    count: 0
+                    names: ''
+            Level:
+                old: '1'
+                new: '0'
+-
+    '2016-04-30 20:49:21':
+        '':
+            Entity:
+                id: null
+                parent: menus
+                parents:
+                    count: 1
+                    names: menus
+            Level:
+                old: '0'
+                new: '1'
+-
+    '2016-04-30 20:49:22':
+        '':
+            Entity:
+                id: null
+                parent: menus
+                parents:
+                    count: 1
+                    names: menus
+            Level:
+                old: '0'
+                new: '1'
+-
+    '2016-04-30 20:49:23':
+        '':
+            Entity:
+                id: null
+                parent: menus
+                parents:
+                    count: 1
+                    names: menus
+            Level:
+                old: '0'
+                new: '1'
+-
+    '2016-04-30 20:49:24':
+        '':
+            Entity:
+                id: null
+                parent: pages-web
+                parents:
+                    count: 1
+                    names: 'pages web'
+            Level:
+                old: '0'
+                new: '1'
+-
+    '2016-04-30 20:49:24':
+        '':
+            Entity:
+                id: null
+                parent: images
+                parents:
+                    count: 1
+                    names: images
+            Level:
+                old: '0'
+                new: '1'
+-
+    '2016-04-30 20:49:25':
+        '':
+            Entity:
+                id: null
+                parent: images
+                parents:
+                    count: 1
+                    names: images
+            Level:
+                old: '0'
+                new: '1'
+-
+    '2016-04-30 20:49:26':
+        '':
+            Entity:
+                id: null
+                parent: fiches
+                parents:
+                    count: 1
+                    names: fiches
+            Level:
+                old: '0'
+                new: '1'
+-
+    '2016-04-30 20:49:27':
+        '':
+            Entity:
+                id: null
+                parent: fiches
+                parents:
+                    count: 1
+                    names: fiches
+            Level:
+                old: '0'
+                new: '1'
+-
+    '2016-04-30 20:49:28':
+        '':
+            Entity:
+                id: null
+                parent: fiches
+                parents:
+                    count: 1
+                    names: fiches
+            Level:
+                old: '0'
+                new: '1'
+-
+    '2016-04-30 20:49:28':
+        '':
+            Entity:
+                id: null
+                parent: fiches
+                parents:
+                    count: 1
+                    names: fiches
+            Level:
+                old: '0'
+                new: '1'
+-
+    '2016-04-30 20:49:29':
+        '':
+            Entity:
+                id: null
+                parent: boutiques
+                parents:
+                    count: 1
+                    names: boutiques
+            Level:
+                old: '0'
+                new: '1'
+-
+    '2016-04-30 20:49:30':
+        '':
+            Entity:
+                id: null
+                parent: articles-1
+                parents:
+                    count: 1
+                    names: articles
+            Level:
+                old: '0'
+                new: '1'
+-
+    '2016-04-30 20:49:31':
+        '':
+            Entity:
+                id: null
+                parent: articles-1
+                parents:
+                    count: 1
+                    names: articles
+            Level:
+                old: '0'
+                new: '1'
+-
+    '2016-04-30 20:49:32':
+        '':
+            Entity:
+                id: null
+                parent: articles-1
+                parents:
+                    count: 1
+                    names: articles
+            Level:
+                old: '0'
+                new: '1'
+-
+    '2016-04-30 20:49:33':
+        '':
+            Entity:
+                id: null
+                parent: articles-1
+                parents:
+                    count: 1
+                    names: articles
+            Level:
+                old: '0'
+                new: '1'
+-
+    '2016-04-30 20:49:34':
+        '':
+            Entity:
+                id: null
+                parent: la-boutique
+                parents:
+                    count: 2
+                    names: 'articles > La boutique'
+            Level:
+                old: '0'
+                new: '2'
+-
+    '2016-04-30 20:49:35':
+        '':
+            Entity:
+                id: null
+                parent: boeuf
+                parents:
+                    count: 3
+                    names: 'articles > La boutique > Bœuf'
+            Level:
+                old: '0'
+                new: '3'
+-
+    '2016-04-30 20:49:35':
+        '':
+            Entity:
+                id: null
+                parent: boeuf
+                parents:
+                    count: 3
+                    names: 'articles > La boutique > Bœuf'
+            Level:
+                old: '0'
+                new: '3'
+-
+    '2016-04-30 20:49:36':
+        '':
+            Entity:
+                id: null
+                parent: boeuf
+                parents:
+                    count: 3
+                    names: 'articles > La boutique > Bœuf'
+            Level:
+                old: '0'
+                new: '3'
+-
+    '2016-04-30 20:49:37':
+        '':
+            Entity:
+                id: null
+                parent: boeuf
+                parents:
+                    count: 3
+                    names: 'articles > La boutique > Bœuf'
+            Level:
+                old: '0'
+                new: '3'
+-
+    '2016-04-30 20:49:38':
+        '':
+            Entity:
+                id: null
+                parent: boeuf
+                parents:
+                    count: 3
+                    names: 'articles > La boutique > Bœuf'
+            Level:
+                old: '0'
+                new: '3'
+-
+    '2016-04-30 20:49:39':
+        '':
+            Entity:
+                id: null
+                parent: la-boutique
+                parents:
+                    count: 2
+                    names: 'articles > La boutique'
+            Level:
+                old: '0'
+                new: '2'
+-
+    '2016-04-30 20:49:40':
+        '':
+            Entity:
+                id: null
+                parent: veau
+                parents:
+                    count: 3
+                    names: 'articles > La boutique > Veau'
+            Level:
+                old: '0'
+                new: '3'
+-
+    '2016-04-30 21:04:04':
+        menu-haut:
+            Entity:
+                id: 216
+                parent: 'null'
+                parents:
+                    count: 0
+                    names: ''
+            Level:
+                old: '1'
+                new: '0'
+-
+    '2016-04-30 21:04:04':
+        menu-produits:
+            Entity:
+                id: 217
+                parent: 'null'
+                parents:
+                    count: 0
+                    names: ''
+            Level:
+                old: '1'
+                new: '0'
+-
+    '2016-04-30 21:04:04':
+        menu-footer:
+            Entity:
+                id: 218
+                parent: 'null'
+                parents:
+                    count: 0
+                    names: ''
+            Level:
+                old: '1'
+                new: '0'
+-
+    '2016-04-30 21:04:04':
+        types-informations:
+            Entity:
+                id: 219
+                parent: 'null'
+                parents:
+                    count: 0
+                    names: ''
+            Level:
+                old: '1'
+                new: '0'
+-
+    '2016-04-30 21:04:04':
+        diaporamas-collections:
+            Entity:
+                id: 220
+                parent: 'null'
+                parents:
+                    count: 0
+                    names: ''
+            Level:
+                old: '1'
+                new: '0'
+-
+    '2016-04-30 21:04:04':
+        diaporama-accueil:
+            Entity:
+                id: 221
+                parent: 'null'
+                parents:
+                    count: 0
+                    names: ''
+            Level:
+                old: '1'
+                new: '0'
+-
+    '2016-04-30 21:04:04':
+        fiches-collections:
+            Entity:
+                id: 222
+                parent: 'null'
+                parents:
+                    count: 0
+                    names: ''
+            Level:
+                old: '1'
+                new: '0'
+-
+    '2016-04-30 21:04:04':
+        recettes:
+            Entity:
+                id: 223
+                parent: 'null'
+                parents:
+                    count: 0
+                    names: ''
+            Level:
+                old: '1'
+                new: '0'
+-
+    '2016-04-30 21:04:04':
+        recettes-de-fetes:
+            Entity:
+                id: 224
+                parent: 'null'
+                parents:
+                    count: 0
+                    names: ''
+            Level:
+                old: '1'
+                new: '0'
+-
+    '2016-04-30 21:04:04':
+        recettes-de-chefs:
+            Entity:
+                id: 225
+                parent: 'null'
+                parents:
+                    count: 0
+                    names: ''
+            Level:
+                old: '1'
+                new: '0'
+-
+    '2016-04-30 21:04:04':
+        boutiques-ain:
+            Entity:
+                id: 226
+                parent: 'null'
+                parents:
+                    count: 0
+                    names: ''
+            Level:
+                old: '1'
+                new: '0'
+-
+    '2016-04-30 21:04:04':
+        articles-collections:
+            Entity:
+                id: 227
+                parent: 'null'
+                parents:
+                    count: 0
+                    names: ''
+            Level:
+                old: '1'
+                new: '0'
+-
+    '2016-04-30 21:04:04':
+        promotions:
+            Entity:
+                id: 228
+                parent: 'null'
+                parents:
+                    count: 0
+                    names: ''
+            Level:
+                old: '1'
+                new: '0'
+-
+    '2016-04-30 21:04:05':
+        fetes:
+            Entity:
+                id: 229
+                parent: 'null'
+                parents:
+                    count: 0
+                    names: ''
+            Level:
+                old: '1'
+                new: '0'
+-
+    '2016-04-30 21:04:05':
+        pieces-du-boucher:
+            Entity:
+                id: 232
+                parent: boeuf
+                parents:
+                    count: 2
+                    names: 'La boutique > Bœuf'
+            Level:
+                old: '3'
+                new: '2'
+-
+    '2016-04-30 21:04:05':
+        a-rotir:
+            Entity:
+                id: 233
+                parent: boeuf
+                parents:
+                    count: 2
+                    names: 'La boutique > Bœuf'
+            Level:
+                old: '3'
+                new: '2'
+-
+    '2016-04-30 21:04:05':
+        a-griller:
+            Entity:
+                id: 234
+                parent: boeuf
+                parents:
+                    count: 2
+                    names: 'La boutique > Bœuf'
+            Level:
+                old: '3'
+                new: '2'
+-
+    '2016-04-30 21:04:05':
+        a-braiser:
+            Entity:
+                id: 235
+                parent: boeuf
+                parents:
+                    count: 2
+                    names: 'La boutique > Bœuf'
+            Level:
+                old: '3'
+                new: '2'
+-
+    '2016-04-30 21:04:05':
+        abats:
+            Entity:
+                id: 236
+                parent: boeuf
+                parents:
+                    count: 2
+                    names: 'La boutique > Bœuf'
+            Level:
+                old: '3'
+                new: '2'
+-
+    '2016-04-30 21:04:05':
+        boeuf:
+            Entity:
+                id: 231
+                parent: la-boutique
+                parents:
+                    count: 1
+                    names: 'La boutique'
+            Level:
+                old: '2'
+                new: '1'
+-
+    '2016-04-30 21:04:05':
+        pieces-du-boucher-1:
+            Entity:
+                id: 238
+                parent: veau
+                parents:
+                    count: 2
+                    names: 'La boutique > Veau'
+            Level:
+                old: '3'
+                new: '2'
+-
+    '2016-04-30 21:04:05':
+        veau:
+            Entity:
+                id: 237
+                parent: la-boutique
+                parents:
+                    count: 1
+                    names: 'La boutique'
+            Level:
+                old: '2'
+                new: '1'
+-
+    '2016-04-30 21:04:05':
+        pieces-du-boucher:
+            Entity:
+                id: 232
+                parent: boeuf
+                parents:
+                    count: 2
+                    names: 'La boutique > Bœuf'
+            Level:
+                old: '2'
+                new: '2'
+-
+    '2016-04-30 21:04:05':
+        a-rotir:
+            Entity:
+                id: 233
+                parent: boeuf
+                parents:
+                    count: 2
+                    names: 'La boutique > Bœuf'
+            Level:
+                old: '2'
+                new: '2'
+-
+    '2016-04-30 21:04:05':
+        a-griller:
+            Entity:
+                id: 234
+                parent: boeuf
+                parents:
+                    count: 2
+                    names: 'La boutique > Bœuf'
+            Level:
+                old: '2'
+                new: '2'
+-
+    '2016-04-30 21:04:05':
+        a-braiser:
+            Entity:
+                id: 235
+                parent: boeuf
+                parents:
+                    count: 2
+                    names: 'La boutique > Bœuf'
+            Level:
+                old: '2'
+                new: '2'
+-
+    '2016-04-30 21:04:05':
+        abats:
+            Entity:
+                id: 236
+                parent: boeuf
+                parents:
+                    count: 2
+                    names: 'La boutique > Bœuf'
+            Level:
+                old: '2'
+                new: '2'
+-
+    '2016-04-30 21:04:05':
+        la-boutique:
+            Entity:
+                id: 230
+                parent: 'null'
+                parents:
+                    count: 0
+                    names: ''
+            Level:
+                old: '1'
+                new: '0'
+-
+    '2016-04-30 21:04:05':
+        pieces-du-boucher:
+            Entity:
+                id: 232
+                parent: boeuf
+                parents:
+                    count: 1
+                    names: Bœuf
+            Level:
+                old: '2'
+                new: '1'
+-
+    '2016-04-30 21:04:05':
+        a-rotir:
+            Entity:
+                id: 233
+                parent: boeuf
+                parents:
+                    count: 1
+                    names: Bœuf
+            Level:
+                old: '2'
+                new: '1'
+-
+    '2016-04-30 21:04:05':
+        a-griller:
+            Entity:
+                id: 234
+                parent: boeuf
+                parents:
+                    count: 1
+                    names: Bœuf
+            Level:
+                old: '2'
+                new: '1'
+-
+    '2016-04-30 21:04:05':
+        a-braiser:
+            Entity:
+                id: 235
+                parent: boeuf
+                parents:
+                    count: 1
+                    names: Bœuf
+            Level:
+                old: '2'
+                new: '1'
+-
+    '2016-04-30 21:04:05':
+        abats:
+            Entity:
+                id: 236
+                parent: boeuf
+                parents:
+                    count: 1
+                    names: Bœuf
+            Level:
+                old: '2'
+                new: '1'
+-
+    '2016-04-30 21:04:05':
+        boeuf:
+            Entity:
+                id: 231
+                parent: 'null'
+                parents:
+                    count: 0
+                    names: ''
+            Level:
+                old: '1'
+                new: '0'
+-
+    '2016-04-30 21:04:05':
+        pieces-du-boucher:
+            Entity:
+                id: 232
+                parent: 'null'
+                parents:
+                    count: 0
+                    names: ''
+            Level:
+                old: '1'
+                new: '0'
+-
+    '2016-04-30 21:04:05':
+        a-rotir:
+            Entity:
+                id: 233
+                parent: 'null'
+                parents:
+                    count: 0
+                    names: ''
+            Level:
+                old: '1'
+                new: '0'
+-
+    '2016-04-30 21:04:05':
+        a-griller:
+            Entity:
+                id: 234
+                parent: 'null'
+                parents:
+                    count: 0
+                    names: ''
+            Level:
+                old: '1'
+                new: '0'
+-
+    '2016-04-30 21:04:05':
+        a-braiser:
+            Entity:
+                id: 235
+                parent: 'null'
+                parents:
+                    count: 0
+                    names: ''
+            Level:
+                old: '1'
+                new: '0'
+-
+    '2016-04-30 21:04:05':
+        abats:
+            Entity:
+                id: 236
+                parent: 'null'
+                parents:
+                    count: 0
+                    names: ''
+            Level:
+                old: '1'
+                new: '0'
+-
+    '2016-04-30 21:04:05':
+        pieces-du-boucher-1:
+            Entity:
+                id: 238
+                parent: veau
+                parents:
+                    count: 1
+                    names: Veau
+            Level:
+                old: '2'
+                new: '1'
+-
+    '2016-04-30 21:04:05':
+        veau:
+            Entity:
+                id: 237
+                parent: 'null'
+                parents:
+                    count: 0
+                    names: ''
+            Level:
+                old: '1'
+                new: '0'
+-
+    '2016-04-30 21:04:05':
+        pieces-du-boucher-1:
+            Entity:
+                id: 238
+                parent: 'null'
+                parents:
+                    count: 0
+                    names: ''
+            Level:
+                old: '1'
+                new: '0'
+-
+    '2016-04-30 21:04:10':
+        '':
+            Entity:
+                id: null
+                parent: menus
+                parents:
+                    count: 1
+                    names: menus
+            Level:
+                old: '0'
+                new: '1'
+-
+    '2016-04-30 21:04:10':
+        '':
+            Entity:
+                id: null
+                parent: menus
+                parents:
+                    count: 1
+                    names: menus
+            Level:
+                old: '0'
+                new: '1'
+-
+    '2016-04-30 21:04:11':
+        '':
+            Entity:
+                id: null
+                parent: menus
+                parents:
+                    count: 1
+                    names: menus
+            Level:
+                old: '0'
+                new: '1'
+-
+    '2016-04-30 21:04:11':
+        '':
+            Entity:
+                id: null
+                parent: pages-web
+                parents:
+                    count: 1
+                    names: 'pages web'
+            Level:
+                old: '0'
+                new: '1'
+-
+    '2016-04-30 21:04:11':
+        '':
+            Entity:
+                id: null
+                parent: images
+                parents:
+                    count: 1
+                    names: images
+            Level:
+                old: '0'
+                new: '1'
+-
+    '2016-04-30 21:04:12':
+        '':
+            Entity:
+                id: null
+                parent: images
+                parents:
+                    count: 1
+                    names: images
+            Level:
+                old: '0'
+                new: '1'
+-
+    '2016-04-30 21:04:12':
+        '':
+            Entity:
+                id: null
+                parent: fiches
+                parents:
+                    count: 1
+                    names: fiches
+            Level:
+                old: '0'
+                new: '1'
+-
+    '2016-04-30 21:04:13':
+        '':
+            Entity:
+                id: null
+                parent: fiches
+                parents:
+                    count: 1
+                    names: fiches
+            Level:
+                old: '0'
+                new: '1'
+-
+    '2016-04-30 21:04:13':
+        '':
+            Entity:
+                id: null
+                parent: fiches
+                parents:
+                    count: 1
+                    names: fiches
+            Level:
+                old: '0'
+                new: '1'
+-
+    '2016-04-30 21:04:14':
+        '':
+            Entity:
+                id: null
+                parent: fiches
+                parents:
+                    count: 1
+                    names: fiches
+            Level:
+                old: '0'
+                new: '1'
+-
+    '2016-04-30 21:04:14':
+        '':
+            Entity:
+                id: null
+                parent: boutiques
+                parents:
+                    count: 1
+                    names: boutiques
+            Level:
+                old: '0'
+                new: '1'
+-
+    '2016-04-30 21:04:15':
+        '':
+            Entity:
+                id: null
+                parent: articles-1
+                parents:
+                    count: 1
+                    names: articles
+            Level:
+                old: '0'
+                new: '1'
+-
+    '2016-04-30 21:04:15':
+        '':
+            Entity:
+                id: null
+                parent: articles-1
+                parents:
+                    count: 1
+                    names: articles
+            Level:
+                old: '0'
+                new: '1'
+-
+    '2016-04-30 21:04:16':
+        '':
+            Entity:
+                id: null
+                parent: articles-1
+                parents:
+                    count: 1
+                    names: articles
+            Level:
+                old: '0'
+                new: '1'
+-
+    '2016-04-30 21:04:16':
+        '':
+            Entity:
+                id: null
+                parent: articles-1
+                parents:
+                    count: 1
+                    names: articles
+            Level:
+                old: '0'
+                new: '1'
+-
+    '2016-04-30 21:04:16':
+        '':
+            Entity:
+                id: null
+                parent: la-boutique
+                parents:
+                    count: 2
+                    names: 'articles > La boutique'
+            Level:
+                old: '0'
+                new: '2'
+-
+    '2016-04-30 21:04:17':
+        '':
+            Entity:
+                id: null
+                parent: boeuf
+                parents:
+                    count: 3
+                    names: 'articles > La boutique > Bœuf'
+            Level:
+                old: '0'
+                new: '3'
+-
+    '2016-04-30 21:04:17':
+        '':
+            Entity:
+                id: null
+                parent: boeuf
+                parents:
+                    count: 3
+                    names: 'articles > La boutique > Bœuf'
+            Level:
+                old: '0'
+                new: '3'
+-
+    '2016-04-30 21:04:18':
+        '':
+            Entity:
+                id: null
+                parent: boeuf
+                parents:
+                    count: 3
+                    names: 'articles > La boutique > Bœuf'
+            Level:
+                old: '0'
+                new: '3'
+-
+    '2016-04-30 21:04:18':
+        '':
+            Entity:
+                id: null
+                parent: boeuf
+                parents:
+                    count: 3
+                    names: 'articles > La boutique > Bœuf'
+            Level:
+                old: '0'
+                new: '3'
+-
+    '2016-04-30 21:04:19':
+        '':
+            Entity:
+                id: null
+                parent: boeuf
+                parents:
+                    count: 3
+                    names: 'articles > La boutique > Bœuf'
+            Level:
+                old: '0'
+                new: '3'
+-
+    '2016-04-30 21:04:19':
+        '':
+            Entity:
+                id: null
+                parent: la-boutique
+                parents:
+                    count: 2
+                    names: 'articles > La boutique'
+            Level:
+                old: '0'
+                new: '2'
+-
+    '2016-04-30 21:04:20':
+        '':
+            Entity:
+                id: null
+                parent: veau
+                parents:
+                    count: 3
+                    names: 'articles > La boutique > Veau'
+            Level:
+                old: '0'
+                new: '3'
+-
+    '2016-04-30 21:04:20':
+        '':
+            Entity:
+                id: null
+                parent: veau
+                parents:
+                    count: 3
+                    names: 'articles > La boutique > Veau'
+            Level:
+                old: '0'
+                new: '3'
+-
+    '2016-04-30 21:04:20':
+        '':
+            Entity:
+                id: null
+                parent: veau
+                parents:
+                    count: 3
+                    names: 'articles > La boutique > Veau'
+            Level:
+                old: '0'
+                new: '3'
+-
+    '2016-04-30 21:04:21':
+        '':
+            Entity:
+                id: null
+                parent: veau
+                parents:
+                    count: 3
+                    names: 'articles > La boutique > Veau'
+            Level:
+                old: '0'
+                new: '3'
+-
+    '2016-04-30 21:04:21':
+        '':
+            Entity:
+                id: null
+                parent: veau
+                parents:
+                    count: 3
+                    names: 'articles > La boutique > Veau'
+            Level:
+                old: '0'
+                new: '3'
+-
+    '2016-04-30 21:04:22':
+        '':
+            Entity:
+                id: null
+                parent: la-boutique
+                parents:
+                    count: 2
+                    names: 'articles > La boutique'
+            Level:
+                old: '0'
+                new: '2'
+-
+    '2016-04-30 21:04:22':
+        '':
+            Entity:
+                id: null
+                parent: agneau
+                parents:
+                    count: 3
+                    names: 'articles > La boutique > Agneau'
+            Level:
+                old: '0'
+                new: '3'
+-
+    '2016-04-30 21:04:23':
+        '':
+            Entity:
+                id: null
+                parent: agneau
+                parents:
+                    count: 3
+                    names: 'articles > La boutique > Agneau'
+            Level:
+                old: '0'
+                new: '3'
+-
+    '2016-04-30 21:04:23':
+        '':
+            Entity:
+                id: null
+                parent: agneau
+                parents:
+                    count: 3
+                    names: 'articles > La boutique > Agneau'
+            Level:
+                old: '0'
+                new: '3'
+-
+    '2016-04-30 21:04:24':
+        '':
+            Entity:
+                id: null
+                parent: agneau
+                parents:
+                    count: 3
+                    names: 'articles > La boutique > Agneau'
+            Level:
+                old: '0'
+                new: '3'
+-
+    '2016-04-30 21:04:24':
+        '':
+            Entity:
+                id: null
+                parent: agneau
+                parents:
+                    count: 3
+                    names: 'articles > La boutique > Agneau'
+            Level:
+                old: '0'
+                new: '3'
+-
+    '2016-04-30 21:04:25':
+        '':
+            Entity:
+                id: null
+                parent: la-boutique
+                parents:
+                    count: 2
+                    names: 'articles > La boutique'
+            Level:
+                old: '0'
+                new: '2'
+-
+    '2016-04-30 21:04:25':
+        '':
+            Entity:
+                id: null
+                parent: porc
+                parents:
+                    count: 3
+                    names: 'articles > La boutique > Porc'
+            Level:
+                old: '0'
+                new: '3'
+-
+    '2016-04-30 21:04:26':
+        '':
+            Entity:
+                id: null
+                parent: porc
+                parents:
+                    count: 3
+                    names: 'articles > La boutique > Porc'
+            Level:
+                old: '0'
+                new: '3'
+-
+    '2016-04-30 21:04:26':
+        '':
+            Entity:
+                id: null
+                parent: porc
+                parents:
+                    count: 3
+                    names: 'articles > La boutique > Porc'
+            Level:
+                old: '0'
+                new: '3'
+-
+    '2016-04-30 21:04:27':
+        '':
+            Entity:
+                id: null
+                parent: porc
+                parents:
+                    count: 3
+                    names: 'articles > La boutique > Porc'
+            Level:
+                old: '0'
+                new: '3'
+-
+    '2016-04-30 21:04:27':
+        '':
+            Entity:
+                id: null
+                parent: porc
+                parents:
+                    count: 3
+                    names: 'articles > La boutique > Porc'
+            Level:
+                old: '0'
+                new: '3'
+-
+    '2016-04-30 21:04:28':
+        '':
+            Entity:
+                id: null
+                parent: la-boutique
+                parents:
+                    count: 2
+                    names: 'articles > La boutique'
+            Level:
+                old: '0'
+                new: '2'
+-
+    '2016-04-30 21:04:28':
+        '':
+            Entity:
+                id: null
+                parent: epicerie
+                parents:
+                    count: 3
+                    names: 'articles > La boutique > Épicerie'
+            Level:
+                old: '0'
+                new: '3'
+-
+    '2016-04-30 21:04:29':
+        '':
+            Entity:
+                id: null
+                parent: epicerie
+                parents:
+                    count: 3
+                    names: 'articles > La boutique > Épicerie'
+            Level:
+                old: '0'
+                new: '3'
+-
+    '2016-04-30 21:04:29':
+        '':
+            Entity:
+                id: null
+                parent: epicerie
+                parents:
+                    count: 3
+                    names: 'articles > La boutique > Épicerie'
+            Level:
+                old: '0'
+                new: '3'
+-
+    '2016-05-01 17:54:14':
+        '':
+            Entity:
+                id: null
+                parent: la-boutique
+                parents:
+                    count: 2
+                    names: 'articles > La boutique'
+            Level:
+                old: '0'
+                new: '2'
+-
+    '2016-05-01 21:52:14':
+        '':
+            Entity:
+                id: null
+                parent: la-boutique
+                parents:
+                    count: 2
+                    names: 'articles > La boutique'
+            Level:
+                old: '0'
+                new: '2'
+-
+    '2016-05-02 13:22:18':
+        '':
+            Entity:
+                id: null
+                parent: promotions
+                parents:
+                    count: 2
+                    names: 'articles > Promotions'
+            Level:
+                old: '0'
+                new: '2'
+-
+    '2016-05-02 13:22:38':
+        '':
+            Entity:
+                id: null
+                parent: promotions
+                parents:
+                    count: 2
+                    names: 'articles > Promotions'
+            Level:
+                old: '0'
+                new: '2'
+-
+    '2016-05-02 13:23:05':
+        '':
+            Entity:
+                id: null
+                parent: promotions
+                parents:
+                    count: 2
+                    names: 'articles > Promotions'
+            Level:
+                old: '0'
+                new: '2'
+-
+    '2016-05-02 13:33:35':
+        '':
+            Entity:
+                id: null
+                parent: promotions
+                parents:
+                    count: 2
+                    names: 'articles > Promotions'
+            Level:
+                old: '0'
+                new: '2'
+-
+    '2016-05-02 13:34:02':
+        '':
+            Entity:
+                id: null
+                parent: promotions
+                parents:
+                    count: 2
+                    names: 'articles > Promotions'
+            Level:
+                old: '0'
+                new: '2'
+-
+    '2016-05-02 13:38:21':
+        '':
+            Entity:
+                id: null
+                parent: promotions
+                parents:
+                    count: 2
+                    names: 'articles > Promotions'
+            Level:
+                old: '0'
+                new: '2'
+-
+    '2016-05-02 13:38:50':
+        '':
+            Entity:
+                id: null
+                parent: promotions
+                parents:
+                    count: 2
+                    names: 'articles > Promotions'
+            Level:
+                old: '0'
+                new: '2'
+-
+    '2016-05-02 13:49:04':
+        '':
+            Entity:
+                id: null
+                parent: promotions
+                parents:
+                    count: 2
+                    names: 'articles > Promotions'
+            Level:
+                old: '0'
+                new: '2'
+-
+    '2016-05-02 13:49:30':
+        '':
+            Entity:
+                id: null
+                parent: promotions
+                parents:
+                    count: 2
+                    names: 'articles > Promotions'
+            Level:
+                old: '0'
+                new: '2'
+-
+    '2016-05-02 13:50:02':
+        '':
+            Entity:
+                id: null
+                parent: promotions
+                parents:
+                    count: 2
+                    names: 'articles > Promotions'
+            Level:
+                old: '0'
+                new: '2'
+-
+    '2016-05-02 13:50:29':
+        '':
+            Entity:
+                id: null
+                parent: promotions
+                parents:
+                    count: 2
+                    names: 'articles > Promotions'
+            Level:
+                old: '0'
+                new: '2'
+-
+    '2016-05-02 23:11:07':
+        '':
+            Entity:
+                id: null
+                parent: promotions
+                parents:
+                    count: 2
+                    names: 'articles > Promotions'
+            Level:
+                old: '0'
+                new: '2'
+-
+    '2016-05-02 23:16:55':
+        '':
+            Entity:
+                id: null
+                parent: promotions
+                parents:
+                    count: 2
+                    names: 'articles > Promotions'
+            Level:
+                old: '0'
+                new: '2'
+-
+    '2016-05-03 13:14:52':
+        '':
+            Entity:
+                id: null
+                parent: la-boutique
+                parents:
+                    count: 2
+                    names: 'articles > La boutique'
+            Level:
+                old: '0'
+                new: '2'

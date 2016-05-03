@@ -37,6 +37,9 @@ marketplace:
     name: e-commerce
 icons:
     default_icon: icône par défaut
+default:
+    bydefault: Elément par défaut
+    nomore: Vous ne pouvez plus attribuer d''élément supplémentaire. Désactivez un autre pour pouvoir attribuer celui-ci.
 actions:
     name: actions
     voir: voir

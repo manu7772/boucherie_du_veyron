@@ -23,7 +23,7 @@ use \DateTime;
  * article
  *
  * @ORM\Entity
- * @ORM\Table(name="article")
+ * @ORM\Table(name="article", options={"comment":"articles du site"})
  * @ORM\HasLifecycleCallbacks
  * @ORM\Entity(repositoryClass="site\adminBundle\Entity\articleRepository")
  * @ExclusionPolicy("all")

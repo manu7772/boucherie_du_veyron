@@ -57,6 +57,13 @@ class imageType extends baseType {
 					'disabled'      => false,
 					'required'		=> false,
 					))
+				// ->add('owner', 'text', array(
+				// 	'label'         => 'fields.owner',
+				// 	'translation_domain' => 'image',
+				// 	'disabled'      => true,
+				// 	'required'		=> true,
+				// 	))
+				// ->add('statut')
 				;
 		} else {
 			// pas d'image à l'origine

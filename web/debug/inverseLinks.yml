@@ -1232,3 +1232,1475 @@
             fiches: {  }
             articlesParents: {  }
             articlesLies: {  }
+-
+    '2016-04-28 01:53:34':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-28 13:47:03':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-29 00:23:10':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-29 00:23:41':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-30 16:33:57':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-30 16:33:58':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-30 16:33:58':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-30 16:33:59':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-30 16:34:00':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-30 16:34:00':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-30 16:34:01':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-30 16:34:01':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-30 16:34:02':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-30 16:34:03':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-30 16:34:03':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-30 16:34:04':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-30 16:34:04':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-30 16:34:05':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-30 16:34:06':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-30 16:34:07':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-30 16:34:07':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-30 16:34:08':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-30 16:34:09':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-30 16:34:09':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-30 16:34:10':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-30 16:34:11':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-30 16:34:12':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-30 16:34:12':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-30 16:34:13':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-30 16:34:14':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-30 16:34:15':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-30 16:34:16':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-30 16:34:16':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-30 16:34:17':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-30 16:34:18':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-30 16:34:19':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-30 16:34:19':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-30 16:34:20':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-30 16:34:21':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-30 16:34:22':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-30 16:34:22':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-30 16:34:23':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-30 16:34:24':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-30 16:34:25':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-30 16:34:25':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-30 16:34:26':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-30 20:49:16':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-30 20:49:17':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-30 20:49:17':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-30 20:49:18':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-30 20:49:18':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-30 20:49:19':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-30 20:49:20':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-30 20:49:20':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-30 20:49:21':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-30 20:49:21':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-30 20:49:22':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-30 20:49:23':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-30 20:49:24':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-30 20:49:24':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-30 20:49:25':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-30 20:49:26':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-30 20:49:27':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-30 20:49:28':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-30 20:49:29':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-30 20:49:29':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-30 20:49:30':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-30 20:49:31':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-30 20:49:32':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-30 20:49:33':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-30 20:49:34':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-30 20:49:35':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-30 20:49:35':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-30 20:49:36':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-30 20:49:37':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-30 20:49:38':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-30 20:49:39':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-30 20:49:40':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-30 21:01:51':
+        info:
+            boutique: site\adminBundle\Entity\boutique
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-30 21:03:27':
+        info:
+            boutique: site\adminBundle\Entity\boutique
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-30 21:04:07':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-30 21:04:07':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-30 21:04:07':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-30 21:04:08':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-30 21:04:08':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-30 21:04:08':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-30 21:04:09':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-30 21:04:09':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-30 21:04:10':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-30 21:04:10':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-30 21:04:10':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-30 21:04:11':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-30 21:04:11':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-30 21:04:12':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-30 21:04:12':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-30 21:04:12':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-30 21:04:13':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-30 21:04:13':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-30 21:04:14':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-30 21:04:14':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-30 21:04:15':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-30 21:04:15':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-30 21:04:16':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-30 21:04:16':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-30 21:04:17':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-30 21:04:17':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-30 21:04:17':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-30 21:04:18':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-30 21:04:18':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-30 21:04:19':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-30 21:04:19':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-30 21:04:20':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-30 21:04:20':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-30 21:04:21':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-30 21:04:21':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-30 21:04:21':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-30 21:04:22':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-30 21:04:22':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-30 21:04:23':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-30 21:04:23':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-30 21:04:24':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-30 21:04:24':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-30 21:04:25':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-30 21:04:25':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-30 21:04:26':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-30 21:04:26':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-30 21:04:27':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-30 21:04:27':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-30 21:04:28':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-30 21:04:28':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-30 21:04:29':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-30 21:04:29':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-30 23:44:55':
+        info:
+            rawfile: site\adminBundle\Entity\rawfile
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-30 23:45:31':
+        info:
+            rawfile: site\adminBundle\Entity\rawfile
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-30 23:45:45':
+        info:
+            image: site\adminBundle\Entity\image
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-04-30 23:45:45':
+        info:
+            image: site\adminBundle\Entity\image
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-05-02 12:09:14':
+        info:
+            rawfile: site\adminBundle\Entity\rawfile
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-05-02 12:09:46':
+        info:
+            rawfile: site\adminBundle\Entity\rawfile
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-05-02 12:10:06':
+        info:
+            rawfile: site\adminBundle\Entity\rawfile
+            id: 'null'
+        old: {  }
+        current: {  }
+        new: {  }
+        delete: {  }
+-
+    '2016-05-03 13:14:43':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: '266'
+        old:
+            parents:
+                - boeuf
+        current:
+            parents:
+                - boeuf
+                - la-boutique
+                - articles-1
+        new:
+            parents:
+                1: la-boutique
+                2: articles-1
+            result:
+                parents: 'Error : not found false with source "childrens" on class "Proxies\\__CG__\\site\\adminBundle\\Entity\\categorie"'
+        delete:
+            parents: {  }
+-
+    '2016-05-03 13:18:58':
+        info:
+            0: Proxies\__CG__\site\adminBundle\Entity\image
+            id: '90'
+        old:
+            parents: {  }
+            userAvatar: null
+        current: {  }
+        new: {  }
+        delete:
+            parents: {  }
+            userAvatar: null
+-
+    '2016-05-03 13:18:59':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: '267'
+        old:
+            parents:
+                - boeuf
+        current:
+            parents:
+                - boeuf
+                - la-boutique
+                - articles-1
+        new:
+            parents:
+                1: la-boutique
+                2: articles-1
+            result:
+                parents: 'Error : not found false with source "childrens" on class "Proxies\\__CG__\\site\\adminBundle\\Entity\\categorie"'
+        delete:
+            parents: {  }
+-
+    '2016-05-03 13:18:59':
+        info:
+            categorie: site\adminBundle\Entity\categorie
+            id: '269'
+        old:
+            parents:
+                - boeuf
+        current:
+            parents:
+                - boeuf
+                - la-boutique
+                - articles-1
+        new:
+            parents:
+                1: la-boutique
+                2: articles-1
+            result:
+                parents: 'Error : not found false with source "childrens" on class "Proxies\\__CG__\\site\\adminBundle\\Entity\\categorie"'
+        delete:
+            parents: {  }
+-
+    '2016-05-03 13:18:59':
+        info:
+            0: Proxies\__CG__\site\adminBundle\Entity\image
+            id: '94'
+        old:
+            parents: {  }
+            userAvatar: null
+        current: {  }
+        new: {  }
+        delete:
+            parents: {  }
+            userAvatar: null
+-
+    '2016-05-03 13:18:59':
+        info:
+            fiche: site\adminBundle\Entity\fiche
+            id: '88'
+        old:
+            parents: {  }
+            articles:
+                - filet-de-rumstec-2
+                - poulet-de-bresse
+                - cote-d-agneau
+        current:
+            parents: {  }
+            articles:
+                - filet-de-rumstec-2
+                - poulet-de-bresse
+                - cote-d-agneau
+                - steak-hache
+        new:
+            parents: {  }
+            articles:
+                3: steak-hache
+        delete:
+            parents: {  }
+            articles: {  }
+-
+    '2016-05-03 13:18:59':
+        info:
+            0: Proxies\__CG__\site\adminBundle\Entity\image
+            id: '78'
+        old:
+            parents: {  }
+            userAvatar: null
+        current: {  }
+        new: {  }
+        delete:
+            parents: {  }
+            userAvatar: null
+-
+    '2016-05-03 13:19:00':
+        info:
+            article: site\adminBundle\Entity\article
+            id: '61'
+        old:
+            parents:
+                - pieces-du-boucher
+            marque: de-bresse
+            reseaus:
+                - internet
+            pdf: null
+            fiches:
+                - recette-de-veau-maringot
+            articlesParents:
+                - faux-filet
+            articlesLies: {  }
+        current:
+            parents:
+                - pieces-du-boucher
+            marque: de-bresse
+            reseaus:
+                - internet
+            pdf: null
+            fiches:
+                - recette-de-veau-maringot
+            articlesParents:
+                - faux-filet
+                - steak-hache
+            articlesLies: {  }
+        new:
+            parents: {  }
+            reseaus: {  }
+            fiches: {  }
+            articlesParents:
+                1: steak-hache
+            articlesLies: {  }
+        delete:
+            parents: {  }
+            reseaus: {  }
+            fiches: {  }
+            articlesParents: {  }
+            articlesLies: {  }
+-
+    '2016-05-03 13:19:00':
+        info:
+            article: site\adminBundle\Entity\article
+            id: '60'
+        old:
+            parents:
+                - pieces-du-boucher
+            marque: charollais
+            reseaus:
+                - internet
+            pdf: null
+            fiches: {  }
+            articlesParents:
+                - faux-filet
+            articlesLies: {  }
+        current:
+            parents:
+                - pieces-du-boucher
+                - a-rotir
+                - a-braiser
+            marque: charollais
+            reseaus:
+                - internet
+            pdf: null
+            fiches:
+                - recette-de-veau-maringot
+            articlesParents:
+                - faux-filet
+            articlesLies:
+                - filet-de-rumstec-2
+        new:
+            parents:
+                1: a-rotir
+                2: a-braiser
+            reseaus: {  }
+            fiches:
+                - recette-de-veau-maringot
+            articlesParents: {  }
+            articlesLies:
+                - filet-de-rumstec-2
+            result:
+                parents: 'Success : data added'
+                fiches: 'Success : data added'
+                articlesLies: 'Success : data added'
+        delete:
+            parents: {  }
+            reseaus: {  }
+            fiches: {  }
+            articlesParents: {  }
+            articlesLies: {  }
