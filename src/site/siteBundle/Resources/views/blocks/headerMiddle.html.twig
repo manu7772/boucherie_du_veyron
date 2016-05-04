@@ -40,7 +40,15 @@
 									<li><a href="{{ path('fos_user_security_login') }}"><i class="fa fa-user"></i> Connexion</a></li>
 									{% endif %}
 									{% if is_granted("ROLE_TRANSLATOR") %}
-									<li><a href="{{ path('siteadmin_homepage') }}"><i class="fa fa-cog"></i></a></li>
+									<li>
+										{% if app.request.getSchemeAndHttpHost() == 'http://localhost' or site_domains.admin is not defined -%}
+										<a href="{{ path('siteadmin_homepage') }}">
+										{%- else -%}
+										<a href="{{ site_domains.admin.prefix }}.{{ site_domains.admin.domain }}.{{ site_domains.admin.extensions[0] }}{{ site_domains.admin.path }}">
+										{%- endif %}
+											<i class="fa fa-cog"></i>
+										</a>
+									</li>
 									{% endif %}
 								</ul>
 							</div>

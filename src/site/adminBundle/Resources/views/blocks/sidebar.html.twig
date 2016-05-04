@@ -6,7 +6,11 @@
 			<li class="nav-header">
 				<div class="dropdown profile-element">
 					<span>
+						{% if app.request.getSchemeAndHttpHost() == 'http://localhost' or site_domains.public is not defined %}
 						<a href="{{ path(homepage) }}">
+						{% else %}
+						<a href="{{ site_domains.public.prefix }}.{{ site_domains.public.domain }}.{{ site_domains.public.extensions[0] }}{{ site_domains.public.path|default('') }}">
+						{% endif %}
 							{% if sitedata.adminLogo|default(null) != null %}
 							<img alt="image" class="" src="{{ sitedata.adminLogo.img }}" />
 							{% else %}

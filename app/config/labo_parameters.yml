@@ -1,4 +1,17 @@
 parameters:
+    site_domains:
+        public:
+            domain: 'boucherie-du-veyron'
+            prefix: 'www'
+            extensions:
+                - 'fr'
+                - 'com'
+        admin:
+            domain: 'boucherie-du-veyron'
+            prefix: 'admin'
+            extensions:
+                - 'fr'
+            path: '/admin'
     siteadminBundle: siteadminsite
     default_color: 'rgba(128,128,128,1)'
     mail:

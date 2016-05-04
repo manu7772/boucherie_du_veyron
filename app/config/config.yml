@@ -53,6 +53,7 @@ twig:
         list_locales: %list_locales%
         info_entites: %info_entites%
         marketplace: %marketplace%
+        site_domains: %site_domains%
     form:
         resources:
             # - 'sitegraphicsBundle:Form:form_div_layout.html.twig'
