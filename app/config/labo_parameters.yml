@@ -1,14 +1,16 @@
 parameters:
     site_domains:
         public:
-            domain: 'boucherie-du-veyron'
+            reseau: 'http://'
             prefix: 'www'
+            domain: 'boucherie-du-veyron'
             extensions:
                 - 'fr'
                 - 'com'
         admin:
-            domain: 'boucherie-du-veyron'
+            reseau: 'http://'
             prefix: 'admin'
+            domain: 'boucherie-du-veyron'
             extensions:
                 - 'fr'
             path: '/admin'

@@ -44,7 +44,7 @@
 										{% if app.request.getSchemeAndHttpHost() == 'http://localhost' or site_domains.admin is not defined -%}
 										<a href="{{ path('siteadmin_homepage') }}">
 										{%- else -%}
-										<a href="{{ site_domains.admin.prefix }}.{{ site_domains.admin.domain }}.{{ site_domains.admin.extensions[0] }}{{ site_domains.admin.path }}">
+										<a href="{{ site_domains.admin.reseau|default('http://') }}{{ site_domains.admin.prefix }}.{{ site_domains.admin.domain }}.{{ site_domains.admin.extensions[0] }}{{ site_domains.admin.path }}">
 										{%- endif %}
 											<i class="fa fa-cog"></i>
 										</a>
