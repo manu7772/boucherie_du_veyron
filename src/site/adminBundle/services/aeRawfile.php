@@ -25,7 +25,7 @@ class aeRawfile extends aeEntity {
      * @param baseEntity $entity
      * @return aeRawfile
      */
-    public function checkAfterChange(baseEntity &$entity, $butEntities = []) {
+    public function checkAfterChange(&$entity, $butEntities = []) {
         parent::checkAfterChange($entity, $butEntities);
         return $this;
     }

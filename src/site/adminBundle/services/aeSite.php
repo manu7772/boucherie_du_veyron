@@ -33,7 +33,7 @@ class aeSite extends aeEntity {
      * @param baseEntity $entity
      * @return aeSite
      */
-    public function checkAfterChange(baseEntity &$entity, $butEntities = []) {
+    public function checkAfterChange(&$entity, $butEntities = []) {
         // check images
         $fields = array('image', 'logo', 'favicon', 'adminLogo');
         foreach ($fields as $field) {

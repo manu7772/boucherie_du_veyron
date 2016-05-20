@@ -25,7 +25,7 @@ class aeMedia extends aeEntity {
 	 * @param baseEntity $entity
 	 * @return aeMedia
 	 */
-	public function checkAfterChange(baseEntity &$entity, $butEntities = []) {
+	public function checkAfterChange(&$entity, $butEntities = []) {
 		parent::checkAfterChange($entity, $butEntities);
 		return $this;
 	}

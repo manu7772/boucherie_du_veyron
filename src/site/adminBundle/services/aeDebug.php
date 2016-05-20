@@ -18,12 +18,16 @@ use \Exception;
  */
 class aeDebug extends aetools {
 
+	const DEBUG_FOLDER = 'debug';
 	const YAML_LEVELS = 32;			// niveaux yaml
 	protected $container; 			// container
+	protected $debugPath;			// path for debug folder
 
 	public function __construct(ContainerInterface $container = null) {
 		$this->container = $container;
 		parent::__construct($this->container);
+		$this->createFolderInWeb(self::DEBUG_FOLDER);
+		$this->debugPath = 'web/'.self::DEBUG_FOLDER;
 	}
 
 	/**
@@ -94,9 +98,9 @@ class aeDebug extends aetools {
 			$date = new DateTime();
 			$dumper = new Dumper();
 			$inc = 0;
-			$file = $this->gotoroot.'web/debug/debugFile_'.$date->format('Ymd_His').'-'.$inc.'.yml';
+			$file = $this->gotoroot.$this->debugPath.'/debugFile_'.$date->format('Ymd_His').'-'.$inc.'.yml';
 			while (@file_exists($file)) {
-				$file = $this->gotoroot.'web/debug/debugFile_'.$date->format('Ymd_His').'-'.$inc++.'.yml';
+				$file = $this->gotoroot.$this->debugPath.'/debugFile_'.$date->format('Ymd_His').'-'.$inc++.'.yml';
 			}
 			$r = @file_put_contents(
 				$file,
@@ -128,7 +132,7 @@ class aeDebug extends aetools {
 			$date = new DateTime();
 			$dateTxt = $date->format('Y-m-d H:i:s');
 			$array = array(array($dateTxt => $this->reduceArray($array)));
-			$file = $this->gotoroot.'web/debug/'.$name.'.yml';
+			$file = $this->gotoroot.$this->debugPath.'/'.$name.'.yml';
 			if(file_exists($file)) {
 				if(is_writable($file)) {
 					$fop = @fopen($file, $mode);

@@ -25,7 +25,7 @@ class aeSubEntity extends aeEntity {
 	 * @param baseEntity $entity
 	 * @return aeSubEntity
 	 */
-	public function checkAfterChange(baseEntity &$entity, $butEntities = []) {
+	public function checkAfterChange(&$entity, $butEntities = []) {
         // check images
         $fields = array('image');
         foreach ($fields as $field) {

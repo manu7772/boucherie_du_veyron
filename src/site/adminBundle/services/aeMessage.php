@@ -35,10 +35,10 @@ class aeMessage extends aeEntity {
 
     /**
      * Check entity after change (edit…)
-     * @param baseEntity $entity
+     * @param  $entity
      * @return aeArticle
      */
-    public function checkAfterChange(baseEntity &$entity, $butEntities = []) {
+    public function checkAfterChange(&$entity, $butEntities = []) {
         parent::checkAfterChange($entity, $butEntities);
         return $this;
     }

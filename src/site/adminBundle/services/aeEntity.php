@@ -1181,42 +1181,44 @@ class aeEntity extends aetools {
 
 	// DEFAULT
 
-	public function setAsDefault(&$entite, $set = null) {
-		if($entite->getDefault() === $set) return;
-		if($set === false || ($set == null && $entite->getDefault() === true)) {
-			// set false
-			$entite->setDefault(false);
-		} else {
-			// set true => vérification
-			$entite->setDefault(true);
-			$dm = $entite->isDefaultMultiple();
-			if($dm !== true) {
-				$items = $this->getRepo($entite->getClassName())->findByDefault(true);
-				if(count($items) > 0) foreach ($items as $key => $oneItem) if($entite->getId() == $oneItem->getId()) unset($items[$key]);
-				if(is_int($dm)) {
-					if($dm < 1) $dm = 1;
-				} else $dm = 1;
-				if($dm == 1) {
-					$cpt = count($items) - $dm + 1;
-					if($cpt > 0) foreach ($items as $oneItem) {
-						$this->setAsDefault($oneItem, false);
-						$cpt--;
-						if($cpt < 1) break;
+	public function setAsDefault(&$entite, $set = null, $flush = true) {
+		if(method_exists($entite, 'setDefault') && method_exists($entite, 'getDefault')) {
+			if($entite->getDefault() === $set) return;
+			if($set === false || ($set == null && $entite->getDefault() === true)) {
+				// set false
+				$entite->setDefault(false);
+			} else {
+				// set true => vérification
+				$entite->setDefault(true);
+				$dm = $entite->isDefaultMultiple();
+				if($dm !== true) {
+					$items = $this->getRepo($entite->getClassName())->findByDefault(true);
+					if(count($items) > 0) foreach ($items as $key => $oneItem) if($entite->getId() == $oneItem->getId()) unset($items[$key]);
+					if(is_int($dm)) {
+						if($dm < 1) $dm = 1;
+					} else $dm = 1;
+					if($dm == 1) {
+						$cpt = count($items) - $dm + 1;
+						if($cpt > 0) foreach ($items as $oneItem) {
+							$this->setAsDefault($oneItem, false);
+							$cpt--;
+							if($cpt < 1) break;
+						}
+					} else if($dm > 1 && (count($items) + 1) > $dm) {
+						//
+						$message = $this->container->get('flash_messages')->send(array(
+							'title'		=> 'Default max. dépassé',
+							'type'		=> flashMessage::MESSAGES_ERROR,
+							'text'		=> $this->trans->trans('default.nomore'),
+						));
+						// annule les changements sur $entite
+						$this->getEm()->refresh($entite);
 					}
-				} else if($dm > 1 && (count($items) + 1) > $dm) {
-					//
-					$message = $this->container->get('flash_messages')->send(array(
-						'title'		=> 'Default max. dépassé',
-						'type'		=> flashMessage::MESSAGES_ERROR,
-						'text'		=> $this->trans->trans('default.nomore'),
-					));
-					// annule les changements sur $entite
-					$this->getEm()->refresh($entite);
 				}
 			}
+			// flush
+			if($flush) $this->getEm()->flush();
 		}
-		// flush
-		$this->getEm()->flush();
 	}
 
 
@@ -1247,7 +1249,7 @@ class aeEntity extends aetools {
 			if(is_object($statut)) {
 				$entite->setStatut($statut);
 				// gestion de la suppression de default…
-				$this->setAsDefault($entite, false);
+				$this->setAsDefault($entite, false, false);
 			} else {
 				$this->getEm()->remove($entite);
 			}
@@ -1326,7 +1328,7 @@ class aeEntity extends aetools {
 	 * @param baseEntity $butEntities = []
 	 * @return aeEntity
 	 */
-	public function checkAfterChange(baseEntity &$entity, $butEntities = []) {
+	public function checkAfterChange(&$entity, $butEntities = []) {
 		// if(method_exists($entity, 'check')) $entity->check();
 		// Check statut… etc.
 		// $this->checkStatuts($entity, false);
@@ -1339,15 +1341,16 @@ class aeEntity extends aetools {
 	// ALL
 	/**
 	 * Vérifie le statut et l'attribue si null
-	 * @param object &$entity
+	 * @param object $entity
 	 * @param string $inverse (nom de l'entité liée)
 	 * @param boolean $flush = true
-	 * @return boolean
+	 * @return object $entity
 	 */
-	public function checkField(&$entity, $inverse, $flush = true) {
-		$set = $this->getMethodOfSetting($inverse, $entity);
-		$get = $this->getMethodOfGetting($inverse, $entity);
-		if(method_exists($entity, $set) && method_exists($entity, $get)) {
+	public function checkField($entity, $inverse, $flush = true) {
+		$set = $this->getMethodOfSetting($inverse, $entity, true);
+		$get = $this->getMethodOfGetting($inverse, $entity, true);
+		// echo('<h3>'.get_class($entity).' ('.$inverse.') : '.$set.' / '.$get.'</h3>');
+		if($set && $get) {
 			$repo = $this->getRepo($inverse);
 			$attr = false;
 			if($entity->$get() == null) {
@@ -1355,8 +1358,11 @@ class aeEntity extends aetools {
 			} else if(method_exists($entity->$get(), 'toArray')) {
 				if(count($entity->$get()->toArray()) < 1) $attr = self::COLLECTION_ASSOC_NAME;
 			}
+			// echo('<h4>'.get_class($entity).' ('.$inverse.') : '.$set.' / '.$get.'</h4>');
 			if($attr != false && method_exists($repo, self::REPO_DEFAULT_VAL)) {
+				// echo('<h5>'.get_class($entity).' ('.$inverse.') : '.$set.' / '.$get.'</h5>');
 				$default = $repo->{self::REPO_DEFAULT_VAL}();
+				// echo('<h5>'.get_class($entity).' ('.$inverse.') : '.$set.' / '.$get.'</h5>');
 				switch ($attr) {
 					case self::SINGLE_ASSOC_NAME:
 						if(is_array($default)) $default = reset($default);
@@ -1366,7 +1372,7 @@ class aeEntity extends aetools {
 						if(is_object($default)) $default = array($default);
 						if(is_array($default)) {
 							foreach ($default as $value) {
-								$entity->$set($default);
+								$entity->$set($value);
 							}
 						}
 						break;

@@ -40,6 +40,7 @@ class aetools {
 	const SOURCE_FILES 			= 'src/';
 	const WEB_PATH				= 'web/';
 	const BUNDLE_EXTENSION 		= 'Bundle';
+	const PARAMS_FOLDER			= 'params';
 	// Dossiers
 	const DEFAULT_CHMOD			= 0755;
 	// DateTime
@@ -151,7 +152,7 @@ class aetools {
 		$this->container 		= $container;
 		// initialisation de données nécessaires au service
 		$this->initAllData();
-		// initialisation nécessitant la présence du controller
+		$this->createFolderInWeb(self::PARAMS_FOLDER);
 		return $this;
 	}
 
@@ -430,6 +431,13 @@ class aetools {
 			$this->rewind();
 			return $this;
 		} else return false;
+	}
+
+	public function createFolderInWeb($name) {
+		$path = $this->currentPath;
+		$this->setWebPath();
+		$this->verifDossierAndCreate($name);
+		$this->setRootPath($this->currentPath);
 	}
 
 	/**
@@ -1056,7 +1064,7 @@ class aetools {
 			if($all == false) $this->selectBundles($bundles);
 			return $bundles;
 		} else {
-			$pathToConfig = $this->gotoroot.'web/params/bundles.yml';
+			$pathToConfig = $this->gotoroot.'web/'.self::PARAMS_FOLDER.'/bundles.yml';
 			if(!@file_exists($pathToConfig)) return array();
 			$yaml = new Parser();
 			$config = $yaml->parse(@file_get_contents($pathToConfig));
@@ -1066,7 +1074,7 @@ class aetools {
 
 	/**
 	 * Enregistre la liste des bundles disponibles dans un fichier YAML
-	 * dans : web/params/bundles.yml
+	 * dans : web/'.self::PARAMS_FOLDER.'/bundles.yml
 	 * @return boolean
 	 */
 	public function updateBundlesInConfig() {
@@ -1074,11 +1082,11 @@ class aetools {
 		if($this->isContainerPresent()) {
 			$bundles = $this->container->getParameter('kernel.bundles');
 			$this->selectBundles($bundles);
-			$pathToConfig = $this->gotoroot.'web/params/bundles.yml';
+			$pathToConfig = $this->gotoroot.'web/'.self::PARAMS_FOLDER.'/bundles.yml';
 			$dumper = new Dumper();
 			$r = @file_put_contents($pathToConfig, $dumper->dump($bundles, self::MAX_YAML_LEVEL));
 		}
-		if($r == false) throw new Exception("Mise à jour des bundles dans web/params/bundles.yml : impossible d'écrire dans le fichier.", 1);
+		if($r == false) throw new Exception("Mise à jour des bundles dans web/'.self::PARAMS_FOLDER.'/bundles.yml : impossible d'écrire dans le fichier.", 1);
 		return $r;
 	}
 

@@ -26,7 +26,7 @@ class aeCategorie extends aeSubEntity {
      * @param baseEntity $entity
      * @return aeCategorie
      */
-    public function checkAfterChange(baseEntity &$entity, $butEntities = []) {
+    public function checkAfterChange(&$entity, $butEntities = []) {
         // elements subEntitys ajoutés // inverses
         // echo('<pre>');
         // $list = $entity->getSubEntitys()->toArray();
@@ -42,6 +42,16 @@ class aeCategorie extends aeSubEntity {
         //     $service->checkAfterChange($child);
         //     $service->save($child, false);
         // }
+
+        if($entity->getPageweb() == null) {
+            // pageweb par défaut
+            $servicePageweb = $this->container->get('aetools.aePageweb');
+            $pw = $servicePageweb->getRepo()->findByNom('liste_'.$entity->getType().'s');
+            if(count($pw) > 0) {
+                $entity->setPageweb(reset($pw));
+            }
+        }
+
         parent::checkAfterChange($entity, $butEntities);
         return $this;
     }
@@ -62,5 +72,21 @@ class aeCategorie extends aeSubEntity {
     // public function save(baseEntity &$entity, $flush = true) {
     //  return parent::save($entity, $flush);
     // }
+
+    /**
+     * Get list of types of $cagetories = categorie or array of categorie
+     * @param array $categories
+     * @return array
+     */
+    public function getTypesOfCategories($categories) {
+        if(is_object($categories)) $categories = array($categories);
+        $types = array();
+        if(is_array($categories)) {
+            foreach ($categories as $categorie) {
+                if($categorie instanceOf categorie) $types[] = $categorie->getType();
+            }
+        }
+        return array_unique($types);
+    }
 
 }

@@ -25,7 +25,7 @@ class aePdf extends aeMedia {
      * @param baseEntity $entity
      * @return aePdf
      */
-    public function checkAfterChange(baseEntity &$entity, $butEntities = []) {
+    public function checkAfterChange(&$entity, $butEntities = []) {
         parent::checkAfterChange($entity, $butEntities);
         return $this;
     }

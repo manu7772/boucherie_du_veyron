@@ -23,6 +23,10 @@ class aePageweb extends aeItem {
     public function __construct(ContainerInterface $container = null, $em = null) {
         parent::__construct($container, $em);
         $this->defineEntity(self::CLASS_ENTITY);
+        $this->rootPath = __DIR__.self::GO_TO_ROOT;
+        $this->setRootPath("/");
+        // récupération de fichiers et check
+        $this->initFiles();
         return $this;
     }
 
@@ -39,11 +43,10 @@ class aePageweb extends aeItem {
      * @param baseEntity $entity
      * @return aeArticle
      */
-    public function checkAfterChange(baseEntity &$entity, $butEntities = []) {
+    public function checkAfterChange(&$entity, $butEntities = []) {
         parent::checkAfterChange($entity, $butEntities);
         return $this;
     }
-
 
     public function getDefaultPage() {
         return $this->getRepo()->findOneByDefault(1);

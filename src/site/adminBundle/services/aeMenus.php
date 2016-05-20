@@ -45,6 +45,7 @@ class aeMenus {
 	public function __construct(ContainerInterface $container) {
 		$this->container = $container;
 		$this->aetools = new aetools();
+		$this->aetools->createFolderInWeb(self::WEB_FOLD_PUBLIC);
 		$this->rootPath = __DIR__.self::GO_TO_ROOT;
 		$this->menusPath = $this->rootPath.self::WEB_SOURCE_FILES.self::WEB_FOLD_PUBLIC;
 		$this->aetools->setRootPath(aetools::SLASH);

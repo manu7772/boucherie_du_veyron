@@ -33,7 +33,7 @@ class aeTier extends aeSubEntity {
 	 * @param baseEntity $entity
 	 * @return aeTier
 	 */
-	public function checkAfterChange(baseEntity &$entity, $butEntities = []) {
+	public function checkAfterChange(&$entity, $butEntities = []) {
         // check images
         $fields = array('logo');
         foreach ($fields as $field) {

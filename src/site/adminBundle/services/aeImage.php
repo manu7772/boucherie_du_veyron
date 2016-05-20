@@ -32,7 +32,7 @@ class aeImage extends aeMedia {
 	 * @param baseEntity $entity
 	 * @return aeImage
 	 */
-	public function checkAfterChange(baseEntity &$entity, $butEntities = []) {
+	public function checkAfterChange(&$entity, $butEntities = []) {
 		$infoForPersist = $entity->getInfoForPersist();
 		$entity->setNom($entity->getNom());
 		if(isset($infoForPersist['rawfiles']['actual'])) {

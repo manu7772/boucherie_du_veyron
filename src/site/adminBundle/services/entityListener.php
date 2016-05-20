@@ -262,7 +262,12 @@ class entityListener implements EventSubscriber {
 	 * Actions sur prePersist
 	 */
 	public function prePersistActions() {
-		// $this->entityService->checkStatuts($this->entityObject, false);
+		if(method_exists($this->entityObject, 'getStatut')) {
+			if($this->entityObject->getId() == null && $this->entityObject->getStatut() == null) {
+				$this->entityService->checkStatuts($this->entityObject, false);
+				$this->_em->persist($this->entityObject);
+			}
+		}
 		// $this->entityService->checkTva($this->entityObject, false);
 	}
 
