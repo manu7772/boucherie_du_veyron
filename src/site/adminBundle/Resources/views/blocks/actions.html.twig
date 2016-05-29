@@ -84,7 +84,7 @@
 
 {%- macro htmlicon(item, size, classes) %}
 	{% if item.className is defined %}
-	<i class="fa {{ ('entite.' ~ item.icon|default(item.className|default('unknown')))|trans({}, 'icon') }} fa-{{ size|default(1) }}x {{ classes|default([])|join(' ') }}"></i>
+	<i class="fa {{ (item.icon|default('entite.' ~ item.className|default('unknown')))|trans({}, 'icon') }} fa-{{ size|default(1) }}x {{ classes|default([])|join(' ') }}"></i>
 	{% else %}
 	<i class="fa {{ ('entite.' ~ item)|trans({}, 'icon') }} fa-{{ size|default(1) }}x {{ classes|default([])|join(' ') }}"></i>
 	{% endif %}
@@ -361,5 +361,11 @@
 	</div>
 {%- endmacro %}
 
-
+{%- macro subEntityLink(item) -%}
+{%- if(item.className == 'pageweb') -%}
+{{ path('site_pageweb', {pageweb: item.slug}) }}
+{%- else -%}
+#
+{%- endif -%}
+{%- endmacro -%}
 

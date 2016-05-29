@@ -22,6 +22,7 @@ fields:
     accroche: slogan
     descriptif: description
     couleur: color
+    menuNav: navigation menu
     menuArticle: products menu
     categorieArticles: promo collections
     categorieFooters: collections for footer

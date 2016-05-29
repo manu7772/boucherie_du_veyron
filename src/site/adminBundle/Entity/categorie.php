@@ -49,6 +49,12 @@ class categorie extends baseSubEntity {
 	protected $nom;
 
 	/**
+	 * @ORM\ManyToOne(targetEntity="site\adminBundle\Entity\pageweb")
+	 * @ORM\JoinColumn(nullable=true, unique=false, onDelete="SET NULL")
+	 */
+	protected $pageweb;
+
+	/**
 	 * @var integer
 	 * @ORM\Column(name="lvl", type="integer", nullable=false, unique=false)
 	 */
@@ -61,8 +67,8 @@ class categorie extends baseSubEntity {
 	protected $parent;
 
 	/**
-	 * @ORM\ManyToMany(targetEntity="site\adminBundle\Entity\baseSubEntity", inversedBy="parents", cascade={"persist"})
-	 * @ORM\JoinTable(name="parent_cat_child")
+	 * @ORM\OneToMany(targetEntity="site\adminBundle\Entity\categorieposition", mappedBy="categorie", cascade={"persist", "remove"})
+	 * @ORM\JoinColumn(name="childrens", nullable=true)
 	 */
 	protected $childrens;
 
@@ -98,12 +104,15 @@ class categorie extends baseSubEntity {
 	protected $type_list;
 	// propriétés calculées
 	protected $subEntitys;
+	protected $addedSubEntitys;
 
 	public function __construct() {
 		parent::__construct();
+		$this->pageweb = null;
 		$this->childrens = new ArrayCollection();
 		$this->historySubEntitys = new ArrayCollection();
 		$this->subEntitys = new ArrayCollection();
+		$this->addedSubEntitys = new ArrayCollection();
 		$this->parent = null;
 		$this->lvl = 0;
 		$this->open = false;
@@ -164,6 +173,7 @@ class categorie extends baseSubEntity {
 	public function check() {
 		// $this->init();
 		// parent
+		// if($this->pageweb == null) $this->pageweb = $this->getType()."html.twig";
 		parent::check();
 	}
 
@@ -173,6 +183,22 @@ class categorie extends baseSubEntity {
 	 */
 	public function isDefaultNullable() {
 		return true;
+	}
+
+	/**
+	 * set pageweb
+	 * @param pageweb $pageweb
+	 * @return categorie
+	 */
+	public function setPageweb(pageweb $pageweb) {
+		$this->pageweb = $pageweb;
+	}
+	/**
+	 * get pageweb
+	 * @return pageweb
+	 */
+	public function getPageweb() {
+		return $this->pageweb;
 	}
 
 	/**
@@ -291,6 +317,10 @@ class categorie extends baseSubEntity {
 		return $this->childrens;
 	}
 
+	public function hasChildrensOfAllTypes(baseSubEntity $children) {
+		return $this->childrens->contains($children);
+	}
+
 	public function getAllChildrens($unique = false) {
 		$allChildren = $this->getChildrens();
 		foreach($allChildren as $children) {
@@ -374,12 +404,33 @@ class categorie extends baseSubEntity {
 		return $this->removeChildren($subEntity);
 	}
 
+	// addedSubEntitys (form)
 
+	public function getAddedSubEntitys() {
+		return $this->addedSubEntitys;
+	}
 
+	public function addAddedSubEntity(baseSubEntity $addedSubEntity) {
+		if(!$this->addedSubEntitys->contains($addedSubEntitys)) $this->addedSubEntitys->add($addedSubEntitys);
+		return $this;
+	}
 
+	public function removeAddedSubEntity(baseSubEntity $addedSubEntitys) {
+		return $this->addedSubEntitys->removeElement($addedSubEntitys);
+	}
+
+	public function clearAddedSubEntitys() {
+		return $this->addedSubEntitys->clear();
+	}
+
+	// historySubEntitys (gestion des baseSubEntity en statut != 'Actif')
 
 	public function getHistorySubEntitys() {
 		return $this->historySubEntitys;
+	}
+
+	public function hasHistorySubEntitys(baseSubEntity $historyChildren) {
+		return $this->historySubEntitys->contains($historyChildren);
 	}
 
 	public function addHistorySubEntity(baseSubEntity $subEntity) {

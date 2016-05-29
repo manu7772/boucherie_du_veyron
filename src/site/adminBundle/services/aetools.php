@@ -1241,6 +1241,23 @@ class aetools {
 	// languages
 
 	/**
+	 * Renvoie la locale par défaut stockée dans parameters.yml ou config.yml
+	 * @return string
+	 */
+	public function getLocaleInParameters() {
+		$content = $this->getYmlContent('parameters.yml');
+		if(isset($content['parameters']['locale'])) {
+			return $content['parameters']['locale'];
+		} else {
+			$content = $this->getYmlContent('config.yml');
+			if(isset($content['parameters']['locale'])) {
+				return $content['parameters']['locale'];
+			}
+		}
+		throw new Exception('Locale absente dans "parameters.yml" et "config.yml" !', 1);
+	}
+
+	/**
 	 * @dev voir pour charger la locale par défaut via Parser sur le fichier app/config.yml si le controller est absent
 	 * Get parsed translation files
 	 * @param string $domain = "messages"
@@ -1250,7 +1267,7 @@ class aetools {
 	 */
 	public function getTranslations($domain = "messages", $lang = null, $path = "src") {
 		if($lang == null) 
-			$this->isControllerPresent() ? $lang = $this->container->get('request')->getLocale() : $lang = "fr";
+			$this->isControllerPresent() ? $lang = $this->container->get('request')->getLocale() : $lang = $this->getLocaleInParameters();
 		$files = $this->exploreDir($this->gotoroot.$path, $domain.'.'.$lang.'.yml', 'fichiers', true, true);
 		$result = array();
 		$yaml = new Parser();

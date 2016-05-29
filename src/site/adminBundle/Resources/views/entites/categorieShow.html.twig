@@ -60,7 +60,7 @@
 										</p>
 									</div>
 									<div class="col-sm-6">
-										<div id="jsajx-{{ entite.id }}" class="jstree-ajax"></div>
+										<div id="jsajx-{{ entite.id }}" class="jstree-ajax jstree-menu-all jstree-dnd" jstree-types='{{ entite.accepts|json_encode() }}'></div>
 									</div>
 								</div>
 							</div>

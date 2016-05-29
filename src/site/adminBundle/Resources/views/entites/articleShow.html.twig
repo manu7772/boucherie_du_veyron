@@ -95,8 +95,8 @@
 				            <div class="panel-body"{{ style|raw }}>
 				            	<h3 class='text-navy' style='margin-top:0px;'>{{ UCfirst('fields.artlink'|trans({}, entite.className)) }}</h3>
 				            	<hr class="m-t-xs m-b-xs">
-				            	{% if entite.articlesLies|length > 0 %}
-				                {{ actions.labelLinkList(entite.articlesLies, [], null, type, type_value_joiner, 'show') }}
+				            	{% if entite.articlesChilds|length > 0 %}
+				                {{ actions.labelLinkList(entite.articlesChilds, [], null, type, type_value_joiner, 'show') }}
 				                {% else %}
 				                <p>{{ UCfirst('not_found'|trans({}, entite.className)) }}</p>
 				                {% endif %}

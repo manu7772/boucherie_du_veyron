@@ -7,7 +7,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Doctrine\Common\Collections\ArrayCollection;
 // Slug
-use Gedmo\Mapping\Annotation as Gedmo;
+// use Gedmo\Mapping\Annotation as Gedmo;
 
 use site\adminBundle\Entity\baseEntity;
 
@@ -36,16 +36,10 @@ abstract class baseSubEntity extends baseEntity {
 	protected $id;
 
 	/**
-	 * @ORM\ManyToMany(targetEntity="site\adminBundle\Entity\categorie", mappedBy="childrens", cascade={"persist"})
+	 * @ORM\OneToMany(targetEntity="site\adminBundle\Entity\categorieposition", mappedBy="subEntity", cascade={"persist", "remove"})
+	 * @ORM\JoinColumn(name="parents", nullable=false)
 	 */
 	protected $parents;
-
-	/**
-	 * https://github.com/Atlantic18/DoctrineExtensions/blob/master/doc/sortable.md
-	 * @Gedmo\SortablePosition
-	 * @ORM\Column(type="integer", nullable=false)
-	 */
-	protected $position;
 
 	/**
 	 * @var string
@@ -86,12 +80,13 @@ abstract class baseSubEntity extends baseEntity {
 
 	protected $class_name;
 	protected $old_values;
+	protected $addedParents;
 
 	public function __construct() {
 		parent::__construct();
 		$this->old_values = array();
 		$this->parents = new ArrayCollection();
-		$this->position = 0;
+		$this->addedParents = new ArrayCollection();
 		$this->descriptif = null;
 		$this->statut = null;
 		$this->deletable = true;
@@ -107,8 +102,15 @@ abstract class baseSubEntity extends baseEntity {
 		$fields = array('parents');
 		if(count($addedfields) > 0 && is_array($addedfields)) $fields = array_unique(array_merge($fields, $addedfields));
 		foreach ($fields as $field) {
-			if(is_object($this->$field) && method_exists($this->$field, "toArray")) $this->old_values[$field] = $this->$field->toArray();
-				else $this->old_values[$field] = $this->$field;
+			switch ($field) {
+				case 'parents':
+					# code...
+					break;				
+				default:
+					if(is_object($this->$field) && method_exists($this->$field, "toArray")) $this->old_values[$field] = $this->$field->toArray();
+						else $this->old_values[$field] = $this->$field;
+					break;
+			}
 		}
 		return $this;
 	}
@@ -141,7 +143,7 @@ abstract class baseSubEntity extends baseEntity {
 
 	/**
 	 * Get keywords
-	 * @return array 
+	 * @return array
 	 */
 	public function getArrayKeywords() {
 		return $this->getTags()->toArray();
@@ -172,6 +174,15 @@ abstract class baseSubEntity extends baseEntity {
 		if(!$this->parents->contains($parent)) $this->parents->add($parent);
 		// $parent->addChildren($this);
 		return $this;
+	}
+
+	/**
+	 * Has parent 
+	 * @param categorie $parent
+	 * @return boolean
+	 */
+	public function hasParent(categorie $parent) {
+		return $this->parents->contains($parent);
 	}
 
 	/**
@@ -256,21 +267,16 @@ abstract class baseSubEntity extends baseEntity {
 	// }
 
 	/**
-	 * Set position
-	 * @param integer $position
-	 * @return baseSubEntity
-	 */
-	public function setPosition($position) {
-		$this->position = $position;
-		return $this;
-	}
-
-	/**
 	 * Get position
 	 * @return integer
 	 */
-	public function getPosition() {
-		return $this->position;
+	public function getPosition(categorie $parent) {
+		$position = null;
+		foreach ($this->parents as $cp) {
+			if($cp->getCategorie() == $parent) $position = $cp->getPosition();
+		}
+		if($position == null) throw new Exception('Error while getting position of entity "'.$this.'" has not parent named "'.$parent.'" !', 1);
+		return $position;
 	}
 
 	/**

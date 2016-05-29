@@ -65,6 +65,24 @@ class siteType extends baseType {
                 'translation_domain' => 'site',
                 'required'  => true,
                 ))
+            ->add('menuNav', 'entity', array(
+                "label"     => 'fields.menuNav',
+                'translation_domain' => 'site',
+                'class'     => 'siteadminBundle:categorie',
+                'property'  => 'nom',
+                'multiple'  => false,
+                'required' => false,
+                'group_by' => 'parent.nom',
+                "query_builder" => function($repo) {
+                    if(method_exists($repo, 'getElementsByTypeButRoot'))
+                        return $repo->getElementsByTypeButRoot(array("menu"));
+                        else return $repo->findAllClosure();
+                    },
+                'placeholder'   => 'form.select',
+                'attr'      => array(
+                    'class'         => 'select2',
+                    ),
+                ))
             ->add('menuArticle', 'entity', array(
                 "label"     => 'fields.menuArticle',
                 'translation_domain' => 'site',
@@ -74,8 +92,8 @@ class siteType extends baseType {
                 'required' => false,
                 'group_by' => 'parent.nom',
                 "query_builder" => function($repo) {
-                    if(method_exists($repo, 'getElementsBySubType'))
-                        return $repo->getElementsBySubType(array('article'));
+                    if(method_exists($repo, 'getElementsBySubTypeButRoot'))
+                        return $repo->getElementsBySubTypeButRoot(array('article'));
                         else return $repo->findAllClosure();
                     },
                 'placeholder'   => 'form.select',
@@ -92,8 +110,8 @@ class siteType extends baseType {
                 'required' => false,
                 'group_by' => 'parent.nom',
                 "query_builder" => function($repo) {
-                    if(method_exists($repo, 'getElementsBySubType'))
-                        return $repo->getElementsBySubType(array('article', 'fiche'));
+                    if(method_exists($repo, 'getElementsBySubTypeButRoot'))
+                        return $repo->getElementsBySubTypeButRoot(array('article', 'fiche'));
                         else return $repo->findAllClosure();
                     },
                 'placeholder'   => 'form.select',
@@ -110,8 +128,8 @@ class siteType extends baseType {
                 'required' => false,
                 'group_by' => 'parent.nom',
                 "query_builder" => function($repo) {
-                    if(method_exists($repo, 'getElementsBySubType'))
-                        return $repo->getElementsBySubType(array('article', 'pageweb', 'fiche'));
+                    if(method_exists($repo, 'getElementsBySubTypeButRoot'))
+                        return $repo->getElementsBySubTypeButRoot(array('article', 'pageweb', 'fiche'));
                         else return $repo->findAllClosure();
                     },
                 'placeholder'   => 'form.select',

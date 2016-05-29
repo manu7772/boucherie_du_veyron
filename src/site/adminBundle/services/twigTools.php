@@ -924,7 +924,7 @@ class twigTools extends Twig_Extension {
 	 * Get liste des icones
 	 * @return json string
 	 */
-	public function iconsAsJson() {
+	public function iconsAsJson($asArray = false) {
 		$icons = $this->container->get('aetools.aetools')->getTranslations('icon', null, 'src/site/adminsiteBundle');
 		if(count($icons) > 0) {
 			$icons = reset($icons);
@@ -939,7 +939,7 @@ class twigTools extends Twig_Extension {
 				'forbidden' => array('icon' => 'fa fa-ban'),
 				);
 		}
-		return json_encode($icons);
+		return $asArray ? $icons : json_encode($icons);
 	}
 
 

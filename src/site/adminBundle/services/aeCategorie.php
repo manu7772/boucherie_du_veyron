@@ -6,6 +6,7 @@ use site\adminBundle\services\aeSubEntity;
 
 use site\adminBundle\Entity\categorie;
 use site\adminBundle\Entity\baseEntity;
+use site\adminBundle\Entity\categorieposition;
 
 // call in controller with $this->get('aetools.aeCategorie');
 class aeCategorie extends aeSubEntity {
@@ -28,21 +29,6 @@ class aeCategorie extends aeSubEntity {
      */
     public function checkAfterChange(&$entity, $butEntities = []) {
         // elements subEntitys ajoutés // inverses
-        // echo('<pre>');
-        // $list = $entity->getSubEntitys()->toArray();
-        // echo(implode(', ', $list));
-        // echo('</pre>');
-        // echo('<pre><h4>All children of all types <i>('.$entity.' #'.$entity->getId().')</i> : </h4>');
-        // echo('<p>'.implode(', ', $entity->getChildrensOfAllTypes()->toArray()).'</p>');
-        // echo('</pre>');
-
-        // foreach($entity->getChildrensOfAllTypes() as $child) {
-        //     $child->addParent($entity);
-        //     $service = $this->container->get('aetools.aeEntity')->getEntityService($child);
-        //     $service->checkAfterChange($child);
-        //     $service->save($child, false);
-        // }
-
         if($entity->getPageweb() == null) {
             // pageweb par défaut
             $servicePageweb = $this->container->get('aetools.aePageweb');
@@ -51,7 +37,18 @@ class aeCategorie extends aeSubEntity {
                 $entity->setPageweb(reset($pw));
             }
         }
-
+        // ajout baseSubEntity
+        $addedSubEntitys = $entity->getAddedSubEntitys()->toArray();
+        if(count($addedSubEntitys > 0)) {
+            foreach ($addedSubEntitys as $key => $added) {
+                if(!$added->hasChildrensOfAllTypes($entity) && !$added->hasHistorySubEntitys($entity) && $entity != $added) {
+                    $cp = new categorieposition();
+                    $cp->setCategorie($added)->setSubEntity($entity);
+                    $this->getEm()->persist($cp);
+                }
+            }
+            $entity->clearAddedSubEntitys();
+        }
         parent::checkAfterChange($entity, $butEntities);
         return $this;
     }

@@ -21,6 +21,8 @@ use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\ClassMetadata;
 
+use site\adminBundle\services\aetools;
+use site\adminBundle\services\aeDebug;
 use \Exception;
 
 /**
@@ -39,121 +41,209 @@ class categorieRepository extends EntityBaseRepository {
 	// use ClosureTreeRepository;
 	// use AbstractTreeRepository;
 
-	// public function __construct(EntityManager $em, ClassMetadata $class) {
-		// parent::__construct($em, $class);
+	protected $icons;
+	protected $aetools;
+	protected $aeDebug;
+
+	public function __construct(EntityManager $em, ClassMetadata $class) {
+		parent::__construct($em, $class);
 		// $this->initializeTreeRepository($em, $class);
-	// }
+	}
 
 
-	public function findArrayTree($id = null, $shortCutContext = false) {
+	public function findArrayTree($id = null, $types = 'all', $shortCutContext = false) {
+		if(is_string($types)) $types = array($types);
+		if(!is_array($types)) $types = array('all');
 		$qb = $this->createQueryBuilder(self::ELEMENT);
 		if($id != null) {
+			if(is_object($id)) $id = $id->getId();
 			$id = intval($id);
 			if($id > 0) $qb->where(self::ELEMENT.'.id = :id')->setParameter('id', $id);
 		} else {
 			$qb->where(self::ELEMENT.'.parent IS NULL');
 		}
-		$this->selectForTree($qb, self::ELEMENT, $shortCutContext);
-
+		$this->selectCategoriesForTree($qb, self::ELEMENT, $shortCutContext);
 		$results = $qb->getQuery()->getScalarResult();
-		$this->addChildrenInTree($results, $shortCutContext);
+		$results = $this->addChildrenInTree($results, $types, $shortCutContext);
 		return $results;
 	}
 
-	protected function addChildrenInTree(&$elements, $shortCutContext = false) {
+	protected function addChildrenInTree($elements, $types, $shortCutContext = false) {
+		$this->compileForTree($elements);
 		foreach ($elements as $key => $element) {
-			// opened
-			// $fields = $this->getFields();
-			$fields = array('opened','bundles','element_class_name');
-			foreach ($fields as $field) {
-				switch ($field) {
-					case 'opened':
-						if(isset($elements[$key][$field])) $elements[$key]['state'] = array($field => (boolean) $elements[$key][$field]);
-							else $elements[$key]['state'] = array($field => false);
-						unset($elements[$key][$field]);
-						break;
-					case 'element_class_name':
-						$elements[$key]['type'] = $elements[$key][$field];
-						unset($elements[$key][$field]);
+			// 1ère passe
+			$qb = $this->_em->createQueryBuilder(self::ELEMENT)->from('site\adminBundle\Entity\baseSubEntity', self::ELEMENT);
+			if($shortCutContext == false) $this->contextStatut($qb, self::ELEMENT);
+			$qb->join(self::ELEMENT.'.parents', 'cp')
+				->join('cp.categorie', 'cat')
+				->where($qb->expr()->in('cat.id', $element['id']))
+				->orderBy('cp.position', 'ASC')
+				// select…
+				->select(self::ELEMENT.'.id id')
+				->addSelect(self::ELEMENT.' class_name')
+				// groupBy
+				->groupBy(self::ELEMENT.'.id')
+				;
+			$passe1 = $qb->getQuery()->getScalarResult();
+			// 2ème passe
+			foreach ($passe1 as $key2 => $passe) {
+				switch ($passe['element_class_name']) {
+					case 'categorie':
+						$qb = $this->createQueryBuilder(self::ELEMENT);
+						$qb->where(self::ELEMENT.'.id = :id')->setParameter('id', $passe['id']);
+						$this->selectCategoriesForTree($qb, self::ELEMENT, true); // $shortCutContext déjà opéré en passe1
+						$res = $qb->getQuery()->getScalarResult();
+						if(is_array($res)) if(count($res) > 0) {
+							if(!isset($elements[$key]['children'])) $elements[$key]['children'] = array();
+							$elements[$key]['children'] = array_merge($elements[$key]['children'], $this->addChildrenInTree($res, $types, $shortCutContext));
+						}
 						break;
 					default:
-						if(isset($elements[$key][$field])) {
-							if(unserialize($elements[$key][$field]) != null) {
-								$elements[$key][$field] = unserialize($elements[$key][$field]);
-							} else {
-								$elements[$key][$field] = array();
+						if(in_array($passe['element_class_name'], $types) || in_array('all', $types)) {
+							$qb = $this->_em->createQueryBuilder(self::ELEMENT)->from('site\adminBundle\Entity\baseSubEntity', self::ELEMENT);
+							$qb->where(self::ELEMENT.'.id = :id')->setParameter('id', $passe['id']);
+							$this->selectBaseSubEntitiesForTree($qb, self::ELEMENT, true); // $shortCutContext déjà opéré en passe1
+							$res = $qb->getQuery()->getScalarResult();
+							if(is_array($res)) if(count($res) > 0) {
+								if(!isset($elements[$key]['children'])) $elements[$key]['children'] = array();
+								$elements[$key]['children'] = array_merge($elements[$key]['children'], $this->compileForTree($res));
 							}
 						}
 						break;
 				}
 			}
-			// new Request
-			$qb = $this->createQueryBuilder(self::ELEMENT);
-			$qb->where(self::ELEMENT.'.parent = :parentId')->setParameter('parentId', $element['id']);
-			$this->selectForTree($qb, self::ELEMENT, $shortCutContext);
-			// subEntities
-			$qb->leftJoin(self::ELEMENT.'.childrens', 'childrens');
-			$qb->addSelect('childrens.id subId');
-			// result
-			// echo('<h6 style="color:blue;">'.$qb->getQuery()->getSQL().'</h6>');
-			$results = $qb->getQuery()->getScalarResult();
-			// children
-			if(count($results) > 0) {
-				$this->addChildrenInTree($results, $shortCutContext);
-				if(!isset($elements[$key]['children'])) $elements[$key]['children'] = array();
-				$elements[$key]['children'] = $results + $elements[$key]['children'];
-			}
-			// $this->selectForTree($qb, 'children', $shortCutContext);
 		}
+		return $elements;
 	}
 
-	protected function addItemsInTree($elem, $shortCutContext = false) {
-	}
-
-	protected function selectForTree(&$qb, $elem, $shortCutContext = false) {
-		$qb->select($elem.'.id id');
-		// context by statut
+	protected function selectCategoriesForTree(&$qb, $elem, $shortCutContext = false) {
 		if($shortCutContext == false) $this->contextStatut($qb, $elem);
-		$validFields = $this->getFields();
+		$qb->select($elem.'.id id')
+			->addSelect($elem.'.nom text')
+			// ->addSelect($elem.'.icon icon')
+			->addSelect($elem.'.open opened')
+			->addSelect($elem.'.couleur color')
+			->addSelect($elem.'.type type_accept')
+			->addSelect($elem.'.accepts valid_children')
+			;
+		// statut
+		if(!$this->aliasExists($qb, 'statut')) $qb->join($elem.'.statut', 'statut');
+		$qb->addSelect('statut.niveau niveau')
+			->addSelect('statut.bundles bundles')
+			;
+		// class_name + groupBy
+		$qb->addSelect($elem.' class_name')
+			->groupBy($elem.'.id')
+			;
+	}
+	protected function selectBaseSubEntitiesForTree(&$qb, $elem, $shortCutContext = false) {
+		if($shortCutContext == false) $this->contextStatut($qb, $elem);
+		$qb->select($elem.'.id id')
+			->addSelect($elem.'.nom text')
+			// ->addSelect($elem.'.icon icon')
+			->addSelect($elem.'.couleur color')
+			;
+		// statut
+		if(!$this->aliasExists($qb, 'statut')) $qb->join($elem.'.statut', 'statut');
+		$qb->addSelect('statut.niveau niveau')
+			->addSelect('statut.bundles bundles')
+			;
+		// class_name + groupBy
+		$qb->addSelect($elem.' class_name')
+			->groupBy($elem.'.id')
+			;
+	}
+
+	protected function compileForTree(&$elements) {
 		$fields = array(
-			// single
-			// 'id' => 'id', // id inutile / déjà précisé en début de méthode
-			'nom' => 'text',
-			'open' => 'opened',
-			'couleur' => 'color',
-			'type' => 'type_accept',
-			// association
-			// 'subEntitys' => array('id' => 'subEntitysId'),
-			'statut' => array('niveau' => 'niveau', 'bundles' => 'bundles'),
-			// 'stat' => array('niveau', 'bundles'),
-			);
-		foreach ($fields as $field => $name) {
-			if(!is_string($field) && is_array($name)) {
-				throw new Exception("Champ manquant : vous devez préciser le nom ou l'alias du champ pour ".json_encode($name).".", 1);
-			}
-			if(!is_string($field) && is_string($name)) $field = $name;
-			if(!is_array($name)) $names = array($name); else $names = $name;
-			if('single' === $validFields[$field]['type']) {
-				// FIELD (single)
-				foreach ($names as $name => $dataName) {
-					$qb->addSelect($elem.'.'.$field.' '.$dataName);
+			'opened' => array('categorie'),
+			// 'icon' => array('all'),
+			'valid_children' => array('categorie'),
+			'bundles' => array('all'),
+			'element_class_name' => array('all'),
+		);
+		foreach ($elements as $key => $element) {
+			foreach ($fields as $field => $class) {
+				if(in_array($element['element_class_name'], $class) || in_array('all', $class)) {
+					switch ($field) {
+						// case 'icon':
+						// 	if(isset($elements[$key][$field])) {
+						// 		if(is_string($elements[$key][$field])) $elements[$key][$field] .= ' fa';
+						// 			else $elements[$key][$field] = $this->icons['element_class_name'];
+						// 	} else $elements[$key][$field] = $this->icons['element_class_name'];
+						// 	break;
+						case 'valid_children':
+							if(isset($elements[$key][$field])) $elements[$key][$field] = json_decode($elements[$key][$field]);
+							break;
+						case 'opened':
+							if(isset($elements[$key][$field])) $elements[$key]['state'] = array($field => (boolean) $elements[$key][$field]);
+								else $elements[$key]['state'] = array($field => false);
+							unset($elements[$key][$field]);
+							break;
+						case 'element_class_name':
+							$elements[$key]['type'] = $elements[$key][$field];
+							unset($elements[$key][$field]);
+							break;
+						default:
+							if(isset($elements[$key][$field])) {
+								if(unserialize($elements[$key][$field]) != null) {
+									$elements[$key][$field] = unserialize($elements[$key][$field]);
+								} else {
+									$elements[$key][$field] = array();
+								}
+							}
+							break;
+					}
 				}
-			} else if('association' === $validFields[$field]['type']) {
-				// ALIAS (association)
-				// création de l'alias s'il n'existe pas
-				if(!$this->aliasExists($qb, $field)) $qb->join($elem.'.'.$field, $field);
-				foreach ($names as $name => $dataName) {
-					$qb->addSelect($field.'.'.$name.' '.$dataName);
-				}
-			} else {
-				throw new Exception("- ".$elem." : champ \"".$field."\" indéfini !", 1);
 			}
 		}
-		// add class_name column
-		$qb->addSelect($elem.' class_name');
-		// groupBy
-		$qb->addGroupBy($elem.'.id');
+		return $elements;
 	}
+
+	// protected function selectCategoriesForTree(&$qb, $elem, $shortCutContext = false) {
+	// 	$qb->select($elem.'.id id');
+	// 	// context by statut
+	// 	if($shortCutContext == false) $this->contextStatut($qb, $elem);
+	// 	$validFields = $this->getFields();
+	// 	$fields = array(
+	// 		// single
+	// 		// 'id' => 'id', // id inutile / déjà précisé en début de méthode
+	// 		'nom' => 'text',
+	// 		'open' => 'opened',
+	// 		'couleur' => 'color',
+	// 		'type' => 'type_accept',
+	// 		// association
+	// 		// 'subEntitys' => array('id' => 'subEntitysId'),
+	// 		'statut' => array('niveau' => 'niveau', 'bundles' => 'bundles'),
+	// 		// 'stat' => array('niveau', 'bundles'),
+	// 		);
+	// 	foreach ($fields as $field => $name) {
+	// 		if(!is_string($field) && is_array($name)) {
+	// 			throw new Exception("Champ manquant : vous devez préciser le nom ou l'alias du champ pour ".json_encode($name).".", 1);
+	// 		}
+	// 		if(!is_string($field) && is_string($name)) $field = $name;
+	// 		if(!is_array($name)) $names = array($name); else $names = $name;
+	// 		if('single' === $validFields[$field]['type']) {
+	// 			// FIELD (single)
+	// 			foreach ($names as $name => $dataName) {
+	// 				$qb->addSelect($elem.'.'.$field.' '.$dataName);
+	// 			}
+	// 		} else if('association' === $validFields[$field]['type']) {
+	// 			// ALIAS (association)
+	// 			// création de l'alias s'il n'existe pas
+	// 			if(!$this->aliasExists($qb, $field)) $qb->join($elem.'.'.$field, $field);
+	// 			foreach ($names as $name => $dataName) {
+	// 				$qb->addSelect($field.'.'.$name.' '.$dataName);
+	// 			}
+	// 		} else {
+	// 			// throw new Exception("- ".$elem." : champ \"".$field."\" indéfini !", 1);
+	// 		}
+	// 	}
+	// 	// add class_name column
+	// 	$qb->addSelect($elem.' class_name');
+	// 	// groupBy
+	// 	$qb->addGroupBy($elem.'.id');
+	// }
 
 	// public function findSimpleScalarArticles($onlyActive = false) {
 	// 	$qb = $this->createQueryBuilder(self::ELEMENT)
@@ -267,16 +357,34 @@ class categorieRepository extends EntityBaseRepository {
 	/*** CLOSURES                 ***/
 	/********************************/
 
+	// Select selon ACCEPT / But root
 	public function getElementsBySubTypeButRoot($types, &$qb = null, $shortCutContext = false) {
 		$qb = $this->getElementsBySubType($types, $qb, $shortCutContext);
 		return $this->getNotRoots($qb);
 	}
 
+	// Select selon ACCEPT
 	public function getElementsBySubType($types, &$qb = null, $shortCutContext = false) {
 		if($qb == null) $qb = $this->createQueryBuilder(self::ELEMENT);
 		if(is_string($types)) $types = array($types);
 		foreach ($types as $type) {
 			$qb->orWhere($qb->expr()->orX($qb->expr()->like(self::ELEMENT.'.accepts', $qb->expr()->literal('%'.$type.'%'))));
+		}
+		if($shortCutContext == false) $this->contextStatut($qb);
+		// resultat
+		return $qb;
+	}
+
+	public function getElementsByTypeButRoot($types, &$qb = null, $shortCutContext = false) {
+		$qb = $this->getElementsByType($types, $qb, $shortCutContext);
+		return $this->getNotRoots($qb);
+	}
+
+	public function getElementsByType($types, &$qb = null, $shortCutContext = false) {
+		if($qb == null) $qb = $this->createQueryBuilder(self::ELEMENT);
+		if(is_string($types)) $types = array($types);
+		foreach ($types as $type) {
+			$qb->orWhere(self::ELEMENT.'.type = :type')->setParameter('type', $type);
 		}
 		if($shortCutContext == false) $this->contextStatut($qb);
 		// resultat

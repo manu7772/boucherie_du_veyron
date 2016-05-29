@@ -56,6 +56,18 @@ class articleType extends baseType {
 				))
 			// ->add('dateCreation')
 			// ->add('dateMaj')
+			->add('icon', 'choice', array(
+				"required"  => false,
+				"label"     => 'fields.icon',
+				'translation_domain' => 'article',
+				'multiple'  => false,
+				"choices"   => $data->getListIcons(),
+				'placeholder'   => 'form.select',
+				'attr'      => array(
+					'class'         => 'select2',
+					'data-format'	=> 'formatState',
+					),
+				))
 			->add('refFabricant', 'text', array(
 				'label' => 'fields.refFabricant',
 				'translation_domain' => 'article',
@@ -222,7 +234,7 @@ class articleType extends baseType {
 			// 		),
 			// 	))
 			// ->add('articlesParents')
-			->add('articlesLies', 'entity', array(
+			->add('articlesChilds', 'entity', array(
 				"label"		=> 'fields.artlink',
 				'translation_domain' => 'article',
 				'property'	=> 'nom',

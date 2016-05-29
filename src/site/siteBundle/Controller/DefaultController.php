@@ -157,7 +157,7 @@ class DefaultController extends Controller {
 	}
 
 	public function headerMiddleAction() {
-		$data['menu'] = $this->get('aetools.aeMenus')->getMenu('site-menu');
+		// $data['menu'] = $this->get('aetools.aeMenus')->getMenu('site-menu');
 		$data['sitedata'] = $this->get('aetools.aeSite')->getDefaultSiteData();
 		// récupération route/params requête MASTER
 		$stack = $this->get('request_stack');

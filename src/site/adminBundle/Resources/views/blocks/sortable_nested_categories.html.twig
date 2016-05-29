@@ -85,16 +85,7 @@ $("#{{ idItem }}").jstree({{ jstreeObjects.dataAsJson(idItem)|raw }})
 $('.jstree-ajax').each(function (index) {
 	splt = $(this).attr('id').split('-');
 	var rootid = splt[1];
-	{%- if (app.environment in ['DEV', 'TEST']) or (is_granted('ROLE_SUPER_ADMIN')) -%}
-	$.ajax({
-		// url: "{{ path('categorie_ajax_data') }}"+"/"+rootid,
-		url: "{{ path('categorie_ajax_data') }}",
-		data: {id: rootid},
-		method: "POST",
-	}).done(function (data) {
-		console.log("retour data : ", data);
-	});
-	{%- endif -%}
+	var types = JSON.parse($(this).attr('jstree-types'));
 	var plugins = ['types'];
 	if($(this).hasClass('jstree-menu-all')) plugins.push('contextmenu');
 	if($(this).hasClass('jstree-dnd')) plugins.push('dnd');
@@ -108,17 +99,15 @@ $('.jstree-ajax').each(function (index) {
 				method: "POST",
 				data: function (node) {
 					if(node.id === "#") {
-						{%- if (app.environment in ['DEV', 'TEST']) or (is_granted('ROLE_SUPER_ADMIN')) -%}
-						console.log('Root build : ', rootid);
-						{%- endif -%}
-						return { "id" : rootid};
+						// console.log('Root build : ', rootid);
+						return { "id" : rootid, types: types };
 					} else {
-						return { "id" : node.id };
+						return { "id" : node.id, types: types };
 					}
 				},
 			},
 			strings: {
-				{% for it in ['Loading ...'] %}
+				{% for it in ['Loading ...'] -%}
 				"{{ it }}": "{{ it|trans({}, 'jstree') }}",
 				{% endfor %}
 			}

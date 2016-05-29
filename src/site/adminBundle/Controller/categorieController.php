@@ -19,22 +19,39 @@ use \Exception;
 class categorieController extends baseController {
 
 	const ENTITE_NAME = 'site\adminBundle\Entity\categorie';
+	const ENTITE_SHORTNAME = 'categorie';
 	const DEFAULT_LEVEL = 1;
 
 	protected $types = array('level', 'accept');
 
-	public function ajaxDataAction($id = null) {
+	public function ajaxDataAction($id = null, $types = 'all') {
 		$request = $this->getRequest();
-		$entityService = $this->getEntityService('categorie');
+		$entityService = $this->getEntityService(self::ENTITE_SHORTNAME);
 		if($id == null) {
 			$id = $request->request->get('id');
 		}
-		if($id != null) {
-			$data = $entityService->getRepo()->findArrayTree($id);
-			// echo('<pre>');
-			// var_dump($data);
-			// die('</pre>');
+		if($id != null && $request->isXmlHttpRequest()) {
+			// AJAX REQUEST
+			$types = $request->request->get('types');
+			$data = $entityService->getRepo()->findArrayTree($id, $types);
+			// $this->get('aetools.debug')->debugNamedFile('verifTypesForJSTree', array('Types' => $types, 'Data' => $data), true, false);
+			// $icons = $this->get('aetools.textutilities')->iconsAsJson(true);
+			// $this->get('aetools.debug')->debugNamedFile('iconsForJSTree', $icons, true, false);
 			return new JsonResponse($data);
+		} else if(!$request->isXmlHttpRequest()) {
+			// TEST EN GET
+			$em = $this->getDoctrine()->getManager();
+			if($id == null) {
+				$id = $em->getRepository(self::ENTITE_NAME)->findAll();
+				if(is_array($id)) $id = reset($id);
+			} else {
+				$id = $em->getRepository(self::ENTITE_NAME)->find($id);
+			}
+			$data = $entityService->getRepo()->findArrayTree($id, $types);
+			echo('<pre><h3>'.$id->getSlug().' / #'.$id->getId().'</h3>');
+			var_dump($data);
+			echo('</pre><br><hr><br>');
+			return new Response(json_encode($data));
 		}
 		return new JsonResponse('Error');
 	}

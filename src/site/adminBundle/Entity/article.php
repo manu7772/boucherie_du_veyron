@@ -13,6 +13,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
 
 use site\adminBundle\Entity\item;
 
+use site\adminBundle\Entity\articleposition;
 use site\adminBundle\Entity\reseau;
 use site\adminBundle\Entity\marque;
 use site\adminBundle\Entity\tauxTva;
@@ -70,28 +71,24 @@ class article extends item {
 	protected $tauxTva;
 
 	/**
-	 * - PROPRIÉTAIRE
 	 * @ORM\ManyToOne(targetEntity="site\adminBundle\Entity\marque", inversedBy="articles")
 	 * @ORM\JoinColumn(nullable=true, unique=false, onDelete="SET NULL")
 	 */
 	protected $marque;
 
 	/**
-	 * - PROPRIÉTAIRE
 	 * @ORM\ManyToMany(targetEntity="site\adminBundle\Entity\reseau", inversedBy="articles")
 	 * @ORM\JoinColumn(nullable=true, unique=false, onDelete="SET NULL")
 	 */
 	protected $reseaus;
 
 	/**
-	 * - PROPRIÉTAIRE
 	 * @ORM\OneToOne(targetEntity="site\adminBundle\Entity\pdf", cascade={"all"}, inversedBy="article", orphanRemoval=true, cascade={"persist", "remove"})
 	 * @ORM\JoinColumn(nullable=true, unique=false, onDelete="SET NULL")
 	 */
 	protected $pdf;
 
 	/**
-	 * - INVERSE
 	 * @ORM\ManyToMany(targetEntity="site\adminBundle\Entity\fiche", mappedBy="articles")
 	 * @ORM\JoinColumn(nullable=true, unique=false, onDelete="SET NULL")
 	 */
@@ -99,20 +96,22 @@ class article extends item {
 
 	/**
 	 * @var array
-	 * @ORM\ManyToMany(targetEntity="site\adminBundle\Entity\article", mappedBy="articlesLies")
+	 * @ORM\OneToMany(targetEntity="site\adminBundle\Entity\articleposition", orphanRemoval=true, mappedBy="parent", cascade={"persist", "remove"})
+	 * @ORM\JoinColumn(nullable=true, unique=false)
 	 */
 	protected $articlesParents;
 
 	/**
 	 * @var array
-	 * @ORM\ManyToMany(targetEntity="site\adminBundle\Entity\article", inversedBy="articlesParents")
-	 * @ORM\JoinTable(name="articlesLinks",
-	 *     joinColumns={@ORM\JoinColumn(name="articlesLies_id", referencedColumnName="id")},
-	 *     inverseJoinColumns={@ORM\JoinColumn(name="articlesParents_id", referencedColumnName="id")}
-	 * )
+	 * @ORM\OneToMany(targetEntity="site\adminBundle\Entity\articleposition", orphanRemoval=true, mappedBy="child", cascade={"persist", "remove"})
+	 * @ORM\JoinColumn(nullable=true, unique=false)
 	 */
-	protected $articlesLies;
+	protected $articlesChilds;
 
+	// NESTED VIRTUAL DATA
+	protected $virtualParents;
+	protected $virtualChilds;
+	protected $ArticleLinkInfo;
 
 	public function __construct() {
 		parent::__construct();
@@ -125,15 +124,14 @@ class article extends item {
 		$this->reseaus = new ArrayCollection();
 		$this->fiches = new ArrayCollection();
 		$this->articlesParents = new ArrayCollection();
-		$this->articlesLies = new ArrayCollection();
+		$this->articlesChilds = new ArrayCollection();
+		$this->virtualParents = new ArrayCollection();
+		$this->virtualChilds = new ArrayCollection();
+		$this->ArticleLinkInfo = array();
 	}
 
-    // public function getClassName(){
-    //     return parent::CLASS_ARTICLE;
-    // }
-
 	public function memOldValues($addedfields = null) {
-		$fields = array('marque', 'reseaus', 'pdf', 'fiches', 'articlesParents', 'articlesLies');
+		$fields = array('marque', 'reseaus', 'pdf', 'fiches', 'articlesParents', 'articlesChilds');
 		if(count($addedfields) > 0 && is_array($addedfields)) $fields = array_unique(array_merge($fields, $addedfields));
 		parent::memOldValues($fields);
 		return $this;
@@ -272,7 +270,7 @@ class article extends item {
 	}
 
 	/**
-	 * Set marque - PROPRIÉTAIRE
+	 * Set marque
 	 * @param marque $marque
 	 * @return article
 	 */
@@ -284,7 +282,7 @@ class article extends item {
 	}
 
 	/**
-	 * Get marque - PROPRIÉTAIRE
+	 * Get marque
 	 * @return marque 
 	 */
 	public function getMarque() {
@@ -292,7 +290,7 @@ class article extends item {
 	}
 
 	/**
-	 * Set pdf - PROPRIÉTAIRE
+	 * Set pdf
 	 * @param pdf $pdf
 	 * @return article
 	 */
@@ -303,7 +301,7 @@ class article extends item {
 	}
 
 	/**
-	 * Get pdf - PROPRIÉTAIRE
+	 * Get pdf
 	 * @return pdf 
 	 */
 	public function getpdf() {
@@ -340,7 +338,7 @@ class article extends item {
 	}
 
 	/**
-	 * Get fiches - INVERSE
+	 * Get fiches
 	 * @return ArrayCollection 
 	 */
 	public function getFiches() {
@@ -348,7 +346,7 @@ class article extends item {
 	}
 
 	/**
-	 * Add fiche - INVERSE
+	 * Add fiche
 	 * @param fiche $fiche
 	 * @return article
 	 */
@@ -358,29 +356,112 @@ class article extends item {
 	}
 
 	/**
-	 * Remove fiche - INVERSE
+	 * Remove fiche
 	 * @param fiche $fiche
 	 */
 	public function removeFiche(fiche $fiche) {
 		return $this->fiches->removeElement($fiche);
 	}
 
+
+
 	/**
-	 * Add articlesParents
-	 * @param article $articlesParents
+	 * @ORM\PostLoad
+	 */
+	public function initNesteds() {
+		$this->virtualParents = new ArrayCollection();
+		$this->articlesChilds = new ArrayCollection();
+		foreach($this->articlesParents as $link) {
+			$this->virtualParents->add($link->getParent());
+			$this->ArticleLinkInfo[$link->getParent()->getId()] = array();
+			$this->ArticleLinkInfo[$link->getParent()->getId()]['position'] = $link->getPosition();
+			$this->ArticleLinkInfo[$link->getParent()->getId()]['parentLink'] = $link;
+		}
+		foreach($this->articlesChilds as $link) {
+			$this->virtualChilds->add($link->getChild());
+			$this->ArticleLinkInfo[$link->getChild()->getId()] = array();
+			$this->ArticleLinkInfo[$link->getChild()->getId()]['childLink'] = $link;
+		}
+	}
+
+	/**
+	 * Get position
+	 * @param article $parent
+	 * @return integer 
+	 */
+	public function getArticlePosition(article $parent) {
+		return isset($this->ArticleLinkInfo[$parent->getId()]['position']) ? $this->ArticleLinkInfo[$parent->getId()]['position'] : null ;
+	}
+
+	/**
+	 * Add articlesParent
+	 * @param article $articlesParent
 	 * @return article
 	 */
-	public function addArticlesParent(article $articlesParents) {
-		$this->articlesParents->add($articlesParents);
+	public function addArticlesParent(article $articlesParent) {
+		// if(!$this->virtualParents->contains($articlesParent)) {
+			// $this->virtualParents->add($articlesParent);
+			// $articleposition = new articleposition();
+			// $articleposition->addChild($this)
+			// 	->addParent($articlesParent);
+			// $articlesParent->addArticlepositionChild($this);
+			// $this->addArticlepositionParent($articleposition);
+		// }
 		return $this;
 	}
 
 	/**
-	 * Remove articlesParents
-	 * @param article $articlesParents
+	 * Remove articlesParent
+	 * @param article $articlesParent
+	 * @return boolean
 	 */
-	public function removeArticlesParent(article $articlesParents) {
-		$this->articlesParents->removeElement($articlesParents);
+	public function removeArticlesParent(article $articlesParent) {
+		if($this->virtualParents->contains($articlesParent) && isset($this->ArticleLinkInfo[$articlesParent->getId()]['parentLink'])) {
+			$articleposition = $this->ArticleLinkInfo[$articlesParent->getId()]['parentLink'];
+			$this->virtualParents->removeElement($articlesParent);
+			return $this->articlesParents->removeElement($articleposition);
+		}
+		return false;
+	}
+
+	/**
+	 * Add articleposition in parent
+	 * @param articleposition $articleposition
+	 * @return article
+	 */
+	public function addArticlepositionParent(articleposition $articleposition) {
+		if(!$this->articlesParents->contains($articleposition)) $this->articlesParents->add($articleposition);
+		return $this;
+	}
+
+	/**
+	 * Remove articleposition in parent
+	 * @param articleposition $articleposition
+	 * @return article
+	 */
+	public function removeArticlepositionParent(articleposition $articleposition) {
+		$this->articlesParents->removeElement($articleposition);
+		return $this;
+	}
+
+	/**
+	 * Add articleposition in child
+	 * @param articleposition $articleposition
+	 * @return article
+	 */
+	public function addArticlepositionChild(articleposition $articleposition) {
+		if(!$this->articlesChilds->contains($articleposition)) $this->articlesChilds->add($articleposition);
+		return $this;
+	}
+
+	/**
+	 * Remove articleposition in child
+	 * @param articleposition $articleposition
+	 * @return article
+	 */
+	public function removeArticlepositionChild(articleposition $articleposition) {
+		$this->articlesChilds->removeElement($articleposition);
+		return $this;
 	}
 
 	/**
@@ -388,36 +469,51 @@ class article extends item {
 	 * @return ArrayCollection 
 	 */
 	public function getArticlesParents() {
-		return $this->articlesParents;
+		return $this->virtualParents;
 	}
 
 	/**
-	 * Add articlesLies
-	 * @param article $articlesLies
+	 * Add articlesChild
+	 * @param article $articlesChild
 	 * @return article
 	 */
-	public function addArticlesLie(article $articlesLies) {
-		if($articlesLies != $this) $this->articlesLies->add($articlesLies);
-		// $articlesLies->addArticlesParent($this);
+	public function addArticlesChild(article $articlesChild) {
+		$this->initNesteds();
+		if(!$this->virtualChilds->contains($articlesChild)) {
+			$this->virtualChilds->add($articlesChild);
+			$articleposition = new articleposition();
+			$articleposition->addChild($articlesChild)
+				->addParent($this);
+			$articlesChild->addArticlepositionParent($articleposition);
+			$this->addArticlepositionChild($articleposition);
+		}
 		return $this;
 	}
 
 	/**
-	 * Remove articlesLies
-	 * @param article $articlesLies
+	 * Remove articlesChild
+	 * @param article $articlesChild
 	 * @return boolean
 	 */
-	public function removeArticlesLie(article $articlesLies) {
-		return $this->articlesLies->removeElement($articlesLies);
-		// $articlesLies->removeArticlesParent($this);
+	public function removeArticlesChild(article $articlesChild) {
+		if($this->virtualChilds->contains($articlesChild) && isset($this->ArticleLinkInfo[$this->getId()]['childLink'])) {
+			$articleposition = $this->ArticleLinkInfo[$this->getId()]['childLink'];
+			$this->virtualChilds->removeElement($articlesChild);
+			$articlesChild->removeArticlesParent($this);
+			return $this->articlesParents->removeElement($articleposition);
+		}
+		return false;
 	}
 
 	/**
-	 * Get articlesLies
+	 * Get articlesChilds
 	 * @return ArrayCollection 
 	 */
-	public function getArticlesLies() {
-		return $this->articlesLies;
+	public function getArticlesChilds() {
+		return $this->virtualChilds;
 	}
 
 }
+
+
+

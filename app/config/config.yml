@@ -10,7 +10,7 @@ imports:
 # Put parameters here that don't need to change on each machine where the app is deployed
 # http://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
-    locale:                 fr
+    locale:                 "fr"
     default_locales:        "fr|en"
 
 framework:
@@ -141,12 +141,12 @@ swiftmailer:
 
 # FOSUser Configuration
 fos_user:
-    db_driver:     orm  # le type de BDD à utiliser : ORM Doctrine
-    firewall_name: main # le nom du firewall derrière lequel on utilisera ces utilisateurs
-    user_class:    site\UserBundle\Entity\User # la classe de l'entité User que nous utilisons
+    db_driver:          orm  # le type de BDD à utiliser : ORM Doctrine
+    firewall_name:      main # le nom du firewall derrière lequel on utilisera ces utilisateurs
+    user_class:         site\UserBundle\Entity\User # la classe de l'entité User que nous utilisons
     registration:
         form:
-            type: site_user_registration
+            type:       site_user_registration
         confirmation:
             enabled:    true # change to true for required email confirmation
             template:   siteUserBundle:Registration:email.txt.twig

@@ -55,29 +55,18 @@ class categorieType extends baseType {
 				'translation_domain' => 'categorie',
 				'required'  => false,
 				))
+			->add('pageweb', 'entity', array(
+				'label'     => 'fields.pageweb',
+				'translation_domain' => 'categorie',
+				'class' => "siteadminBundle:pageweb",
+				'required'  => false,
+				))
 			// 1 image :
 			->add('image', new cropperType($this->controller, $this->imagesData), array(
 				'label' => 'fields.image',
 				'translation_domain' => 'categorie',
 				'required' => false,
 				))
-			// ->add('subEntitys', 'entity', array(
-			//     "label"     => 'fields.subEntitys',
-			//     'translation_domain' => 'categorie',
-			//     'class'     => 'siteadminBundle:baseSubEntity',
-			//     'property'  => 'nom',
-			//     'multiple'  => true,
-			//     'required' => false,
-			//     'group_by' => 'class_name',
-			//     "query_builder" => function($repo) use ($categorie) {
-			//         if(method_exists($repo, 'getElementsBySubType'))
-			//             return $repo->getElementsBySubType($categorie);
-			//             else return $repo->findAllClosure();
-			//         },
-			//     'attr'      => array(
-			//         'class'         => 'select2',
-			//         ),
-			//     ))
 		;
 		if($categorie != null) {
 			// type
@@ -111,7 +100,7 @@ class categorieType extends baseType {
 							'data-format'	=> 'formatState',
 							),
 						))
-					->add('subEntitys', 'entity', array(
+					->add('addedSubEntitys', 'entity', array(
 						"label"     => 'fields.subEntitys',
 						'translation_domain' => 'categorie',
 						'class'     => 'siteadminBundle:baseSubEntity',

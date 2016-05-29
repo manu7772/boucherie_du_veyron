@@ -42,8 +42,8 @@ class entiteController extends baseController {
 		// EM
 		// autres éléments…
 		switch ($data['entite_name']) {
-			case '...':
-				# code...
+			case 'categorie':
+				$data['categories_tree'] = $this->getEntityService('categorie')->getRepo()->findArrayTree(null, 'all');
 				break;
 			
 			default:
@@ -427,8 +427,8 @@ class entiteController extends baseController {
 		$memory = $this->get('aetools.aetools')->getConfigParameters('cropper.yml', 'memory_limit');
 		ini_set("memory_limit", $memory);
 		$data = array();
-		$data['sitedata'] = $this->get('aetools.aeSite')->getDefaultSiteData();
 		$classname = urldecode($classname);
+		$classname = $this->get('aetools.aeEntity')->getEntityClassName($classname);
 		$entiteType = str_replace('Entity', 'Form', $classname.'Type');
 		$typeTmp = new $entiteType($this);
 		// REQUEST
@@ -438,7 +438,14 @@ class entiteController extends baseController {
 		// if(!isset($req["hiddenData"])) throw new Exception("entitePostFormPageAction : hiddenData absent ! (".$typeTmp->getName().")", 1);
 		if(isset($req["hiddenData"])) {
 			$data = json_decode(urldecode($req["hiddenData"]), true);
-		} 
+		} else {
+			throw new Exception('Données "hiddenData" manquantes !', 1);
+		}
+		if(count($data) < 1) throw new Exception('Données "hiddenData" vides !', 1);
+		// echo('<pre>');
+		// var_dump($data);
+		// echo('</pre>');
+		// $data['sitedata'] = $this->get('aetools.aeSite')->getDefaultSiteData();
 		// Entity service
 		$entityService = $this->getEntityService($data['entite_name']);
 
@@ -595,7 +602,7 @@ class entiteController extends baseController {
 			case 'delete_linked_image':
 				if(!isset($data['form_action'])) {
 					$data['form_action'] = $this->generateUrl('siteadmin_form_action', array(
-						'classname'	=> $data['classname'],
+						'classname'	=> $data['entite_name'],
 						), true);
 				}
 				if(!isset($data['onSuccess'])) {
@@ -623,7 +630,7 @@ class entiteController extends baseController {
 			case self::CREATE_ACTION:
 				if(!isset($data['form_action'])) {
 					$data['form_action'] = $this->generateUrl('siteadmin_form_action', array(
-						'classname'	=> $data['classname'],
+						'classname'	=> $data['entite_name'],
 						), true);
 				}
 				if(!isset($data['onSuccess'])) {
@@ -650,7 +657,7 @@ class entiteController extends baseController {
 			case self::EDIT_ACTION:
 				if(!isset($data['form_action'])) {
 					$data['form_action'] = $this->generateUrl('siteadmin_form_action', array(
-						'classname'	=> $data['classname'],
+						'classname'	=> $data['entite_name'],
 						), true);
 				}
 				if(!isset($data['onSuccess'])) {
@@ -678,7 +685,7 @@ class entiteController extends baseController {
 			case self::COPY_ACTION:
 				if(!isset($data['form_action'])) {
 					$data['form_action'] = $this->generateUrl('siteadmin_form_action', array(
-						'classname'	=> $data['classname'],
+						'classname'	=> $data['entite_name'],
 						), true);
 				}
 				if(!isset($data['onSuccess'])) {
@@ -695,7 +702,7 @@ class entiteController extends baseController {
 			case self::DELETE_ACTION:
 				if(!isset($data['form_action'])) {
 					$data['form_action'] = $this->generateUrl('siteadmin_form_action', array(
-						'classname'	=> $data['classname'],
+						'classname'	=> $data['entite_name'],
 						), true);
 				}
 				if(!isset($data['onSuccess'])) {
@@ -715,7 +722,7 @@ class entiteController extends baseController {
 			default:
 				if(!isset($data['form_action'])) {
 					$data['form_action'] = $this->generateUrl('siteadmin_form_action', array(
-						'classname'	=> $data['classname'],
+						'classname'	=> $data['entite_name'],
 						), true);
 				}
 				break;

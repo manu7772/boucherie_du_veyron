@@ -148,6 +148,7 @@
 
 
 {% if DEVMODE and entites|length > 0 %}
+{{ dump(categories_tree) }}
 <br>
 <br>
 <div class="row">
@@ -156,7 +157,8 @@
 			<div class="ibox-content">
 				{% for entite in entites %}
 				<h3>{{ ('types.' ~ entite.type)|trans({}, entite.className) }}</h3>
-				<div id="jsajx-{{ entite.id }}" class="jstree-ajax jstree-menu-all jstree-dnd"></div>
+				{# <div id="jsajx-{{ entite.id }}" class="jstree-ajax jstree-menu-all jstree-dnd" jstree-types='["all"]'></div> #}
+				<div id="jsajx-{{ entite.id }}" class="jstree-ajax jstree-menu-all jstree-dnd" jstree-types='{{ entite.accepts|json_encode() }}'></div>
 				{% if not loop.last %}<hr>{% endif %}
 				{% endfor %}
 			</div>

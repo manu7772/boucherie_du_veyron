@@ -71,6 +71,13 @@ class site extends baseEntity {
 	/**
 	 * @ORM\ManyToOne(targetEntity="site\adminBundle\Entity\categorie", cascade={"persist"})
 	 * @ORM\JoinColumn(nullable=true, unique=false, onDelete="SET NULL")
+	 * @ORM\JoinTable(name="site_cat_navmenu")
+	 */
+	protected $menuNav;
+
+	/**
+	 * @ORM\ManyToOne(targetEntity="site\adminBundle\Entity\categorie", cascade={"persist"})
+	 * @ORM\JoinColumn(nullable=true, unique=false, onDelete="SET NULL")
 	 * @ORM\JoinTable(name="site_cat_menu")
 	 */
 	protected $menuArticle;
@@ -136,6 +143,7 @@ class site extends baseEntity {
 		parent::__construct();
 		$this->accroche = null;
 		$this->descriptif = null;
+		$this->menuNav = null;
 		$this->menuArticle = null;
 		$this->categorieArticles = new ArrayCollection();
 		$this->categorieFooters = new ArrayCollection();
@@ -218,6 +226,24 @@ class site extends baseEntity {
 	 */
 	public function getDescriptif() {
 		return $this->descriptif;
+	}
+
+	/**
+	 * set menuNav
+	 * @param categorie $menuNav
+	 * @return site
+	 */
+	public function setMenuNav(categorie $menuNav = null) {
+		$this->menuNav = $menuNav;
+		return $this;
+	}
+
+	/**
+	 * get menuNav
+	 * @return categorie
+	 */
+	public function getMenuNav() {
+		return $this->menuNav;
 	}
 
 	/**
