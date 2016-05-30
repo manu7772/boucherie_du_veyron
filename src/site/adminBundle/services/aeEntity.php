@@ -1560,6 +1560,35 @@ class aeEntity extends aetools {
 		return false;
 	}
 
+    protected function affData($entity) {
+        echo('<pre><h3 style="color:blue;margin:4px 0px;">Old values</h3>');
+        foreach ($entity->getOldValues() as $name => $old) {
+            echo('<h4 style="color:darkblue;margin:2px 20px;">- Field '.$name);
+            if(get_class($old) == 'Doctrine\ORM\PersistentCollection') echo(' <i>(PersistentCollection)</i>');
+                else if($old != null) echo(' <i>(Single)</i>');
+                else echo(' <i>(Null)</i>');
+            echo('</h4>');
+            if(get_class($old) == 'Doctrine\ORM\PersistentCollection') foreach ($old as $item) {
+                echo('<p style="margin:1px 40px;">• #'.$item->getId().' '.$item->getNom().' <small><i style="color:#999;">('.get_class($item).')</small></i></p>');
+            } else if($old != null) {
+                echo('<p style="margin:1px 40px;">• #'.$old->getId().' '.$old->getNom().' <small><i style="color:#999;">('.get_class($old).')</small></i></p>');
+            }
+        }
+        echo('</pre>');
+        // $entity->initNesteds();
+        // $list = array_merge($entity->getArticleParents()->toArray(), $entity->getArticleChilds()->toArray());
+        echo('<pre><h3 style="color:blue;margin:4px 0px;">Parents</h3>');
+        foreach ($entity->getArticleParents()->toArray() as $item) {
+            echo('<p style="margin:1px 40px;">• #'.$item->getId().' '.$item->getNom().' <small><i style="color:#999;">('.get_class($item).')</small></i></p>');
+        }
+        echo('</pre>');
+        echo('<pre><h3 style="color:blue;margin:4px 0px;">Enfants</h3>');
+        foreach ($entity->getArticleChilds()->toArray() as $item) {
+            echo('<p style="margin:1px 40px;">• #'.$item->getId().' '.$item->getNom().' <small><i style="color:#999;">('.get_class($item).')</small></i></p>');
+        }
+        echo('</pre>');
+    }
+
 
 
 

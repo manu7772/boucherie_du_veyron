@@ -96,22 +96,24 @@ class article extends item {
 
 	/**
 	 * @var array
-	 * @ORM\OneToMany(targetEntity="site\adminBundle\Entity\articleposition", orphanRemoval=true, mappedBy="parent", cascade={"persist", "remove"})
+	 * @ORM\OneToMany(targetEntity="site\adminBundle\Entity\articleposition", orphanRemoval=true, mappedBy="child", cascade={"all"})
 	 * @ORM\JoinColumn(nullable=true, unique=false)
+	 * @ORM\OrderBy({"position" = "ASC"})
 	 */
-	protected $articlesParents;
+	protected $articlepositionParents;
 
 	/**
 	 * @var array
-	 * @ORM\OneToMany(targetEntity="site\adminBundle\Entity\articleposition", orphanRemoval=true, mappedBy="child", cascade={"persist", "remove"})
+	 * @ORM\OneToMany(targetEntity="site\adminBundle\Entity\articleposition", orphanRemoval=true, mappedBy="parent", cascade={"all"})
 	 * @ORM\JoinColumn(nullable=true, unique=false)
+	 * @ORM\OrderBy({"position" = "ASC"})
 	 */
-	protected $articlesChilds;
+	protected $articlepositionChilds;
 
 	// NESTED VIRTUAL DATA
-	protected $virtualParents;
-	protected $virtualChilds;
-	protected $ArticleLinkInfo;
+	protected $articleParents;
+	protected $articleChilds;
+	protected $articleLinkInfo;
 
 	public function __construct() {
 		parent::__construct();
@@ -123,15 +125,15 @@ class article extends item {
 		$this->marque = null;
 		$this->reseaus = new ArrayCollection();
 		$this->fiches = new ArrayCollection();
-		$this->articlesParents = new ArrayCollection();
-		$this->articlesChilds = new ArrayCollection();
-		$this->virtualParents = new ArrayCollection();
-		$this->virtualChilds = new ArrayCollection();
-		$this->ArticleLinkInfo = array();
+		$this->articlepositionParents = new ArrayCollection();
+		$this->articlepositionChilds = new ArrayCollection();
+		$this->articleParents = new ArrayCollection();
+		$this->articleChilds = new ArrayCollection();
+		$this->articleLinkInfo = array();
 	}
 
 	public function memOldValues($addedfields = null) {
-		$fields = array('marque', 'reseaus', 'pdf', 'fiches', 'articlesParents', 'articlesChilds');
+		$fields = array('marque', 'reseaus', 'pdf', 'fiches', 'articlepositionParents', 'articlepositionChilds');
 		if(count($addedfields) > 0 && is_array($addedfields)) $fields = array_unique(array_merge($fields, $addedfields));
 		parent::memOldValues($fields);
 		return $this;
@@ -364,23 +366,24 @@ class article extends item {
 	}
 
 
-
 	/**
 	 * @ORM\PostLoad
+	 * init nested values
 	 */
 	public function initNesteds() {
-		$this->virtualParents = new ArrayCollection();
-		$this->articlesChilds = new ArrayCollection();
-		foreach($this->articlesParents as $link) {
-			$this->virtualParents->add($link->getParent());
-			$this->ArticleLinkInfo[$link->getParent()->getId()] = array();
-			$this->ArticleLinkInfo[$link->getParent()->getId()]['position'] = $link->getPosition();
-			$this->ArticleLinkInfo[$link->getParent()->getId()]['parentLink'] = $link;
+		$this->articleParents = new ArrayCollection();
+		$this->articleChilds = new ArrayCollection();
+		foreach($this->articlepositionParents as $link) /* if($link->getParent() != null) */ {
+			$this->articleParents->add($link->getParent());
+			$this->articleLinkInfo[$link->getParent()->getId()] = array();
+			$this->articleLinkInfo[$link->getParent()->getId()]['position'] = $link->getPosition();
+			// $this->articleLinkInfo[$link->getParent()->getId()]['parentLink'] = $link;
 		}
-		foreach($this->articlesChilds as $link) {
-			$this->virtualChilds->add($link->getChild());
-			$this->ArticleLinkInfo[$link->getChild()->getId()] = array();
-			$this->ArticleLinkInfo[$link->getChild()->getId()]['childLink'] = $link;
+		foreach($this->articlepositionChilds as $link) /* if($link->getChild() != null) */ {
+			$this->articleChilds->add($link->getChild());
+			$this->articleLinkInfo[$link->getChild()->getId()] = array();
+			$this->articleLinkInfo[$link->getChild()->getId()]['position'] = $link->getPosition();
+			// $this->articleLinkInfo[$link->getChild()->getId()]['childLink'] = $link;
 		}
 	}
 
@@ -390,103 +393,122 @@ class article extends item {
 	 * @return integer 
 	 */
 	public function getArticlePosition(article $parent) {
-		return isset($this->ArticleLinkInfo[$parent->getId()]['position']) ? $this->ArticleLinkInfo[$parent->getId()]['position'] : null ;
+		return isset($this->articleLinkInfo[$parent->getId()]['position']) ? $this->articleLinkInfo[$parent->getId()]['position'] : null ;
 	}
 
-	/**
-	 * Add articlesParent
-	 * @param article $articlesParent
-	 * @return article
-	 */
-	public function addArticlesParent(article $articlesParent) {
-		// if(!$this->virtualParents->contains($articlesParent)) {
-			// $this->virtualParents->add($articlesParent);
-			// $articleposition = new articleposition();
-			// $articleposition->addChild($this)
-			// 	->addParent($articlesParent);
-			// $articlesParent->addArticlepositionChild($this);
-			// $this->addArticlepositionParent($articleposition);
-		// }
-		return $this;
-	}
 
 	/**
-	 * Remove articlesParent
-	 * @param article $articlesParent
-	 * @return boolean
-	 */
-	public function removeArticlesParent(article $articlesParent) {
-		if($this->virtualParents->contains($articlesParent) && isset($this->ArticleLinkInfo[$articlesParent->getId()]['parentLink'])) {
-			$articleposition = $this->ArticleLinkInfo[$articlesParent->getId()]['parentLink'];
-			$this->virtualParents->removeElement($articlesParent);
-			return $this->articlesParents->removeElement($articleposition);
-		}
-		return false;
-	}
-
-	/**
-	 * Add articleposition in parent
+	 * Add articlepositionParents
 	 * @param articleposition $articleposition
 	 * @return article
 	 */
 	public function addArticlepositionParent(articleposition $articleposition) {
-		if(!$this->articlesParents->contains($articleposition)) $this->articlesParents->add($articleposition);
+		if(!$this->articlepositionParents->contains($articleposition)) {
+			$this->articlepositionParents->add($articleposition);
+		}
+		$this->initNesteds();
 		return $this;
 	}
 
 	/**
-	 * Remove articleposition in parent
+	 * Remove articlepositionParents
 	 * @param articleposition $articleposition
-	 * @return article
+	 * @return boolean
 	 */
 	public function removeArticlepositionParent(articleposition $articleposition) {
-		$this->articlesParents->removeElement($articleposition);
-		return $this;
+		$r = false;
+		if($this->articlepositionParents->contains($articleposition)) {
+			$r = $this->articlepositionParents->removeElement($articleposition);
+		}
+		$this->initNesteds();
+		return $r;
 	}
 
 	/**
-	 * Add articleposition in child
+	 * Get articlepositionParents
+	 * @return ArrayCollection 
+	 */
+	public function getArticlepositionParents() {
+		return $this->articlepositionParents;
+	}
+
+
+	/**
+	 * Add articlepositionChild
 	 * @param articleposition $articleposition
 	 * @return article
 	 */
 	public function addArticlepositionChild(articleposition $articleposition) {
-		if(!$this->articlesChilds->contains($articleposition)) $this->articlesChilds->add($articleposition);
+		if(!$this->articlepositionChilds->contains($articleposition)) {
+			$this->articlepositionChilds->add($articleposition);
+		}
+		$this->initNesteds();
 		return $this;
 	}
 
 	/**
-	 * Remove articleposition in child
+	 * Remove articlepositionChilds
 	 * @param articleposition $articleposition
-	 * @return article
+	 * @return boolean
 	 */
 	public function removeArticlepositionChild(articleposition $articleposition) {
-		$this->articlesChilds->removeElement($articleposition);
+		$r = false;
+		if($this->articlepositionChilds->contains($articleposition)) {
+			$r = $this->articlepositionChilds->removeElement($articleposition);
+		}
+		$this->initNesteds();
+		return $r;
+	}
+
+	/**
+	 * Get articlepositionChilds
+	 * @return ArrayCollection 
+	 */
+	public function getArticlepositionChilds() {
+		return $this->articlepositionChilds;
+	}
+
+
+
+	/**
+	 * Add articleParent
+	 * @param article $articleParent
+	 * @return article
+	 */
+	public function addArticleParent(article $articleParent) {
+		$this->initNesteds();
+		if(!$this->articleParents->contains($articleParent)) $this->articleParents->add($articleParent);
 		return $this;
 	}
 
 	/**
-	 * Get articlesParents
+	 * Remove articleParent
+	 * @param article $articleParent
+	 * @return boolean
+	 */
+	public function removeArticleParent(article $articleParent) {
+		$this->initNesteds();
+		if($this->articleParents->contains($articleParent)) return $this->articleParents->removeElement($articleParent);
+		return false;
+	}
+
+	/**
+	 * Get articleParents
 	 * @return ArrayCollection 
 	 */
-	public function getArticlesParents() {
-		return $this->virtualParents;
+	public function getArticleParents() {
+		return $this->articleParents;
 	}
+
 
 	/**
 	 * Add articlesChild
 	 * @param article $articlesChild
 	 * @return article
 	 */
-	public function addArticlesChild(article $articlesChild) {
+	public function addArticleChild(article $articlesChild) {
 		$this->initNesteds();
-		if(!$this->virtualChilds->contains($articlesChild)) {
-			$this->virtualChilds->add($articlesChild);
-			$articleposition = new articleposition();
-			$articleposition->addChild($articlesChild)
-				->addParent($this);
-			$articlesChild->addArticlepositionParent($articleposition);
-			$this->addArticlepositionChild($articleposition);
-		}
+		if(!$this->articleChilds->contains($articlesChild)) $this->articleChilds->add($articlesChild);
 		return $this;
 	}
 
@@ -495,22 +517,18 @@ class article extends item {
 	 * @param article $articlesChild
 	 * @return boolean
 	 */
-	public function removeArticlesChild(article $articlesChild) {
-		if($this->virtualChilds->contains($articlesChild) && isset($this->ArticleLinkInfo[$this->getId()]['childLink'])) {
-			$articleposition = $this->ArticleLinkInfo[$this->getId()]['childLink'];
-			$this->virtualChilds->removeElement($articlesChild);
-			$articlesChild->removeArticlesParent($this);
-			return $this->articlesParents->removeElement($articleposition);
-		}
+	public function removeArticleChild(article $articlesChild) {
+		$this->initNesteds();
+		if($this->articleChilds->contains($articlesChild)) return $this->articleChilds->removeElement($articlesChild);
 		return false;
 	}
 
 	/**
-	 * Get articlesChilds
+	 * Get articleChilds
 	 * @return ArrayCollection 
 	 */
-	public function getArticlesChilds() {
-		return $this->virtualChilds;
+	public function getArticleChilds() {
+		return $this->articleChilds;
 	}
 
 }

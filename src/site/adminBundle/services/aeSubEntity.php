@@ -47,6 +47,10 @@ class aeSubEntity extends aeEntity {
 	            }
             }
         }
+        // effacement olds
+        foreach ($entity->getOldValues() as $name => $old) {
+        	// !!!
+        }
         parent::checkAfterChange($entity, $butEntities);
 		return $this;
 	}

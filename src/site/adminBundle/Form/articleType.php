@@ -234,7 +234,7 @@ class articleType extends baseType {
 			// 		),
 			// 	))
 			// ->add('articlesParents')
-			->add('articlesChilds', 'entity', array(
+			->add('articleChilds', 'entity', array(
 				"label"		=> 'fields.artlink',
 				'translation_domain' => 'article',
 				'property'	=> 'nom',
@@ -252,6 +252,24 @@ class articleType extends baseType {
 						else return $repo->findAllClosure();
 					},
 				))
+			// ->add('articleParents', 'entity', array(
+			// 	"label"		=> 'Parents',
+			// 	// 'translation_domain' => 'article',
+			// 	'property'	=> 'nom',
+			// 	'class'		=> 'siteadminBundle:article',
+			// 	'multiple'	=> true,
+			// 	'expanded'	=> false,
+			// 	"required"	=> false,
+			// 	'placeholder'   => 'form.select',
+			// 	'attr'		=> array(
+			// 		'class'			=> 'select2',
+			// 		),
+			// 	"query_builder" => function($repo) use ($data) {
+			// 		if(method_exists($repo, 'defaultValsListClosure'))
+			// 			return $repo->defaultValsListClosure($this->aeEntities, $data);
+			// 			else return $repo->findAllClosure();
+			// 		},
+			// 	))
 		;
 
 		// $builder->addEventListener(
