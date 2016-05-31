@@ -24,7 +24,7 @@ fields:
     keywords: mots clés
     descriptif: description
     categories: catégories
-    artlink: articles liés
+    artlink: articles conseillés
     image: image
     prix: prix
     TTC: TTC

@@ -39,4 +39,13 @@ $(document).ready(function() {
 	}
 	$(".hideauto").each(function() { hideauto(this); });
 
+
+	// sort list (JQuery UI)
+	$('.sortlist').each(function(item) {
+		$(this).sortable();
+		var URL = $(this).attr('data-url');
+		console.log('Sorting #' + $(this).attr('id'));
+		console.log('Sorting url : ', URL);
+	});
+
 });

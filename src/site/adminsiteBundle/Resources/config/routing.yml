@@ -75,6 +75,10 @@ categorie_ajax_data:
     path:     /categorie/ajax-data/{id}/{types}
     defaults: { _controller: siteadminsiteBundle:categorie:ajaxData, id: null, types: 'all' }
 
+ajax_data_sort:
+    path:     /sorting-UI/ajax
+    defaults: { _controller: siteadminsiteBundle:ajaxqueries:ajaxsort }
+
 
 # MENUS
 siteadmin_menus:

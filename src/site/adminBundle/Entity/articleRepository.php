@@ -29,8 +29,15 @@ class articleRepository extends itemRepository {
 					;
 			}
 		}
+		// $this->sortByPosition($qb);
 		// resultat
 		return $qb;
+	}
+
+	public function sortByPosition(&$qb) {
+		$qb->join(self::ELEMENT.'.articlepositionParents', 'ap')
+			->orderBy('ap.position', 'ASC')
+		;
 	}
 
 }
