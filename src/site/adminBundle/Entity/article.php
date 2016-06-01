@@ -19,6 +19,7 @@ use site\adminBundle\Entity\marque;
 use site\adminBundle\Entity\tauxTva;
 
 use \DateTime;
+use \Exception;
 
 /**
  * article
@@ -83,7 +84,7 @@ class article extends item {
 	protected $reseaus;
 
 	/**
-	 * @ORM\OneToOne(targetEntity="site\adminBundle\Entity\pdf", cascade={"all"}, inversedBy="article", orphanRemoval=true, cascade={"persist", "remove"})
+	 * @ORM\OneToOne(targetEntity="site\adminBundle\Entity\pdf", inversedBy="article", orphanRemoval=true, cascade={"persist", "remove"})
 	 * @ORM\JoinColumn(nullable=true, unique=false, onDelete="SET NULL")
 	 */
 	protected $pdf;
@@ -96,7 +97,7 @@ class article extends item {
 
 	/**
 	 * @var array
-	 * @ORM\OneToMany(targetEntity="site\adminBundle\Entity\articleposition", orphanRemoval=true, mappedBy="child", cascade={"all"})
+	 * @ORM\OneToMany(targetEntity="site\adminBundle\Entity\articleposition", orphanRemoval=true, mappedBy="child", cascade={"persist", "remove"})
 	 * @ORM\JoinColumn(nullable=true, unique=false)
 	 * @ORM\OrderBy({"position" = "ASC"})
 	 */
@@ -104,7 +105,7 @@ class article extends item {
 
 	/**
 	 * @var array
-	 * @ORM\OneToMany(targetEntity="site\adminBundle\Entity\articleposition", orphanRemoval=true, mappedBy="parent", cascade={"all"})
+	 * @ORM\OneToMany(targetEntity="site\adminBundle\Entity\articleposition", orphanRemoval=true, mappedBy="parent", cascade={"persist", "remove"})
 	 * @ORM\JoinColumn(nullable=true, unique=false)
 	 * @ORM\OrderBy({"position" = "ASC"})
 	 */
@@ -113,7 +114,8 @@ class article extends item {
 	// NESTED VIRTUAL DATA
 	protected $articleParents;
 	protected $articleChilds;
-	protected $articleLinkInfo;
+	protected $articleParentInfo;
+	protected $articleChildInfo;
 
 	public function __construct() {
 		parent::__construct();
@@ -129,7 +131,8 @@ class article extends item {
 		$this->articlepositionChilds = new ArrayCollection();
 		$this->articleParents = new ArrayCollection();
 		$this->articleChilds = new ArrayCollection();
-		$this->articleLinkInfo = array();
+		$this->articleParentInfo = array();
+		$this->articleChildInfo = array();
 	}
 
 	public function memOldValues($addedfields = null) {
@@ -373,19 +376,22 @@ class article extends item {
 	public function initNesteds() {
 		$this->articleParents = new ArrayCollection();
 		$this->articleChilds = new ArrayCollection();
-		foreach($this->articlepositionParents as $link) /* if($link->getParent() != null) */ {
+		foreach($this->articlepositionParents as $link) {
+			if($link->getChild() !== $this) throw new Exception("Link parent error !!", 1);
 			$this->articleParents->add($link->getParent());
-			$this->articleLinkInfo[$link->getParent()->getId()] = array();
-			$this->articleLinkInfo[$link->getParent()->getId()]['position'] = $link->getPosition();
-			// $this->articleLinkInfo[$link->getParent()->getId()]['parentLink'] = $link;
+			$this->articleParentInfo['position'][$link->getParent()->getId()] = $link->getPosition();
+			$this->articleParentInfo['parentLink'][$link->getParent()->getId()] = $link;
 		}
-		foreach($this->articlepositionChilds as $link) /* if($link->getChild() != null) */ {
+		foreach($this->articlepositionChilds as $link) {
+			if($link->getParent() !== $this) throw new Exception("Link child error !!", 1);
 			$this->articleChilds->add($link->getChild());
-			$this->articleLinkInfo[$link->getChild()->getId()] = array();
-			$this->articleLinkInfo[$link->getChild()->getId()]['position'] = $link->getPosition();
-			// $this->articleLinkInfo[$link->getChild()->getId()]['childLink'] = $link;
+			$this->articleChildInfo['position'][$link->getChild()->getId()] = $link->getPosition();
+			$this->articleChildInfo['childLink'][$link->getChild()->getId()] = $link;
 		}
 	}
+
+	public function getArticleParentInfo() { $this->initNesteds(); return isset($this->articleParentInfo['position']) ? $this->articleParentInfo['position'] : null; }
+	public function getArticleChildrenInfo() { $this->initNesteds(); return isset($this->articleChildInfo['position']) ? $this->articleChildInfo['position'] : null; }
 
 	/**
 	 * Get position
@@ -393,7 +399,40 @@ class article extends item {
 	 * @return integer 
 	 */
 	public function getArticlePosition(article $parent) {
-		return isset($this->articleLinkInfo[$parent->getId()]['position']) ? $this->articleLinkInfo[$parent->getId()]['position'] : null ;
+		$this->initNesteds();
+		return isset($this->articleParentInfo['position'][$parent->getId()]) ? $this->articleParentInfo['position'][$parent->getId()] : null ;
+	}
+
+	/**
+	 * set first in parent position
+	 * @param article $parent
+	 * @param integer $position
+	 * @return integer 
+	 */
+	public function setArticlePosition_position(article $parent, $position) {
+		if(isset($this->articleParentInfo['parentLink'][$parent->getId()])) {
+			$this->articleParentInfo['parentLink'][$parent->getId()]->setPosition((integer) $position);
+			$parent->initNesteds();
+			$this->initNesteds();
+		}
+	}
+
+	/**
+	 * set first in parent position
+	 * @param article $parent
+	 * @return integer 
+	 */
+	public function setArticlePosition_first(article $parent) {
+		$this->setArticlePosition_position($parent, 0);
+	}
+
+	/**
+	 * set last in parent position
+	 * @param article $parent
+	 * @return integer 
+	 */
+	public function setArticlePosition_last(article $parent) {
+		$this->setArticlePosition_position($parent, -1);
 	}
 
 

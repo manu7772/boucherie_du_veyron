@@ -99,12 +99,12 @@
 	{% for item in list|default([]) %}
 		{% if loop.index0 < limit or limit == 0 %}
 			{% if item.className == 'categorie' and item.lvl|default(null) == 0 %}
-			<span class="label m-r-xs m-b-xs inline {{ classeRoot|raw }}" style="display: inline-block; height: 20px; line-height: 15px;">
+			<span id="{{ item.className }}_{{ item.id }}" class="sortable-disabled label m-r-xs m-b-xs inline {{ classeRoot|raw }}" style="display: inline-block; height: 20px; line-height: 15px;">
 				<i class="fa {{ self.icon(item) }} m-r-xs"></i>
 				{{ ('types.' ~ item.type)|trans({}, item.className) }}
 			</span>
 			{% else %}
-			<span class="label m-r-xs m-b-xs inline{% if item in highlight|default([]) %} {{ classe|raw }}{% endif %}" style="display: inline-block; height: 20px; line-height: 15px;">
+			<span id="{{ item.className }}_{{ item.id }}" class="label m-r-xs m-b-xs inline{% if item in highlight|default([]) %} {{ classe|raw }}{% endif %}" style="display: inline-block; height: 20px; line-height: 15px;">
 				<i class="fa {{ self.icon(item) }} m-r-xs"></i>
 				{{ item|trans({}, item.className) }}
 			</span>
@@ -124,12 +124,12 @@
 	{% for item in list|default([]) %}
 		{% if loop.index0 < limit or limit == 0 %}
 			{% if item.className == 'categorie' and item.lvl|default(null) == 0 %}
-			<span class="label inline {{ classeRoot|raw }} m-b-xs m-r-xs" style="display: inline-block; height: 20px; line-height: 15px;">
+			<span id="{{ item.className }}_{{ item.id }}" class="sortable-disabled label inline {{ classeRoot|raw }} m-b-xs m-r-xs" style="display: inline-block; height: 20px; line-height: 15px;">
 				<i class="fa {{ self.icon(item) }} m-r-xs"></i>
 				{{ ('types.' ~ item.type)|trans({}, item.className) }}
 			</span>
 			{% else %}
-			<a href="{{ self.entiteLink(item, action, type, type_value_joiner) }}" class="label inline{% if item in highlight|default([]) %} {{ classe|raw }}{% endif %} m-b-xs m-r-xs" style="display: inline-block; height: 20px; line-height: 15px;">
+			<a id="{{ item.className }}_{{ item.id }}" href="{{ self.entiteLink(item, action, type, type_value_joiner) }}" class="label inline{% if item in highlight|default([]) %} {{ classe|raw }}{% endif %} m-b-xs m-r-xs" style="display: inline-block; height: 20px; line-height: 15px;">
 				<i class="fa {{ self.icon(item) }} m-r-xs"></i>
 				{{ item|trans({}, item.className) }}
 			</a>

@@ -40,12 +40,46 @@ $(document).ready(function() {
 	$(".hideauto").each(function() { hideauto(this); });
 
 
+	var parseArrayOfItems = function(items) {
+	    for (var i = 0; i < items.length; i++) {
+	    	items[i] = items[i].split('_');
+	    };
+	    return items;
+	}
+
 	// sort list (JQuery UI)
 	$('.sortlist').each(function(item) {
-		$(this).sortable();
-		var URL = $(this).attr('data-url');
-		console.log('Sorting #' + $(this).attr('id'));
-		console.log('Sorting url : ', URL);
+		var element = this;
+		$(this).sortable({
+			items: "> *:not(.sortable-disabled)",
+			stop: function(event, ui) {
+				var $widget = $(element).sortable('widget');
+				var URL = $widget.attr('data-url');
+				var data = {};
+				data.entity = $widget.attr('data-parent').split('_');
+				data.children = parseArrayOfItems($widget.sortable('toArray'));
+				// console.log('Sorting url : ', URL);
+				// console.log('Sorting data : ', data);
+				$.ajax({
+					method: "POST",
+					dataType: "json",
+					url: URL,
+					data: data,
+					context: document.body,
+					success: function(returndata) {
+						console.log('Return data : ', returndata);
+					},
+					error: function(error) {
+					    alert("Error "+error.status+" : "+error.responseText);
+					},
+				}).always(function() {
+					$(element).sortable('refresh');
+					$(element).sortable('refreshPositions');
+				});
+			},
+		});
 	});
+
+
 
 });

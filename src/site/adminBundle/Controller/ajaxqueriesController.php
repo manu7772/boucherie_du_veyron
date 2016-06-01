@@ -19,26 +19,58 @@ use \Exception;
 class ajaxqueriesController extends baseController {
 
 	public function ajaxsortAction() {
-		$data = array();
 		$request = $this->getRequest();
-		$entity = $request->request->get('entity');
-		$id = $request->request->get('id');
-		// service
-		$entityService = $this->getEntityService($entity);
-
-		if($id != null && $request->isXmlHttpRequest()) {
+		$data = array();
+		if($request->isXmlHttpRequest()) {
 			// AJAX REQUEST
-			// $data = $entityService->getRepo()->findArrayTree($id, $types);
-			// $this->get('aetools.debug')->debugNamedFile('verifTypesForJSTree', array('Types' => $types, 'Data' => $data), true, false);
-			// $icons = $this->get('aetools.textutilities')->iconsAsJson(true);
-			// $this->get('aetools.debug')->debugNamedFile('iconsForJSTree', $icons, true, false);
-			return new JsonResponse($data);
+			$data = $request->request->all();
+			if(isset($data['entity']) && isset($data['children'])) {
+				// DATA OK
+				$entityService = $this->getEntityService($data['entity'][0]);
+				if(method_exists($entityService, 'sortChildren')) {
+					$data = $entityService->sortChildren($data);
+					return new JsonResponse($data);
+				} else {
+					return $this->requErrors(500, 'This entity is not nestable');
+				}
+			} else {
+				// ERROR
+				$data['request']['method'] = $request->getMethod();
+				$this->get('aetools.debug')->debugNamedFile('ajaxqueries_ajaxsort', $data);
+				return $this->requErrors(500, 'Request data not found');
+			}
 		} else if(!$request->isXmlHttpRequest()) {
 			// TEST EN GET
-			return new Response(json_encode($data));
+			$data = array(
+				'entity' => array('article', '6'),
+				'children' => array(
+					array('article', '7'),
+					array('article', '8'),
+					),
+				);
+			$entityService = $this->getEntityService($data['entity'][0]);
+			if(method_exists($entityService, 'sortChildren')) {
+				$data = $entityService->sortChildren($data);
+				echo('<pre>');
+				var_dump($data);
+				echo('</pre>');
+				return new Response('ok !');
+			}
 		}
-		return new JsonResponse(null);
+		return $this->requErrors(500, 'System error');
 	}
 
+
+	/***************************/
+	/*** ERRORS              ***/
+	/***************************/
+
+	protected function requErrors($status, $message) {
+		$response = new Response();
+		$response->headers->set('Content-type', 'application/json');
+		$response->setContent((string) $message);
+		$response->setStatusCode((integer) $status);
+		return $response;
+	}
 
 }

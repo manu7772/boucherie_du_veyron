@@ -111,4 +111,37 @@ class aeArticle extends aeItem {
 	//  return parent::save($entity, $flush);
 	// }
 
+	public function sortChildren($data) {
+		$entity = $this->getRepo(self::CLASS_ENTITY)->find($data['entity'][1]);
+		$sorted = array_reverse($data['children']);
+		foreach ($sorted as $key => $item) {
+			$itemEntity = $this->getRepo(self::CLASS_ENTITY)->find($item[1]);
+			$itemEntity->setArticlePosition_first($entity);
+			$this->save($itemEntity, false);
+		}
+		$this->getEm()->flush();
+		// $entity = $this->getRepo(self::CLASS_ENTITY)->find($data['entity'][1]);
+		$children = array();
+		foreach ($entity->getArticleChilds() as $child) {
+			$children[] = array(
+				array('classe_name' => $child->getClassname()),
+				array('id' => $child->getId()),
+				array('position' => $child->getArticlePosition($entity)),
+				array('ParentInfo' => $child->getArticleParentInfo()),
+				array('ChildInfo' => $child->getArticleChildrenInfo()),
+				);
+		}
+		return array(
+			'entity' => array(
+				array('classe_name' => $entity->getClassname()),
+				array('id' => $entity->getId()),
+				array('ParentInfo' => $entity->getArticleParentInfo()),
+				array('ChildInfo' => $entity->getArticleChildrenInfo()),
+				),
+			'children' => $children,
+			);
+	}
+
+
 }
+
