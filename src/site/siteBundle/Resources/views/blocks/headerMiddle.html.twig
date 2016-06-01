@@ -68,7 +68,7 @@
 						</div>
 						<div class="mainmenu pull-left">
 							<ul class="nav navbar-nav collapse navbar-collapse">
-								{% if sitedata.menuNav is defined %}
+								{% if sitedata.menuNav.subEntitys is defined %}
 								{% for item in sitedata.menuNav.subEntitys %}
 								<li>
 									<a href="{{ actions.subEntityLink(item) }}"{% if item.title|default(null) != null %} title="{{ item.title }}"{% endif %}>{{ item.icon|raw }}{{ item.nom }}</a>

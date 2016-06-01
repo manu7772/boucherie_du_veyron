@@ -417,8 +417,8 @@ jQuery(document).ready(function($) {
 		}
 		// console log DEV
 		if(environnementMode != 'prod') console.log("options : ", options);
-		// initialize select2
-		$(this).select2(options);
+		// initialize select2 with sortable
+		$(this).select2Sortable(options);
 	});
 
 	/***************************************/

@@ -99,15 +99,15 @@ abstract class baseSubEntity extends baseEntity {
 	 * @ORM\PostLoad
 	 */
 	public function memOldValues($addedfields = null) {
-		$fields = array('parents');
+		$fields = array('parents', 'tags', 'image', 'statut');
 		if(count($addedfields) > 0 && is_array($addedfields)) $fields = array_unique(array_merge($fields, $addedfields));
 		foreach ($fields as $field) {
 			switch ($field) {
-				case 'parents':
+				// case 'parents':
 					# code...
-					break;				
+					// break;				
 				default:
-					if(is_object($this->$field) && method_exists($this->$field, "toArray")) $this->old_values[$field] = $this->$field->toArray();
+					if(is_object($this->$field) && method_exists($this->$field, "toArray")) $this->old_values[$field] = $this->$field;
 						else $this->old_values[$field] = $this->$field;
 					break;
 			}

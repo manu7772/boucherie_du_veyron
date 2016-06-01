@@ -19,25 +19,25 @@ use \ReflectionClass;
  *
  * @ORM\Entity
  * @ORM\Table(name="article_position")
- * @ORM\Entity(repositoryClass="Gedmo\Sortable\Entity\Repository\SortableRepository")
+ * @ORM\Entity(repositoryClass="site\adminBundle\Entity\articlepositionRepository")
  * @ORM\HasLifecycleCallbacks
  */
- // * @ORM\Entity(repositoryClass="site\adminBundle\Entity\articlepositionRepository")
+ // * @ORM\Entity(repositoryClass="Gedmo\Sortable\Entity\Repository\SortableRepository")
 class articleposition {
 
 	// const CLASS_ARTICLEPOSITION = 'articleposition';
 
 	/**
 	 * @ORM\Id
-	 * @ORM\ManyToOne(targetEntity="site\adminBundle\Entity\article", inversedBy="articlesParents", cascade={"persist", "remove"})
-	 * @ORM\JoinColumn(name="article_id", referencedColumnName="id")
+	 * @ORM\ManyToOne(targetEntity="site\adminBundle\Entity\article", inversedBy="articlepositionChilds")
+	 * @ORM\JoinColumn(name="parent_id", referencedColumnName="id")
 	 * @Gedmo\SortableGroup
 	 */
 	protected $parent;
 
 	/**
 	 * @ORM\Id
-	 * @ORM\ManyToOne(targetEntity="site\adminBundle\Entity\article", inversedBy="articlesChilds", cascade={"persist", "remove"})
+	 * @ORM\ManyToOne(targetEntity="site\adminBundle\Entity\article", inversedBy="articlepositionParents")
 	 * @ORM\JoinColumn(name="child_id", referencedColumnName="id")
 	 */
 	protected $child;
@@ -56,7 +56,11 @@ class articleposition {
 	}
 
 	public function __toString() {
-		return $this->getParent()->getId().'/'.$this->getChild()->getId();
+		return $this->getNom();
+	}
+
+	public function getNom() {
+		return $this->getParent()->getNom().' / '.$this->getChild()->getNom();
 	}
 
     // abstract public function getClassName();
@@ -77,31 +81,45 @@ class articleposition {
 	}
 
 	public function getId() {
-		return $this->getParent()->getId().'/'.$this->getChild()->getId();
+		return $this->getParent()->getId().'-'.$this->getChild()->getId();
 	}
 
 	/**
 	 * @ORM\PreRemove
 	 */
 	public function onRemove() {
-		$this->parent->removeChildren($this);
-		$this->child->removeParent($this);
+		$this->parent->removeArticlepositionChild($this);
+		$this->child->removeArticlepositionParent($this);
+	}
+
+	/**
+	 * Set parent and child at the same time
+	 * @param article $parent
+	 * @param article $child
+	 * @return articleposition
+	 */
+	public function setParentEnfant(article $parent, article $child) {
+		$this->parent = $parent;
+		$this->child = $child;
+		$parent->addArticlepositionChild($this);
+		$child->addArticlepositionParent($this);
+		return $this;
 	}
 
 	/**
 	 * Set parent
-	 * @param parent $parent
+	 * @param article $parent
 	 * @return articleposition
 	 */
-	public function setParent(parent $parent) {
+	public function setParent(article $parent) {
 		$this->parent = $parent;
-		$parent->addChildren($this);
+		$parent->addArticlepositionChild($this);
 		return $this;
 	}
 
 	/**
 	 * Get parent
-	 * @return parent 
+	 * @return article 
 	 */
 	public function getParent() {
 		return $this->parent;
@@ -109,18 +127,18 @@ class articleposition {
 
 	/**
 	 * Set child
-	 * @param child $child
+	 * @param article $child
 	 * @return articleposition
 	 */
-	public function setChild(child $child) {
+	public function setChild(article $child) {
 		$this->child = $child;
-		$child->addParent($this);
+		$child->addArticlepositionParent($this);
 		return $this;
 	}
 
 	/**
 	 * Get child
-	 * @return child 
+	 * @return article 
 	 */
 	public function getChild() {
 		return $this->child;
