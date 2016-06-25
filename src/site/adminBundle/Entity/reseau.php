@@ -43,24 +43,26 @@ class reseau extends tier {
 	 */
 	protected $nom;
 
-	/**
-	 * @var array - INVERSE
-	 * @ORM\ManyToMany(targetEntity="site\adminBundle\Entity\article", mappedBy="reseaus")
-	 * @ORM\JoinColumn(nullable=true, unique=false)
-	 */
-	protected $articles;
+	// NESTED VIRTUAL GROUPS
+	// les noms doivent commencer par "$group_" et finir par "Parents" (pour les parents) ou "Childs" (pour les enfants)
+	// et la partie variable doit comporter au moins 3 lettres
+	// reconnaissance auto par : "#^(add|remove|get)(Group_).{3,}(Parent|Child)(s)?$#" (self::VIRTUALGROUPS_PARENTS_PATTERN et self::VIRTUALGROUPS_CHILDS_PATTERN)
+	protected $group_articles_reseausParents;
+	protected $group_articles_reseausChilds;
 
+	// public function __construct() {
+	// 	parent::__construct();
+	// }
 
-	public function __construct() {
-		parent::__construct();
-		$this->articles = new ArrayCollection();
-	}
-
-	public function memOldValues($addedfields = null) {
-		$fields = array('articles');
-		if(count($addedfields) > 0 && is_array($addedfields)) $fields = array_unique(array_merge($fields, $addedfields));
-		parent::memOldValues($fields);
-		return $this;
+	public function getNestedAttributesParameters() {
+		$new = array(
+			'articles_reseaus' => array(
+				'data-limit' => 0,
+				'class' => array('reseau'),
+				'required' => false,
+				),
+			);
+		return array_merge(parent::getNestedAttributesParameters(), $new);
 	}
 
 	/**
@@ -69,33 +71,6 @@ class reseau extends tier {
 	 */
 	public function isDefaultNullable() {
 		return true;
-	}
-
-	/**
-	 * Get articles - INVERSE
-	 * @return ArrayCollection
-	 */
-	public function getArticles() {
-		return $this->articles;
-	}
-
-	/**
-	 * Add article - INVERSE
-	 * @param article $article
-	 * @return reseau
-	 */
-	public function addArticle(article $article) {
-		$this->articles->add($article);
-		return $this;
-	}
-
-	/**
-	 * Remove article - INVERSE
-	 * @param article $article
-	 * @return boolean
-	 */
-	public function removeArticle(article $article) {
-		return $this->articles->removeElement($article);
 	}
 
 

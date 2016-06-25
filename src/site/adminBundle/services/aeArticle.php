@@ -15,6 +15,7 @@ class aeArticle extends aeItem {
 	const NAME                  = 'aeArticle';        // nom du service
 	const CALL_NAME             = 'aetools.aeArticle'; // comment appeler le service depuis le controller/container
 	const CLASS_ENTITY          = 'site\adminBundle\Entity\article';
+	const CLASS_SHORT_ENTITY    = 'article';
 
 	public function __construct(ContainerInterface $container = null, $em = null) {
 		parent::__construct($container, $em);
@@ -28,68 +29,39 @@ class aeArticle extends aeItem {
 	 * @return aeArticle
 	 */
 	public function checkAfterChange(&$entity, $butEntities = []) {
-		// fiche inverse
-		// foreach($entity->getFiches() as $fiche) {
-		//     $fiche->addArticle($entity);
-		//     $service = $this->container->get('aetools.aeEntity')->getEntityService($fiche);
-		//     $service->checkAfterChange($fiche);
-		//     $service->save($fiche, false);
-		// }
 		// saving…
-		$childs = $entity->getArticleChilds();
-		$parents = $entity->getArticleParents();
-		$oldChilds = $entity->getOldValues('articlepositionChilds');
-		$oldParents = $entity->getOldValues('articlepositionParents');
-		// nested childs
-		echo('<h2 style="color:magenta;margin:4px 0px;">Ajouts enfants…</h2>');
-		$this->affData($entity);
-		foreach ($childs as $child) {
-			$exists = $this->getRepo('site\adminBundle\Entity\articleposition')->existsJointure($entity, $child);
-			if(!$exists) {
-				$newPosition = new articleposition();
-				$newPosition->setParentEnfant($entity, $child);
-				$this->getEm()->persist($newPosition);
-				echo('<p style="color:green;margin:1px 40px;">Création parent#'.$entity.' = child#'.$child.'</p>');
-			} else {
-				echo('<p style="color:orange;margin:1px 40px;">Existant parent#'.$entity.' = child#'.$child.'</p>');
-			}
-		}
-		// nested parents
-		echo('<h2 style="color:magenta;margin:4px 0px;">Ajouts parents</h2>');
-		$this->affData($entity);
-		foreach ($parents as $parent) {
-			$exists = $this->getRepo('site\adminBundle\Entity\articleposition')->existsJointure($parent, $entity);
-			if(!$exists) {
-				$newPosition = new articleposition();
-				$newPosition->setParentEnfant($parent, $entity);
-				$this->getEm()->persist($newPosition);
-				echo('<p style="color:green;margin:1px 40px;">Création parent#'.$parent.' = child#'.$entity.'</p>');
-			} else {
-				echo('<p style="color:orange;margin:1px 40px;">Existant parent#'.$parent.' = child#'.$entity.'</p>');
-			}
-		}
-		// effacement olds
-		echo('<h2 style="color:magenta;margin:4px 0px;">Suppressions enfants…</h2>');
-		$this->affData($entity);
-		foreach ($oldChilds as $name => $old) {
-			if(!$childs->contains($old->getChild())) {
-				echo('<p style="color:red;margin:1px 40px;">Suppression enfant#'.$old->getParent().' = child#'.$old->getChild().'</p>');
-				$this->getEm()->remove($old);
-			} else {
-				echo('<p style="color:grey;margin:1px 40px;"><small><i>Concervation enfant#'.$old->getParent().' = child#'.$old->getChild().'</i></small></p>');
-			}
-		}
-		echo('<h2 style="color:magenta;margin:4px 0px;">Suppressions parents…</h2>');
-		$this->affData($entity);
-		foreach ($oldParents as $name => $old) {
-			if(!$parents->contains($old->getParent())) {
-				echo('<p style="color:red;margin:1px 40px;">Suppression parent#'.$old->getParent().' = child#'.$old->getChild().'</p>');
-				$this->getEm()->remove($old);
-			} else {
-				echo('<p style="color:grey;margin:1px 40px;"><small><i>Concervation parent#'.$old->getParent().' = child#'.$old->getChild().'</i></small></p>');
-			}
-		}
-		// die();
+		// $parents = $entity->getArticleParents();
+		// $childs = $entity->getArticleChilds();
+		// // $oldChilds = $entity->getOldValues('articlepositionChilds');
+		// // $oldParents = $entity->getOldValues('articlepositionParents');
+		// // nested childs
+		// echo('<h2 style="color:magenta;margin:4px 0px;">Ajouts enfants Articles '.json_encode(get_class($entity)).'</h2>');
+		// $this->affData($entity, $parents, $childs);
+		// foreach ($childs as $child) {
+		// 	$exists = $this->getRepo('site\adminBundle\Entity\articleposition')->existsJointure($entity, $child);
+		// 	if(!$exists) {
+		// 		$newPosition = new articleposition();
+		// 		$newPosition->setParentChild($entity, $child);
+		// 		$this->getEm()->persist($newPosition);
+		// 		echo('<p style="color:green;margin:1px 40px;">Création parent#'.$entity.' = child#'.$child.'</p>');
+		// 	} else {
+		// 		echo('<p style="color:orange;margin:1px 40px;">Existant parent#'.$entity.' = child#'.$child.'</p>');
+		// 	}
+		// }
+		// // nested parents
+		// echo('<h2 style="color:magenta;margin:4px 0px;">Ajouts parents Articles '.json_encode(get_class($entity)).'</h2>');
+		// $this->affData($entity, $parents, $childs);
+		// foreach ($parents as $parent) {
+		// 	$exists = $this->getRepo('site\adminBundle\Entity\articleposition')->existsJointure($parent, $entity);
+		// 	if(!$exists) {
+		// 		$newPosition = new articleposition();
+		// 		$newPosition->setParentChild($parent, $entity);
+		// 		$this->getEm()->persist($newPosition);
+		// 		echo('<p style="color:green;margin:1px 40px;">Création parent#'.$parent.' = child#'.$entity.'</p>');
+		// 	} else {
+		// 		echo('<p style="color:orange;margin:1px 40px;">Existant parent#'.$parent.' = child#'.$entity.'</p>');
+		// 	}
+		// }
 		parent::checkAfterChange($entity, $butEntities);
 		return $this;
 	}
@@ -111,36 +83,44 @@ class aeArticle extends aeItem {
 	//  return parent::save($entity, $flush);
 	// }
 
-	public function sortChildren($data) {
-		$entity = $this->getRepo(self::CLASS_ENTITY)->find($data['entity'][1]);
-		$sorted = array_reverse($data['children']);
-		foreach ($sorted as $key => $item) {
-			$itemEntity = $this->getRepo(self::CLASS_ENTITY)->find($item[1]);
-			$itemEntity->setArticlePosition_first($entity);
-			$this->save($itemEntity, false);
-		}
-		$this->getEm()->flush();
-		// $entity = $this->getRepo(self::CLASS_ENTITY)->find($data['entity'][1]);
-		$children = array();
-		foreach ($entity->getArticleChilds() as $child) {
-			$children[] = array(
-				array('classe_name' => $child->getClassname()),
-				array('id' => $child->getId()),
-				array('position' => $child->getArticlePosition($entity)),
-				array('ParentInfo' => $child->getArticleParentInfo()),
-				array('ChildInfo' => $child->getArticleChildrenInfo()),
-				);
-		}
-		return array(
-			'entity' => array(
-				array('classe_name' => $entity->getClassname()),
-				array('id' => $entity->getId()),
-				array('ParentInfo' => $entity->getArticleParentInfo()),
-				array('ChildInfo' => $entity->getArticleChildrenInfo()),
-				),
-			'children' => $children,
-			);
-	}
+	// /**
+	//  * Sort children of entity
+	//  * @param array $data
+	//  * @return array
+	//  */
+	// public function sortChildren($data) {
+	// 	if($data['entity'][0] == self::CLASS_SHORT_ENTITY) {
+	// 		$entity = $this->getRepo(self::CLASS_ENTITY)->find($data['entity'][1]);
+	// 		$sorted = array_reverse($data['children']);
+	// 		foreach ($sorted as $key => $item) {
+	// 			$itemEntity = $this->getRepo(self::CLASS_ENTITY)->find($item[1]);
+	// 			$itemEntity->setArticlePosition_first($entity);
+	// 			$this->save($itemEntity, false);
+	// 		}
+	// 		$this->getEm()->flush();
+	// 		// $entity = $this->getRepo(self::CLASS_ENTITY)->find($data['entity'][1]);
+	// 		$children = array();
+	// 		foreach ($entity->getArticleChilds() as $child) {
+	// 			$children[] = array(
+	// 				array('classe_name' => $child->getClassname()),
+	// 				array('id' => $child->getId()),
+	// 				array('position' => $child->getArticlePosition($entity)),
+	// 				array('ParentInfo' => $child->getArticleParentInfo()),
+	// 				array('ChildInfo' => $child->getArticleChildrenInfo()),
+	// 				);
+	// 		}
+	// 		return array(
+	// 			'entity' => array(
+	// 				array('classe_name' => $entity->getClassname()),
+	// 				array('id' => $entity->getId()),
+	// 				array('ParentInfo' => $entity->getArticleParentInfo()),
+	// 				array('ChildInfo' => $entity->getArticleChildrenInfo()),
+	// 				),
+	// 			'children' => $children,
+	// 			);
+	// 	}
+	// 	return parent::sortChildren($data);
+	// }
 
 
 }

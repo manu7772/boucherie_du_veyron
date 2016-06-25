@@ -21,12 +21,16 @@
 			{% endblock headtitle %}
 		</h2>
 		{% block breadcrumb %}
-		<ol class="breadcrumb ellipsis">
+		<ol class="breadcrumb ellipsis col-md-9">
 			<li><a href="{{ path('siteadmin_homepage') }}"><strong>{{ UCfirst('administration'|trans) }}</strong></a></li>
 			<li><a href="{{ path('siteadmin_entite', {entite: entite_name}) }}"><strong>{{ UCfirst('name_s'|trans({}, entite.className)) }}</strong></a></li>
 			<li>{{ entite.nom|default('#' ~ entite.id)|trans({}, entite.className) }}</li>
 		</ol>
 		{% endblock breadcrumb %}
+		<div class="col-md-3">
+		{% block buttons %}
+		{% endblock buttons %}
+		</div>
 	</div>
 </div>
 {% endblock page_heading %}

@@ -21,6 +21,7 @@
 							<th>{{ UCfirst('actions.name'|trans) }}</th>
 							{% if not DEVMODE %}
 							<th>{{ UCfirst('fields.accroche'|trans({}, entite_name)) }}</th>
+							<th>Dossiers parents</th>
 							{% else %}
 							<th>Enfants / Parents</th>
 							{% endif %}
@@ -57,27 +58,21 @@
 							</td>
 							<td{{ bgcolor|raw }}>
 								{{ actions.entiteButtons(entite, ['show','edit','delete','active'], type) }}
-								{# - OFF ----------------------
-								{% if DEVMODE %}
-								<hr class="m-b-xs m-t-xs">
-								<div class="btn-group">
-									{% if type.type_values|default(null) != null %}
-									<a href="{{ path('siteadmin_entite_type', {entite: entite.className, type_related: type.type_related, type_field: type.type_field, type_values: type.type_values|join(type_value_joiner)|url_encode, id: entite.id, action: 'check'}) }}" type="button" class="btn btn-danger btn-xs" title="Checker article {{ entite.nom }}"><i class="fa fa-check"></i></a>
-									{% else %}
-									<a href="{{ path('siteadmin_entite', {entite: entite.className, id: entite.id, action: 'check'}) }}" type="button" class="btn btn-danger btn-xs" title="Checker article {{ entite.nom }}"><i class="fa fa-check"></i></a>
-									{% endif %}
-								</div>
-								{% endif %}
-								- OFF ---------------------- #}
 							</td>
 							{% if not DEVMODE %}
 							<td{{ bgcolor|raw }}>{{ entite.accroche|raw }}</td>
+							<td{{ bgcolor|raw }}>{{ actions.labelLinkList(entite.allNestedParentsByClass('categorie'), entite.nestedParentsByClass('categorie'), null, type, type_value_joiner, 'edit') }}</td>
 							{% else %}
 							<td{{ bgcolor|raw }}>
-							<p>Enfants</p>
-							{{ actions.labelLinkList(entite.articleChilds, [], null, type, type_value_joiner, 'edit') }}
-							<p>Parents</p>
-							{{ actions.labelLinkList(entite.articleParents, [], null, type, type_value_joiner, 'edit') }}
+								<p><strong>Dossiers parents</strong></p>
+								{{ actions.labelLinkList(entite.allNestedParentsByClass('categorie'), entite.nestedParentsByClass('categorie'), null, type, type_value_joiner, 'edit') }}
+								<hr>
+								{% for name,attribute in entite.nestedAttributesParameters %}
+								<p><strong>{{ UCfirst(name) }}</strong> <i>parents</i></p>
+								{{ actions.labelLinkList(entite.allNestedParentsByClass(attribute.class), entite.nestedParentsByClass(attribute.class), null, type, type_value_joiner, 'edit') }}
+								<p><strong>{{ UCfirst(name) }}</strong> <i>enfants</i></p>
+								{{ actions.labelLinkList(entite.allNestedChildsByClass(attribute.class), entite.nestedChildsByClass(attribute.class), null, type, type_value_joiner, 'edit') }}
+								{% endfor %}
 							</td>
 							{% endif %}
 							<td{{ bgcolor|raw }}><strong>{{ UCfirst('fields.TTC'|trans({}, entite.className)) }} {{ entite.prix }}{{ marketplace.devise.symb|raw }}</strong><br>{{ UCfirst('fields.HT'|trans({}, entite.className)) }} {{ entite.prixHT }}{{ marketplace.devise.symb|raw }}<br>{{ UCfirst('fields.TVA'|trans({}, entite.className)) }} {{ entite.tauxTva.taux|number_format(2, ',', ' ') }}%</td>

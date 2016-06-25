@@ -31,6 +31,7 @@ class panier {
 	 * @ORM\Id
 	 * @ORM\ManyToOne(targetEntity="site\UserBundle\Entity\User", inversedBy="paniers")
 	 * @ORM\JoinColumn(nullable=false, unique=false)
+	 * @Gedmo\SortableGroup
 	 */
 	protected $user;
 
@@ -42,9 +43,9 @@ class panier {
 	protected $article;
 
 	/**
+	 * @ORM\Column(type="integer")
 	 * https://github.com/Atlantic18/DoctrineExtensions/blob/master/doc/sortable.md
 	 * @Gedmo\SortablePosition
-	 * @ORM\Column(type="integer")
 	 */
 	private $position;
 

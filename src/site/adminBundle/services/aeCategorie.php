@@ -2,18 +2,18 @@
 namespace site\adminBundle\services;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use site\adminBundle\services\aeSubEntity;
+use site\adminBundle\services\aeNested;
 
 use site\adminBundle\Entity\categorie;
 use site\adminBundle\Entity\baseEntity;
 use site\adminBundle\Entity\categorieposition;
 
 // call in controller with $this->get('aetools.aeCategorie');
-class aeCategorie extends aeSubEntity {
+class aeCategorie extends aeNested {
 
 
-    const NAME                  = 'aePanier';        // nom du service
-    const CALL_NAME             = 'aetools.aePanier'; // comment appeler le service depuis le controller/container
+    const NAME                  = 'aeCategorie';        // nom du service
+    const CALL_NAME             = 'aetools.aeCategorie'; // comment appeler le service depuis le controller/container
     const CLASS_ENTITY          = 'site\adminBundle\Entity\categorie';
 
     public function __construct(ContainerInterface $container = null, $em = null) {
@@ -28,27 +28,6 @@ class aeCategorie extends aeSubEntity {
      * @return aeCategorie
      */
     public function checkAfterChange(&$entity, $butEntities = []) {
-        // elements subEntitys ajoutés // inverses
-        if($entity->getPageweb() == null) {
-            // pageweb par défaut
-            $servicePageweb = $this->container->get('aetools.aePageweb');
-            $pw = $servicePageweb->getRepo()->findByNom('liste_'.$entity->getType().'s');
-            if(count($pw) > 0) {
-                $entity->setPageweb(reset($pw));
-            }
-        }
-        // ajout baseSubEntity
-        $addedSubEntitys = $entity->getAddedSubEntitys()->toArray();
-        if(count($addedSubEntitys > 0)) {
-            foreach ($addedSubEntitys as $key => $added) {
-                if(!$added->hasChildrensOfAllTypes($entity) && !$added->hasHistorySubEntitys($entity) && $entity != $added) {
-                    $cp = new categorieposition();
-                    $cp->setCategorie($added)->setSubEntity($entity);
-                    $this->getEm()->persist($cp);
-                }
-            }
-            $entity->clearAddedSubEntitys();
-        }
         parent::checkAfterChange($entity, $butEntities);
         return $this;
     }

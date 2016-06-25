@@ -55,12 +55,12 @@ class marque extends tier {
 		$this->articles = new ArrayCollection();
 	}
 
-	public function memOldValues($addedfields = null) {
-		$fields = array('articles');
-		if(count($addedfields) > 0 && is_array($addedfields)) $fields = array_unique(array_merge($fields, $addedfields));
-		parent::memOldValues($fields);
-		return $this;
-	}
+	// public function memOldValues($addedfields = null) {
+	// 	$fields = array('articles');
+	// 	if(count($addedfields) > 0 && is_array($addedfields)) $fields = array_unique(array_merge($fields, $addedfields));
+	// 	parent::memOldValues($fields);
+	// 	return $this;
+	// }
 
 	/**
 	 * Un élément par défaut dans la table est-il obligatoire ?
@@ -68,6 +68,19 @@ class marque extends tier {
 	 */
 	public function isDefaultNullable() {
 		return true;
+	}
+
+	/**
+	 * Set articles
+	 * @param arrayCollection $articles
+	 * @return subentity
+	 */
+	public function setArticles(ArrayCollection $articles) {
+		// $this->articles->clear();
+		// incorporation avec "add" et "remove" au cas où il y aurait des opérations (inverse notamment)
+		foreach ($this->getArticles() as $article) if(!$articles->contains($article)) $this->removeArticle($article); // remove
+		foreach ($articles as $article) $this->addArticle($article); // add
+		return $this;
 	}
 
 	/**

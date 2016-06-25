@@ -2,13 +2,13 @@
 namespace site\adminBundle\services;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use site\adminBundle\services\aeEntity;
+use site\adminBundle\services\aeNested;
 
 use site\adminBundle\Entity\media;
 use site\adminBundle\Entity\baseEntity;
 
 // call in controller with $this->get('aetools.media');
-class aeMedia extends aeEntity {
+class aeMedia extends aeNested {
 
 	const NAME                  = 'aeMedia';        // nom du service
 	const CALL_NAME             = 'aetools.aeMedia'; // comment appeler le service depuis le controller/container

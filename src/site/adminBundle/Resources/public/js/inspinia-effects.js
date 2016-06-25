@@ -50,16 +50,22 @@ $(document).ready(function() {
 	// sort list (JQuery UI)
 	$('.sortlist').each(function(item) {
 		var element = this;
+		var select = "> *:not(.sortable-disabled)";
+		var reg = new RegExp("^label-");
+		var classe = null;
+		var classes = $(select, $(element)).first().attr('class').split(" ");
+		for(var i = classes.length - 1; i >= 0; i--) if(reg.test(classes[i])) classe = classes[i];
 		$(this).sortable({
-			items: "> *:not(.sortable-disabled)",
+			items: select,
 			stop: function(event, ui) {
 				var $widget = $(element).sortable('widget');
 				var URL = $widget.attr('data-url');
 				var data = {};
 				data.entity = $widget.attr('data-parent').split('_');
+				data.group = $widget.attr('data-group');
 				data.children = parseArrayOfItems($widget.sortable('toArray'));
-				// console.log('Sorting url : ', URL);
-				// console.log('Sorting data : ', data);
+				console.log('Sorting url : ', URL);
+				console.log('Sorting data : ', data);
 				$.ajax({
 					method: "POST",
 					dataType: "json",
@@ -68,6 +74,10 @@ $(document).ready(function() {
 					context: document.body,
 					success: function(returndata) {
 						console.log('Return data : ', returndata);
+						if(classe != null) {
+							$(select, $(element)).removeClass(classe);
+							$(select, $(element)).first().addClass(classe);
+						}
 					},
 					error: function(error) {
 					    alert("Error "+error.status+" : "+error.responseText);

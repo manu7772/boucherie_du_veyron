@@ -10,7 +10,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 // Slug
 use Gedmo\Mapping\Annotation as Gedmo;
 
-use site\adminBundle\Entity\baseSubEntity;
+use site\adminBundle\Entity\nested;
 
 use site\adminBundle\Entity\categorie;
 use site\adminBundle\Entity\adresse;
@@ -29,7 +29,7 @@ use \Exception;
  * 
  * @ExclusionPolicy("all")
  */
-abstract class tier extends baseSubEntity {
+abstract class tier extends nested {
 
     // const CLASS_ARTICLE		= "article";
     // const CLASS_FICHE		= "fiche";

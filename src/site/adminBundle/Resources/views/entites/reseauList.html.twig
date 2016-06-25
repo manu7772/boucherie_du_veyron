@@ -21,6 +21,7 @@
 							<th>{{ UCfirst('actions.name'|trans) }}</th>
 							<th class="text-center">{{ UCfirst('fields.couleur'|trans({}, entite_name)) }}</th>
 							<th>{{ UCfirst('fields.descriptif'|trans({}, entite_name)) }}</th>
+							<th>{{ UCfirst('fields.group_articles_reseausParents'|trans({}, entite_name)) }}</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -64,6 +65,9 @@
 								{{ actions.colorDot(entite.couleur) }}
 							</td>
 							<td{{ bgcolor|raw }}>{{ entite.descriptif|raw }}</td>
+							<td{{ bgcolor|raw }}>
+								{{ actions.labelLinkList(entite.group_articles_reseausParents, [], null, type, type_value_joiner, 'show') }}
+							</td>
 						</tr>
 						{% endfor %}
 					</tbody>

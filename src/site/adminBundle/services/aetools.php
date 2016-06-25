@@ -1655,7 +1655,7 @@ class aetools {
 			// Entities
 			'aetools.aetools',
 			'aetools.aeEntity',
-			'aetools.aeSubEntity',
+			'aetools.aeSubentity',
 			// subEntity
 			'aetools.aeItem',
 			'aetools.aeMedia',

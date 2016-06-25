@@ -9,7 +9,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 // Slug
 use Gedmo\Mapping\Annotation as Gedmo;
 
-use site\adminBundle\Entity\baseSubEntity;
+use site\adminBundle\Entity\nested;
 
 use site\adminBundle\services\aetools;
 use site\adminBundle\services\aeDebug;
@@ -24,7 +24,7 @@ use \DateTime;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Entity(repositoryClass="site\adminBundle\Entity\categorieRepository")
  */
-class categorie extends baseSubEntity {
+class categorie extends nested {
 
 	const CLASS_CATEGORIE = 'categorie';
 
@@ -49,41 +49,16 @@ class categorie extends baseSubEntity {
 	protected $nom;
 
 	/**
-	 * @ORM\ManyToOne(targetEntity="site\adminBundle\Entity\pageweb")
-	 * @ORM\JoinColumn(nullable=true, unique=false, onDelete="SET NULL")
-	 */
-	protected $pageweb;
-
-	/**
 	 * @var integer
 	 * @ORM\Column(name="lvl", type="integer", nullable=false, unique=false)
 	 */
 	protected $lvl;
 
 	/**
-	 * @ORM\ManyToOne(targetEntity="site\adminBundle\Entity\categorie", cascade={"persist"})
-	 * @ORM\JoinColumn(nullable=true, unique=false, onDelete="SET NULL")
+	 * @var boolean
+	 * @ORM\Column(name="open", type="boolean", nullable=false, unique=false)
 	 */
-	protected $parent;
-
-	/**
-	 * @ORM\OneToMany(targetEntity="site\adminBundle\Entity\categorieposition", mappedBy="categorie", cascade={"persist", "remove"})
-	 * @ORM\JoinColumn(name="childrens", nullable=true)
-	 */
-	protected $childrens;
-
-	/**
-	 * @ORM\ManyToMany(targetEntity="site\adminBundle\Entity\baseSubEntity", cascade={"persist"})
-	 * @ORM\JoinTable(name="parent_cat_histchild")
-	 */
-	protected $historySubEntitys;
-
-	/**
-	 * type de catégorie
-	 * @var string
-	 * @ORM\Column(name="type", type="string", length=64, nullable=false, unique=false)
-	 */
-	protected $type;
+	protected $open;
 
 	/**
 	 * Classes d'entités accceptées pour subEntitys
@@ -93,53 +68,43 @@ class categorie extends baseSubEntity {
 	protected $accepts;
 
 	/**
-	 * @var boolean
-	 * @ORM\Column(name="open", type="boolean", nullable=false, unique=false)
+	 * type de catégorie
+	 * @var string
+	 * @ORM\Column(name="type", type="string", length=64, nullable=false, unique=false)
 	 */
-	protected $open;
+	protected $type;
 
 	// Liste des termes valides pour accept
 	protected $accept_list;
 	protected $type_description;
 	protected $type_list;
-	// propriétés calculées
-	protected $subEntitys;
-	protected $addedSubEntitys;
+
+	// NESTED VIRTUAL GROUPS
+	// les noms doivent commencer par "$group_" et finir par "Parents" (pour les parents) ou "Childs" (pour les enfants)
+	// et la partie variable doit comporter au moins 3 lettres
+	// reconnaissance auto par : "#^(add|remove|get)(Group_).{3,}(Parent|Child)(s)?$#" (self::VIRTUALGROUPS_PARENTS_PATTERN et self::VIRTUALGROUPS_CHILDS_PATTERN)
+	protected $group_nestedsParents;
+	protected $group_nestedsChilds;
+	// parent categorie
+	protected $group_categorie_parentParents;
+	protected $group_categorie_parentChilds;
+	// pages web
+	protected $group_pagewebsParents;
+	protected $group_pagewebsChilds;
 
 	public function __construct() {
 		parent::__construct();
-		$this->pageweb = null;
-		$this->childrens = new ArrayCollection();
-		$this->historySubEntitys = new ArrayCollection();
-		$this->subEntitys = new ArrayCollection();
-		$this->addedSubEntitys = new ArrayCollection();
-		$this->parent = null;
 		$this->lvl = 0;
 		$this->open = false;
 		// init
-		$this->type_list = null;
 		$this->accept_list = null;
 		$this->type_description = null;
-		$this->init();
+		$this->type_list = null;
+		$this->initTypes();
 		$this->setType(array_keys($this->type_list)[0]);
 	}
 
-	/**
-	 * @ORM\PostLoad
-	 * 
-	 * mémorise subEntitys
-	 * @return categorie
-	 */
-	public function PostLoad() {
-		$this->subEntitys = new ArrayCollection();
-		foreach ($this->getChildrensOfAllTypes() as $child) {
-			if(in_array($child->getClassName(), $this->getAccepts())) $this->addSubEntity($child);
-			// if($child->getClassName() != self::CLASS_CATEGORIE) $this->addSubEntity($child);
-		}
-		return $this;
-	}
-
-	public function init() {
+	public function initTypes() {
 		// Description selon parameters (labo_parameters.yml)
 		if(!is_array($this->accept_list) || !is_array($this->type_description) || !is_array($this->type_list)) {
 			$aetools = new aetools();
@@ -150,9 +115,43 @@ class categorie extends baseSubEntity {
 			$this->type_list = array();
 			foreach ($this->type_description as $key => $value) {
 				$this->type_list[$key] = $value['nom'];
+				$this->accept_list = array_unique(array_merge($this->accept_list, $value['accepts']));
 			}
 		}
+		return $this;
 	}
+
+	/**
+	 * @ORM\PostLoad
+	 * @return categorie
+	 */
+	public function PostLoad() {
+		$this->initTypes();
+		return $this;
+	}
+
+	public function getNestedAttributesParameters() {
+		$this->initTypes();
+		$new = array(
+			'categorie_parent' => array(			// groupe articles => group_articlesParents / group_imagesChilds
+				'data-limit' => 1,					// nombre max. d'enfants / 0 = infini
+				'class' => array('categorie'),		// classes acceptées (array) / null = toutes les classes de nested
+				'required' => false,
+				),
+			'nesteds' => array(
+				'data-limit' => 0,
+				'class' => $this->getAccepts(),
+				'required' => false,
+				),
+			'pagewebs' => array(
+				'data-limit' => 12,
+				'class' => array('pageweb'),
+				'required' => false,
+				),
+			);
+		return array_merge(parent::getNestedAttributesParameters(), $new);
+	}
+
 
 	/**
 	 * @Assert\IsTrue(message="La catégorie n'est pas conforme.")
@@ -171,9 +170,8 @@ class categorie extends baseSubEntity {
 	 * @return array
 	 */
 	public function check() {
-		// $this->init();
-		// parent
-		// if($this->pageweb == null) $this->pageweb = $this->getType()."html.twig";
+		$this->setLvl();
+		if($this->getLvl() > 0) $this->setType($this->getRootParent()->getType());
 		parent::check();
 	}
 
@@ -185,297 +183,141 @@ class categorie extends baseSubEntity {
 		return true;
 	}
 
-	/**
-	 * set pageweb
-	 * @param pageweb $pageweb
-	 * @return categorie
-	 */
-	public function setPageweb(pageweb $pageweb) {
-		$this->pageweb = $pageweb;
-	}
-	/**
-	 * get pageweb
-	 * @return pageweb
-	 */
-	public function getPageweb() {
-		return $this->pageweb;
+	public function __get($property) {
+		// echo('<p>Call to __GET::'.$property.' !</p>');
+		return $this->$property;
 	}
 
-	/**
-	 * Set icon
-	 * @param string $icon
-	 * @return baseEntity
-	 */
-	public function setIcon($icon = null) {
-		if($this->getLvl() > 0) {
-			if(trim($icon) == '') $icon = null;
-			$this->icon = trim($icon);
+	public function __set($property, $values) {
+		// echo('<p>Call to __SET::'.$property.' !</p>');
+		parent::__set($property, $values);
+		// echo("<p>SET $property</p>");
+	}
+
+	public function __call($method, $arguments) {
+		// echo('<p>Call to __CALL::'.$method.' !</p>');
+		parent::__call($method, $arguments);
+		// echo("<p>CALL $method</p>");
+		if($method == 'setGroup_categorie_parentParents') {
+			$this->setType();
+			$this->setLvl();
+			$this->setCouleur($this->getRootParent()->getCouleur());
 		}
-		return $this;
 	}
 
 	/**
-	 * Add parent 
-	 * @param categorie $parent
-	 * @return categorie
+	 * Get nestedChilds
+	 * @param boolean $excludeNotAccepts = false
+	 * @return ArrayCollection 
 	 */
-	public function addParent(categorie $parent) {
-		if($this->getParent() == null) $this->setParent($parent);
-		parent::addParent($parent);
-		return $this;
+	public function getNestedChilds($excludeNotAccepts = false) {
+		if(!$excludeNotAccepts) return $this->nestedChilds;
+		// $accepts = $this->getAcceptsList();
+		return $this->getChildsByTypes();
+	}
+
+	public function getParent() {
+		$parent = $this->group_categorie_parentParents->toArray();
+		$parent = reset($parent);
+		return is_object($parent) ? $parent : null;
 	}
 
 	/**
-	 * Get parents
+	 * Get array list of parents
 	 * @return array
 	 */
-	public function getParents($includeThis = false) {
-		$parents = array();
-		if($includeThis) $parents = array($this);
-		if($this->parent != null) $parents = array_merge($parents, $this->parent->getParents(true));
-		return $parents;
+	public function getParents() {
+		if(count($this->group_categorie_parentParents) > 0) {
+			$arrayOfCP = $this->group_categorie_parentParents->toArray();
+			$parent = reset($arrayOfCP);
+			$parents = array();
+			$parentsparents = $parent->getParents();
+			if(count($parentsparents) > 0) $parents = $parentsparents;
+			$parents[] = $parent;
+			return $parents;
+		}
+		return array();
 	}
-
 	/**
-	 * Renvoie les parents récursifs de l'entité en tableau inversé (contraire de getParents())
-	 * Inclut ou non l'entité elle-même dans la liste. Le premier élément du tableau est le parent root, et ainsi de suite. Le dernier élément est le premier parent direct.
-	 * @param boolean $includeThis = false
+	 * Get inversed array list of parents
 	 * @return array
 	 */
-	public function getParentsInverse($includeThis = false) {
-		return array_reverse($this->getParents($includeThis));
+	public function getParents_inverse($andHimself = false) {
+		return array_reverse($this->getParents());
 	}
 
 	/**
-	 * Renvoie le parent ROOT ($level = 0) ou de niveau $level. 
-	 * NULL si aucun parent n'a été trouvé. 
-	 * @param integer $level = 0
+	 * Get root parent (with lvl = 0)
 	 * @return categorie
 	 */
-	public function getRootParent($level = 0) {
-		$parents = $this->getParentsInverse(false);
-		if(count($parents) >= ($level + 1)) return $parents[$level];
-		return null;
+	public function getRootParent() {
+		$rootParent = $this->getParents();
+		return count($rootParent) > 0 ? reset($rootParent) : null;
 	}
 
 	/**
-	 * Remove parent
-	 * @param categorie $parent
+	 * has parents
 	 * @return boolean
 	 */
-	public function removeParent(categorie $parent) {
-		if($parent === $this->getParent()) $this->setParent(null);
-		return parent::removeParent($parent);
+	public function hasParents() {
+		return count($this->getParents()) > 0;
 	}
 
 	/**
-	 * @ORM\PreRemove
-	 * Remove all parents
-	 * @return categorie
+	 * has parent $parent (or has at least on parent, if $parent is null)
+	 * @param nested $parent = null
+	 * @return boolean
 	 */
-	public function removeParents() {
-		$this->setParent(null);
-		return parent::removeParents();
+	public function hasCategorieParent(categorie $parent = null) {
+		$parents = new ArrayCollection($this->getParents());
+		return $parent == null ? $this->hasParents() : $parents->contains($parent);
 	}
 
 	/**
-	 * Set parent
-	 * @param categorie $categorie = null
-	 * @return categorie
-	 */
-	public function setParent(categorie $categorie = null) {
-		if($this->parent != $categorie) {
-			if($this->parent != null) $this->parent->removeChildren($this);
-			if($categorie != null) $categorie->addChildren($this);
-			$this->parent = $categorie;
-			if($categorie != null) {
-				if($this->getType() != $categorie->getType()) $this->setType($categorie->getType());
-			}
-			$this->setLvl();
-		}
-		return $this;
-	}
-
-	/**
-	 * Get parent
-	 * @return categorie
-	 */
-	public function getParent() {
-		return $this->parent;
-	}
-
-	public function getChildrens() {
-		$childrens = array();
-		$allChildren = $this->childrens->toArray();
-		foreach($allChildren as $children) {
-			if($children->getClassName() == self::CLASS_CATEGORIE) $childrens[] = $children;
-		}
-		return $childrens;
-	}
-
-	public function getChildrensOfAllTypes() {
-		return $this->childrens;
-	}
-
-	public function hasChildrensOfAllTypes(baseSubEntity $children) {
-		return $this->childrens->contains($children);
-	}
-
-	public function getAllChildrens($unique = false) {
-		$allChildren = $this->getChildrens();
-		foreach($allChildren as $children) {
-			$allChildren = array_merge($allChildren, $children->getAllChildrens());
-		}
-		if($unique) return array_unique($allChildren);
-		return $allChildren;
-	}
-
-	public function getAllChildrensOfAllTypes($unique = false) {
-		$allChildren = $this->getChildrensOfAllTypes()->toArray();
-		foreach($allChildren as $children) {
-			if(method_exists($children, 'getAllChildrensOfAllTypes')) $allChildren = array_merge($allChildren, $children->getAllChildrensOfAllTypes());
-		}
-		if($unique) return array_unique($allChildren);
-		return $allChildren;
-	}
-
-	public function addChildren(baseSubEntity $children) {
-		if(!$this->childrens->contains($children)) $this->childrens->add($children);
-		$this->addSubEntity($children, false);
-		return $this;
-	}
-
-	public function removeChildren(baseSubEntity $children) {
-		$remove = $this->childrens->removeElement($children);
-		if($remove) {
-			$this->subEntitys->removeElement($children);
-			$this->removeHistorySubEntity($children);
-		}
-		return $remove;
-	}
-
-
-
-
-	// public function setSubEntitys($array) {
-	// 	$this->subEntitys = new ArrayCollection($array);
-	// 	return $this;
-	// }
-
-	/**
-	 * Get only baseSubEntity class children (but category class). 
+	 * Get only nested class children. 
 	 * Can define witch classes in $classes array of shortnames (or one class in a string shortname). 
 	 * @param mixed $classes = []
 	 * @return array
 	 */
-	public function getSubEntitys($classes = []) {
-		if(is_string($classes)) $classes = array($classes);
-		if(!is_array($classes)) $classes = array();
-		if(count($classes) < 1) $classes = $this->getAccepts();
-		if(in_array(self::CLASS_CATEGORIE, $classes)) unset($classes[self::CLASS_CATEGORIE]);
-		$subs = array();
-		foreach ($this->subEntitys->toArray() as $key => $sub) {
-			if(in_array($sub->getClassName(), $classes)) $subs[] = $sub;
+	public function getChildsByTypes($classes = []) {
+		if(count((array)$classes) < 1) $classes = $this->getAccepts();
+		// if(in_array(self::CLASS_CATEGORIE, $classes)) unset($classes[self::CLASS_CATEGORIE]);
+		$nesteds = array();
+		foreach ($this->group_nestedsChilds as $nested) {
+			if(in_array($nested->getClassName(), (array)$classes)) $nesteds[] = $nested;
 		}
-		// return array_unique($subs);
-		return array_unique($subs);
+		// return array_unique($nesteds);
+		return array_unique($nesteds);
 	}
 
-	public function getAllSubEntitys($classes = []) {
-		$allSubEntitys = $this->getSubEntitys($classes);
-		$children = $this->getChildrens();
-		if(is_array($children)) foreach ($children as $child) {
-			$allSubEntitys = array_merge($allSubEntitys, $child->getAllSubEntitys($classes));
+	public function getAllChildsByTypes($classes = [], $limit = 100) {
+		if(count((array)$classes) < 1) $classes = $this->getAccepts();
+		// if(in_array(self::CLASS_CATEGORIE, $classes)) unset($classes[self::CLASS_CATEGORIE]);
+		$nesteds = $this->getChildsByTypes((array)$classes);
+		if($limit > 0) foreach ($this->getAllCategorieChilds() as $child) {
+			$nesteds = array_merge($nesteds, $child->getAllChildsByTypes((array)$classes, $limit - 1));
 		}
-		// return array_unique($allSubEntitys);
-		return array_unique($allSubEntitys);
+		return array_unique($nesteds);
 	}
 
-	public function addSubEntity(baseSubEntity $subEntity, $addAsChildren = true) {
-		if(in_array($subEntity->getClassName(), $this->getAccepts())) {
-			if(!$this->subEntitys->contains($subEntity)) $this->subEntitys->add($subEntity);
-			if($addAsChildren) $this->addChildren($subEntity);
-			$this->addHistorySubEntity($subEntity);
+	public function getCategorieChilds() {
+		return $this->group_categorie_parentChilds;
+	}
+
+	public function getAllCategorieChilds($limit = 100) {
+		$allChilds = $this->getCategorieChilds()->toArray();
+		if($limit > 0) foreach ($allChilds as $child) {
+			$allChilds = array_merge($allChilds, (array)$child->getAllCategorieChilds($limit - 1));
 		}
-		return $this;
+		return array_unique($allChilds);
 	}
-
-	public function removeSubEntity(baseSubEntity $subEntity) {
-		return $this->removeChildren($subEntity);
-	}
-
-	// addedSubEntitys (form)
-
-	public function getAddedSubEntitys() {
-		return $this->addedSubEntitys;
-	}
-
-	public function addAddedSubEntity(baseSubEntity $addedSubEntity) {
-		if(!$this->addedSubEntitys->contains($addedSubEntitys)) $this->addedSubEntitys->add($addedSubEntitys);
-		return $this;
-	}
-
-	public function removeAddedSubEntity(baseSubEntity $addedSubEntitys) {
-		return $this->addedSubEntitys->removeElement($addedSubEntitys);
-	}
-
-	public function clearAddedSubEntitys() {
-		return $this->addedSubEntitys->clear();
-	}
-
-	// historySubEntitys (gestion des baseSubEntity en statut != 'Actif')
-
-	public function getHistorySubEntitys() {
-		return $this->historySubEntitys;
-	}
-
-	public function hasHistorySubEntitys(baseSubEntity $historyChildren) {
-		return $this->historySubEntitys->contains($historyChildren);
-	}
-
-	public function addHistorySubEntity(baseSubEntity $subEntity) {
-		if(!$this->historySubEntitys->contains($subEntity)) $this->historySubEntitys->add($subEntity);
-	}
-
-	public function removeHistorySubEntity(baseSubEntity $subEntity) {
-		$remove = false;
-		if(in_array($subEntity->getClassName(), $this->getAccepts())) {
-			$remove = $this->historySubEntitys->removeElement($subEntity);
-		}
-		return $remove;
-	}
-
-	public function retrieveHistorySubEntitys() {
-		foreach ($this->getHistorySubEntitys() as $subEntity) {
-			if(in_array($subEntity->getClassName(), $this->getAccepts())) {
-				$this->addSubEntity($subEntity);
-			}
-		}
-	}
-
-
-
 
 	/**
 	 * Set Level
 	 * @return categorie
 	 */
-	public function setLvl() {
-		$debug = new aeDebug();
-		$db[$this->getSlug()]['Entity']['id'] = $this->getId();
-		if($this->getParent() != null) $db[$this->getSlug()]['Entity']['parent'] = $this->getParent()->getSlug();
-			else $db[$this->getSlug()]['Entity']['parent'] = json_encode(null);
-		$db[$this->getSlug()]['Entity']['parents']['count'] = count($this->getParents());
-		$db[$this->getSlug()]['Entity']['parents']['names'] = implode(' > ', $this->getParentsInverse());
-		$db[$this->getSlug()]['Level']['old'] = json_encode($this->lvl);
-		$this->lvl = count($this->getParents());
-		$db[$this->getSlug()]['Level']['new'] = json_encode($this->lvl);
-		if($this->lvl == 0) $this->open();
-		// ajoute le type à ses categories enfants
-		foreach ($this->getAllChildrens() as $child) {
-			$child->setLvl();
-		}
-		$debug->debugNamedFile('testLvl', $db);
+	public function setLvl($lvl = null) {
+		$this->lvl = $lvl == null ? count($this->getParents()) : (integer) $lvl;
 		return $this;
 	}
 
@@ -487,9 +329,63 @@ class categorie extends baseSubEntity {
 		return $this->lvl;
 	}
 
+	/**
+	 * is Root categorie
+	 * @return boolean
+	 */
+	public function isRoot() {
+		return $this->lvl == 0;
+	}
+
 	public function getAcceptsList() {
 		if(!is_array($this->accept_list)) $this->init();
 		return $this->accept_list;
+	}
+
+	/**
+	 * set accepts
+	 * @param json/array $accepts = null
+	 * @return categorie
+	 */
+	public function setAccepts() {
+		if(!is_array($this->type_description)) $this->initTypes();
+		if(array_key_exists($this->getType(), $this->type_description)) $this->accepts = json_encode($this->type_description[$this->getType()]['accepts']);
+			else $this->accepts = json_encode(array());
+		return $this;
+	}
+
+	/**
+	 * has accepts
+	 * @param array $accepts
+	 * @param boolean $hasOne = false
+	 * @return boolean
+	 */
+	public function hasAccepts($accepts, $hasOne = false) {
+		if(is_string($accepts)) $accepts = array($accepts);
+		$typeAccepts = $this->getAccepts();
+		if($hasOne) foreach($accepts as $accept) {
+			if(in_array($accept, $typeAccepts)) return true;
+		} else foreach($accepts as $accept) {
+			if(!in_array($accept, $typeAccepts)) return false;
+		}
+		return !$hasOne;
+	}
+
+	/**
+	 * get accepts
+	 * @return array
+	 */
+	public function getAccepts() {
+		if(!is_string($this->accepts)) return array();
+		return json_decode($this->accepts);
+	}
+
+	/**
+	 * get not accepts
+	 * @return array
+	 */
+	public function getNotAccepts() {
+		return array_diff($this->getAcceptsList(), $this->getAccepts());
 	}
 
 	/**
@@ -514,67 +410,33 @@ class categorie extends baseSubEntity {
 	 * @param string $type
 	 * @return categorie
 	 */
-	public function setType($type) {
+	public function setType($type = null) {
 		// ajoute le type du parent en priorité
-		if($this->getParent() != null) {
+		if($type == null && $this->getParent() instanceOf categorie) {
+			// get parent type
 			$this->type = $this->getParent()->getType();
-		} else if(array_key_exists($type, $this->getTypeList())) {
-			$this->type = $type;
-		} else {
-			throw new Exception("Ce type n'existe pas : ".json_encode($type), 1);
+		} else $this->type = $type;
+		// if(array_key_exists($type, $this->getTypeList())) {
+		// 	$this->type = $type;
+		// } else {
+		// 	throw new Exception("Ce type n'existe pas : ".json_encode($type), 1);
+		// }
+		if(array_key_exists($type, $this->getTypeList())) {
+			// ajoute le type à ses categories enfants
+			foreach($this->group_categorie_parentChilds as $child) {
+				$child->setType($this->type);
+			}
+			// refresh accepts
+			$this->setAccepts();
+			// suppression des subEntitys hors type / hors accept
+			foreach($this->getChildsByTypes($this->getNotAccepts()) as $child) {
+				$nestedposition = $this->getNestedposition($this, $child, "nesteds");
+				$this->removeNestedpositionChild($nestedposition);
+			}
 		}
-		// ajoute le type à ses categories enfants
-		foreach ($this->getAllChildrens() as $child) {
-			$child->setType($this->type);
-		}
-		// refresh accepts
-		$this->setAccepts();
-		// suppression des subEntitys hors type / hors accept
-		foreach($this->getSubEntitys($this->getNotAccepts()) as $subEntity) {
-			$subEntity->removeParent($this);
-		}
-		// retrouve les éléments depuis historySubEntitys
-		$this->retrieveHistorySubEntitys();
 		return $this;
 	}
 
-	/**
-	 * set accepts
-	 * @param json/array $accepts = null
-	 * @return categorie
-	 */
-	public function setAccepts() {
-		if(!is_array($this->type_description)) $this->init();
-		if($this->getType() != null) $this->accepts = json_encode($this->type_description[$this->getType()]['accepts']);
-			else $this->accepts = json_encode(array());
-		return $this;
-	}
-
-	/**
-	 * has accept
-	 * @return boolean
-	 */
-	public function hasAccept($accept) {
-		$accepts = $this->getAccepts();
-		return in_array($accept, $accepts);
-	}
-
-	/**
-	 * get accepts
-	 * @return array
-	 */
-	public function getAccepts() {
-		if(!is_string($this->accepts)) return array();
-		return json_decode($this->accepts);
-	}
-
-	/**
-	 * get not accepts
-	 * @return array
-	 */
-	public function getNotAccepts() {
-		return array_diff($this->getAcceptsList(), $this->getAccepts());
-	}
 
 	/**
 	 * Set open

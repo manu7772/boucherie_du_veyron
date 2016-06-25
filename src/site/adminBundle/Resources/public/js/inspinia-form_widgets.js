@@ -25,6 +25,24 @@ jQuery(document).ready(function($) {
 
 
 	/***************************************/
+	/* initialisation data-report          */
+	/***************************************/
+	$('.data-report').each(function (item) {
+		var dr_target = $(this).attr('data-report-target');
+		var $parent = $(this);
+		if(dr_target != undefined) {
+			var target = $(dr_target);
+			if(target != undefined) {
+				$parent.text(target.val());
+				$(target).on('keyup change', function (elem) {
+					$parent.text(target.val());
+				});
+			}
+		}
+	});
+
+
+	/***************************************/
 	/* initialisation ICHECK/IRADIO        */
 	/***************************************/
 	$('.icheckbox, .iradio').each(function() {
@@ -407,7 +425,10 @@ jQuery(document).ready(function($) {
 		// allowClear
 		if($(this).attr('data-allowClear')) options['allowClear'] = eval($(this).attr('data-allowClear'));
 		// max selection
-		if($(this).attr('data-limit')) options['maximumSelectionLength'] = parseInt($(this).attr('data-limit'));
+		if($(this).attr('data-limit')) {
+			limit = parseInt($(this).attr('data-limit'));
+			if(limit > 0) options['maximumSelectionLength'] = limit;
+		}
 		// language
 		if(locale != undefined) options['language'] = locale;
 		if($(this).attr('data-language')) options['language'] = parseInt($(this).attr('data-language'));
@@ -418,7 +439,8 @@ jQuery(document).ready(function($) {
 		// console log DEV
 		if(environnementMode != 'prod') console.log("options : ", options);
 		// initialize select2 with sortable
-		$(this).select2Sortable(options);
+		// $(this).select2Sortable(options);
+		$(this).select2(options);
 	});
 
 	/***************************************/

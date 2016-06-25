@@ -29,6 +29,7 @@ class articleType extends baseType {
 		// ajout de action si défini
 		$this->initBuilder($builder);
 		$data = $builder->getData();
+		$nestedAttributesParameters = $data->getNestedAttributesParameters();
 		$this->imagesData = array(
 			'image' => array(
 				'owner' => 'article:image'
@@ -54,25 +55,23 @@ class articleType extends baseType {
 					'data-height' => 140,
 					)
 				))
-			// ->add('dateCreation')
-			// ->add('dateMaj')
-			->add('icon', 'choice', array(
-				"required"  => false,
-				"label"     => 'fields.icon',
-				'translation_domain' => 'article',
-				'multiple'  => false,
-				"choices"   => $data->getListIcons(),
-				'placeholder'   => 'form.select',
-				'attr'      => array(
-					'class'         => 'select2',
-					'data-format'	=> 'formatState',
-					),
-				))
-			->add('refFabricant', 'text', array(
-				'label' => 'fields.refFabricant',
-				'translation_domain' => 'article',
-				'required' => false,
-				))
+			// ->add('icon', 'choice', array(
+			// 	"required"  => false,
+			// 	"label"     => 'fields.icon',
+			// 	'translation_domain' => 'article',
+			// 	'multiple'  => false,
+			// 	"choices"   => $data->getListIcons(),
+			// 	'placeholder'   => 'form.select',
+			// 	'attr'      => array(
+			// 		'class'         => 'select2',
+			// 		'data-format'	=> 'formatState',
+			// 		),
+			// 	))
+			// ->add('refFabricant', 'text', array(
+			// 	'label' => 'fields.refFabricant',
+			// 	'translation_domain' => 'article',
+			// 	'required' => false,
+			// 	))
 			->add('prix', 'money', array(
 				'label'		=> 'fields.prixTTC',
 				'translation_domain' => 'article',
@@ -129,44 +128,54 @@ class articleType extends baseType {
 					'class'			=> 'select2',
 					),
 				))
-			->add('reseaus', 'entity', array(
-				"label"     => 'name_s',
-				'translation_domain' => 'reseau',
-				'class'     => 'siteadminBundle:reseau',
-				'property'  => 'nom',
-				'multiple'  => true,
-				'required' => false,
-				"query_builder" => function($repo) {
+			->add('group_articles_reseausChilds', 'entity', array(
+				'by_reference' => false,
+				"label"		=> 'fields.reseaus',
+				'translation_domain' => 'article',
+				'property'	=> 'nom',
+				'class'		=> 'siteadminBundle:nested',
+				'multiple'	=> true,
+				'expanded'	=> false,
+				"required"	=> $nestedAttributesParameters['articles_reseaus']['required'],
+				'placeholder'   => 'form.select',
+				'attr'		=> array(
+					'class'			=> 'select2',
+					'data-limit'	=> $nestedAttributesParameters['articles_reseaus']['data-limit'],
+					),
+				// 'group_by' => 'class_name',
+				"query_builder" => function($repo) use ($data, $nestedAttributesParameters) {
 					if(method_exists($repo, 'defaultValsListClosure'))
-						return $repo->defaultValsListClosure($this->aeEntities);
+						return $repo->defaultValsListClosure($this->aeEntities, $nestedAttributesParameters['articles_reseaus']['class']);
 						else return $repo->findAllClosure();
 					},
-				'placeholder'   => 'form.select',
-				'attr'		=> array(
-					'class'			=> 'select2',
-					),
-				))
-			->add('parents', 'entity', array(
-				"label"     => 'name_s',
-				'translation_domain' => 'categorie',
-				'class'     => 'siteadminBundle:categorie',
-				'property'  => 'nom',
-				'multiple'  => true,
-				'required' => false,
-				'group_by' => 'parent.nom',
-				"query_builder" => function($repo) {
-					return $repo->getElementsBySubTypeButRoot(array('article'));
-					},
-				'placeholder'   => 'form.select',
-				'attr'		=> array(
-					'class'			=> 'select2',
-					),
 				))
 			// 1 image :
 			->add('image', new cropperType($this->controller, $this->imagesData), array(
 				'label' => 'fields.image',
 				'translation_domain' => 'article',
 				'required' => false,
+				))
+			// autres images :
+			->add('group_imagesChilds', 'entity', array(
+				'by_reference' => false,
+				"label"		=> 'fields.group_imagesChilds',
+				'translation_domain' => 'article',
+				'property'	=> 'nom',
+				'class'		=> 'siteadminBundle:nested',
+				'multiple'	=> true,
+				'expanded'	=> false,
+				"required"	=> $nestedAttributesParameters['images']['required'],
+				'placeholder'   => 'form.select',
+				'attr'		=> array(
+					'class'			=> 'select2',
+					'data-limit'	=> $nestedAttributesParameters['images']['data-limit'],
+					),
+				'group_by' => 'class_name',
+				"query_builder" => function($repo) use ($data, $nestedAttributesParameters) {
+					if(method_exists($repo, 'defaultValsListClosure'))
+						return $repo->defaultValsListClosure($this->aeEntities, $nestedAttributesParameters['images']['class']);
+						else return $repo->findAllClosure();
+					},
 				))
 			// Images collection :
 			// ->add('images', 'multiCollection', array(
@@ -221,55 +230,27 @@ class articleType extends baseType {
 						else return $repo->findAllClosure();
 					},
 				))
-			// ->add('tags', 'multiCollection', array(
-			// 	'label' => 'name_s',
-			// 	'translation_domain' => 'tag',
-			// 	'required' => false,
-			// 	'type' => new tagType($this->controller),
-			// 	'allow_add' => true,
-			// 	'allow_delete' => true,
-			// 	'by_reference'  => false,
-			// 	'attr'          => array(
-			// 		'data-columns'      => "0",
-			// 		),
-			// 	))
-			// ->add('articlesParents')
-			->add('articleChilds', 'entity', array(
-				"label"		=> 'fields.artlink',
+			->add('group_articlesChilds', 'entity', array(
+				'by_reference' => false,
+				"label"		=> 'fields.group_articlesChilds',
 				'translation_domain' => 'article',
 				'property'	=> 'nom',
-				'class'		=> 'siteadminBundle:article',
+				'class'		=> 'siteadminBundle:nested',
 				'multiple'	=> true,
 				'expanded'	=> false,
-				"required"	=> false,
+				"required"	=> $nestedAttributesParameters['articles']['required'],
 				'placeholder'   => 'form.select',
 				'attr'		=> array(
 					'class'			=> 'select2',
+					'data-limit'	=> $nestedAttributesParameters['articles']['data-limit'],
 					),
-				"query_builder" => function($repo) use ($data) {
+				'group_by' => 'class_name',
+				"query_builder" => function($repo) use ($data, $nestedAttributesParameters) {
 					if(method_exists($repo, 'defaultValsListClosure'))
-						return $repo->defaultValsListClosure($this->aeEntities, $data);
+						return $repo->defaultValsListClosure($this->aeEntities, $nestedAttributesParameters['articles']['class']);
 						else return $repo->findAllClosure();
 					},
 				))
-			// ->add('articleParents', 'entity', array(
-			// 	"label"		=> 'Parents',
-			// 	// 'translation_domain' => 'article',
-			// 	'property'	=> 'nom',
-			// 	'class'		=> 'siteadminBundle:article',
-			// 	'multiple'	=> true,
-			// 	'expanded'	=> false,
-			// 	"required"	=> false,
-			// 	'placeholder'   => 'form.select',
-			// 	'attr'		=> array(
-			// 		'class'			=> 'select2',
-			// 		),
-			// 	"query_builder" => function($repo) use ($data) {
-			// 		if(method_exists($repo, 'defaultValsListClosure'))
-			// 			return $repo->defaultValsListClosure($this->aeEntities, $data);
-			// 			else return $repo->findAllClosure();
-			// 		},
-			// 	))
 		;
 
 		// $builder->addEventListener(

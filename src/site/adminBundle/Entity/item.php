@@ -10,7 +10,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 // Slug
 use Gedmo\Mapping\Annotation as Gedmo;
 
-use site\adminBundle\Entity\baseSubEntity;
+use site\adminBundle\Entity\nested;
 
 use site\adminBundle\Entity\categorie;
 // use site\UserBundle\Entity\User;
@@ -28,7 +28,7 @@ use \Exception;
  * 
  * @ExclusionPolicy("all")
  */
-abstract class item extends baseSubEntity {
+abstract class item extends nested {
 
     // const CLASS_ARTICLE		= "article";
     // const CLASS_FICHE		= "fiche";
@@ -47,12 +47,12 @@ abstract class item extends baseSubEntity {
 	// 	parent::__construct();
 	// }
 
-	public function memOldValues($addedfields = null) {
-		$fields = array();
-		if(count($addedfields) > 0 && is_array($addedfields)) $fields = array_unique(array_merge($fields, $addedfields));
-		parent::memOldValues($fields);
-		return $this;
-	}
+	// public function memOldValues($addedfields = null) {
+	// 	$fields = array();
+	// 	if(count($addedfields) > 0 && is_array($addedfields)) $fields = array_unique(array_merge($fields, $addedfields));
+	// 	parent::memOldValues($fields);
+	// 	return $this;
+	// }
 
 
 

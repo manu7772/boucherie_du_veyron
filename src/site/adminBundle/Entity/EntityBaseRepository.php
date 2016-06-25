@@ -79,17 +79,24 @@ class EntityBaseRepository extends EntityRepository {
 	/********************************/
 
 	public function defaultValAsClosure(aetools $aeEntities = null) {
-		// $qb = $this->createQueryBuilder(self::ELEMENT);
 		$qb = $this->findAllClosure($aeEntities);
-		$qb->where(self::ELEMENT.'.default = :def')
-			->setParameter('def', 1)
-			;
+		if(array_key_exists("default", $this->getFields())) {
+			$qb->where(self::ELEMENT.'.default = :def')
+				->setParameter('def', 1)
+				;
+		}
 		// resultat
 		return $qb;		
 	}
 
 	public function defaultValsListClosure(aetools $aeEntities = null, $data = null) {
 		$qb = $this->findAllClosure($aeEntities);
+		$whr = 'where';
+		if(is_array($data)) foreach ($data as $classname) if(is_string($classname)) {
+			$qb->$whr(self::ELEMENT.' INSTANCE OF site\adminBundle\Entity\\'.$classname);
+			$whr = 'orWhere';
+		}
+		// echo('<p>Returns : <p>'.implode('</p><p>- ', $qb->getQuery()->getResult()).'</p></p>');
 		// resultat
 		return $qb;
 	}
@@ -97,7 +104,9 @@ class EntityBaseRepository extends EntityRepository {
 	public function findAllClosure(aetools $aeEntities = null) {
 		$qb = $this->createQueryBuilder(self::ELEMENT);
 		if($aeEntities != null) $this->declareContext($aeEntities);
+		// echo('<p>test 1</p>');
 		$this->contextStatut($qb);
+		// echo('<p>test 2</p>');
 		// resultat
 		return $qb;
 	}
@@ -123,9 +132,9 @@ class EntityBaseRepository extends EntityRepository {
 		// ENVIRONMENT
 		$this->environment = $this->aeEntities->getEnv();
 
-		// is_object($this->user) ? $user = $this->user.' / '.$userRole : $user = "anon." ;
+		// is_object($this->user) ? $user = $this->user.' = '.$this->user->getBestRole() : $user = "anon. = IS_AUTHENTICATED_ANONYMOUSLY" ;
 		// echo('<h4 style="color:red;">Entité : '.$this->entity_shortName.'</h4>');
-		// echo('<h4>- User / roles : '.implode(', ', $this->roles).'</h4>');
+		// echo('<h4>- User = high role / roles : <span style="color:green;">'.$user.'</span> / '.implode(', ', $this->roles).'</h4>');
 		// echo('<h4>- Bundlename : '.$this->bundle.'</h4>');
 		return $this;
 	}
@@ -151,34 +160,47 @@ class EntityBaseRepository extends EntityRepository {
 	/**
 	 * Recherche des entités selon des valeurs/champ
 	 * $type_related = '_self' pour désigner un champ interne
+	 * @param array $data - array association of field => value
+	 * @param boolean/string $returns = false (values = true/false/"querybuilder")
+	 * @return mixed
 	 */
-	public function findWithField(array $data, $asArray = false) {
-		$asArray == true ? $getMethod = 'getArrayResult' : $getMethod = 'getResult';
+	public function findWithField(array $data, $returns = false) {
+		$returns == true ? $getMethod = 'getArrayResult' : $getMethod = 'getResult';
 		if(isset($data['type_related']) && isset($data['type_field']) && isset($data['type_values'])) {
 			// foreach ($data['type_values'] as $key => $value) {
 			// 	$data['type_values'][$key] = $value.'%';
 			// }
 			$qb = $this->createQueryBuilder(self::ELEMENT);
+			$whr = 'where';
 			if($data['type_related'] == '_self') {
 				// champ interne
 				// $qb->where($qb->expr()->in(self::ELEMENT.'.'.$data['type_field'], $data['type_values']));
 				foreach ($data['type_values'] as $typeValue) {
-					if($typeValue !== 'null')
-						$qb->andWhere($qb->expr()->orX($qb->expr()->like(self::ELEMENT.'.'.$data['type_field'], $qb->expr()->literal('%'.$typeValue.'%'))));
-						else $qb->andWhere(self::ELEMENT.'.'.$data['type_field'].' IS NULL');
+					if($typeValue !== 'null') {
+						$qb->$whr($qb->expr()->orX($qb->expr()->like(self::ELEMENT.'.'.$data['type_field'], $qb->expr()->literal('%'.(string) $typeValue.'%'))));
+						$whr = 'andWhere';
+					} else {
+						$qb->$whr(self::ELEMENT.'.'.$data['type_field'].' IS NULL');
+						$whr = 'andWhere';
+					}
 				}
 			} else {
+				echo('related !!');
 				$qb->join(self::ELEMENT.'.'.$data['type_related'], 'entity');
 				foreach ($data['type_values'] as $typeValue) {
-					if($typeValue !== 'null')
-						$qb->andWhere($qb->expr()->orX($qb->expr()->like('entity.'.$data['type_field'], $qb->expr()->literal('%'.$typeValue.'%'))));
-						else $qb->andWhere('entity.'.$data['type_field'].' IS NULL');
+					if($typeValue !== 'null') {
+						$qb->$whr($qb->expr()->orX($qb->expr()->like('entity.'.$data['type_field'], $qb->expr()->literal('%'.$typeValue.'%'))));
+						$whr = 'andWhere';
+					} else {
+						$qb->$whr('entity.'.$data['type_field'].' IS NULL');
+						$whr = 'andWhere';
+					}
 				}
 			}
 		} else throw new Exception("Missing parameters for Repository method \"findWithField\"", 1);
 		// mode normal : suppression des éléments périmés, sadmin, etc.
 		$this->contextStatut($qb);
-		return $qb->getQuery()->$getMethod();
+		return $returns == "querybuilder" ? $qb : $qb->getQuery()->$getMethod();
 	}
 
 

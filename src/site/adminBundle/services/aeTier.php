@@ -2,13 +2,13 @@
 namespace site\adminBundle\services;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use site\adminBundle\services\aeSubEntity;
+use site\adminBundle\services\aeNested;
 
 use site\adminBundle\Entity\tier;
 use site\adminBundle\Entity\baseEntity;
 
 // call in controller with $this->get('aetools.aeTier');
-class aeTier extends aeSubEntity {
+class aeTier extends aeNested {
 
     const NAME                  = 'aeTier';        // nom du service
     const CALL_NAME             = 'aetools.aeTier'; // comment appeler le service depuis le controller/container

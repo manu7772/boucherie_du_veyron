@@ -43,3 +43,5 @@ fields:
     parent: parent
     elements: elements
     icon: icon
+    group_imagesChilds: other images
+    group_articlesChilds: adviced products

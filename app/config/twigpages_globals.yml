@@ -39,81 +39,73 @@ twig:
                         role: 'ROLE_SUPER_ADMIN'
                         icon: 'entite.categorie'
                         path: 
-                            path: 'siteadmin_entite_repo'
+                            path: 'siteadmin_repo_categorie'
                             params:
-                                entite: categorie
                                 method: findRoots
-                                # repository: ~
                     cat_mixed:
                         nom: 'types.multimedia'
                         trans_domain: categorie
                         icon: 'entite.multimedia'
                         path:
-                            path: 'siteadmin_entite_repo'
+                            path: 'siteadmin_repo_categorie'
                             params:
-                                entite: categorie
                                 method: findCollectionsByType
-                                params: multimedia
+                                repoParams: multimedia
                     cat_article:
                         nom: 'types.article'
                         trans_domain: categorie
                         icon: 'entite.article'
                         path:
-                            path: 'siteadmin_entite_repo'
+                            path: 'siteadmin_repo_categorie'
                             params:
-                                entite: categorie
                                 method: findCollectionsByType
-                                params: article
+                                repoParams: article
+
                     cat_pageweb:
                         nom: 'types.pageweb'
                         trans_domain: categorie
                         icon: 'entite.pageweb'
                         path:
-                            path: 'siteadmin_entite_repo'
+                            path: 'siteadmin_repo_categorie'
                             params:
-                                entite: categorie
                                 method: findCollectionsByType
-                                params: pageweb
+                                repoParams: pageweb
                     cat_fiche:
                         nom: 'types.fiche'
                         trans_domain: categorie
                         icon: 'entite.fiche'
                         path:
-                            path: 'siteadmin_entite_repo'
+                            path: 'siteadmin_repo_categorie'
                             params:
-                                entite: categorie
                                 method: findCollectionsByType
-                                params: fiche
+                                repoParams: fiche
                     cat_images:
                         nom: 'types.image'
                         trans_domain: categorie
                         icon: 'entite.image'
                         path:
-                            path: 'siteadmin_entite_repo'
+                            path: 'siteadmin_repo_categorie'
                             params:
-                                entite: categorie
                                 method: findCollectionsByType
-                                params: image
+                                repoParams: image
                     cat_boutiques:
                         nom: 'types.boutique'
                         trans_domain: categorie
                         icon: 'entite.boutique'
                         path:
-                            path: 'siteadmin_entite_repo'
+                            path: 'siteadmin_repo_categorie'
                             params:
-                                entite: categorie
                                 method: findCollectionsByType
-                                params: boutique
+                                repoParams: boutique
                     cat_pdfs:
                         nom: 'types.pdf'
                         trans_domain: categorie
                         icon: 'entite.pdf'
                         path:
-                            path: 'siteadmin_entite_repo'
+                            path: 'siteadmin_repo_categorie'
                             params:
-                                entite: categorie
                                 method: findCollectionsByType
-                                params: pdf
+                                repoParams: pdf
             marketplace:
                 role: 'ROLE_ADMIN'
                 nom: 'marketplace.name'
@@ -186,23 +178,20 @@ twig:
                         trans_domain: categorie
                         icon: 'entite.categorie'
                         path:
-                            path: 'siteadmin_entite_repo'
+                            path: 'siteadmin_repo_categorie'
                             params:
-                                entite: categorie
                                 method: findCollectionsByType
-                                params: pageweb
+                                repoParams: pageweb
                     menus:
                         role: %restrict_admin%
                         nom: 'menu.name_s'
                         icon: 'entite.menu'
                         trans_domain: menus
                         path:
-                            path: 'siteadmin_entite_type'
+                            path: 'siteadmin_repo_categorie'
                             params:
-                                entite: categorie
-                                type_related: _self
-                                type_field: type
-                                type_values: menu
+                                method: findCollectionsByType
+                                repoParams: menu
                     images_pagewebs:
                         nom: 'owner.pageweb:image'
                         trans_domain: image
@@ -346,7 +335,7 @@ twig:
                                         type_field: format
                                         type_values: image
                             raws_pdf:
-                                nom: 'types.image.name_s'
+                                nom: 'types.pdf.name_s'
                                 trans_domain: rawfile
                                 icon: 'entite.raw'
                                 path: 

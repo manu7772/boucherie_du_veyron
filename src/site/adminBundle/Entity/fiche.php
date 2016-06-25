@@ -106,15 +106,14 @@ class fiche extends item {
 		$this->articles = new ArrayCollection();
 		$this->setNiveau(reset($this->listeNiveaux)); // Niveau par défaut
 		$this->duree = 30;
-		$this->tags = new ArrayCollection();
 	}
 
-	public function memOldValues($addedfields = null) {
-		$fields = array('articles');
-		if(count($addedfields) > 0 && is_array($addedfields)) $fields = array_unique(array_merge($fields, $addedfields));
-		parent::memOldValues($fields);
-		return $this;
-	}
+	// public function memOldValues($addedfields = null) {
+	// 	$fields = array('articles');
+	// 	if(count($addedfields) > 0 && is_array($addedfields)) $fields = array_unique(array_merge($fields, $addedfields));
+	// 	parent::memOldValues($fields);
+	// 	return $this;
+	// }
  
     // public function getClassName(){
     //     return parent::CLASS_FICHE;
@@ -242,6 +241,19 @@ class fiche extends item {
 	 */
 	public function getDuree() {
 		return $this->duree;
+	}
+
+	/**
+	 * Set articles
+	 * @param arrayCollection $articles
+	 * @return subentity
+	 */
+	public function setArticles(ArrayCollection $articles) {
+		// $this->articles->clear();
+		// incorporation avec "add" et "remove" au cas où il y aurait des opérations (inverse notamment)
+		foreach ($this->getArticles() as $article) if(!$articles->contains($article)) $this->removeArticle($article); // remove
+		foreach ($articles as $article) $this->addArticle($article); // add
+		return $this;
 	}
 
 	/**

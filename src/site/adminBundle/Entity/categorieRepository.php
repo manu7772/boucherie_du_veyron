@@ -4,17 +4,9 @@ namespace site\adminBundle\Entity;
 
 use site\adminBundle\Entity\EntityBaseRepository;
 use site\adminBundle\Entity\categorie;
-// use Gedmo\Sortable\Entity\Repository\SortableRepository;
-// use Gedmo\Tree\Entity\Repository\NestedTreeRepository;
-// use Gedmo\Tree\Traits\Repository\ORM\NestedTreeRepositoryTrait;
 use Gedmo\Tree\Traits\MaterializedPath;
 use Gedmo\Tree\Traits\NestedSet;
 use Gedmo\Tree\Traits\NestedSetEntity;
-
-// use Gedmo\Tree\Entity\Repository\NestedTreeRepository;
-// use Gedmo\Tree\Entity\Repository\MaterializedPathRepository;
-// use Gedmo\Tree\Entity\Repository\ClosureTreeRepository;
-// use Gedmo\Tree\Entity\Repository\AbstractTreeRepository;
 
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Tools\Pagination\Paginator;
@@ -34,21 +26,13 @@ use \Exception;
 // class categorieRepository extends SortableRepository {
 class categorieRepository extends EntityBaseRepository {
 
-	// https://github.com/Atlantic18/DoctrineExtensions/blob/master/doc/tree.md
-	// use NestedSetEntity;
-	// use \Gedmo\Tree\Entity\Repository\NestedTreeRepository;
-	// use MaterializedPathRepository;
-	// use ClosureTreeRepository;
-	// use AbstractTreeRepository;
-
 	protected $icons;
 	protected $aetools;
 	protected $aeDebug;
 
-	public function __construct(EntityManager $em, ClassMetadata $class) {
-		parent::__construct($em, $class);
-		// $this->initializeTreeRepository($em, $class);
-	}
+	// public function __construct(EntityManager $em, ClassMetadata $class) {
+	// 	parent::__construct($em, $class);
+	// }
 
 
 	public function findArrayTree($id = null, $types = 'all', $shortCutContext = false) {
@@ -60,7 +44,7 @@ class categorieRepository extends EntityBaseRepository {
 			$id = intval($id);
 			if($id > 0) $qb->where(self::ELEMENT.'.id = :id')->setParameter('id', $id);
 		} else {
-			$qb->where(self::ELEMENT.'.parent IS NULL');
+			$this->getRoots($qb);
 		}
 		$this->selectCategoriesForTree($qb, self::ELEMENT, $shortCutContext);
 		$results = $qb->getQuery()->getScalarResult();
@@ -72,12 +56,12 @@ class categorieRepository extends EntityBaseRepository {
 		$this->compileForTree($elements);
 		foreach ($elements as $key => $element) {
 			// 1ère passe
-			$qb = $this->_em->createQueryBuilder(self::ELEMENT)->from('site\adminBundle\Entity\baseSubEntity', self::ELEMENT);
+			$qb = $this->_em->createQueryBuilder(self::ELEMENT)->from('site\adminBundle\Entity\categorie', self::ELEMENT);
 			if($shortCutContext == false) $this->contextStatut($qb, self::ELEMENT);
-			$qb->join(self::ELEMENT.'.parents', 'cp')
-				->join('cp.categorie', 'cat')
-				->where($qb->expr()->in('cat.id', $element['id']))
-				->orderBy('cp.position', 'ASC')
+			$qb->join(self::ELEMENT.'.nestedpositionParents', 'nestpos')
+				->join('nestpos.parent', 'parent')
+				->where($qb->expr()->in('parent.id', $element['id']))
+				// ->orderBy('nestpos.position', 'ASC')
 				// select…
 				->select(self::ELEMENT.'.id id')
 				->addSelect(self::ELEMENT.' class_name')
@@ -100,7 +84,7 @@ class categorieRepository extends EntityBaseRepository {
 						break;
 					default:
 						if(in_array($passe['element_class_name'], $types) || in_array('all', $types)) {
-							$qb = $this->_em->createQueryBuilder(self::ELEMENT)->from('site\adminBundle\Entity\baseSubEntity', self::ELEMENT);
+							$qb = $this->_em->createQueryBuilder(self::ELEMENT)->from('site\adminBundle\Entity\nested', self::ELEMENT);
 							$qb->where(self::ELEMENT.'.id = :id')->setParameter('id', $passe['id']);
 							$this->selectBaseSubEntitiesForTree($qb, self::ELEMENT, true); // $shortCutContext déjà opéré en passe1
 							$res = $qb->getQuery()->getScalarResult();
@@ -283,7 +267,7 @@ class categorieRepository extends EntityBaseRepository {
 	public function findRoots($types = null, $shortCutContext = false) {
 		$qb = $this->createQueryBuilder(self::ELEMENT);
 		if($types != null) $this->getElementsBySubType($types, $qb, $shortCutContext);
-		// if($shortCutContext == false) $this->contextStatut($qb);
+			else if($shortCutContext == false) $this->contextStatut($qb);
 		$this->getRoots($qb);
 		return $qb->getQuery()->getResult();
 	}
@@ -294,12 +278,13 @@ class categorieRepository extends EntityBaseRepository {
 	 * @param boolean $shortCutContext = false
 	 * @return array
 	 */
-	public function findCollectionsByType($type = null, $shortCutContext = false) {
+	public function findCollectionsByType($type = null, $level = null, $shortCutContext = false) {
 		$qb = $this->createQueryBuilder(self::ELEMENT);
 		// if($types != null) $this->getElementsBySubType($types, $qb, $shortCutContext);
 		$qb->where(self::ELEMENT.'.type = :type')
 			->setParameter('type', $type);
-		$this->getByLevel(1, $qb);
+		if($level != null) $this->getByLevel((integer)$level, $qb);
+			else $this->getNotRoots($qb);
 		if($shortCutContext == false) $this->contextStatut($qb);
 		return $qb->getQuery()->getResult();
 	}
@@ -317,40 +302,6 @@ class categorieRepository extends EntityBaseRepository {
 		return $qb->getQuery()->getResult();
 	}
 
-	/**
-	 * Recherche des entités selon des valeurs/champ
-	 * $type_related = '_self' pour désigner un champ interne
-	 */
-	public function findWithField(array $data, $asArray = false) {
-		$asArray == true ? $getMethod = 'getArrayResult' : $getMethod = 'getResult';
-		if(isset($data['type_related']) && isset($data['type_field']) && isset($data['type_values'])) {
-			// foreach ($data['type_values'] as $key => $value) {
-			// 	$data['type_values'][$key] = $value.'%';
-			// }
-			$qb = $this->createQueryBuilder(self::ELEMENT);
-			if($data['type_related'] == '_self') {
-				// champ interne
-				// $qb->where($qb->expr()->in(self::ELEMENT.'.'.$data['type_field'], $data['type_values']));
-				foreach ($data['type_values'] as $typeValue) {
-					if($typeValue !== 'null')
-						$qb->andWhere($qb->expr()->orX($qb->expr()->like(self::ELEMENT.'.'.$data['type_field'], $qb->expr()->literal('%'.$typeValue.'%'))));
-						else $qb->andWhere(self::ELEMENT.'.'.$data['type_field'].' IS NULL');
-				}
-			} else {
-				$qb->join(self::ELEMENT.'.'.$data['type_related'], 'entity');
-				foreach ($data['type_values'] as $typeValue) {
-					if($typeValue !== 'null')
-						$qb->andWhere($qb->expr()->orX($qb->expr()->like('entity.'.$data['type_field'], $qb->expr()->literal('%'.$typeValue.'%'))));
-						else $qb->andWhere('entity.'.$data['type_field'].' IS NULL');
-				}
-			}
-		} else throw new Exception("Missing parameters for Repository method \"findWithField\"", 1);
-		// recherche uniquement dans les niveaux 1
-		$this->getByLevel(1, $qb);
-		// mode normal : suppression des éléments périmés, sadmin, etc.
-		$this->contextStatut($qb);
-		return $qb->getQuery()->$getMethod();
-	}
 
 
 	/********************************/

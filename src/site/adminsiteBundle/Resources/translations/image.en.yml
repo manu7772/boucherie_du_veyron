@@ -39,3 +39,8 @@ fields:
     parent: parent
     elements: elements
     icon: icon
+    size: size
+    dimensions: dimensions
+    creation: creation
+    visuel: view
+    group_imagesParents: used by

@@ -95,6 +95,8 @@ abstract class baseType extends AbstractType {
 			foreach($this->parametres as $key => $value) {
 				if(is_string($value) || is_array($value) || is_bool($value)) {
 					$data[$key] = $value;
+				} else if(is_object($value)) {
+					$data[$key] = $value->getId();
 				}
 			}
 			if($builder->has($nom)) $builder->remove($nom);

@@ -9,7 +9,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Doctrine\Common\Collections\ArrayCollection;
 // Slug
 use Gedmo\Mapping\Annotation as Gedmo;
-use site\adminBundle\Entity\baseSubEntity;
+use site\adminBundle\Entity\nested;
 
 use site\adminBundle\services\aeImages;
 
@@ -31,7 +31,7 @@ use \SplFileInfo;
  *
  * @ExclusionPolicy("all")
  */
-abstract class media extends baseSubEntity {
+abstract class media extends nested {
 
 	const CLASS_IMAGE		= "image";
 	const CLASS_PDF			= "pdf";

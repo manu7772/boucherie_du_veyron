@@ -6,7 +6,7 @@ use site\adminBundle\services\aeEntity;
 
 use site\adminBundle\Entity\statut;
 use site\adminBundle\Entity\baseEntity;
-use site\adminBundle\Entity\baseSubEntity;
+use site\adminBundle\Entity\subentity;
 
 // call in controller with $this->get('aetools.aeStatut');
 class aeStatut extends aeEntity {
@@ -50,12 +50,12 @@ class aeStatut extends aeEntity {
     // }
 
     /**
-     * Passe le baseSubEntity en mode temps
-     * @param baseSubEntity &$entity
+     * Passe le subentity en mode temps
+     * @param subentity &$entity
      * @param string $method = 'setStatut'
      * @return aeStatut
      */
-    public function setTemp(baseSubEntity &$entity, $method = 'setStatut') {
+    public function setTemp(subentity &$entity, $method = 'setStatut') {
         if(method_exists($entity, $method)) {
             $temp = $this->getRepo()->findTemp();
             $entity->$method($temp);
@@ -64,12 +64,12 @@ class aeStatut extends aeEntity {
     }
 
     /**
-     * Passe le baseSubEntity en mode actif
-     * @param baseSubEntity &$entity
+     * Passe le subentity en mode actif
+     * @param subentity &$entity
      * @param string $method = 'setStatut'
      * @return aeStatut
      */
-    public function setActif(baseSubEntity &$entity, $method = 'setStatut') {
+    public function setActif(subentity &$entity, $method = 'setStatut') {
         if(method_exists($entity, $method)) {
             $actif = $this->getRepo()->findActif();
             $entity->$method($actif);
@@ -78,12 +78,12 @@ class aeStatut extends aeEntity {
     }
 
     /**
-     * Passe le baseSubEntity en mode inactif
-     * @param baseSubEntity &$entity
+     * Passe le subentity en mode inactif
+     * @param subentity &$entity
      * @param string $method = 'setStatut'
      * @return aeStatut
      */
-    public function setInactif(baseSubEntity &$entity, $method = 'setStatut') {
+    public function setInactif(subentity &$entity, $method = 'setStatut') {
         if(method_exists($entity, $method)) {
             $inactif = $this->getRepo()->findInactif();
             $entity->$method($inactif);
@@ -92,12 +92,12 @@ class aeStatut extends aeEntity {
     }
 
     /**
-     * Passe le baseSubEntity en mode expired
-     * @param baseSubEntity &$entity
+     * Passe le subentity en mode expired
+     * @param subentity &$entity
      * @param string $method = 'setStatut'
      * @return aeStatut
      */
-    public function setExpired(baseSubEntity &$entity, $method = 'setStatut') {
+    public function setExpired(subentity &$entity, $method = 'setStatut') {
         if(method_exists($entity, $method)) {
             $expired = $this->getRepo()->findExpired();
             $entity->$method($expired);
@@ -106,12 +106,12 @@ class aeStatut extends aeEntity {
     }
 
     /**
-     * Passe le baseSubEntity en mode webmaster
-     * @param baseSubEntity &$entity
+     * Passe le subentity en mode webmaster
+     * @param subentity &$entity
      * @param string $method = 'setStatut'
      * @return aeStatut
      */
-    public function setWebmaster(baseSubEntity &$entity, $method = 'setStatut') {
+    public function setWebmaster(subentity &$entity, $method = 'setStatut') {
         if(method_exists($entity, $method)) {
             $webmaster = $this->getRepo()->findWebmaster();
             $entity->$method($webmaster);
@@ -120,12 +120,12 @@ class aeStatut extends aeEntity {
     }
 
     /**
-     * Passe le baseSubEntity en mode deleted
-     * @param baseSubEntity &$entity
+     * Passe le subentity en mode deleted
+     * @param subentity &$entity
      * @param string $method = 'setStatut'
      * @return aeStatut
      */
-    public function setDeleted(baseSubEntity &$entity, $method = 'setStatut') {
+    public function setDeleted(subentity &$entity, $method = 'setStatut') {
         if(method_exists($entity, $method)) {
             $deleted = $this->getRepo()->findDeleted();
             $entity->$method($deleted);

@@ -57,12 +57,12 @@ class boutique extends tier {
 		$this->sites = new ArrayCollection();
 	}
 
-	public function memOldValues($addedfields = null) {
-		$fields = array('sites');
-		if(count($addedfields) > 0 && is_array($addedfields)) $fields = array_unique(array_merge($fields, $addedfields));
-		parent::memOldValues($fields);
-		return $this;
-	}
+	// public function memOldValues($addedfields = null) {
+	// 	$fields = array('sites');
+	// 	if(count($addedfields) > 0 && is_array($addedfields)) $fields = array_unique(array_merge($fields, $addedfields));
+	// 	parent::memOldValues($fields);
+	// 	return $this;
+	// }
 
 	// /**
 	//  * Renvoie l'image principale
@@ -71,6 +71,19 @@ class boutique extends tier {
 	// public function getMainMedia() {
 	// 	return $this->getLogo();
 	// }
+
+	/**
+	 * Set sites
+	 * @param arrayCollection $sites
+	 * @return subentity
+	 */
+	public function setSites(ArrayCollection $sites) {
+		// $this->sites->clear();
+		// incorporation avec "add" et "remove" au cas où il y aurait des opérations (inverse notamment)
+		foreach ($this->getSites() as $site) if(!$sites->contains($site)) $this->removeSite($site); // remove
+		foreach ($sites as $site) $this->addSite($site); // add
+		return $this;
+	}
 
 	/**
 	 * Add site

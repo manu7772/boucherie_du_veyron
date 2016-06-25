@@ -52,24 +52,46 @@ siteadmin_entite:
 siteadmin_form_action:
     path:     /form-action/{classname}
     defaults: { _controller: siteadminsiteBundle:entite:entitePostFormPage }
-    requirements:
 
 siteadmin_set_default:
     path:     /entite-set/as-default/{id}/{entite}/{redir}
     defaults: { _controller: siteadminsiteBundle:entite:entite_as_default, redir: 'siteadmin_homepage' }
 
+
+
 #CATEGORIES
-# siteadmin_categorie:
-#     path:     /categorie/action/{action}/{type}/{value}/{id}
-#     defaults: { _controller: siteadminsiteBundle:categorie:categorie, action: null, type: null, value: null, id: null }
+siteadmin_list_categorie:
+    path:     /categorie/list/{type_related}/{type_field}/{type_values}
+    defaults: { _controller: siteadminsiteBundle:categorie:categorieList, type_related: null, type_field: null, type_values: null }
 
-# siteadmin_categorie_level:
-#     path:     /categorie/level/{level}
-#     defaults: { _controller: siteadminsiteBundle:categorie:level, level: 0 }
+siteadmin_repo_categorie:
+    path:     /categorie/repo/{method}/{repoParams}
+    defaults: { _controller: siteadminsiteBundle:categorie:categorieRepo, repoParams: null }
 
-# siteadmin_categorie_accept:
-#     path:     /categorie/accept/{accept}
-#     defaults: { _controller: siteadminsiteBundle:categorie:accept, accept: 0 }
+siteadmin_show_categorie:
+    path:     /categorie/show/{id}
+    defaults: { _controller: siteadminsiteBundle:categorie:categorieShow }
+    requirements:
+        rootParent: \d+
+
+siteadmin_edit_categorie:
+    path:     /categorie/edit/{id}
+    defaults: { _controller: siteadminsiteBundle:categorie:categorieEdit }
+    requirements:
+        rootParent: \d+
+
+siteadmin_create_categorie:
+    # type root : rootParent = null
+    # autres types : type d'un parent root = préciser son id
+    path:     /categorie/create/{rootParent}
+    defaults: { _controller: siteadminsiteBundle:categorie:categorieCreate, rootParent: null }
+    requirements:
+        rootParent: \d+
+
+siteadmin_form_categorie:
+    path:     /categorie-form-action
+    defaults: { _controller: siteadminsiteBundle:categorie:postform }
+    # methods: ['POST']
 
 categorie_ajax_data:
     path:     /categorie/ajax-data/{id}/{types}

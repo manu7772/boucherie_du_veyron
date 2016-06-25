@@ -39,3 +39,8 @@ fields:
     parent: parent
     elements: éléments
     icon: icône
+    size: taille
+    dimensions: dimensions
+    creation: creation
+    visuel: visuel
+    group_imagesParents: utilisations

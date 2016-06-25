@@ -11,7 +11,7 @@ use JMS\Serializer\Annotation\Expose;
 // Slug
 use Gedmo\Mapping\Annotation as Gedmo;
 
-use site\adminBundle\Entity\baseEntity;
+use site\adminBundle\Entity\subentity;
 use site\adminBundle\Entity\categorie;
 use site\adminBundle\Entity\boutique;
 use site\adminBundle\Entity\image;
@@ -29,7 +29,7 @@ use \Exception;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Entity(repositoryClass="site\adminBundle\Entity\siteRepository")
  */
-class site extends baseEntity {
+class site extends subentity {
 
 	/**
 	 * @var integer
@@ -61,12 +61,6 @@ class site extends baseEntity {
 	 * )
 	 */
 	protected $accroche;
-
-	/**
-	 * @var string
-	 * @ORM\Column(name="descriptif", type="text", nullable=true, unique=false)
-	 */
-	protected $descriptif;
 
 	/**
 	 * @ORM\ManyToOne(targetEntity="site\adminBundle\Entity\categorie", cascade={"persist"})
@@ -112,12 +106,6 @@ class site extends baseEntity {
      * @ORM\OneToOne(targetEntity="site\adminBundle\Entity\image", orphanRemoval=true, cascade={"all"})
 	 * @ORM\JoinColumn(nullable=true, unique=true, onDelete="SET NULL")
      */
-    protected $image;
-
-    /**
-     * @ORM\OneToOne(targetEntity="site\adminBundle\Entity\image", orphanRemoval=true, cascade={"all"})
-	 * @ORM\JoinColumn(nullable=true, unique=true, onDelete="SET NULL")
-     */
     protected $logo;
 
     /**
@@ -132,36 +120,27 @@ class site extends baseEntity {
      */
     protected $adminLogo;
 
-	/**
-	 * @var string
-	 * @ORM\Column(name="couleur", type="string", length=24, nullable=false, unique=false)
-	 */
-	protected $couleur;
-
 
 	public function __construct() {
 		parent::__construct();
 		$this->accroche = null;
-		$this->descriptif = null;
 		$this->menuNav = null;
 		$this->menuArticle = null;
 		$this->categorieArticles = new ArrayCollection();
 		$this->categorieFooters = new ArrayCollection();
 		$this->boutiques = new ArrayCollection();
 		$this->collaborateurs = new ArrayCollection();
-		$this->image = null;
 		$this->logo = null;
 		$this->favicon = null;
 		$this->adminLogo = null;
-		$this->couleur = "rgba(255,255,255,1)";
 	}
 
-	public function memOldValues($addedfields = null) {
-		$fields = array('boutiques', 'collaborateurs');
-		if(count($addedfields) > 0 && is_array($addedfields)) $fields = array_unique(array_merge($fields, $addedfields));
-		parent::memOldValues($fields);
-		return $this;
-	}
+	// public function memOldValues($addedfields = null) {
+	// 	$fields = array('boutiques', 'collaborateurs');
+	// 	if(count($addedfields) > 0 && is_array($addedfields)) $fields = array_unique(array_merge($fields, $addedfields));
+	// 	parent::memOldValues($fields);
+	// 	return $this;
+	// }
 
     // abstract public function getClassName();
     public function getClassName() {
@@ -210,25 +189,6 @@ class site extends baseEntity {
 	}
 
 	/**
-	 * Set descriptif
-	 * @param string $descriptif
-	 * @return site
-	 */
-	public function setDescriptif($descriptif = null) {
-		$this->descriptif = $descriptif;
-		if(strip_tags(preg_replace('#([[:space:]])+#', '', $this->descriptif)) == '') $this->descriptif = null;
-		return $this;
-	}
-
-	/**
-	 * Get descriptif
-	 * @return string 
-	 */
-	public function getDescriptif() {
-		return $this->descriptif;
-	}
-
-	/**
 	 * set menuNav
 	 * @param categorie $menuNav
 	 * @return site
@@ -265,6 +225,19 @@ class site extends baseEntity {
 	}
 
 	/**
+	 * Set categorieArticles
+	 * @param arrayCollection $categorieArticles
+	 * @return subentity
+	 */
+	public function setCategorieArticles(ArrayCollection $categorieArticles) {
+		// $this->categorieArticles->clear();
+		// incorporation avec "add" et "remove" au cas où il y aurait des opérations (inverse notamment)
+		foreach ($this->getCategorieArticles() as $categorieArticle) if(!$categorieArticles->contains($categorieArticle)) $this->removeCategorieArticle($categorieArticle); // remove
+		foreach ($categorieArticles as $categorieArticle) $this->addCategorieArticle($categorieArticle); // add
+		return $this;
+	}
+
+	/**
 	 * Add categorieArticle
 	 * @param categorie $categorieArticle
 	 * @return site
@@ -289,6 +262,19 @@ class site extends baseEntity {
 	 */
 	public function getCategorieArticles() {
 		return $this->categorieArticles;
+	}
+
+	/**
+	 * Set categorieFooters
+	 * @param arrayCollection $categorieFooters
+	 * @return subentity
+	 */
+	public function setCategorieFooters(ArrayCollection $categorieFooters) {
+		// $this->categorieFooters->clear();
+		// incorporation avec "add" et "remove" au cas où il y aurait des opérations (inverse notamment)
+		foreach ($this->getCategorieFooters() as $categorieFooter) if(!$categorieFooters->contains($categorieFooter)) $this->removeCategorieFooter($categorieFooter); // remove
+		foreach ($categorieFooters as $categorieFooter) $this->addCategorieFooter($categorieFooter); // add
+		return $this;
 	}
 
 	/**
@@ -319,6 +305,19 @@ class site extends baseEntity {
 	}
 
 	/**
+	 * Set boutiques
+	 * @param arrayCollection $boutiques
+	 * @return subentity
+	 */
+	public function setBoutiques(ArrayCollection $boutiques) {
+		// $this->boutiques->clear();
+		// incorporation avec "add" et "remove" au cas où il y aurait des opérations (inverse notamment)
+		foreach ($this->getBoutiques() as $boutique) if(!$boutiques->contains($boutique)) $this->removeBoutique($boutique); // remove
+		foreach ($boutiques as $boutique) $this->addBoutique($boutique); // add
+		return $this;
+	}
+
+	/**
 	 * Add boutique
 	 * @param boutique $boutique
 	 * @return site
@@ -345,6 +344,19 @@ class site extends baseEntity {
 	 */
 	public function getBoutiques() {
 		return $this->boutiques;
+	}
+
+	/**
+	 * Set collaborateurs
+	 * @param arrayCollection $collaborateurs
+	 * @return subentity
+	 */
+	public function setCollaborateurs(ArrayCollection $collaborateurs) {
+		// $this->collaborateurs->clear();
+		// incorporation avec "add" et "remove" au cas où il y aurait des opérations (inverse notamment)
+		foreach ($this->getCollaborateurs() as $collaborateur) if(!$collaborateurs->contains($collaborateur)) $this->removeCollaborateur($collaborateur); // remove
+		foreach ($collaborateurs as $collaborateur) $this->addCollaborateur($collaborateur); // add
+		return $this;
 	}
 
 	/**
@@ -385,14 +397,6 @@ class site extends baseEntity {
 		$this->image = $image;
 		if($image != null) $image->setOwner('site:image');
 		return $this;
-	}
-
-	/**
-	 * Get image
-	 * @return image $image
-	 */
-	public function getImage() {
-		return $this->image;
 	}
 
 	/**
@@ -451,27 +455,6 @@ class site extends baseEntity {
 	public function getAdminLogo() {
 		return $this->adminLogo;
 	}
-
-	/**
-	 * Set couleur
-	 * @param string $couleur
-	 * @return site
-	 */
-	public function setCouleur($couleur) {
-		$this->couleur = $couleur;
-		return $this;
-	}
-
-	/**
-	 * Get couleur
-	 * @return string 
-	 */
-	public function getCouleur() {
-		return $this->couleur;
-	}
-
-
-
 
 
 

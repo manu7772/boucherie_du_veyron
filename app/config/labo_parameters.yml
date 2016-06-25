@@ -86,15 +86,15 @@ parameters:
     categorie:
         descrition:
             defaults:
-                accepts: ['pageweb', 'article','image','fiche','marque','reseau','boutique','pdf']
+                accepts: ['pageweb', 'article','image','fiche','marque','reseau','boutique','pdf', "categorie"]
                 couleur: 'rgba(128,128,128,1)'
             types:
                 menu:
                     nom: 'types.menu'
-                    accepts: ['pageweb', 'article','image','fiche','marque','reseau','boutique','pdf']
-                multimedia:
-                    nom: 'types.multimedia'
-                    accepts: ['pageweb', 'article','image','fiche','marque','reseau','boutique','pdf']
+                    accepts: ['pageweb', 'article','image','fiche','marque','reseau','boutique','pdf', "categorie"]
+                # multimedia:
+                #     nom: 'types.multimedia'
+                #     accepts: ['pageweb', 'article','image','fiche','marque','reseau','boutique','pdf']
                 diapo:
                     nom: 'types.diapo'
                     accepts: ['article','image','fiche']
@@ -110,18 +110,18 @@ parameters:
                 fiche:
                     nom: 'types.fiche'
                     accepts: ['fiche']
-                marque:
-                    nom: 'types.marque'
-                    accepts: ['marque']
-                reseau:
-                    nom: 'types.reseau'
-                    accepts: ['reseau']
-                boutique:
-                    nom: 'types.boutique'
-                    accepts: ['boutique']
-                pdf:
-                    nom: 'types.pdf'
-                    accepts: ['pdf']
+                # marque:
+                #     nom: 'types.marque'
+                #     accepts: ['marque']
+                # reseau:
+                #     nom: 'types.reseau'
+                #     accepts: ['reseau']
+                # boutique:
+                #     nom: 'types.boutique'
+                #     accepts: ['boutique']
+                # pdf:
+                #     nom: 'types.pdf'
+                #     accepts: ['pdf']
 
 
 

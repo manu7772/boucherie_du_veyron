@@ -24,14 +24,14 @@ class ajaxqueriesController extends baseController {
 		if($request->isXmlHttpRequest()) {
 			// AJAX REQUEST
 			$data = $request->request->all();
-			if(isset($data['entity']) && isset($data['children'])) {
+			if(isset($data['entity']) && isset($data['children']) && isset($data['group'])) {
 				// DATA OK
 				$entityService = $this->getEntityService($data['entity'][0]);
 				if(method_exists($entityService, 'sortChildren')) {
 					$data = $entityService->sortChildren($data);
 					return new JsonResponse($data);
 				} else {
-					return $this->requErrors(500, 'This entity is not nestable');
+					return $this->requErrors(500, 'This entity is not nestable !');
 				}
 			} else {
 				// ERROR
@@ -42,11 +42,13 @@ class ajaxqueriesController extends baseController {
 		} else if(!$request->isXmlHttpRequest()) {
 			// TEST EN GET
 			$data = array(
-				'entity' => array('article', '6'),
+				'entity' => array('article', '7'),
 				'children' => array(
-					array('article', '7'),
 					array('article', '8'),
+					array('article', '9'),
+					array('article', '7'),
 					),
+				'group' => 'articles',
 				);
 			$entityService = $this->getEntityService($data['entity'][0]);
 			if(method_exists($entityService, 'sortChildren')) {
@@ -57,7 +59,7 @@ class ajaxqueriesController extends baseController {
 				return new Response('ok !');
 			}
 		}
-		return $this->requErrors(500, 'System error');
+		return $this->requErrors(500, 'Uncognized system error !');
 	}
 
 

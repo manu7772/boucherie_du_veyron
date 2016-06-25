@@ -117,12 +117,12 @@ class adresse extends baseEntity {
 		$this->tier = null;
 	}
 
-	public function memOldValues($addedfields = null) {
-		$fields = array('tier');
-		if(count($addedfields) > 0 && is_array($addedfields)) $fields = array_unique(array_merge($fields, $addedfields));
-		parent::memOldValues($fields);
-		return $this;
-	}
+	// public function memOldValues($addedfields = null) {
+	// 	$fields = array('tier');
+	// 	if(count($addedfields) > 0 && is_array($addedfields)) $fields = array_unique(array_merge($fields, $addedfields));
+	// 	parent::memOldValues($fields);
+	// 	return $this;
+	// }
 
 	/**
 	 * @Assert\IsTrue(message="L'item n'est pas conforme.")

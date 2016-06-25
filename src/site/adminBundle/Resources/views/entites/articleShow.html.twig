@@ -40,16 +40,16 @@
 							<td>{{ entite.keywords }}</td>
 						</tr>
 						<tr>
-							<td><strong>{{ UCfirst('fields.reseaus'|trans({}, entite.className)) }}</strong></td>
+							<td><strong>{{ UCfirst('fields.reseaus'|trans({}, entite.className)) }}</strong>{% if entite.group_articles_reseausChilds|length > 1 %} <i class="fa fa-unsorted text-muted"></i>{% endif %}</td>
 							<td>
-								{# <span id="reseaux" class="sortlist" data-parent="reseaus_{{ entite.id }}" data-url="{{ path('ajax_data_sort') }}"> #}
-								{{ actions.labelLinkList(entite.reseaus, [], null, type, type_value_joiner, 'show') }}
-								{# </span> #}
+								<span id="articles_reseaus" class="{% if entite.group_articles_reseausChilds|length > 1 %}sortlist{% endif %}" data-parent="article_{{ entite.id }}" data-group="articles_reseaus" data-url="{{ path('ajax_data_sort') }}">
+								{{ actions.labelLinkList(entite.group_articles_reseausChilds, [entite.nestedFirstChild("articles_reseaus")], null, type, type_value_joiner, 'show') }}
+								</span>
 							</td>
 						</tr>
 						<tr>
-							<td><strong>{{ UCfirst('fields.categories'|trans({}, entite.className)) }}</strong></td>
-							<td>{{ actions.labelLinkList(entite.allParents(false, true), entite.parents, null, type, type_value_joiner, 'show') }}</td>
+							<td><strong>{{ UCfirst('fields.parents'|trans({}, entite.className)) }}</strong></td>
+							<td>{{ actions.labelLinkList(entite.nestedParents, [], null, type, type_value_joiner, 'show') }}</td>
 						</tr>
 						<tr>
 							<td><strong>{{ UCfirst('fields.created'|trans({}, entite.className)) }}</strong></td>
@@ -80,69 +80,77 @@
 			</div>
 			<div class="ibox-content">
 				<div class="tabs-container">
-				    <ul class="nav nav-tabs">
-				        <li><a data-toggle="tab" href="#tab-1"><i class="fa fa-list-ul"></i></a></li>
-				        <li class="active"><a data-toggle="tab" href="#tab-2"><i class="fa fa-cube"></i></a></li>
-				        <li><a data-toggle="tab" href="#tab-3"><i class="fa fa-puzzle-piece"></i></a></li>
-				        <li><a data-toggle="tab" href="#tab-4"><i class="fa fa-tag"></i></a></li>
-				    </ul>
-				    {% set style = ' style="height: 200px; overflow-y: auto;"' %}
-				    <div class="tab-content">
-				        <div id="tab-1" class="tab-pane">
-				            <div class="panel-body"{{ style|raw }}>
-				            	<h3 class='text-navy' style='margin-top:0px;'>{{ UCfirst('fields.descriptif'|trans({}, entite.className)) }}</h3>
-				            	<hr class="m-t-xs m-b-xs">
-				                {{ entite.descriptif|raw }}
-				            </div>
-				        </div>
-				        <div id="tab-2" class="tab-pane active">
-				            <div class="panel-body"{{ style|raw }}>
-				            	<h3 class='text-navy' style='margin-top:0px;'>{{ UCfirst('fields.artlink'|trans({}, entite.className)) }}</h3>
-				            	<hr class="m-t-xs m-b-xs">
-				            	{% if entite.articleChilds|length > 1 %}
-				            	<span id="children" class="sortlist" data-parent="article_{{ entite.id }}" data-url="{{ path('ajax_data_sort') }}">
-					                {{ actions.labelLinkList(entite.articleChilds, [], null, type, type_value_joiner, 'show') }}
-					            </span>
-					            {% elseif entite.articleChilds|length == 1 %}
-					            {{ actions.labelLinkList(entite.articleChilds, [], null, type, type_value_joiner, 'show') }}
-				                {% else %}
-				                <p>{{ UCfirst('not_found'|trans({}, entite.className)) }}</p>
-				                {% endif %}
-				                {% if DEVMODE %}
-				                <hr>
-				            	<h3 class='text-navy' style='margin-top:0px;'>Articles qui le conseillent :</h3>
-				            	<hr class="m-t-xs m-b-xs">
-				            	{% if entite.articleParents|length > 0 %}
-					            {{ actions.labelLinkList(entite.articleParents, [], null, type, type_value_joiner, 'show') }}
-				                {% else %}
-				                <p>{{ UCfirst('not_found'|trans({}, entite.className)) }}</p>
-				                {% endif %}
-				                {% endif %}
-				            </div>
-				        </div>
-				        <div id="tab-3" class="tab-pane">
-				            <div class="panel-body"{{ style|raw }}>
-				            	<h3 class='text-navy' style='margin-top:0px;'>{{ UCfirst('name_s'|trans({}, 'fiche')) }}</h3>
-				            	<hr class="m-t-xs m-b-xs">
-				            	{% if entite.fiches|length > 0 %}
-				            	{{ actions.labelLinkList(entite.fiches, [], null, type, type_value_joiner, 'show') }}
-				                {% else %}
-				                <p>{{ UCfirst('not_found'|trans({}, 'fiche')) }}</p>
-				                {% endif %}
-				            </div>
-				        </div>
-				        <div id="tab-4" class="tab-pane">
-				            <div class="panel-body"{{ style|raw }}>
-				            	<h3 class='text-navy' style='margin-top:0px;'>{{ UCfirst('name_s'|trans({}, 'tag')) }}</h3>
-				            	<hr class="m-t-xs m-b-xs">
-				            	{% if entite.tags|length > 0 %}
-				            	{{ actions.labelLinkList(entite.tags, [], null, type, type_value_joiner, 'show') }}
-				                {% else %}
-				                <p>{{ UCfirst('not_found'|trans({}, 'tag')) }}</p>
-				                {% endif %}
-				            </div>
-				        </div>
-				    </div>
+					<ul class="nav nav-tabs">
+						<li><a data-toggle="tab" href="#tab-1"><i class="fa {{ actions.icon('texte') }}"></i></a></li>
+						<li class="active"><a data-toggle="tab" href="#tab-2"><i class="fa {{ actions.icon('article') }}"></i></a></li>
+						<li><a data-toggle="tab" href="#tab-3"><i class="fa {{ actions.icon('image') }}"></i></a></li>
+						<li><a data-toggle="tab" href="#tab-4"><i class="fa {{ actions.icon('fiche') }}"></i></a></li>
+						<li><a data-toggle="tab" href="#tab-5"><i class="fa {{ actions.icon('tag') }}"></i></a></li>
+					</ul>
+					{% set style = ' style="height: 280px; overflow-y: auto;"' %}
+					<div class="tab-content">
+						<div id="tab-1" class="tab-pane">
+							<div class="panel-body"{{ style|raw }}>
+								<h3 class='text-navy' style='margin-top:0px;'>{{ UCfirst('fields.descriptif'|trans({}, entite.className)) }}</h3>
+								<hr class="m-t-xs m-b-xs">
+								{{ entite.descriptif|raw }}
+							</div>
+						</div>
+						<div id="tab-2" class="tab-pane active">
+							<div class="panel-body"{{ style|raw }}>							
+								<h3 class='text-navy' style='margin-top:0px;'>Articles conseillés{% if entite.group_articlesChilds|length > 1 %} <i class="fa fa-unsorted text-muted"></i>{% endif %}</h3>
+								{% if entite.group_articlesChilds|length > 0 %}
+								<span id="articles" class="{% if entite.group_articlesChilds|length > 1 %}sortlist{% endif %}" data-parent="article_{{ entite.id }}" data-group="articles" data-url="{{ path('ajax_data_sort') }}">
+								{{ actions.labelLinkList(entite.group_articlesChilds, [entite.nestedFirstChild("articles")], null, type, type_value_joiner, 'show') }}
+								</span>
+								{% else %}
+								<p>{{ UCfirst('not_found'|trans({}, entite.className)) }}</p>
+								{% endif %}
+								<hr class="m-t-xs m-b-xs">
+								<h3 class='text-navy' style='margin-top:0px;'>Articles qui le conseillent</h3>
+								{% if entite.group_articlesParents|length > 0 %}
+								{{ actions.labelLinkList(entite.group_articlesParents, [], null, type, type_value_joiner, 'show') }}
+								{% else %}
+								<p>{{ UCfirst('not_found'|trans({}, entite.className)) }}</p>
+								{% endif %}
+							</div>
+						</div>
+						<div id="tab-3" class="tab-pane">
+							<div class="panel-body"{{ style|raw }}>
+								<h3 class='text-navy' style='margin-top:0px;'>{{ UCfirst('name_s'|trans({}, 'image')) }}{% if entite.group_imagesChilds|length > 1 %} <i class="fa fa-unsorted text-muted"></i>{% endif %}</h3>
+								<hr class="m-t-xs m-b-xs">
+								{% if entite.group_imagesChilds|length > 0 %}
+								<span id="images" class="{% if entite.group_imagesChilds|length > 1 %}sortlist{% endif %}" data-parent="article_{{ entite.id }}" data-group="images" data-url="{{ path('ajax_data_sort') }}">
+								{{ actions.labelLinkList(entite.group_imagesChilds, [entite.nestedFirstChild("images")], null, type, type_value_joiner, 'show') }}
+								</span>
+								{% else %}
+								<p>{{ UCfirst('not_found'|trans({}, 'image')) }}</p>
+								{% endif %}
+							</div>
+						</div>
+						<div id="tab-4" class="tab-pane">
+							<div class="panel-body"{{ style|raw }}>
+								<h3 class='text-navy' style='margin-top:0px;'>{{ UCfirst('name_s'|trans({}, 'fiche')) }}</h3>
+								<hr class="m-t-xs m-b-xs">
+								{% if entite.fiches|length > 0 %}
+								{{ actions.labelLinkList(entite.fiches, [], null, type, type_value_joiner, 'show') }}
+								{% else %}
+								<p>{{ UCfirst('not_found'|trans({}, 'fiche')) }}</p>
+								{% endif %}
+							</div>
+						</div>
+						<div id="tab-5" class="tab-pane">
+							<div class="panel-body"{{ style|raw }}>
+								<h3 class='text-navy' style='margin-top:0px;'>{{ UCfirst('name_s'|trans({}, 'tag')) }}</h3>
+								<hr class="m-t-xs m-b-xs">
+								{% if entite.tags|length > 0 %}
+								{{ actions.labelLinkList(entite.tags, [], null, type, type_value_joiner, 'show') }}
+								{% else %}
+								<p>{{ UCfirst('not_found'|trans({}, 'tag')) }}</p>
+								{% endif %}
+							</div>
+						</div>
+					</div>
 				</div>
 				<!-- <div class="clearfix"></div> -->
 			</div>

@@ -4,6 +4,8 @@ not_found: 'no collection found'
 x_found: '{0} no collection found|{1} 1 collection found|[2,+Inf] %count% collections found'
 create: 'create new collection'
 create_btn: 'new collection'
+create_root_btn: 'new type of collection'
+create_btn_child: 'new collection in %name%'
 backlist: 'back to list of collections'
 backlist_btn: 'back to list'
 dontexist: 'this collection does not exist'
@@ -49,6 +51,9 @@ fields:
     lvl: level
     technique: details
     icon: icon
+    group_pagewebsChilds: Web pages
+    group_categorie_parentParents: Parent categories
+    group_nestedsChilds: Contains items
 types:
     all: types
     multimedia: multimedias

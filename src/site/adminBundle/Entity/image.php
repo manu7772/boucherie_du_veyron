@@ -14,7 +14,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
 use site\adminBundle\services\aeImages;
 use site\adminBundle\services\aetools;
 
-use site\adminBundle\Entity\baseSubEntity;
+use site\adminBundle\Entity\subentity;
 // use site\adminBundle\Entity\media;
 // use site\adminBundle\Entity\tier;
 // use site\adminBundle\Entity\item;
@@ -36,7 +36,7 @@ class image extends media {
 
 
 	/**
-	 * @ORM\ManyToOne(targetEntity="site\adminBundle\Entity\baseSubEntity")
+	 * @ORM\ManyToOne(targetEntity="site\adminBundle\Entity\subentity")
 	 * @ORM\JoinColumn(nullable=true, unique=false, onDelete="SET NULL")
 	 */
 	protected $element;
@@ -76,6 +76,13 @@ class image extends media {
 	protected $aeReponse;
 	protected $checked = false;
 
+	// NESTED VIRTUAL GROUPS
+	// les noms doivent commencer par "$group_" et finir par "Parents" (pour les parents) ou "Childs" (pour les enfants)
+	// et la partie variable doit comporter au moins 3 lettres
+	// reconnaissance auto par : "#^(add|remove|get)(Group_).{3,}(Parent|Child)(s)?$#" (self::VIRTUALGROUPS_PARENTS_PATTERN et self::VIRTUALGROUPS_CHILDS_PATTERN)
+	protected $group_imagesParents;
+	protected $group_imagesChilds;
+
 	public function __construct() {
 		parent::__construct();
 		$this->owner = null;
@@ -86,13 +93,6 @@ class image extends media {
 		$this->height = 0;
 		$this->aeReponse = null;
 		$this->getCropperInfo();
-	}
-
-	public function memOldValues($addedfields = null) {
-		$fields = array('userAvatar');
-		if(count($addedfields) > 0 && is_array($addedfields)) $fields = array_unique(array_merge($fields, $addedfields));
-		parent::memOldValues($fields);
-		return $this;
 	}
 
     // public function getClassName(){
@@ -347,10 +347,10 @@ class image extends media {
 
 	/**
 	 * Set element
-	 * @param baseSubEntity $element
+	 * @param subentity $element
 	 * @return image
 	 */
-	public function setElement(baseSubEntity $element = null, $name = 'image') {
+	public function setElement(subentity $element = null, $name = 'image') {
 		$this->element = $element;
 		if($element != null) {
 			$this->setOwner($element->getClassName().':'.$name);
@@ -363,7 +363,7 @@ class image extends media {
 
 	/**
 	 * Get element
-	 * @return baseSubEntity 
+	 * @return subentity 
 	 */
 	public function getElement() {
 		return $this->element;

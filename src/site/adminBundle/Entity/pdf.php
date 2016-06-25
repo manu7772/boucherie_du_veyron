@@ -44,12 +44,12 @@ class pdf extends media {
 		$this->article = null;
 	}
 
-	public function memOldValues($addedfields = null) {
-		$fields = array('article');
-		if(count($addedfields) > 0 && is_array($addedfields)) $fields = array_unique(array_merge($fields, $addedfields));
-		parent::memOldValues($fields);
-		return $this;
-	}
+	// public function memOldValues($addedfields = null) {
+	// 	$fields = array('article');
+	// 	if(count($addedfields) > 0 && is_array($addedfields)) $fields = array_unique(array_merge($fields, $addedfields));
+	// 	parent::memOldValues($fields);
+	// 	return $this;
+	// }
 
     // public function getClassName(){
     //     return parent::CLASS_IMAGE;

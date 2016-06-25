@@ -7,15 +7,12 @@
 				<div class="single-widget">
 					<h2>{{ item1 }}</h2>
 					<ul class="nav nav-pills nav-stacked">
-						{% if item1.subEntitys|default([])|length > 0 -%}
-							{%- for item2 in item1.subEntitys -%}
-							<li><a href="{{ path('site_pageweb', {pageweb: item2.slug }) }}">{{ UCfirst(item2) }}</a></li>
-							{%- endfor -%}
-						{%- else -%}
-							{%- for item2 in item1.childrens -%}
-							<li><a href="{{ path('site_pageweb_categories', {categorieSlug: item2.slug }) }}">{{ UCfirst(item2) }}</a></li>
-							{%- endfor -%}
-						{%- endif %}
+						{%- for item2 in item1.group_nestedsChilds -%}
+						<li><a href="{{ path('site_pageweb', {pageweb: item2.slug }) }}">{{ UCfirst(item2) }}</a></li>
+						{%- endfor -%}
+						{%- for item2 in item1.group_categorie_parentChilds -%}
+						<li><a href="{{ path('site_pageweb_categories', {categorieSlug: item2.slug }) }}">{{ UCfirst(item2) }}</a></li>
+						{%- endfor -%}
 					</ul>
 				</div>
 			</div>

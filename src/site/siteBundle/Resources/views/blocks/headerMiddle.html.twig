@@ -68,13 +68,11 @@
 						</div>
 						<div class="mainmenu pull-left">
 							<ul class="nav navbar-nav collapse navbar-collapse">
-								{% if sitedata.menuNav.subEntitys is defined %}
-								{% for item in sitedata.menuNav.subEntitys %}
+								{% for item in sitedata.menuNav.nestedChilds|default([]) %}
 								<li>
-									<a href="{{ actions.subEntityLink(item) }}"{% if item.title|default(null) != null %} title="{{ item.title }}"{% endif %}>{{ item.icon|raw }}{{ item.nom }}</a>
+									<a href="#">{{ item.icon|raw }}{{ item.nom }}</a>
 								</li>
 								{% endfor %}
-								{% endif %}
 							</ul>
 						</div>
 					</div><!--/interne-menu-->

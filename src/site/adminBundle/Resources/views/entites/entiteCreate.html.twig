@@ -15,6 +15,7 @@
 			<li><a href="{{ path('siteadmin_homepage') }}"><strong>{{ UCfirst('administration'|trans) }}</strong></a></li>
 			<li><a href="{{ path('siteadmin_entite', {entite: create_form.vars.value.className}) }}"><strong>{{ UCfirst('name_s'|trans({}, create_form.vars.value.className)) }}</strong></a></li>
 			<li>{{ UCfirst('actions.creation'|trans) }}</li>
+			<li><strong class="data-report text-success" data-report-target="#site_adminbundle_{{ create_form.vars.value.className }}_nom"></strong></li>
 		</ol>
 	</div>
 </div>

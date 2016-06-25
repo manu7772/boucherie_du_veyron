@@ -9,6 +9,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
 use site\adminBundle\services\flashMessage;
+use site\adminBundle\Entity\categorie;
 
 use \Exception;
 
@@ -41,82 +42,21 @@ class entiteController extends baseController {
 		$data['id'] = $id;
 		// EM
 		// autres éléments…
-		switch ($data['entite_name']) {
-			case 'categorie':
-				$data['categories_tree'] = $this->getEntityService('categorie')->getRepo()->findArrayTree(null, 'all');
-				break;
+		// switch ($data['entite_name']) {
+		// 	case 'categorie':
+		// 		if($this->container->get('kernel')->getEnvironment() == "dev") {
+		// 			$data['categories_tree'] = $this->getEntityService('categorie')->getRepo()->findArrayTree(null, 'all');
+		// 		}
+		// 		$data['roots_list'] = $this->getEntityService('categorie')->getRepo()->findRoots();
+		// 		break;
 			
-			default:
-				# code...
-				break;
-		}
+		// 	default:
+		// 		# code...
+		// 		break;
+		// }
 		// variables diverses
 		$data['typeSelf'] = self::TYPE_SELF;
 		$data['type_value_joiner'] = self::TYPE_VALUE_JOINER;
-		return $data;
-	}
-
-	protected function typeValuesToArray($type_values = null) {
-		if($type_values != null) $type_values = explode(self::TYPE_VALUE_JOINER, $type_values);
-		return $type_values;
-	}
-	protected function typeValuesToString($type_values = null) {
-		if($type_values != null) $type_values = implode(self::TYPE_VALUE_JOINER, $type_values);
-		return $type_values;
-	}
-
-	protected function fillEntityWithData(&$data) {
-		$service = $this->getEntityService($data['entite']);
-		// echo('<pre>');
-		// var_dump($data['type']);
-		if(is_array($data['type']['type_values']) && count($data['type']['type_values']) > 0) {
-			switch ($data['type']['type_related']) {
-				case self::TYPE_SELF:
-					// field
-					if(!$service->hasAssociation($data['type']['type_field'], $data['entite'])) {
-						$set = $service->getMethodOfSetting($data['type']['type_field'], $data['entite'], true);
-						if(is_string($set)) {
-							// ok setter
-							if(preg_match('#^set#', $set)) $data['entite']->$set(reset($data['type']['type_values']));
-							if(preg_match('#^add#', $set)) foreach($data['type']['type_values'] as $value) {
-								$data['entite']->$set($value);
-							}
-						}
-					} else {
-						throw new Exception("Ce champ est de type association : field ".json_encode($data['type']['type_field'])." fourni !", 1);
-					}
-					break;
-				default:
-					// association
-					if($service->hasAssociation($data['type']['type_field'], $data['entite'])) {
-						$set = $service->getMethodOfSetting($data['type']['type_field'], $data['entite'], true);
-						$related = explode(self::TYPE_VALUE_JOINER, $data['type']['type_related']);
-						if(is_string($set) && count($related) == 2) {
-							// ok setter
-							$related_service = $this->getEntityService($related[0]);
-							// echo("<h3>".$related_service." (Repository : ".get_class($related_service->getRepo()).")</h3>");
-							// var_dump($related);
-							foreach ($data['type']['type_values'] as $value) {
-								// find relateds
-								$findMethod = $related_service->getMethodNameWith($related[1], 'findBy');
-								if($findMethod != false) {
-									$related_objects = $related_service->getRepo()->$findMethod($value);
-								} else $related_objects = array();
-								// echo('<h4>Related as '.$related[0]."::".$related[1].' = '.$value.' ('.json_encode($findMethod).')</h4>');
-								// var_dump(count($related_objects));
-								foreach ($related_objects as $rel_object) {
-									$data['entite']->$set($rel_object);
-									if(preg_match('#^set#', $set)) break 2;
-								}
-							}
-						}
-					} else {
-						throw new Exception("Ce champ n'est pas de type association : field ".json_encode($data['type']['type_field'])." fourni !", 1);
-					}
-					break;
-			}
-		}
-		// echo('</pre>');
 		return $data;
 	}
 
@@ -129,7 +69,9 @@ class entiteController extends baseController {
 		// page générique entités
 		switch ($data['action']) {
 			case self::CREATE_ACTION :
-				$data['entite'] = $entityService->getNewEntity($data['classname']);
+				// $data['entite'] = $entityService->getNewEntity($data['classname']);
+				$classname = $data['classname'];
+				$data['entite'] = new $classname();
 				// ajout de valeurs si types sont définis…
 				$this->fillEntityWithData($data);
 				// Get form
@@ -353,52 +295,52 @@ class entiteController extends baseController {
 	}
 
 	protected function addContextData(&$data) {
-		$entityService = $this->getEntityService($data['entite_name']);
-		switch ($data['entite_name']) {
-			case 'categorie':
-				$jstreeObjects = $this->get('aetools.aeJstree');
-				if($data['action'] == self::LIST_ACTION) {
-					$rootParents = array();
-					foreach ($data['entites'] as $entite) {
-						// treeview
-						$jstreeObjects->createNew($entite);
-						// rootparents
-						if(is_object($entite->getRootParent(1))) 
-							$rootParents[$entite->getId()] = $entite->getRootParent(1);
-					}
-					if(count($rootParents) < 1) $rootParents = null;
-						else $rootParents = reset($rootParents);
-					// formulaire création new
-					$data['new_entite'] = $entityService->getNewEntity($data['classname']);
-					if($rootParents != null) {
-						$data['new_entite']->addParent($rootParents);
-					}
-					// $data['type']['type_field']
-					// $data['type']['type_values']
+		// $entityService = $this->getEntityService($data['entite_name']);
+		// switch ($data['entite_name']) {
+		// 	case 'categorie':
+		// 		$jstreeObjects = $this->get('aetools.aeJstree');
+		// 		if($data['action'] == self::LIST_ACTION) {
+		// 			$rootParents = array();
+		// 			foreach ($data['entites'] as $entite) {
+		// 				// treeview
+		// 				$jstreeObjects->createNew($entite);
+		// 				// rootparents
+		// 				if(is_object($entite->getRootParent(1))) 
+		// 					$rootParents[$entite->getId()] = $entite->getRootParent(1);
+		// 			}
+		// 			if(count($rootParents) < 1) $rootParents = null;
+		// 				else $rootParents = reset($rootParents);
+		// 			// formulaire création new
+		// 			$data['new_entite'] = $entityService->getNewEntity($data['classname']);
+		// 			if($rootParents != null) {
+		// 				$data['new_entite']->addParent($rootParents);
+		// 			}
+		// 			// $data['type']['type_field']
+		// 			// $data['type']['type_values']
 
-					// $data['form_pre_create'] =
-						// $this->getEntityFormView($data, 'preCategorieType');
-						// $this->createFormBuilder('preCategorieType', array())
-							// ->setAction($this->generateUrl('siteadmin_entite', array('entite' => $data['entite_name'], 'action' => self::CREATE_ACTION)))
-							// ->add('input', 'text', array(
-							// 	'label' => 'form.nom',
-							// 	'translation_domain' => 'messages',
-							// 	))
-							// ->add('submit', 'submit', array(
-							// 	'attr' => array('class' => 'btn-danger btn-outline', 'label' => self::CREATE_ACTION),
-							// 	))
-							// ->getForm()
-							// ->createView()
-							;
-				} else if($data['action'] == self::SHOW_ACTION) {
-					$jstreeObjects->createNew($data['entite']);
-				}
-				$data['jstreeObjects'] = $jstreeObjects;
-				break;
-			default:
-				# code...
-				break;
-		}
+		// 			// $data['form_pre_create'] =
+		// 				// $this->getEntityFormView($data, 'preCategorieType');
+		// 				// $this->createFormBuilder('preCategorieType', array())
+		// 					// ->setAction($this->generateUrl('siteadmin_entite', array('entite' => $data['entite_name'], 'action' => self::CREATE_ACTION)))
+		// 					// ->add('input', 'text', array(
+		// 					// 	'label' => 'form.nom',
+		// 					// 	'translation_domain' => 'messages',
+		// 					// 	))
+		// 					// ->add('submit', 'submit', array(
+		// 					// 	'attr' => array('class' => 'btn-danger btn-outline', 'label' => self::CREATE_ACTION),
+		// 					// 	))
+		// 					// ->getForm()
+		// 					// ->createView()
+		// 					;
+		// 		} else if($data['action'] == self::SHOW_ACTION) {
+		// 			$jstreeObjects->createNew($data['entite']);
+		// 		}
+		// 		$data['jstreeObjects'] = $jstreeObjects;
+		// 		break;
+		// 	default:
+		// 		# code...
+		// 		break;
+		// }
 		return $data;
 	}
 
@@ -449,7 +391,7 @@ class entiteController extends baseController {
 		// Entity service
 		$entityService = $this->getEntityService($data['entite_name']);
 
-		if($data['action'] == "create") {
+		if($data['action'] == self::CREATE_ACTION) {
 			// create
 			$imsg = '';
 			$data['entite'] = new $classname();
@@ -518,217 +460,6 @@ class entiteController extends baseController {
 		return $this->redirect($this->generateUrl('siteadmin_entite', $data['entite_name']));
 	}
 
-	/**
-	 * Renvoie la vue du formulaire de l'entité $entite
-	 * @param object $entite
-	 * @param string $action
-	 * @param array $data
-	 * @return Symfony\Component\Form\FormView
-	 */
-	public function getEntityFormView(&$data, $typeType = null) {
-		return $this->getEntityForm($data, $typeType, true);
-	}
-
-	/**
-	 * Renvoie le formulaire de l'entité $entite
-	 * @param object $entite
-	 * @param string $action
-	 * @param array $data
-	 * @return Symfony\Component\Form\Form
-	 */
-	public function getEntityForm(&$data, $typeType = null, $getViewNow = false) {
-		if(!is_array($data)) throw new Exception("getEntityForm : data doit être défini !", 1);
-		$types_valid = array(self::LIST_ACTION, self::SHOW_ACTION, self::CREATE_ACTION, self::EDIT_ACTION, self::COPY_ACTION, self::DELETE_ACTION);
-		if(!in_array($data['action'], $types_valid)) {
-			// throw new Exception("Action ".$action." invalide, doit être ".json_encode($types_valid, true), 1);
-			throw new Exception("getEntityForm => type d'action invalide : ".$data['action'], 1);
-		}
-		// récupère les directions en fonction des résultats
-		$this->addContextActionsToData($data);
-		$form = false;
-		// define Type
-		$baseClassType = str_replace('Entity', 'Form', preg_replace('#'.$data['entite_name'].'$#', '', $data['classname']));
-		$entiteType = $typeType;
-		if(!is_string($typeType)) {
-			// Type non fourni => Type selon nom de l'entité
-			$entiteType = $baseClassType.$data['entite_name'].'Type';
-		} else if(!preg_match('#^(.+\\.+)+$#', $typeType)) {
-			// Type fourni => vérification si classname complet fourni
-			$entiteType = $baseClassType.$typeType;
-		}
-		switch ($data['action']) {
-			case self::SHOW_ACTION:
-			case self::LIST_ACTION:
-			case self::CREATE_ACTION:
-				$form = $this->createForm(new $entiteType($this, $data), $data['entite']);
-				break;
-			case self::EDIT_ACTION:
-				$form = $this->createForm(new $entiteType($this, $data), $data['entite']);
-				break;
-			case self::COPY_ACTION:
-				throw new Exception("Ce formulaire ".$data['action']." n'est pas encore supporté.", 1);
-				break;
-			case self::DELETE_ACTION:
-				throw new Exception("Ce formulaire ".$data['action']." n'est pas encore supporté.", 1);
-				break;
-			default:
-				$this->get('flash_messages')->send(array(
-					'title'		=> 'Erreur formulaire',
-					'type'		=> flashMessage::MESSAGES_ERROR,
-					'text'		=> 'Ce type de formulaire <strong>"'.$type.'"</strong> n\'est pas reconnu.',
-				));
-				break;
-		}
-		if($form == false) {
-			$this->get('flash_messages')->send(array(
-				'title'		=> 'Erreur de génération du formalaire',
-				'type'		=> flashMessage::MESSAGES_ERROR,
-				'text'		=> 'Le formulaire n\'a pas pu être généré. Veuillez contacter le webmaster.',
-			));
-		} else {
-			if($getViewNow != false) return $form->createView();
-		}
-		return $form;
-	}
-
-	/**
-	 * Renvoie les url selon résultats (pour formulaires)
-	 * @param array $data = null
-	 * @return array
-	 */
-	protected function addContextActionsToData(&$data) {
-		if(!is_array($data)) throw new Exception("addContextActionsToData : data doit être défini !", 1);
-		switch ($data['action']) {
-			case 'delete_linked_image':
-				if(!isset($data['form_action'])) {
-					$data['form_action'] = $this->generateUrl('siteadmin_form_action', array(
-						'classname'	=> $data['entite_name'],
-						), true);
-				}
-				if(!isset($data['onSuccess'])) {
-					if($data['type']['type_related'] != null) {
-						$data['onSuccess'] = $this->generateUrl('siteadmin_entite_type', array(
-							'entite'		=> $data['entite_name'],
-							'type_related'	=> $data['type']['type_related'],
-							'type_field'	=> $data['type']['type_field'],
-							'type_values'	=> $this->typeValuesToString($data['type']['type_values']),
-							'action'		=> self::SHOW_ACTION,
-							'id'			=> $data['entite']->getId(),
-							), true);
-					} else {
-						$data['onSuccess'] = $this->generateUrl('siteadmin_entite', array(
-							'entite'	=> $data['entite_name'],
-							'id'		=> $data['entite']->getId(),
-							'action'	=> self::SHOW_ACTION,
-							), true);
-					}
-				}
-				if(!isset($data['onError'])) {
-					$data['onError'] = null;
-				}
-				break;
-			case self::CREATE_ACTION:
-				if(!isset($data['form_action'])) {
-					$data['form_action'] = $this->generateUrl('siteadmin_form_action', array(
-						'classname'	=> $data['entite_name'],
-						), true);
-				}
-				if(!isset($data['onSuccess'])) {
-					if($data['type']['type_related'] != null) {
-						$data['onSuccess'] = $this->generateUrl('siteadmin_entite_type', array(
-							'entite'		=> $data['entite_name'],
-							'type_related'	=> $data['type']['type_related'],
-							'type_field'	=> $data['type']['type_field'],
-							'type_values'	=> $this->typeValuesToString($data['type']['type_values']),
-							'action'		=> self::LIST_ACTION,
-							// 'id'			=> $data['entite']->getId(),
-							), true);
-					} else {
-						$data['onSuccess'] = $this->generateUrl('siteadmin_entite', array(
-							'entite'	=> $data['entite_name'],
-							// 'id'		=> $data['entite']->getId(),
-							'action'	=> self::LIST_ACTION,
-							), true);
-					}
-				}
-				if(!isset($data['onError'])) {
-					$data['onError'] = null;
-				}
-			case self::EDIT_ACTION:
-				if(!isset($data['form_action'])) {
-					$data['form_action'] = $this->generateUrl('siteadmin_form_action', array(
-						'classname'	=> $data['entite_name'],
-						), true);
-				}
-				if(!isset($data['onSuccess'])) {
-					if($data['type']['type_related'] != null) {
-						$data['onSuccess'] = $this->generateUrl('siteadmin_entite_type', array(
-							'entite'		=> $data['entite_name'],
-							'type_related'	=> $data['type']['type_related'],
-							'type_field'	=> $data['type']['type_field'],
-							'type_values'	=> $this->typeValuesToString($data['type']['type_values']),
-							'action'		=> self::LIST_ACTION,
-							// 'id'			=> $data['entite']->getId(),
-							), true);
-					} else {
-						$data['onSuccess'] = $this->generateUrl('siteadmin_entite', array(
-							'entite'	=> $data['entite_name'],
-							// 'id'		=> $data['entite']->getId(),
-							'action'	=> self::LIST_ACTION,
-							), true);
-					}
-				}
-				if(!isset($data['onError'])) {
-					$data['onError'] = null;
-				}
-				break;
-			case self::COPY_ACTION:
-				if(!isset($data['form_action'])) {
-					$data['form_action'] = $this->generateUrl('siteadmin_form_action', array(
-						'classname'	=> $data['entite_name'],
-						), true);
-				}
-				if(!isset($data['onSuccess'])) {
-					$data['onSuccess'] = $this->generateUrl('siteadmin_entite', array(
-						'entite'	=> $data['entite_name'],
-						'id'		=> null,
-						'action'	=> self::SHOW_ACTION,
-						), true);
-				}
-				if(!isset($data['onError'])) {
-					$data['onError'] = null;
-				}
-				break;
-			case self::DELETE_ACTION:
-				if(!isset($data['form_action'])) {
-					$data['form_action'] = $this->generateUrl('siteadmin_form_action', array(
-						'classname'	=> $data['entite_name'],
-						), true);
-				}
-				if(!isset($data['onSuccess'])) {
-					$data['onSuccess'] = $this->generateUrl('siteadmin_entite', array(
-						'entite'	=> $data['entite_name'],
-						), true);
-				}
-				if(!isset($data['onError'])) {
-					$data['onError'] = $this->generateUrl('siteadmin_entite', array(
-						'entite'	=> $data['entite_name'],
-						'id'		=> $data['entite']->getId(),
-						'action'	=> self::SHOW_ACTION,
-						), true);
-				}
-				break;
-			
-			default:
-				if(!isset($data['form_action'])) {
-					$data['form_action'] = $this->generateUrl('siteadmin_form_action', array(
-						'classname'	=> $data['entite_name'],
-						), true);
-				}
-				break;
-		}
-		// return $data;
-	}
 
 	/**
 	 * Désigne l'entite comme entite par défaut
@@ -751,29 +482,6 @@ class entiteController extends baseController {
 		return $this->redirect(urldecode($redir));
 	}
 
-
-	/**
-	 * Envoie un flash message après persist/update d'une entité
-	 * @param array $data
-	 */
-	protected function getSuccessPersistFlashMessage($data) {
-		$nom = $data['entite']->getId();
-		if(method_exists($data['entite'], 'getName')) $nom = $data['entite']->getName();
-		if(method_exists($data['entite'], 'getNom')) $nom = $data['entite']->getNom();
-		if($data['action'] == "create") {
-			$this->get('flash_messages')->send(array(
-				'title'		=> 'Saisie enregistrée',
-				'type'		=> flashMessage::MESSAGES_SUCCESS,
-				'text'		=> 'Le nouvel élément "'.$nom.'" a bien été enregistré.',
-			));
-		} else {
-			$this->get('flash_messages')->send(array(
-				'title'		=> 'Saisie enregistrée',
-				'type'		=> flashMessage::MESSAGES_SUCCESS,
-				'text'		=> 'Les modification "'.$nom.'" ont bien été enregistrées.',
-			));
-		}
-	}
 
 
 }

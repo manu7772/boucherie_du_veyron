@@ -7,22 +7,22 @@
 	</div>
 {% endmacro %}
 
-{% macro entiteButton(entite, action, type, type_value_joiner) %}
+{% macro entiteButton(entite, action, select, type_value_joiner) %}
 	{% import _self as self %}
 	{% if action == "list" %}
-		<a href="{{ self.entiteLink(entite, action, type) }}" type="button" class="btn btn-white btn-xs" data-toggle="tooltip" data-placement="bottom" title="{{ UCfirst('backlist'|trans({}, entite.className)) }}"><i class="fa fa-bars icon-wait-on-click"></i></a>
+		<a href="{{ self.entiteLink(entite, action, select) }}" type="button" class="btn btn-white btn-xs" data-toggle="tooltip" data-placement="bottom" title="{{ UCfirst('backlist'|trans({}, entite.className)) }}"><i class="fa fa-bars icon-wait-on-click"></i></a>
 	{% endif %}
 	{% if action == "create" %}
-		<a href="{{ self.entiteLink(entite, action, type) }}" type="button" class="btn btn-white btn-xs" data-toggle="tooltip" data-placement="bottom" title="{{ UCfirst('backlist'|trans({}, entite.className)) }}"><i class="fa fa-bars icon-wait-on-click"></i></a>
+		<a href="{{ self.entiteLink(entite, action, select) }}" type="button" class="btn btn-white btn-xs" data-toggle="tooltip" data-placement="bottom" title="{{ UCfirst('create'|trans({}, entite.className)) }}"><i class="fa fa-plus icon-wait-on-click"></i></a>
 	{% endif %}
 	{% if action == "show" %}
-		<a href="{{ self.entiteLink(entite, action, type) }}" type="button" class="btn btn-white btn-xs" data-toggle="tooltip" data-placement="bottom" title="{{ UCfirst('moredetails'|trans({'%name%': entite.nom}, entite.className)) }}"><i class="fa fa-eye icon-wait-on-click"></i></a>
+		<a href="{{ self.entiteLink(entite, action, select) }}" type="button" class="btn btn-white btn-xs" data-toggle="tooltip" data-placement="bottom" title="{{ UCfirst('moredetails'|trans({'%name%': entite.nom}, entite.className)) }}"><i class="fa fa-eye icon-wait-on-click"></i></a>
 	{% endif %}
 	{% if action == "edit" %}
-		<a href="{{ self.entiteLink(entite, action, type) }}" type="button" class="btn btn-white btn-xs" data-toggle="tooltip" data-placement="bottom" title="{{ UCfirst('actions.modifier'|trans) }}"><i class="fa fa-pencil icon-wait-on-click"></i></a>
+		<a href="{{ self.entiteLink(entite, action, select) }}" type="button" class="btn btn-white btn-xs" data-toggle="tooltip" data-placement="bottom" title="{{ UCfirst('actions.modifier'|trans) }}"><i class="fa fa-pencil icon-wait-on-click"></i></a>
 	{% endif %}
 	{% if (action == "delete" and ((entite.deletable|default(true) == true) or (app.environment in ['DEV', 'TEST']) or (is_granted('ROLE_SUPER_ADMIN')))) %}
-		<a href="{{ self.entiteLink(entite, action, type) }}" type="button" class="btn btn-white btn-xs need-confirmation" data-toggle="tooltip" data-placement="bottom" title="{{ UCfirst('actions.supprimer'|trans) }}" data-title="{{ UCfirst('actions.supprimer'|trans) }}" data-message="{{ UCfirst('actions.suppQuestion'|trans({'%name%': entite.nom|trans({}, entite.className)})) }}"><i class="fa fa-times icon-wait-on-click"></i></a>
+		<a href="{{ self.entiteLink(entite, action, select) }}" type="button" class="btn btn-white btn-xs need-confirmation" data-toggle="tooltip" data-placement="bottom" title="{{ UCfirst('actions.supprimer'|trans) }}" data-title="{{ UCfirst('actions.supprimer'|trans) }}" data-message="{{ UCfirst('actions.suppQuestion'|trans({'%name%': entite.nom|trans({}, entite.className)})) }}"><i class="fa fa-times icon-wait-on-click"></i></a>
 	{% endif %}
 	{% if action == "default" and entite.default is defined and (entite.statut.niveau|default('IS_AUTHENTICATED_ANONYMOUSLY') in ['IS_AUTHENTICATED_ANONYMOUSLY', 'ROLE_USER']) %}
 		{% set defcol = 'white' %}
@@ -31,38 +31,56 @@
 			{% set defcol = 'primary' %}
 			{% if entite.isDefaultNullable|default(false) == false %}{% set disabled = ' disabled="disabled"' %}{% endif %}
 		{% endif %}
-		<a href="{{ self.entiteLink(entite, action, type) }}"{{ disabled|raw }} type="button" class="btn btn-{{ defcol }} btn-xs" data-toggle="tooltip" data-placement="bottom" title="{{ 'default.bydefault'|trans }}"><i class="fa fa-star icon-wait-on-click"></i></a>
+		<a href="{{ self.entiteLink(entite, action, select) }}"{{ disabled|raw }} type="button" class="btn btn-{{ defcol }} btn-xs" data-toggle="tooltip" data-placement="bottom" title="{{ 'default.bydefault'|trans }}"><i class="fa fa-star icon-wait-on-click"></i></a>
 	{% endif %}
 	{% if (action == "active" and (entite.statut.slug|default('actif') != 'actif') and (entite.deletable|default(true) == true or (app.environment in ['DEV', 'TEST']) or (is_granted('ROLE_SUPER_ADMIN')))) %}
-		<a href="{{ self.entiteLink(entite, action, type) }}" type="button" class="btn btn-white btn-xs" title="{{ UCfirst('actions.activer'|trans) }}"><i class="fa fa-check icon-wait-on-click"></i></a>
+		<a href="{{ self.entiteLink(entite, action, select) }}" type="button" class="btn btn-white btn-xs" title="{{ UCfirst('actions.activer'|trans) }}"><i class="fa fa-check icon-wait-on-click"></i></a>
 	{% endif %}
 {% endmacro %}
 
-{% macro entiteLink(entite, action, type, type_value_joiner) -%}
-	{%- if action in ['list'] -%}
-		{%- if type.type_values|default(null) != null -%}
-			{{- path('siteadmin_entite_type', {entite: entite.className, type_related: type.type_related, type_field: type.type_field, type_values: type.type_values|join(type_value_joiner)|url_encode, action: action}) -}}
-		{%- else -%}
-			{{- path('siteadmin_entite', {entite: entite.className, action: action}) -}}
+{% macro entiteLink(entite, action, select, type_value_joiner) -%}
+	{% if entite.className == 'categorie' %}
+		{%- if action in ['list'] -%}
+			{%- if select.type_values|default(null) != null -%}
+				{{- path('siteadmin_list_categorie', {type_related: select.type_related, type_field: select.type_field, type_values: select.type_values|join(type_value_joiner)|url_encode}) -}}
+			{%- elseif select.method|default(null) != null -%}
+				{{- path('siteadmin_repo_categorie', {method: select.method, repoParams: select.repoParams}) -}}
+			{%- else -%}
+				{{- path('siteadmin_list_categorie') -}}
+			{%- endif -%}
 		{%- endif -%}
-	{%- endif -%}
-	{%- if action in ['create'] -%}
-		{%- if type.type_values|default(null) != null -%}
-			{{- path('siteadmin_entite_type', {entite: entite, type_related: type.type_related, type_field: type.type_field, type_values: type.type_values|join(type_value_joiner)|url_encode, action: action}) -}}
-		{%- else -%}
-			{{- path('siteadmin_entite', {entite: entite.className, action: action}) -}}
+		{%- if action in ['create'] -%}
+			{{- path('siteadmin_create_categorie', {rootParent: entite.id}) -}}
 		{%- endif -%}
-	{%- endif -%}
-	{%- if action in ['show','edit','delete', 'active'] -%}
-		{%- if type.type_values|default(null) != null -%}
-			{{- path('siteadmin_entite_type', {entite: entite.className, type_related: type.type_related, type_field: type.type_field, type_values: type.type_values|join(type_value_joiner)|url_encode, id: entite.id, action: action}) -}}
-		{%- else -%}
-			{{- path('siteadmin_entite', {entite: entite.className, id: entite.id, action: action}) -}}
+		{%- if action in ['show','edit'] -%}
+			{{- path('siteadmin_' ~ action ~ '_categorie', {id: entite.id}) -}}
 		{%- endif -%}
-	{%- endif -%}
-	{%- if action in ['default'] -%}
-		{{- path('siteadmin_set_default', {id: entite.id, entite: entite.className, redir: path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params'))|url_encode()}) -}}
-	{%- endif -%}
+	{% else %}
+		{%- if action in ['list'] -%}
+			{%- if select.type_values|default(null) != null -%}
+				{{- path('siteadmin_entite_type', {entite: entite.className, type_related: select.type_related, type_field: select.type_field, type_values: select.type_values|join(type_value_joiner)|url_encode, action: action}) -}}
+			{%- else -%}
+				{{- path('siteadmin_entite', {entite: entite.className, action: action}) -}}
+			{%- endif -%}
+		{%- endif -%}
+		{%- if action in ['create'] -%}
+			{%- if select.type_values|default(null) != null -%}
+				{{- path('siteadmin_entite_type', {entite: entite, type_related: select.type_related, type_field: select.type_field, type_values: select.type_values|join(type_value_joiner)|url_encode, action: action}) -}}
+			{%- else -%}
+				{{- path('siteadmin_entite', {entite: entite.className, action: action}) -}}
+			{%- endif -%}
+		{%- endif -%}
+		{%- if action in ['show','edit','delete', 'active'] -%}
+			{%- if select.type_values|default(null) != null -%}
+				{{- path('siteadmin_entite_type', {entite: entite.className, type_related: select.type_related, type_field: select.type_field, type_values: select.type_values|join(type_value_joiner)|url_encode, id: entite.id, action: action}) -}}
+			{%- else -%}
+				{{- path('siteadmin_entite', {entite: entite.className, id: entite.id, action: action}) -}}
+			{%- endif -%}
+		{%- endif -%}
+		{%- if action in ['default'] -%}
+			{{- path('siteadmin_set_default', {id: entite.id, entite: entite.className, redir: path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params'))|url_encode()}) -}}
+		{%- endif -%}
+	{% endif %}
 {%- endmacro %}
 
 {% macro colorDot(color, size) -%}
@@ -79,7 +97,11 @@
 
 
 {%- macro icon(item) %}
+	{% if item.className is defined %}
 	{{ item.icon|default(('entite.' ~ item.className|default('unknown'))|trans({}, 'icon')) }}
+	{% else %}
+	{{ ('entite.' ~ item)|trans({}, 'icon') }}
+	{% endif %}
 {%- endmacro %}
 
 {%- macro htmlicon(item, size, classes) %}
@@ -115,7 +137,7 @@
 	{% endfor %}
 {%- endmacro %}
 
-{%- macro labelLinkList(list, highlight, classe, type, type_value_joiner, action, limit) %}
+{%- macro labelLinkList(list, highlight, classe, select, type_value_joiner, action, limit) %}
 	{% import _self as self %}
 	{% set limit = limit|default(0) %}
 	{% set classe = classe|default('label-primary') %}
@@ -124,12 +146,12 @@
 	{% for item in list|default([]) %}
 		{% if loop.index0 < limit or limit == 0 %}
 			{% if item.className == 'categorie' and item.lvl|default(null) == 0 %}
-			<span id="{{ item.className }}_{{ item.id }}" class="sortable-disabled label inline {{ classeRoot|raw }} m-b-xs m-r-xs" style="display: inline-block; height: 20px; line-height: 15px;">
+			<a id="{{ item.className }}_{{ item.id }}" href="{{ self.entiteLink(item, action, select, type_value_joiner) }}" class="sortable-disabled label inline {{ classeRoot|raw }} m-b-xs m-r-xs" style="display: inline-block; height: 20px; line-height: 15px;" title="{{ ('types.' ~ item.type)|trans({}, item.className) }}">
 				<i class="fa {{ self.icon(item) }} m-r-xs"></i>
-				{{ ('types.' ~ item.type)|trans({}, item.className) }}
-			</span>
+				{{ item|trans({}, item.className) }}
+			</a>
 			{% else %}
-			<a id="{{ item.className }}_{{ item.id }}" href="{{ self.entiteLink(item, action, type, type_value_joiner) }}" class="label inline{% if item in highlight|default([]) %} {{ classe|raw }}{% endif %} m-b-xs m-r-xs" style="display: inline-block; height: 20px; line-height: 15px;">
+			<a id="{{ item.className }}_{{ item.id }}" href="{{ self.entiteLink(item, action, select, type_value_joiner) }}" class="label inline{% if item in highlight|default([]) %} {{ classe|raw }}{% endif %} m-b-xs m-r-xs" style="display: inline-block; height: 20px; line-height: 15px;">
 				<i class="fa {{ self.icon(item) }} m-r-xs"></i>
 				{{ item|trans({}, item.className) }}
 			</a>

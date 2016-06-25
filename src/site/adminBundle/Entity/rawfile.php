@@ -15,7 +15,7 @@ use site\adminBundle\services\aeImages;
 use site\adminBundle\services\aetools;
 use site\adminBundle\services\aeReponse;
 
-use site\adminBundle\Entity\baseSubEntity;
+use site\adminBundle\Entity\subentity;
 
 use site\adminBundle\Entity\media;
 use site\adminBundle\Entity\image;
@@ -32,7 +32,7 @@ use \Exception;
  * @ORM\Entity(repositoryClass="site\adminBundle\Entity\rawfileRepository")
  * @ORM\HasLifecycleCallbacks
  */
-class rawfile extends baseSubEntity {
+class rawfile extends subentity {
 
 	// const CLASS_RAWFILE = 'rawfile';
     const CLASS_IMAGE		= "image";

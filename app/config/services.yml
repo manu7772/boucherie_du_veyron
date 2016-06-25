@@ -33,8 +33,13 @@ services:
         class: %ae_services%aeEntity
         arguments: [@service_container]
 
-    aetools.aeSubEntity:
-        class: %ae_services%aeSubEntity
+    aetools.aeSubentity:
+        class: %ae_services%aeSubentity
+        arguments: [@service_container]
+
+    # fonctionnalités nested
+    aetools.aeNested:
+        class: %ae_services%aeNested
         arguments: [@service_container]
 
     # fonctionnalités de site

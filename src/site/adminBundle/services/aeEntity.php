@@ -183,6 +183,7 @@ class aeEntity extends aetools {
 			return $getShortName === true ? $list[$name] : $name;
 		}
 		// sinon, renvoie false : l'entité n'existe pas
+		// throw new Exception("L'objet ".json_encode($name)." n'est pas une entité Doctrine !", 1);
 		return false;
 	}
 
@@ -810,7 +811,8 @@ class aeEntity extends aetools {
 	/**
 	 * Renvoie le nom du setter / false si la méthode est manquante
 	 * @param string $field
-	 * @param object $entite
+	 * @param object $entite = null
+	 * @param boolean $testIfExists = true
 	 * @return string / false
 	 */
 	public function getMethodOfSetting($field, $entite = null, $testIfExists = true) {
@@ -838,6 +840,8 @@ class aeEntity extends aetools {
 				}
 			}
 		}
+		if($test == null) return $this->getMethodNameWith($field, 'set', null);
+		// throw new Exception("L'objet entité ".json_encode($entite->getClassName())." n'est pas une entité Doctrine !", 1);		
 		return false;
 	}
 
@@ -1332,7 +1336,7 @@ class aeEntity extends aetools {
 		// if(method_exists($entity, 'check')) $entity->check();
 		// Check statut… etc.
 		// $this->checkStatuts($entity, false);
-		$this->checkInversedLinks($entity, false, $butEntities);
+		// $this->checkInversedLinks($entity, false, $butEntities);
 		return $this;
 	}
 
@@ -1560,30 +1564,29 @@ class aeEntity extends aetools {
 		return false;
 	}
 
-    protected function affData($entity) {
-        echo('<pre><h3 style="color:blue;margin:4px 0px;">Old values</h3>');
-        foreach ($entity->getOldValues() as $name => $old) {
-            echo('<h4 style="color:darkblue;margin:2px 20px;">- Field '.$name);
-            if(get_class($old) == 'Doctrine\ORM\PersistentCollection') echo(' <i>(PersistentCollection)</i>');
-                else if($old != null) echo(' <i>(Single)</i>');
-                else echo(' <i>(Null)</i>');
-            echo('</h4>');
-            if(get_class($old) == 'Doctrine\ORM\PersistentCollection') foreach ($old as $item) {
-                echo('<p style="margin:1px 40px;">• #'.$item->getId().' '.$item->getNom().' <small><i style="color:#999;">('.get_class($item).')</small></i></p>');
-            } else if($old != null) {
-                echo('<p style="margin:1px 40px;">• #'.$old->getId().' '.$old->getNom().' <small><i style="color:#999;">('.get_class($old).')</small></i></p>');
-            }
-        }
-        echo('</pre>');
+    protected function affData($entity, $parents, $childs) {
+        // echo('<pre><h3 style="color:blue;margin:4px 0px;">Old values</h3>');
+        // foreach ($entity->getOldValues() as $name => $old) {
+        //     echo('<h4 style="color:darkblue;margin:2px 20px;">- Field '.$name);
+        //     if(get_class($old) == 'Doctrine\ORM\PersistentCollection') echo(' <i>(PersistentCollection)</i>');
+        //         else if($old != null) echo(' <i>(Single)</i>');
+        //         else echo(' <i>(Null)</i>');
+        //     echo('</h4>');
+        //     if(get_class($old) == 'Doctrine\ORM\PersistentCollection') foreach ($old as $item) {
+        //         echo('<p style="margin:1px 40px;">• #'.$item->getId().' '.$item->getNom().' <small><i style="color:#999;">('.get_class($item).')</small></i></p>');
+        //     } else if($old != null) {
+        //         echo('<p style="margin:1px 40px;">• #'.$old->getId().' '.$old->getNom().' <small><i style="color:#999;">('.get_class($old).')</small></i></p>');
+        //     }
+        // }
+        // echo('</pre>');
         // $entity->initNesteds();
-        // $list = array_merge($entity->getArticleParents()->toArray(), $entity->getArticleChilds()->toArray());
         echo('<pre><h3 style="color:blue;margin:4px 0px;">Parents</h3>');
-        foreach ($entity->getArticleParents()->toArray() as $item) {
+        foreach ($parents as $item) {
             echo('<p style="margin:1px 40px;">• #'.$item->getId().' '.$item->getNom().' <small><i style="color:#999;">('.get_class($item).')</small></i></p>');
         }
         echo('</pre>');
         echo('<pre><h3 style="color:blue;margin:4px 0px;">Enfants</h3>');
-        foreach ($entity->getArticleChilds()->toArray() as $item) {
+        foreach ($childs as $item) {
             echo('<p style="margin:1px 40px;">• #'.$item->getId().' '.$item->getNom().' <small><i style="color:#999;">('.get_class($item).')</small></i></p>');
         }
         echo('</pre>');

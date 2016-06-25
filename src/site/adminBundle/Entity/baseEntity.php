@@ -75,7 +75,8 @@ abstract class baseEntity {
 	}
 
 	public function __toString() {
-		return is_string($this->getNom()) ? $this->getNom() : '(aucun nom)';
+		return $this->getNom().'';
+		// return is_string($this->getNom()) ? $this->getNom() : '(aucun nom)';
 	}
 
     // abstract public function getClassName();

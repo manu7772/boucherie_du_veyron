@@ -30,3 +30,4 @@ fields:
     parent: parent
     elements: éléments
     icon: icône
+    group_articles_reseausParents: articles

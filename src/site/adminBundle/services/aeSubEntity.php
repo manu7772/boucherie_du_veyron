@@ -4,15 +4,16 @@ namespace site\adminBundle\services;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use site\adminBundle\services\aeEntity;
 
-use site\adminBundle\Entity\item;
 use site\adminBundle\Entity\baseEntity;
+use site\adminBundle\Entity\subentityposition;
 
-// call in controller with $this->get('aetools.aeSubEntity');
-class aeSubEntity extends aeEntity {
+// call in controller with $this->get('aetools.aeSubentity');
+class aeSubentity extends aeEntity {
 
-	const NAME                  = 'aeSubEntity';        // nom du service
-	const CALL_NAME             = 'aetools.aeSubEntity'; // comment appeler le service depuis le controller/container
-	const CLASS_ENTITY          = 'site\adminBundle\Entity\baseSubEntity';
+	const NAME                  = 'aeSubentity';        // nom du service
+	const CALL_NAME             = 'aetools.aeSubentity'; // comment appeler le service depuis le controller/container
+	const CLASS_ENTITY          = 'site\adminBundle\Entity\subentity';
+	const CLASS_SHORT_ENTITY    = 'subentity';
 
 	public function __construct(ContainerInterface $container = null, $em = null) {
 	    parent::__construct($container, $em);
@@ -23,7 +24,7 @@ class aeSubEntity extends aeEntity {
 	/**
 	 * Check entity after change (edit…)
 	 * @param baseEntity $entity
-	 * @return aeSubEntity
+	 * @return aeSubentity
 	 */
 	public function checkAfterChange(&$entity, $butEntities = []) {
         // check images
@@ -46,10 +47,6 @@ class aeSubEntity extends aeEntity {
 	                }
 	            }
             }
-        }
-        // effacement olds
-        foreach ($entity->getOldValues() as $name => $old) {
-        	// !!!
         }
         parent::checkAfterChange($entity, $butEntities);
 		return $this;
