@@ -1,0 +1,54 @@
+{% extends 'siteadminBundle::page_admin_generic.html.twig' %}
+{% set cssjsloads = cssjsloads|default('FORM') %}
+{% set DEVMODE = (app.environment in ['dev', 'test']) or (is_granted('ROLE_SUPER_ADMIN')) %}
+
+{% block page_heading %}
+<div class="row wrapper border-bottom white-bg page-heading">
+	<div class="col-lg-12 m-t-xs">
+		<h2 class="row">
+			<div class="col-md-8">{{ UCfirst('name'|trans({}, edit_form.vars.value.className)) }}</div>
+			<div class="col-md-4">
+				<a href="{{ path('siteadmin_entite', {entite: edit_form.vars.value.className}) }}" type="button" class="btn btn-xs btn-white pull-right"><i class="fa fa-bars icon-wait-on-click"></i> {{ UCfirst('backlist_btn'|trans({}, edit_form.vars.value.className)) }}</a>
+			</div>
+		</h2>
+		<ol class="breadcrumb">
+			<li><a href="{{ path('siteadmin_homepage') }}"><strong>{{ UCfirst('administration'|trans) }}</strong></a></li>
+			<li><a href="{{ path('siteadmin_repo_categorie', {method: 'findRoots'}) }}"><strong>{{ UCfirst('name_s'|trans({}, entite_name)) }}</strong></a></li>
+			<li><a href="{{ path('siteadmin_repo_categorie', {method: 'findCollectionsByType', repoParams: entite.type}) }}"><strong>Types {{ UCfirst(('types.' ~ entite.type)|trans({}, entite.className)) }}</strong></a></li>
+			{% if edit_form.vars.value.rootParent != null %}
+			<li><a href="{{ path('siteadmin_show_categorie', {id: edit_form.vars.value.rootParent.id}) }}"><strong>{{ UCfirst(edit_form.vars.value.rootParent) }}</strong></a></li>
+			{% endif %}
+			<li><a href="{{ path('siteadmin_show_categorie', {id: edit_form.vars.value.id}) }}"><strong class="data-report text-success" data-report-target="#site_adminbundle_{{ edit_form.vars.value.className }}_nom">{{ edit_form.vars.value.nom }}</strong></a></li>
+			<li>{{ UCfirst('actions.modification'|trans) }}</li>
+		</ol>
+	</div>
+</div>
+{% endblock page_heading %}
+
+{% block content %}
+
+	{% set noErrors = ['submit', 'submit2', '_token', 'hidden'] %}
+	{% set prior = ["submit2", "nom", "name"] %}
+	{% set lasts = ["submit"] %}
+    {{ form_start(edit_form) }}
+    {{ form_errors(edit_form) }}
+
+    {% for item in prior if edit_form[item] is defined %}
+        {{ form_row(edit_form[item]) }}
+        {% if item not in noErrors %}{{ form_errors(edit_form[item]) }}{% endif %}
+    {% endfor %}
+
+    {% for fieldname,child in edit_form.children if ((fieldname not in prior) and (fieldname not in lasts)) %}
+        {{ form_row(child) }}
+        {% if fieldname not in noErrors %}{{ form_errors(child) }}{% endif %}
+    {% endfor %}
+    
+    {% for item in lasts if edit_form[item] is defined %}
+        {{ form_row(edit_form[item]) }}
+        {% if item not in noErrors %}{{ form_errors(edit_form[item]) }}{% endif %}
+    {% endfor %}
+
+    {{ form_rest(edit_form) }}
+    {{ form_end(edit_form) }}
+
+{% endblock content %}
