@@ -4,29 +4,41 @@
 	<div class="container">
 		<div class="bg">
 			<div class="row">
-				<div class="col-sm-8 hidden-xs">
-					<div id="gmap">
-						<iframe frameborder="0" scrolling="no" marginheight="0" marginwidth="0" width="100%" height="100%" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2996.851938617299!2d5.405574793781415!3d46.08619196962172!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x478ca9d35627e5ef%3A0x9d69bdf673886ebf!2sLa+Boucherie+du+Veyron!5e0!3m2!1sfr!2sfr!4v1448305621316" style="border:0"></iframe>
-					</div>
+				<div class="col-xs-12">
+					<h2 class="title">Contact {{ sitedata.nom }}</h2>
 				</div>
+				{% for boutique in sitedata.boutiques %}
 				<div class="col-sm-4">
 					<div class="contact-info">
-						<h2 class="title">Adresse</h2>
+						{% if boutique.adresse is not null %}
 						<address>
-							<h4>Boucherie du Veyron</h4>
-							<p>1 Rue Neuve</p>
-							<p>01450 Poncin</p>
-							<p>Tél: 04 74 37 77 09</p>
-							<!-- <p>Mobile: 06 87 86 41 78</p> -->
-							<p>Email: laboucheriedeveyron@orange.fr</p>
+							<h4>{{ boutique.nom }}</h4>
+							<p>{{  boutique.adresse.adresse }}<br>{{  boutique.adresse.cp }} {{  boutique.adresse.ville }}</p>
+							{% if boutique.telfixe is not null %}
+							<p>Tel. {{ boutique.telfixe }}</p>
+							{% endif %}
+							{% if boutique.mobile is not null %}
+							<p>Mobile {{ boutique.mobile }}</p>
+							{% endif %}
+							{% if boutique.email is not null %}
+							<p>Email {{ boutique.email }}</p>
+							{% endif %}
 						</address>
+						{% endif %}
 					</div>
 				</div>
+				<div class="col-sm-8 hidden-xs">
+					<div id="gmap">
+						{# https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2996.851938617299!2d5.405574793781415!3d46.08619196962172!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x478ca9d35627e5ef%3A0x9d69bdf673886ebf!2sLa+Boucherie+du+Veyron!5e0!3m2!1sfr!2sfr!4v1448305621316 #}
+						<iframe frameborder="0" scrolling="no" marginheight="0" marginwidth="0" width="100%" height="100%" src="{{ boutique.adresse.url }}" style="border:0"></iframe>
+					</div>
+				</div>
+				{% if not loop.last %}<hr>{% endif %}
+				{% endfor %}
 			</div>
 		</div>
 	</div><!--/#contact-page-->
-	
-		
+
 	<section id="section-color">
 		<div id="contact-page"  class="container"><!--container-->
 			<div class="center">
@@ -77,17 +89,5 @@
 			</div>
 		</div><!--/container-->
 	</section>
-
-	<div class="container visible-xs">
-		<div class="bg">
-			<div class="row">
-				<div class="col-xs-12">
-					<div id="gmap">
-						<iframe frameborder="0" scrolling="no" marginheight="0" marginwidth="0" width="100%" height="100%" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2996.851938617299!2d5.405574793781415!3d46.08619196962172!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x478ca9d35627e5ef%3A0x9d69bdf673886ebf!2sLa+Boucherie+du+Veyron!5e0!3m2!1sfr!2sfr!4v1448305621316" style="border:0"></iframe>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div><!--/#contact-page-->
 
 {% endblock mainContainer %}

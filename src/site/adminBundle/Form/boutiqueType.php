@@ -38,6 +38,21 @@ class boutiqueType extends baseType {
 				'translation_domain' => 'boutique',
 				'required' => true,
 				))
+			->add('telfixe', 'text', array(
+				'label' => 'fields.telfixe',
+				'translation_domain' => 'boutique',
+				'required' => false,
+				))
+			->add('mobile', 'text', array(
+				'label' => 'fields.mobile',
+				'translation_domain' => 'boutique',
+				'required' => false,
+				))
+			->add('email', 'text', array(
+				'label' => 'fields.email',
+				'translation_domain' => 'boutique',
+				'required' => false,
+				))
 			->add('adresse', new adresseType($this->controller), array(
 				'label' => 'fields.adresse',
 				'translation_domain' => 'boutique',

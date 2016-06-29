@@ -12,7 +12,7 @@
 	<div class="col-lg-6">
 		<div class="ibox float-e-margins">
 			<div class="ibox-content">
-				<h2>{{ entite.nom|raw }}{% if entite.marque|default(null) != null %}{% endif %}{% if entite.statut.id > 1 %} - <small><i>({{ entite.statut.nom }})</i></small>{% endif %}</h2>
+				<h2>{{ entite.nom|raw }}{% if entite.statut.id > 1 %} - <small><i>({{ entite.statut.nom }})</i></small>{% endif %}</h2>
 				<hr>
 				<table class="table table-striped table-bordered table-hover" role="grid">
 					<thead>
@@ -22,10 +22,6 @@
 						</tr>
 					</thead>
 					<tbody>
-						<tr>
-							<td><strong>{{ UCfirst('fields.parents'|trans({}, entite_name)) }}</strong></td>
-							<td>{{ actions.labelList(entite.allParentsInverse, entite.parents) }}</td>
-						</tr>
 						<tr>
 							<td><strong>{{ UCfirst('fields.created'|trans({}, entite.className)) }}</strong></td>
 							<td>

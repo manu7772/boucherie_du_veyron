@@ -4,10 +4,17 @@
 			<div class="col-sm-8">
 				<div class="contactinfo">
 					<ul class="nav nav-pills">
-						{% for tel in version.telephones|default({'tel': '04 74 37 77 09'}) %}
-						<li><a href="#"><i class="fa fa-phone" title=""></i> {{ tel }}</a></li>
-						{% endfor %}
-						<li><a href="mailto:boucherie-du-veyron.fr"><i class="fa fa-envelope"></i> boucherie-du-veyron.fr</a></li>
+						{% if sitedata.boutiques|length > 0 %}
+						{% if sitedata.boutiques.0.telfixe is not null %}
+						<li><a><i class="fa fa-phone m-r-xs"></i> {{ sitedata.boutiques.0.telfixe }}</a></li>
+						{% endif %}
+						{% if sitedata.boutiques.0.mobile is not null %}
+						<li><a><i class="fa fa-mobile m-r-xs"></i> {{ sitedata.boutiques.0.mobile }}</a></li>
+						{% endif %}
+						{% if sitedata.boutiques.0.email is not null %}
+						<li><a href="mailto:{{ sitedata.boutiques.0.email }}"><i class="fa fa-envelope m-r-xs"></i> {{ sitedata.boutiques.0.email }}</a></li>
+						{% endif %}
+						{% endif %}
 					</ul>
 				</div>
 			</div>

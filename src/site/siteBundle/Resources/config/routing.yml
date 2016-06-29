@@ -7,8 +7,26 @@ site_pageweb_categories:
     defaults:   { _controller: sitesiteBundle:Default:pagewebCategorie, params: null }
 
 site_pageweb:
-    path:       /page/{pageweb}/{params}
-    defaults:   { _controller: sitesiteBundle:Default:pageweb, params: null }
+    path:       /page/{pagewebSlug}/{params}
+    defaults:   { _controller: sitesiteBundle:Default:pagewebPageweb, params: null }
+
+
+
+site_pageweb_categorie:
+    path:       /categorie/{itemSlug}/{parentSlug}
+    defaults:   { _controller: sitesiteBundle:Default:categorie, parentSlug: null }
+
+site_pageweb_pageweb:
+    path:       /pageweb/{itemSlug}/{parentSlug}
+    defaults:   { _controller: sitesiteBundle:Default:pageweb, parentSlug: null }
+
+site_pageweb_article:
+    path:       /article/{itemSlug}/{parentSlug}
+    defaults:   { _controller: sitesiteBundle:Default:article, parentSlug: null }
+
+site_pageweb_articles:
+    path:       /articles/{categorieSlug}
+    defaults:   { _controller: sitesiteBundle:Default:articles }
 
 
 # Gestion du panier

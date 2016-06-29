@@ -233,7 +233,7 @@
 	{% if errors|length > 0 -%}
 	{% if form.parent %}<span class="help-block">{% else %}<div class="alert alert-danger" role="alert">{% endif %}
 	{%- for error in errors -%}
-		<p class="text-danger"><i class="fa fa-exclamation-triangle"></i> <strong>{{ error.message }}</strong></p>
+		<p class="text-danger"><i class="fa fa-exclamation-triangle m-r-xs"></i> <strong>{{ error.message }}</strong></p>
 	{%- endfor -%}
 	{% if form.parent %}</span>{% else %}</div>{% endif %}
 	{%- endif %}
@@ -445,7 +445,7 @@
 
 {% block multiCollection_widget %}
 	<span id="multi-form_{{ name }}" class="multi-form" data-table-prototype="{{ '<table class=\'table table-hover table-bordered table-condensed table-responsive xsmall m-b-xs\' style=\'background-color:#ffffff;\'><thead><tr></tr></thead><tbody></tbody></table>'|e }}">
-		<button class="btn btn-primary btn-outline btn-sm btn-block add_multiform_link" data-target="#multi-form_{{ name }}"><i class="fa fa-plus"></i> Ajouter</button>
+		<button class="btn btn-primary btn-outline btn-sm btn-block add_multiform_link" data-target="#multi-form_{{ name }}"><i class="fa fa-plus m-r-xs"></i>Ajouter</button>
 		{{- block('form_widget_list') -}}
 	</span>
 {% endblock multiCollection_widget %}

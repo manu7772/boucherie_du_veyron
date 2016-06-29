@@ -27,6 +27,30 @@ pageweb:
             metadescription: 'Contact Boucherie du Veyron'
             modele: 'src/site/siteBundle/Resources/views/pages_web/simple_1col_wrap.html.twig'
         -
+            nom: 'categorie'
+            code: null
+            title: 'Boucherie du Veyron'
+            titreh1: 'Boucherie du Veyron'
+            # keywords: 'boucherie, boucher, traiteur, categorie'
+            metadescription: 'Boucherie du Veyron, categorie'
+            modele: 'src/site/siteBundle/Resources/views/pages_web/categorie.html.twig'
+        -
+            nom: 'categories'
+            code: null
+            title: 'Boucherie du Veyron'
+            titreh1: 'Boucherie du Veyron'
+            # keywords: 'boucherie, boucher, traiteur, categories'
+            metadescription: 'Boucherie du Veyron, categories'
+            modele: 'src/site/siteBundle/Resources/views/pages_web/categories.html.twig'
+        -
+            nom: 'article'
+            code: null
+            title: 'Boucherie du Veyron'
+            titreh1: 'Boucherie du Veyron'
+            # keywords: 'boucherie, boucher, traiteur, article'
+            metadescription: 'Boucherie du Veyron, article'
+            modele: 'src/site/siteBundle/Resources/views/pages_web/article.html.twig'
+        -
             nom: 'articles'
             code: null
             title: 'Boucherie du Veyron'

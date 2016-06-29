@@ -19,6 +19,9 @@ fields:
     created: création
     updated: mise à jour
     adresse: adresse
+    telfixe: tél.
+    mobile: mobile
+    email: email
     image: vitrine
     logo: logotype
     descriptif: descriptif

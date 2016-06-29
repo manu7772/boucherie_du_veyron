@@ -313,6 +313,38 @@ class categorie extends nested {
 	}
 
 	/**
+	 * Get nestedParents by class
+	 * @return array 
+	 */
+	public function getNestedChildsByClass($classes = []) {
+		if(count((array)$classes) == 0) {
+			return $this->getChildsByTypes();
+		} else {
+			$result = array();
+			foreach ($this->getChildsByTypes() as $parent) {
+				if(in_array($parent->getClassName(), (array)$classes)) $result[] = $parent;
+			}
+			return array_unique($result);
+		}
+	}
+
+	/**
+	 * Get ALL nestedParents by class
+	 * @return array 
+	 */
+	public function getAllNestedChildsByClass($classes = []) {
+		if(count((array)$classes) == 0) {
+			return $this->getAllChildsByTypes();
+		} else {
+			$result = array();
+			foreach ($this->getAllChildsByTypes() as $parent) {
+				if(in_array($parent->getClassName(), (array)$classes)) $result[] = $parent;
+			}
+			return array_unique($result);
+		}
+	}
+
+	/**
 	 * Set Level
 	 * @return categorie
 	 */

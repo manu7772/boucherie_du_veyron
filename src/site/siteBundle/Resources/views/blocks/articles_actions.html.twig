@@ -1,5 +1,5 @@
 {% macro boxArticle(article, categorie) %}
-{% set categorie = categorie|default(article.categories) %}
+{% set categorie = categorie|default(article.getNestedParentsByClass('categorie')[0]) %}
 <div class="item active">
 	<div class="col-sm-12 col-md-4">
 		<div class="product-image-wrapper">
@@ -14,28 +14,30 @@
 						<div class="btn-group order-group for-product" role="group">
 							<!-- <h2>25<small>,50<sup>€</sup><span>/Kg</span></small></h2> -->
 							<h2>{{ article.prix|format(2, ',', '') }}€</h2>
+							{% if marketplace.active %}
 							<button type="button" class="btn btn-default btn-commander"><i class="fa fa-shopping-cart fa-flip-horizontal"></i></button>
-							<input class="command_quantity" type="text" name="quantity" value="1 (150g)" autocomplete="off" size="10">
+							<input class="command_quantity" type="text" name="quantity" value="1 x 150g" autocomplete="off" size="10">
 							<span class="btn-quantity">
-								<a class="btn quantity-top" href="#"><i class="fa fa-angle-up"></i></a>
-								<a class="btn quantity-bottom" href="#"><i class="fa fa-angle-down"></i></a>
+								<a class="btn quantity-top"><i class="fa fa-angle-up"></i></a>
+								<a class="btn quantity-bottom"><i class="fa fa-angle-down"></i></a>
 							</span>
+							{% endif %}
 						</div>
 					</div>
 				</div>
 				<p class="tab-name-product">{{ article }}</p>
-				<p class="tab-info-category">{{ categorie.parents[categorie.parents|length - 3]|default(categorie) }}</p>
-				{% if categorie.image != null %}
+				<p class="tab-info-category">{{ categorie.parent|default('') }}</p>
+{# 				{% if categorie.image != null %}
 				{% if categorie.image.isScreenableImage %}
 				<img src="{{ categorie.image.imgThumbnail(66, null, 'in') }}" class="info-triangle" style="border:none;" alt="{{ categorie }}">
 				{% endif %}
 				{% else %}
 				{% set stop = false %}
-				{% for child in categorie.allChildren if (child.image != null) and (child in article.categories) and (stop == false) %}
+				{% for child in categorie.nestedParents if (child.image != null) and (child in article.nestedParents) and (stop == false) %}
 				<img src="{{ child.image.imgThumbnail(66, null, 'in') }}" class="info-triangle" style="border:none;" alt="{{ child }}">
 				{% set stop = true %}
 				{% endfor %}
-				{% endif %}
+				{% endif %} #}
 			</div>
 		</div>
 	</div>

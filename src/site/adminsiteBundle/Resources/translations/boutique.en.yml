@@ -19,6 +19,9 @@ fields:
     created: created
     updated: updated
     adresse: adress
+    telfixe: tel.
+    mobile: mobile
+    email: email
     image: store photo
     logo: logotype
     descriptif: description

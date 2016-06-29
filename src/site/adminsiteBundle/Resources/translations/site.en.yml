@@ -12,6 +12,7 @@ dontexist: 'this site does not exist'
 existe: 'this site already exists'
 suppression: 'site %name% have been deleted'
 moredetails: 'more details on %name%'
+siteparams: 'website parameters'
 grants:
     no_access: You are not granted to access to the site<br>"%name%"
 form:
@@ -19,6 +20,9 @@ form:
 fields:
     id: id
     nom: name
+    tags: tags
+    created: created
+    updated: updated
     accroche: slogan
     descriptif: description
     couleur: color

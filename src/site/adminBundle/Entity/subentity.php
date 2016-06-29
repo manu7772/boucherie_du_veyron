@@ -20,7 +20,22 @@ use \Exception;
  * @ORM\Entity(repositoryClass="site\adminBundle\Entity\subentityRepository")
  * @ORM\InheritanceType("JOINED")
  * @ORM\DiscriminatorColumn(name="class_name", type="string")
- * @ORM\DiscriminatorMap({"item" = "item", "tier" = "tier", "media" = "media", "site" = "site", "rawfile" = "rawfile", "categorie" = "categorie", "article" = "article", "fiche" = "fiche", "pageweb" = "pageweb", "boutique" = "boutique", "marque" = "marque", "reseau" = "reseau", "image" = "image", "pdf" = "pdf"})
+ * @ORM\DiscriminatorMap({
+ * 		"item" 			= "item",
+ * 		"tier" 			= "tier",
+ * 		"media" 		= "media",
+ * 		"site" 			= "site",
+ * 		"rawfile" 		= "rawfile",
+ * 		"categorie" 	= "categorie",
+ * 		"article" 		= "article",
+ * 		"fiche" 		= "fiche",
+ * 		"pageweb" 		= "pageweb",
+ * 		"boutique" 		= "boutique",
+ * 		"marque" 		= "marque",
+ * 		"reseau" 		= "reseau",
+ * 		"image" 		= "image",
+ * 		"pdf" 			= "pdf"
+ * })
  * 
  * @ORM\HasLifecycleCallbacks()
  */

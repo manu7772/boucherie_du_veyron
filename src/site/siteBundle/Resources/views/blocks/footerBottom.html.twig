@@ -1,8 +1,8 @@
 <div class="footer-bottom">
 	<div class="container">
 		<div class="row">
-			{% set addr = version.adresses.first|default(null) %}
-			<p class="pull-left">{{ 'footer.rights'|trans|capitalize }} © {{ annee() }} - {{ 'site'|trans }}{% if addr is iterable %} - {{ addr.adresse }} - {{ addr.cp }} {{ addr.ville }}{% endif %}</p>
+			{% set boutique = sitedata.boutiques.0|default(null) %}
+			<p class="pull-left">{{ 'footer.rights'|trans|capitalize }} © {{ annee() }} - {{ 'site'|trans }} {{ sitedata.nom }}{% if boutique.adresse is not null %} - {{ boutique.adresse.adresse }} - {{ boutique.adresse.cp }} {{ boutique.adresse.ville }}{% endif %}</p>
 			<p class="pull-right">{{ 'footer.realisation'|trans({'%name%': 'Aequation-Webdesign.fr'})|capitalize }} </p>
 		</div>
 	</div>

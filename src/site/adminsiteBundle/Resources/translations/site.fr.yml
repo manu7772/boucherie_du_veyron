@@ -12,6 +12,7 @@ dontexist: 'cet site n''existe pas'
 existe: 'cet site existe déjà'
 suppression: 'le site %name% a été supprimé'
 moredetails: 'plus de détails sur %name%'
+siteparams: 'paramètres du site'
 grants:
     no_access: Vous n'avez pas les droits pour accéder au site<br>"%name%"
 form:
@@ -19,6 +20,9 @@ form:
 fields:
     id: id
     nom: nom
+    tags: tags
+    created: création
+    updated: mis à jour
     accroche: accroche
     descriptif: descriptif
     couleur: couleur

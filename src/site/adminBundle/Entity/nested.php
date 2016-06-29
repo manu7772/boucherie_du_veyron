@@ -639,84 +639,15 @@ abstract class nested extends subentity {
 	 * @return array 
 	 */
 	public function getAllNestedChilds($excludeNotAccepts = false, $limit = 100) {
-		$nestedChilds = $this->getNestedChilds($excludeNotAccepts)->toArray();
-		foreach((array)$nestedChilds as $child) if($limit > 0) {
-			$nestedChilds = array_merge((array)$nestedChilds, (array)$child->getAllNestedChilds($excludeNotAccepts, $limit - 1));
+		$nestedChilds = $this->getNestedChilds($excludeNotAccepts);
+		if($nestedChilds instanceOf ArrayCollection) $nestedChilds = $nestedChilds->toArray();
+		foreach($nestedChilds as $child) if($limit > 0) {
+			$nestedChilds = array_merge($nestedChilds, $child->getAllNestedChilds($excludeNotAccepts, $limit - 1));
 		}
 		return array_unique((array)$nestedChilds);
 	}
 
-	/**
-	 * Get nestedParents by class
-	 * @return array 
-	 */
-	public function getNestedChildsByClass($classes = [], $excludeNotAccepts = false) {
-		if(count((array)$classes) == 0) {
-			return $this->getNestedChilds($excludeNotAccepts);
-		} else {
-			$result = array();
-			foreach ((array)$classes as $classe) {
-				foreach ($this->getNestedChilds() as $parent) {
-					if($parent->getClassName() == $classe) $result[] = $parent;
-				}
-			}
-			return array_unique($result);
-		}
-	}
 
-	/**
-	 * Get ALL nestedParents by class
-	 * @return array 
-	 */
-	public function getAllNestedChildsByClass($classes = [], $excludeNotAccepts = false) {
-		if(count((array)$classes) == 0) {
-			return $this->getAllNestedChilds($excludeNotAccepts);
-		} else {
-			$result = array();
-			foreach ((array)$classes as $classe) {
-				foreach ($this->getAllNestedChilds($excludeNotAccepts) as $parent) {
-					if($parent->getClassName() == $classe) $result[] = $parent;
-				}
-			}
-			return array_unique($result);
-		}
-	}
-
-	// /**
-	//  * Get nestedChilds by type
-	//  * @return array 
-	//  */
-	// public function getNestedChildsByType($types = [], $excludeNotAccepts = false) {
-	// 	if(count((array)$types) == 0) {
-	// 		return $this->getNestedChilds($excludeNotAccepts);
-	// 	} else {
-	// 		$result = array();
-	// 		foreach ((array)$types as $type) {
-	// 			foreach ($this->getNestedChilds($excludeNotAccepts) as $parent) {
-	// 				if($parent->getType() == $type) $result[] = $parent;
-	// 			}
-	// 		}
-	// 		return array_unique($result);
-	// 	}
-	// }
-
-	// /**
-	//  * Get ALL nestedChilds by type
-	//  * @return array 
-	//  */
-	// public function getAllNestedChildsByType($types = [], $excludeNotAccepts = false) {
-	// 	if(count((array)$types) == 0) {
-	// 		return $this->getAllNestedChilds($excludeNotAccepts);
-	// 	} else {
-	// 		$result = array();
-	// 		foreach ((array)$types as $type) {
-	// 			foreach ($this->getAllNestedChilds($excludeNotAccepts) as $parent) {
-	// 				if($parent->getType() == $type) $result[] = $parent;
-	// 			}
-	// 		}
-	// 		return array_unique($result);
-	// 	}
-	// }
 
 
 }

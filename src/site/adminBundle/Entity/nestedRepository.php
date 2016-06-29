@@ -16,4 +16,161 @@ use Doctrine\ORM\Mapping\ClassMetadata;
  */
 class nestedRepository extends EntityBaseRepository {
 
+	protected $icons;
+
+	// public function __construct(EntityManager $em, ClassMetadata $class) {
+	// 	parent::__construct($em, $class);
+	// }
+
+
+	public function findArrayTree($id, $types = 'all', $groups = null, $shortCutContext = false, $maxlevels = null) {
+		$types = (array)$types;
+		$groups = (array)$groups;
+		if(is_object($id)) $id = $id->getId();
+		$tree = $this->buildTree((integer)$id, $types, $groups, $shortCutContext, $maxlevels);
+		return $tree;
+	}
+
+	protected function buildTree($elements, $types, $groups = [], $shortCutContext = false, $maxlevels = null) {
+		$types = (array)$types;
+		$groups = (array)$groups;
+		$nestedValues = array('_categorie_parent', '_articles');
+		if(is_int($elements)) {
+			$qb = $this->createQueryBuilder(self::ELEMENT);
+			$qb->where(self::ELEMENT.'.id = :id')->setParameter('id', (integer)$elements);
+			$this->selectsJstree($qb, null, $shortCutContext, null);
+			$elements = $qb->getQuery()->getScalarResult();
+			// echo('<pre>');
+			// var_dump($elements);
+			// die('</pre>');
+		}
+		$this->computeForTree($elements, $groups);
+		// echo('<pre>');
+		// var_dump($elements);
+		// die('</pre>');
+		foreach ($elements as $key => $element) {
+			if(count($groups) < 1) {
+				$searchgroups = array(
+					0 => $element[self::ELEMENT.'_id'].'_nesteds',
+					1 => $element[self::ELEMENT.'_id'].'_categorie_parent',
+				);
+			} else {
+				$searchgroups = array();
+				// !!! un seul groupe possible !!!
+				foreach ($groups as $group) $searchgroups[0] = $element[self::ELEMENT.'_id'].'_'.$group;
+			}
+			$nested = false;
+			foreach ($searchgroups as $search) {
+				if(preg_match('#('.implode('|', $nestedValues).')$#', $search)) $nested = true;
+				if($maxlevels === null) {
+					if(preg_match("#_categorie_parent$#", $search)) $maxlevels = 100;
+					if(preg_match("#_articles$#", $search)) $maxlevels = 1;
+				}
+			}
+			if($nested && $maxlevels > 0) {
+				// 1ère passe
+				// select only categories
+				// $qb = $this->_em->createQueryBuilder(self::ELEMENT)->from('site\adminBundle\Entity\categorie', self::ELEMENT);
+				// select all nesteds
+				// $qb = $this->_em->createQueryBuilder(self::ELEMENT)->from('site\adminBundle\Entity\nested', self::ELEMENT);
+				$qb = $this->createQueryBuilder(self::ELEMENT);
+				$this->selectsJstree($qb, $element, $shortCutContext, $searchgroups);
+				//
+				$children = $qb->getQuery()->getScalarResult();
+				if(is_array($children)) if(count($children) > 0) {
+					if(!isset($elements[$key]['children'])) $elements[$key]['children'] = array();
+					$elements[$key]['children'] = array_merge($elements[$key]['children'], $this->buildTree($children, $types, $groups, $shortCutContext, $maxlevels - 1));
+				}
+			}
+		}
+		return $elements;
+	}
+
+	protected function selectsJstree(&$qb, $parent = null, $shortCutContext = false, $searchgroups = null) {
+		$qb->select(self::ELEMENT);
+		if($shortCutContext == false) $this->contextStatut($qb, self::ELEMENT);
+		if(!$this->aliasExists($qb, 'statut')) $qb->join(self::ELEMENT.'.statut', 'statut');
+		$qb->addSelect('statut.niveau niveau');
+
+		if($parent != null || $searchgroups != null) {
+			$qb->join(self::ELEMENT.'.nestedpositionParents', 'nestpos')
+				->addSelect('nestpos.group')
+				->addSelect('nestpos.position');
+			if($parent != null)
+				$qb->join('nestpos.parent', 'parent')
+					->where($qb->expr()->in('parent.id', $parent['element_id']));
+			if($searchgroups != null)
+				$qb->andWhere($qb->expr()->in('nestpos.group', $searchgroups));
+			$qb->orderBy('nestpos.position', 'ASC');
+		}
+		return $qb;
+	}
+
+	protected function computeForTree(&$elements, $search = []) {
+		foreach ($elements as $key => $element) {
+			foreach ($element as $field => $value) {
+				switch ($field) {
+					case 'element_lvl':
+					case 'element_icon':
+						// standard AVEC conditions (si null)
+						$name = preg_replace("#^element_#", '', $field);
+						if($value != null) $elements[$key][$name] = $value;
+						unset($elements[$key][$field]);
+						break;
+					case 'element_deletable':
+						// standard SANS conditions (si null)
+						$name = preg_replace("#^element_#", '', $field);
+						$elements[$key][$name] = $value;
+						unset($elements[$key][$field]);
+						break;
+					case 'element_id':
+						$elements[$key]['id'] = isset($elements[$key]['group']) ?
+							$elements[$key]['group'].'-'.$value:
+							$value;
+						break;
+					case 'element_nom':
+						$elements[$key]['text'] = $value;
+						unset($elements[$key][$field]);
+						break;
+					case 'element_couleur':
+						$elements[$key]['color'] = $value;
+						unset($elements[$key][$field]);
+						break;
+					case 'element_type':
+						$elements[$key]['nested_type'] = $value;
+						unset($elements[$key][$field]);
+						break;
+					case 'element_accepts':
+						$elements[$key]['valid_children'] = json_decode($elements[$key][$field]);
+						unset($elements[$key][$field]);
+						break;
+					case 'element_open':
+						$elements[$key]['state'] = array($field => (boolean) $elements[$key][$field]);
+						unset($elements[$key][$field]);
+						break;
+					case 'element_class_name':
+						$elements[$key]['type'] = $elements[$key][$field];
+						if(count($search) > 0) {
+							$class = 'site\\adminBundle\\Entity\\'.$elements[$key]['type'];
+							$object = new $class();
+							$elements[$key]['valid_children'] = $object->getNestedAttributesParameters()[preg_replace("#^_#", '', $search[0])]['class'];
+						}
+						unset($elements[$key][$field]);
+						break;
+					default: // inutiles si "element_", on vire…
+						if(preg_match("#^element_#", $field)) unset($elements[$key][$field]);
+						break;
+				}
+			}
+			// categories virtuelles…
+			if(isset($elements[$key]['group']))
+				if(!preg_match('#_categorie_parent#', $elements[$key]['group']) && $elements[$key]['type'] == 'categorie') {
+					$elements[$key]['type'] = 'sub_categorie';
+				}
+		}
+		return $elements;
+	}
+
+
+
 }

@@ -54,6 +54,11 @@ class adresseType extends baseType {
                 "label"     => 'fields.commentaire',
                 'translation_domain' => 'adresse',
                 ))
+            ->add('url', 'text', array(
+                "required"  => false,
+                "label"     => 'fields.url',
+                'translation_domain' => 'adresse',
+                ))
         ;
         // ajoute les valeurs hidden, passés en paramètre
         $this->addHiddenValues($builder, true);

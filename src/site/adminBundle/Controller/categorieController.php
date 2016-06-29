@@ -22,40 +22,36 @@ class categorieController extends baseController {
 
 	const ENTITE_NAME = 'site\adminBundle\Entity\categorie';
 	const ENTITE_SHORTNAME = 'categorie';
+	const NESTED_NAME = 'site\adminBundle\Entity\nested';
+	const NESTED_SHORTNAME = 'nested';
 	const ROOT_LEVEL = 0;
 	const DEFAULT_LEVEL = 1;
 
-	protected $types = array('level', 'accept');
-	protected $entityService;
+	// protected $entityService;
 
-	public function ajaxDataAction($id = null, $types = 'all') {
+	public function ajaxDataAction($id = null, $types = 'all', $groups = null) {
 		$request = $this->getRequest();
-		$this->entityService = $this->getEntityService(self::ENTITE_SHORTNAME);
+		// $this->entityService = $this->getEntityService(self::NESTED_SHORTNAME);
+		$em = $this->getDoctrine()->getManager();
 		if($id == null) {
 			$id = $request->request->get('id');
 		}
 		if($id != null && $request->isXmlHttpRequest()) {
 			// AJAX REQUEST
 			$types = $request->request->get('types');
-			$data = $this->entityService->getRepo()->findArrayTree($id, $types);
-			// $this->get('aetools.debug')->debugNamedFile('verifTypesForJSTree', array('Types' => $types, 'Data' => $data), true, false);
-			// $icons = $this->get('aetools.textutilities')->iconsAsJson(true);
-			// $this->get('aetools.debug')->debugNamedFile('iconsForJSTree', $icons, true, false);
+			$groups = $request->request->get('groups');
+			$data = $em->getRepository(self::NESTED_NAME)->findArrayTree($id, $types, $groups);
 			return new JsonResponse($data);
 		} else if(!$request->isXmlHttpRequest()) {
 			// TEST EN GET
-			$em = $this->getDoctrine()->getManager();
-			if($id == null) {
-				$id = $em->getRepository(self::ENTITE_NAME)->findAll();
-				if(is_array($id)) $id = reset($id);
-			} else {
-				$id = $em->getRepository(self::ENTITE_NAME)->find($id);
-			}
-			$data = $this->entityService->getRepo()->findArrayTree($id, $types);
-			echo('<pre><h3>'.$id->getSlug().' / #'.$id->getId().'</h3>');
-			var_dump($data);
-			echo('</pre><br><hr><br>');
-			return new Response(json_encode($data));
+			// if($id == null) {
+			// 	$id = $em->getRepository(self::ENTITE_NAME)->findAll();
+			// 	if(is_array($id)) $id = reset($id);
+			// } else {
+			// 	$id = $em->getRepository(self::NESTED_NAME)->find($id);
+			// }
+			$data = $em->getRepository(self::NESTED_NAME)->findArrayTree($id, $types, $groups);
+			return $this->render('siteadminBundle:superadmin:dump.html.twig', array('title' => 'Id '.$id, 'data' => $data));
 		}
 		return new JsonResponse('Error');
 	}

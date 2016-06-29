@@ -94,8 +94,8 @@ siteadmin_form_categorie:
     # methods: ['POST']
 
 categorie_ajax_data:
-    path:     /categorie/ajax-data/{id}/{types}
-    defaults: { _controller: siteadminsiteBundle:categorie:ajaxData, id: null, types: 'all' }
+    path:     /categorie/ajax-data/{id}/{types}/{groups}
+    defaults: { _controller: siteadminsiteBundle:categorie:ajaxData, id: null, types: 'all', groups: null }
 
 ajax_data_sort:
     path:     /sorting-UI/ajax

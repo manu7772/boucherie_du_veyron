@@ -1,6 +1,5 @@
 {% extends 'sitesiteBundle::base_pages.html.twig' %}
 {% set cssjsloads = 'simple' %}
-{% import 'sitesiteBundle:blocks:articles_actions.html.twig' as articles_macros %}
 
 {% block mainContainer %}
 <section>
@@ -12,7 +11,8 @@
 			<div class="col-sm-9 col-md-9 padding-left-resp">
 				<div class="content-page-right">
 					<h2 class="title">
-						<span style="font-weight:300;">{% if categorie is defined %}{{ categorie.nestedParents|join(' > ')|raw }} / {{ categorie }} / </span>{% endif %}{{ 'name_s'|trans({}, 'article') }}
+						{{ categorie.parents|join(' > ')|raw }} > {{ categorie }}
+						{# {% if pageweb.titreh1 != null %}<em style='font-size:0.7em;'><i> - {{ pageweb.titreh1|raw }}</i></em>{% endif %} #}
 					</h2>
 					<div class="single-section">
 						{% if pageweb.mainMedia|default(null) != null %}
@@ -25,8 +25,8 @@
 							{% set aucunarticle = true %}
 							<div id="recommended-item-carousel" class="carousel slide" data-ride="carousel">
 								<div class="carousel-inner">
-									{% for article in categorie.allNestedChildsByClass() %}
-										{{ articles_macros.boxArticle(article, categorie) }}
+									{% for item in categorie.nestedChilds(true) %}
+										<p>{{ item.nom }} <i class="text-muted">(id:{{ item.id }} / class:{{ item.className }})</i></p>
 										{% set aucunarticle = false %}
 									{% endfor %}
 								</div>

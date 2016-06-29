@@ -1,0 +1,31 @@
+{% extends 'sitesiteBundle::base_pages.html.twig' %}
+{% set cssjsloads = 'simple' %}
+{% import 'sitesiteBundle:blocks:articles_actions.html.twig' as articles_macros %}
+
+{% block mainContainer %}
+<section>
+	<div class="container">
+		<div class="row">
+
+			{{ include('sitesiteBundle:blocks:mainmenu.html.twig') }}
+
+			<div class="col-sm-9 col-md-9 padding-left-resp">
+				<div class="content-page-right">
+					<h2 class="title">
+						<span style="font-weight:300;">{% if categorie is defined %}{{ categorie.nestedParents|join(' > ')|raw }} / {{ categorie }} / </span>{% endif %}{{ article }}
+					</h2>
+					<div class="single-section">
+						<div class="section-tabs">
+							{{ articles_macros.boxArticle(article, categorie|default(null)) }}
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</div>
+	</div>
+</section>
+
+{% include('sitesiteBundle:blocks:mini-liste-info.html.twig') %}
+
+{% endblock mainContainer %}

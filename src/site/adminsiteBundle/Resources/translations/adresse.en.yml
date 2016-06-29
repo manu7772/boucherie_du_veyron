@@ -20,6 +20,7 @@ fields:
     cp: zip
     ville: city
     commentaire: informations
+    url: map coordinates
     created: created
     updated: updated
     jamais: no modification

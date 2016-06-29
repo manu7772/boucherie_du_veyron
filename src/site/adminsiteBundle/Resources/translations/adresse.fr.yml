@@ -20,6 +20,7 @@ fields:
     cp: code postal
     ville: ville
     commentaire: complément
+    url: coordonnées map
     created: création
     updated: mise à jour
     jamais: aucune modification

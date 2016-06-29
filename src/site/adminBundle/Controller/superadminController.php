@@ -129,6 +129,14 @@ class superadminController extends baseController {
 			$data['entities'][$name]['association'] = $aeEntities->getAssociationNamesOfEntity($name);
 		}
 
+		// hierarchy
+		$data['hierarchy'] = array();
+		foreach ($data['entities'] as $name => $value) if(isset($value['object'])) {
+			if(method_exists($value['object'], 'getParentsClassNames')) {
+				$data['hierarchy'] = array_merge_recursive($data['hierarchy'], $value['object']->getParentsClassNames(true, true));
+			}
+		}
+
 		if($entity != null) {
 			// analyse d'une entité
 			$level = '_entity';

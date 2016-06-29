@@ -1,0 +1,3 @@
+{% macro elementHref(item, parent, target) -%}
+	href="{{ url('site_pageweb_' ~ item.className, {itemSlug: item.slug, parentSlug: parent.slug|default(null)}) }}"{%- if target|default(null) in ['_self', '_blank'] -%} target="{{ target|raw }}"{%- endif -%}
+{%- endmacro elementHref %}

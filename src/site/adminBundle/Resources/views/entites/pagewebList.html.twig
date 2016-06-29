@@ -20,10 +20,9 @@
 							<th>{{ UCfirst('actions.name'|trans) }}</th>
 							<th>{{ UCfirst('fields.image'|trans({}, entite_name)) }}</th>
 							<th>{{ UCfirst('fields.parents'|trans({}, entite_name)) }}</th>
-							<th>{{ UCfirst('fields.title'|trans({}, entite_name)) }}</th>
-							<th>{{ UCfirst('fields.titreh1'|trans({}, entite_name)) }}</th>
+							{# <th>{{ UCfirst('fields.title'|trans({}, entite_name)) }}</th> #}
+							{# <th>{{ UCfirst('fields.titreh1'|trans({}, entite_name)) }}</th> #}
 							<th>{{ UCfirst('fields.modele'|trans({}, entite_name)) }}</th>
-							<th>{{ UCfirst('fields.keywords'|trans({}, entite_name)) }}</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -65,11 +64,10 @@
 								<i class="fa fa-ban fa-3x text-muted fa-border"></i>
 								{% endif %}
 							</td>
-							<td{{ bgcolor|raw }}>{{ actions.labelLinkList(entite.allParentsInverse, entite.parents, null, type, type_value_joiner, 'show') }}</td>
-							<td{{ bgcolor|raw }}>{{ entite.title }}</td>
-							<td{{ bgcolor|raw }}>{{ entite.titreh1 }}</td>
+							<td{{ bgcolor|raw }}>{{ actions.labelLinkList(entite.nestedParents, [], null, type, type_value_joiner, 'show') }}</td>
+							{# <td{{ bgcolor|raw }}>{{ entite.title }}</td> #}
+							{# <td{{ bgcolor|raw }}>{{ entite.titreh1 }}</td> #}
 							<td{{ bgcolor|raw }}>{{ entite.modelename }}</td>
-							<td{{ bgcolor|raw }}>{{ entite.keywords }}</td>
 						</tr>
 						{% endfor %}
 					</tbody>

@@ -16,8 +16,14 @@ use \Exception;
 
 class DefaultController extends Controller {
 
-	public function indexAction() {
+	protected function getSiteData(&$data = null) {
+		if($data === null) $data = array();
 		$data['sitedata'] = $this->get('aetools.aeSite')->getDefaultSiteData();
+		return $data;
+	}
+
+	public function indexAction() {
+		$data = $this->getSiteData();
 		$data['pageweb'] = $this->get('aetools.aePageweb')->getDefaultPage();
 		if(is_object($data['pageweb'])) {
 			$this->pagewebactions($data);
@@ -50,18 +56,18 @@ class DefaultController extends Controller {
 
 	public function pagewebCategorieAction($categorieSlug, $params = null) {
 		$data = $this->get('tools_json')->JSonExtract($params);
+		$this->getSiteData($data);
 		$data['categorie'] = $categorieSlug;
 		$categorie = $this->get('aetools.aeCategorie')->getRepo()->findOneBySlug($categorieSlug);
-		$data['sitedata'] = $this->get('aetools.aeSite')->getDefaultSiteData();
-		return $this->pagewebAction($categorie->getPageweb(), $data);
+		return $this->pagewebPagewebAction($categorie->getGroup_pagewebsChilds()[0], $data);
 	}
 
-	public function pagewebAction($pageweb, $params = null) {
+	public function pagewebPagewebAction($pagewebSlug, $params = null) {
 		$data = $this->get('tools_json')->JSonExtract($params);
-		$data['pageweb'] = $this->get('aetools.aePageweb')->getDefaultPage();
-		$data['sitedata'] = $this->get('aetools.aeSite')->getDefaultSiteData();
-		if(is_object($pageweb)) $data['pageweb'] = $pageweb;
-			else $data['pageweb'] = $this->get('aetools.aePageweb')->getRepo()->findOneBySlug($pageweb);
+		$this->getSiteData($data);
+		// $data['pageweb'] = $this->get('aetools.aePageweb')->getDefaultPage();
+		if(is_object($pagewebSlug)) $data['pageweb'] = $pagewebSlug;
+			else $data['pageweb'] = $this->get('aetools.aePageweb')->getRepo()->findOneBySlug($pagewebSlug);
 		// $data['marques'] = $this->get('aetools.aeEntity')->getRepo('site\adminBundle\Entity\marque')->findAll();
 		if(is_object($data['pageweb'])) {
 			$this->pagewebactions($data);
@@ -79,6 +85,51 @@ class DefaultController extends Controller {
 			// return $this->redirect($this->generateUrl('generate'));
 		}
 	}
+
+
+	public function categorieAction($itemSlug, $parentSlug = null) {
+		$data = $this->getSiteData();
+		$data['categorie'] = $this->get('aetools.aeCategorie')->getRepo()->findOneBySlug($itemSlug);
+		if(count($data['categorie']->getGroup_pagewebsChilds()) > 0) {
+			$data['pageweb'] = $data['categorie']->getGroup_pagewebsChilds()[0];
+		} else {
+			$data['pageweb'] = $this->get('aetools.aePageweb')->getRepo()->findOneByNom('categorie');
+		}
+		$this->pagewebactions($data);
+		return $this->render($data['pageweb']->getTemplate(), $data);
+	}
+
+	public function pagewebAction($itemSlug, $parentSlug = null) {
+		$data = $this->getSiteData();
+		$data['pageweb'] = $this->get('aetools.aePageweb')->getRepo()->findOneBySlug($itemSlug);
+		if($parentSlug != null)
+			$data['categorie'] = $this->get('aetools.aeCategorie')->getRepo()->findOneBySlug($parentSlug);
+		$this->pagewebactions($data);
+		return $this->render($data['pageweb']->getTemplate(), $data);
+	}
+
+	public function articleAction($itemSlug, $parentSlug = null) {
+		$data = $this->getSiteData();
+		$data['article'] = $this->get('aetools.aeArticle')->getRepo()->findOneBySlug($itemSlug);
+		if($parentSlug != null)
+			$data['categorie'] = $this->get('aetools.aeCategorie')->getRepo()->findOneBySlug($parentSlug);
+		return $this->render('sitesiteBundle:pages_web:article.html.twig', $data);
+	}
+
+	public function articlesAction($categorieSlug) {
+		$data = $this->getSiteData();
+		$data['categorie'] = $this->get('aetools.aeCategorie')->getRepo()->findOneBySlug($categorieSlug);
+		// $data['entites'] = $data['categorie']->getAllNestedChildsByClass('article');
+		if(count($data['categorie']->getGroup_pagewebsChilds()) > 0) {
+			$data['pageweb'] = $data['categorie']->getGroup_pagewebsChilds()[0];
+		} else {
+			$data['pageweb'] = $this->get('aetools.aePageweb')->getRepo()->findOneByNom('articles');
+		}
+		$this->pagewebactions($data);
+		return $this->render($data['pageweb']->getTemplate(), $data);
+	}
+
+
 
 	protected function pagewebactions(&$data) {
 		$trans = $this->get('translator');
@@ -120,7 +171,7 @@ class DefaultController extends Controller {
 						$new_message->setEmail($message->getEmail());
 						// $new_message->setObjet($message->getObjet());
 						$form = $this->createForm(new contactmessageType($this, []), $new_message);
-						$data['redirect'] = $this->generateUrl('site_pageweb', array('pageweb' => $data['pageweb']));
+						$data['redirect'] = $this->generateUrl('site_pageweb', array('pagewebSlug' => $data['pageweb']));
 					} else {
 						// $data['message_error'] = "message.error";
 						$this->get('flash_messages')->send(array(
@@ -158,7 +209,7 @@ class DefaultController extends Controller {
 
 	public function headerMiddleAction() {
 		// $data['menu'] = $this->get('aetools.aeMenus')->getMenu('site-menu');
-		$data['sitedata'] = $this->get('aetools.aeSite')->getDefaultSiteData();
+		$data = $this->getSiteData();
 		// récupération route/params requête MASTER
 		$stack = $this->get('request_stack');
 		$masterRequest = $stack->getMasterRequest();

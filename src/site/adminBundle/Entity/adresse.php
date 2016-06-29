@@ -50,7 +50,7 @@ class adresse extends baseEntity {
 
 	/**
 	 * @var string
-	 * @ORM\Column(name="url", type="string", nullable=true, unique=false)
+	 * @ORM\Column(name="url", type="text", nullable=true, unique=false)
 	 */
 	protected $url;
 

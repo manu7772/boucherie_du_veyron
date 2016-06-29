@@ -96,23 +96,22 @@ class pagewebType extends baseType {
 						else return $repo->findAllClosure();
 					},
 				))
-			->add('parents', 'entity', array(
-				"label"     => 'name_s',
-				'translation_domain' => 'categorie',
-				'class'     => 'siteadminBundle:categorie',
-				'property'  => 'nom',
-				'multiple'  => true,
-				'required' => false,
-				'group_by' => 'parent.nom',
-				"query_builder" => function($repo) {
-					return $repo->getElementsBySubTypeButRoot(array('pageweb'));
-			    	},
-				'placeholder'   => 'form.select',
-				'attr'		=> array(
-					'class'			=> 'select2',
-					),
-				))
-
+			// ->add('parents', 'entity', array(
+			// 	"label"     => 'name_s',
+			// 	'translation_domain' => 'categorie',
+			// 	'class'     => 'siteadminBundle:categorie',
+			// 	'property'  => 'nom',
+			// 	'multiple'  => true,
+			// 	'required' => false,
+			// 	'group_by' => 'parent.nom',
+			// 	"query_builder" => function($repo) {
+			// 		return $repo->getElementsBySubTypeButRoot(array('pageweb'));
+			//     	},
+			// 	'placeholder'   => 'form.select',
+			// 	'attr'		=> array(
+			// 		'class'			=> 'select2',
+			// 		),
+			// 	))
 		;
 		// ajoute les valeurs hidden, passés en paramètre
 		$this->addHiddenValues($builder, true);

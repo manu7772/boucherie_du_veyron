@@ -24,7 +24,11 @@ use \Exception;
  * @ORM\Entity(repositoryClass="site\adminBundle\Entity\tierRepository")
  * @ORM\InheritanceType("JOINED")
  * @ORM\DiscriminatorColumn(name="class_name", type="string")
- * @ORM\DiscriminatorMap({"boutique" = "boutique", "marque" = "marque", "reseau" = "reseau"})
+ * @ORM\DiscriminatorMap({
+ * 		"boutique" 		= "boutique",
+ * 		"marque" 		= "marque",
+ * 		"reseau" 		= "reseau"
+ * })
  * @ORM\HasLifecycleCallbacks
  * 
  * @ExclusionPolicy("all")
@@ -56,10 +60,31 @@ abstract class tier extends nested {
 	 */
 	protected $logo;
 
+	/**
+	 * @var string
+	 * @ORM\Column(name="telfixe", type="string", length=14, nullable=true, unique=false)
+	 */
+	protected $telfixe;
+
+	/**
+	 * @var string
+	 * @ORM\Column(name="mobile", type="string", length=14, nullable=true, unique=false)
+	 */
+	protected $mobile;
+
+	/**
+	 * @var string
+	 * @ORM\Column(name="email", type="string", length=128, nullable=true, unique=false)
+	 */
+	protected $email;
+
 
 	public function __construct() {
 		parent::__construct();
 		$this->adresse = null;
+		$this->telfixe = null;
+		$this->mobile = null;
+		$this->email = null;
 	}
 
 	/**
@@ -70,13 +95,6 @@ abstract class tier extends nested {
 		if($this->getLogo() !== null) return $this->getLogo();
 		if($this->getImage() !== null) return $this->getImage();
 		return null;
-	}
-
-	public function memOldValues($addedfields = null) {
-		$fields = array('adresse');
-		if(count($addedfields) > 0 && is_array($addedfields)) $fields = array_unique(array_merge($fields, $addedfields));
-		parent::memOldValues($fields);
-		return $this;
 	}
 
 	/**
@@ -123,5 +141,76 @@ abstract class tier extends nested {
 		return $this->logo;
 	}
 
+	protected function formatTel($tel) {
+		// return preg_replace_callback(
+		// 	'#(\d)#',
+		// 	function($matches) {
+		// 		return $matches[0];
+		// 	},
+		// 	$tel
+		// );
+		return $tel;
+	}
+
+	/**
+	 * Get telfixe
+	 * @return string
+	 */
+	public function getTelfixe() {
+		return $this->formatTel($this->telfixe);
+	}
+
+	/**
+	 * Set telfixe
+	 * @param string $telfixe
+	 * @return tier
+	 */
+	public function setTelfixe($telfixe) {
+		$this->telfixe = $this->formatTel($telfixe);
+		return $this;
+	}
+
+	// /**
+	//  * @Assert\IsTrue(message="Le téléphone n'est pas bien renseigné.")
+	//  */
+	// public function isTelfixe() {
+	// 	return preg_match('#^([\d]{2}(\s)?){4}[\d]{2}$#', $this->telfixe) || $this->telfixe == null;
+	// }
+
+	/**
+	 * Get mobile
+	 * @return string
+	 */
+	public function getMobile() {
+		return $this->formatTel($this->mobile);
+	}
+
+	/**
+	 * Set mobile
+	 * @param string $mobile
+	 * @return tier
+	 */
+	public function setMobile($mobile) {
+		$this->mobile = $this->formatTel($mobile);
+		return $this;
+	}
+
+	/**
+	 * Get email
+	 * @return string
+	 */
+	public function getEmail() {
+		return $this->email;
+	}
+
+	/**
+	 * Set email
+	 * @param string $email
+	 * @return tier
+	 */
+	public function setEmail($email) {
+		$this->email = $email;
+		return $this;
+	}
 
 }

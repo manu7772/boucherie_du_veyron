@@ -67,9 +67,7 @@ class aeSite extends aeSubentity {
     // }
 
     public function getDefaultSiteData() {
-        $default = $this->getRepo()->findByDefault(true);
-        if(count($default) > 0) return reset($default);
-        else return array();
+        return $this->getRepo()->findOneByDefault(true);
     }
 
 }

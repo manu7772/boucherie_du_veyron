@@ -75,8 +75,7 @@ abstract class baseEntity {
 	}
 
 	public function __toString() {
-		return $this->getNom().'';
-		// return is_string($this->getNom()) ? $this->getNom() : '(aucun nom)';
+		return (string)$this->getNom();
 	}
 
     // abstract public function getClassName();
@@ -86,19 +85,27 @@ abstract class baseEntity {
 
 	/**
 	 * Renvoie la liste (array) des classes des parents de l'entité
+	 * $recursive : 
+	 *    true = renvoie sous forme récursive
 	 * @param boolean $short = false
+	 * @param boolean $recursive = false
 	 * @return array
 	 */
-	public function getParentsClassNames($short = false) {
+	public function getParentsClassNames($short = false, $recursive = false) {
 		$class = new ReflectionClass($this->getClass());
 		$short ?
 			$him = $class->getShortName():
 			$him = $class->getName();
-		$parents = array($him);
+		$recursive ?
+			$parents = array($him => array()):
+			$parents = array($him);
 		while($class = $class->getParentClass()) {
 			$short ?
-				$parents[] = $class->getShortName():
-				$parents[] = $class->getName();
+				$par = $class->getShortName():
+				$par = $class->getName();
+			$recursive ?
+				$parents = array($par => $parents):
+				$parents[] = $par;
 		}
 		return $parents;
 	}

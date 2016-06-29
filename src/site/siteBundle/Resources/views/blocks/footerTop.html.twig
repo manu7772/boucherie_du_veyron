@@ -1,3 +1,5 @@
+{% import 'sitesiteBundle:blocks:actions.html.twig' as actions %}
+
 <div class="footer-widget">
 	<div class="container">
 		<div class="row">
@@ -8,10 +10,10 @@
 					<h2>{{ item1 }}</h2>
 					<ul class="nav nav-pills nav-stacked">
 						{%- for item2 in item1.group_nestedsChilds -%}
-						<li><a href="{{ path('site_pageweb', {pageweb: item2.slug }) }}">{{ UCfirst(item2) }}</a></li>
+						<li><a {{ actions.elementHref(item2, item1, '_self') }}>{{ UCfirst(item2) }}</a></li>
 						{%- endfor -%}
 						{%- for item2 in item1.group_categorie_parentChilds -%}
-						<li><a href="{{ path('site_pageweb_categories', {categorieSlug: item2.slug }) }}">{{ UCfirst(item2) }}</a></li>
+						<li><a {{ actions.elementHref(item2, item1, '_self') }}>{{ UCfirst(item2) }}</a></li>
 						{%- endfor -%}
 					</ul>
 				</div>

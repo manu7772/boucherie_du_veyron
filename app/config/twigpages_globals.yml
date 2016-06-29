@@ -21,6 +21,32 @@ twig:
                 nom: 'accueil'
                 path: siteadmin_homepage
                 icon: 'entite.home'
+            webmaster:
+                role: 'ROLE_SUPER_ADMIN'
+                nom: 'roles.ROLE_SUPER_ADMIN'
+                trans_domain: User
+                path: 'siteadmin_sadmin_index'
+                icon: 'entite.webmaster'
+                level2: 
+                    sadminHome:
+                        nom: 'roles.ROLE_SUPER_ADMIN'
+                        trans_domain: User
+                        path: 'siteadmin_sadmin_index'
+                    generate:
+                        nom: 'install.name'
+                        path: 'generate'
+                    routes:
+                        nom: 'Routes'
+                        path: 'siteadmin_sadmin_routes'
+                    bundles:
+                        nom: 'Bundles'
+                        path: 'siteadmin_sadmin_bundles'
+                    entities:
+                        nom: 'superadmin.entites'
+                        path: 'siteadmin_sadmin_entities'
+                    panier:
+                        nom: 'Tests panier'
+                        path: 'siteadmin_sadmin_panier'
             traduction:
                 role: 'ROLE_TRANSLATOR'
                 nom: 'traduction.name'
@@ -182,16 +208,6 @@ twig:
                             params:
                                 method: findCollectionsByType
                                 repoParams: pageweb
-                    menus:
-                        role: %restrict_admin%
-                        nom: 'menu.name_s'
-                        icon: 'entite.menu'
-                        trans_domain: menus
-                        path:
-                            path: 'siteadmin_repo_categorie'
-                            params:
-                                method: findCollectionsByType
-                                repoParams: menu
                     images_pagewebs:
                         nom: 'owner.pageweb:image'
                         trans_domain: image
@@ -423,7 +439,8 @@ twig:
                         entite: message
             parametres:
                 role: %restrict_admin%
-                nom: 'parametres'
+                nom: 'siteparams'
+                trans_domain: site
                 path: 'siteadmin_homepage'
                 icon: 'entite.parametres'
                 level2: 
@@ -436,42 +453,25 @@ twig:
                             path: 'siteadmin_entite'
                             params:
                                 entite: statut
-                    site:
+                    sites:
                         nom: 'name_s'
-                        role: %restrict_admin%
                         trans_domain: site
                         icon: 'entite.site'
                         path: 
                             path: 'siteadmin_entite'
                             params:
                                 entite: site
+                    menus:
+                        role: %restrict_admin%
+                        nom: 'menu.name_s'
+                        icon: 'entite.menu'
+                        trans_domain: menus
+                        path:
+                            path: 'siteadmin_repo_categorie'
+                            params:
+                                method: findCollectionsByType
+                                repoParams: menu
             help:
                 nom: 'help'
                 path: siteadmin_support
                 icon: 'entite.help'
-            webmaster:
-                role: 'ROLE_SUPER_ADMIN'
-                nom: 'roles.ROLE_SUPER_ADMIN'
-                trans_domain: User
-                path: 'siteadmin_sadmin_index'
-                icon: 'entite.webmaster'
-                level2: 
-                    sadminHome:
-                        nom: 'roles.ROLE_SUPER_ADMIN'
-                        trans_domain: User
-                        path: 'siteadmin_sadmin_index'
-                    generate:
-                        nom: 'install.name'
-                        path: 'generate'
-                    routes:
-                        nom: 'Routes'
-                        path: 'siteadmin_sadmin_routes'
-                    bundles:
-                        nom: 'Bundles'
-                        path: 'siteadmin_sadmin_bundles'
-                    entities:
-                        nom: 'superadmin.entites'
-                        path: 'siteadmin_sadmin_entities'
-                    panier:
-                        nom: 'Tests panier'
-                        path: 'siteadmin_sadmin_panier'

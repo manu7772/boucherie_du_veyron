@@ -1,14 +1,14 @@
-name_s: notices
-name: notice
-not_found: 'no notice found'
-x_found: '{0} no notice found|{1} 1 notice found|[2,+Inf] %count% notices found'
-create: 'create new notice'
-create_btn: 'new notice'
-backlist: 'back to list of notices'
+name_s: recipes
+name: recipe
+not_found: 'no recipe found'
+x_found: '{0} no recipe found|{1} 1 recipe found|[2,+Inf] %count% recipes found'
+create: 'create new recipe'
+create_btn: 'new recipe'
+backlist: 'back to list of recipes'
 backlist_btn: 'back to list'
-dontexist: 'this notice does not exist'
+dontexist: 'this recipe does not exist'
 moredetails: 'more details on %name%'
-existe: this notice already exists
+existe: this recipe already exists
 niveaux:
     debutant: rookie
     intermediaire: medium

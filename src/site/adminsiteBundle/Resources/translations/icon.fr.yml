@@ -38,6 +38,7 @@ entite:
     boutique: fa-building-o
     reseau: fa-share-alt
     categorie: fa-folder
+    sub_categorie: fa-folder-o
     tauxTva: fa-calculator
     User: fa-user
     message: fa-paper-plane

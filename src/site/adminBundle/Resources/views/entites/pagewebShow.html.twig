@@ -36,7 +36,7 @@
 						{% endif %}
 						<tr>
 							<td><strong>{{ UCfirst('fields.parents'|trans({}, entite_name)) }}</strong></td>
-							<td>{{ actions.labelLinkList(entite.allParentsInverse, entite.parents, null, null, null, 'show') }}</td>
+							<td>{{ actions.labelLinkList(entite.nestedParents, [], null, null, null, 'show') }}</td>
 						</tr>
 						<tr>
 							<td><strong>{{ UCfirst('fields.title'|trans({}, entite_name)) }}</strong></td>

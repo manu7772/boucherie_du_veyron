@@ -23,6 +23,13 @@ use \DateTime;
  */
 class EntityBaseRepository extends EntityRepository {
 
+	// documentation instanceOf
+	// http://stackoverflow.com/questions/5988636/doctrine-2-how-to-use-discriminator-column-in-where-clause
+	// Exemple :
+	// $class = 'Entity\File\Image';
+	// $qb = $this->createQueryBuilder('f');
+	// $qb->where($qb->expr()->isInstanceOf('f', $class));
+
 	const ELEMENT = 'element';
 
 	protected $initCMD;

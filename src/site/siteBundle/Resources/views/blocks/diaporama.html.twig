@@ -22,6 +22,7 @@
 						<h1>Osso Buco</h1>
 						<p>Une viande de choix pour un budget imbattable. </p>
 						<h2>18<small>,50<sup>€</sup><span>/Kg</span></small></h2>
+						{% if marketplace.active %}
 						<div class="btn-group order-group in-slide" role="group" aria-label="...">
 							<button type="button" class="btn btn-default btn-commander">Commander</button>
 							<input class="command_quantity" type="text" name="quantity" value="250." autocomplete="off" size="6">
@@ -30,6 +31,7 @@
 							<a class="btn quantity-bottom" href="#"><i class="fa fa-angle-down"></i></a>
 							</span>
 						</div>
+						{% endif %}
 					</div>
 					</div>
 					<div class="col-sm-7 col-md-8 col-lg-7 padding-right padding-left">
@@ -42,6 +44,7 @@
 						<h1>Osso Buco 2</h1>
 						<p>Une viande de choix pour un budget imbattable. </p>
 						<h2>18<small>,50<sup>€</sup><span>/Kg</span></small></h2>
+						{% if marketplace.active %}
 						<div class="btn-group order-group in-slide" role="group" aria-label="...">
 							<button type="button" class="btn btn-default btn-commander">Commander</button>
 							<input class="command_quantity" type="text" name="quantity" value="250g." autocomplete="off" size="6">
@@ -50,6 +53,7 @@
 							<a class="btn quantity-bottom" href="#"><i class="fa fa-angle-down"></i></a>
 							</span>
 						</div>
+						{% endif %}
 					</div>
 					</div>
 					<div class="col-sm-7 col-md-8 col-lg-7 padding-right padding-left">

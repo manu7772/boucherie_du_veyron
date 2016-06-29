@@ -186,18 +186,14 @@
 			<div class="panel panel-default">
 				<div class="panel-heading">
 					<h5 class="panel-title">
-						<a data-toggle="collapse" data-parent="#{{ idBlock }}_accordion" href="#{{ idBlock }}_collapse_0"><strong>{{ service_info.object.nom|default(service_info.object.className|default(service_info.object)) }}</strong> <i class="text-muted"><small>Niv. {{ service_info.object.level|default('0') }} / {{ service_info.object.parentClassName(true)|default('aucun parent') }}</small></i></a>
+						<a data-toggle="collapse" data-parent="#{{ idBlock }}_accordion" href="#{{ idBlock }}_collapse_0"><strong>{{ service_info.object.nom|default(service_info.object.className|default(service_info.object)) }}</strong></a>
 					</h5>
 				</div>
 				<div id="{{ idBlock }}_collapse_0" class="panel-collapse collapse in">
 					<div class="panel-body">
 						<p class="m-b-none">• Nom : {{ service_info.object.nom|default(service_info.object.className|default(service_info.object)) }}</p>
-						<p class="m-b-none">• Call : {{ service_info.object.callName|default(null) }}</p>
-						<p class="m-b-none">• Name : {{ service_info.object.name|default(null) }}</p>
 						<p class="m-b-none">• ClassName : {{ service_info.object.class(false)|default(null) }}</p>
 						<p class="m-b-none">• ShortName : {{ service_info.object.class(true)|default(null) }}</p>
-						<p class="m-b-none">• Parent classes : <i><p class="m-l-lg m-b-none">{{ service_info.object.parentsClassNames|default([])|join('<p class="m-l-lg m-b-none"> ')|raw }}</p></p></i>
-						<p class="m-b-none">• Parent names : <i><p class="m-l-lg m-b-none">{{ service_info.object.parentsShortNames|default([])|join('<p class="m-l-lg m-b-none"> ')|raw }}</p></p></i>
 					</div>
 				</div>
 			</div>
@@ -389,5 +385,21 @@
 {%- else -%}
 #
 {%- endif -%}
+{%- endmacro -%}
+
+{%- macro entitehierarchy(hierarchy, id) -%}
+	{% import _self as self %}
+	{% if id|default(null) != null %}<div id="{{ id }}" class="hierarchy">{% endif %}
+		<ul>
+			{% for name,data in hierarchy|default([]) %}
+			<li>
+				{{ name }}
+				{% if data|length > 0 %}
+				{{ self.entitehierarchy(data, null) }}
+				{% endif %}
+			</li>
+			{% endfor %}
+		</ul>
+	{% if id|default(null) != null %}</div>{% endif %}
 {%- endmacro -%}
 

@@ -9,49 +9,31 @@
 				<div class="panel-heading">
 					<h4 class="panel-title">
 						{% if item1.className == 'categorie' %}
-						{% if item1.group_categorie_parentChilds|length > 0 or item1.group_nestedsChilds|length > 0 %}
-						<a data-toggle="collapse" data-parent="#accordian" href="#mainmenu-{{ item1.slug }}">
-							<span class="badge pull-right"><i class="fa fa-plus"></i></span>
-							{{ UCfirst(item1) }}
-						</a>
-						{% else %}
-							{% if item1.className == 'categorie' %}
-							<a href="{{ path('site_pageweb_categories', {categorieSlug: item1.slug }) }}">{{ UCfirst(item1) }}</a>
-							{% elseif item1.className == 'article' %}
-							<a href="{{ path('site_pageweb_categories', {categorieSlug: item1.slug }) }}">{{ UCfirst(item1) }}</a>
-							{% elseif item1.className == 'pageweb' %}
-							<a href="{{ path('site_pageweb_categories', {categorieSlug: item1.slug }) }}">{{ UCfirst(item1) }}</a>
+							{% if item1.group_categorie_parentChilds|length > 0 or item1.nestedChildsByClass|length > 0 %}
+							<a data-toggle="collapse" data-parent="#accordian" href="#mainmenu-{{ item1.slug }}">
+								<span class="badge pull-right"><i class="fa fa-plus"></i></span>
+								{{ UCfirst(item1) }}
+							</a>
+							{% else %}
+								<a href="{{ path('site_pageweb_articles', {categorieSlug: item1.slug }) }}">{{ UCfirst(item1) }}</a>
 							{% endif %}
-						{% endif %}
 						{% else %}
-							<a href="{{ path('site_pageweb_categories', {categorieSlug: item1.slug }) }}">{{ UCfirst(item1) }}</a>
+							<a href="{{ path('site_pageweb_' ~ item1.className, {itemSlug: item1.slug, parentSlug: sitedata.menuArticle.slug }) }}">{{ UCfirst(item1) }}</a>
 						{% endif %}
 					</h4>
 				</div>
-				{% if item1.group_categorie_parentChilds|length > 0 or item1.group_nestedsChilds|length > 0 %}
+				{% if item1.group_categorie_parentChilds|length > 0 or item1.nestedChildsByClass|length > 0 %}
 				<div id="mainmenu-{{ item1.slug }}" class="panel-collapse collapse">
 					<div class="panel-body">
 						<ul>
 							{% for item2 in item1.group_categorie_parentChilds -%}
 							<li>
-								{% if item2.className == 'categorie' %}
-								<a href="{{ path('site_pageweb_categories', {categorieSlug: item2.slug }) }}">{{ UCfirst(item2) }}</a>
-								{% elseif item2.className == 'article' %}
-								<a href="{{ path('site_pageweb_categories', {categorieSlug: item2.slug }) }}">{{ UCfirst(item2) }}</a>
-								{% elseif item2.className == 'pageweb' %}
-								<a href="{{ path('site_pageweb_categories', {categorieSlug: item2.slug }) }}">{{ UCfirst(item2) }}</a>
-								{% endif %}
+								<a href="{{ path('site_pageweb_articles', {categorieSlug: item2.slug }) }}">{{ UCfirst(item2) }}</a>
 							</li>
 							{%- endfor %}
-							{% for item2 in item1.group_nestedsChilds -%}
+							{% for item2 in item1.nestedChildsByClass -%}
 							<li>
-								{% if item2.className == 'categorie' %}
-								<a href="{{ path('site_pageweb_categories', {categorieSlug: item2.slug }) }}">{{ UCfirst(item2) }}</a>
-								{% elseif item2.className == 'article' %}
-								<a href="{{ path('site_pageweb_categories', {categorieSlug: item2.slug }) }}">{{ UCfirst(item2) }}</a>
-								{% elseif item2.className == 'pageweb' %}
-								<a href="{{ path('site_pageweb_categories', {categorieSlug: item2.slug }) }}">{{ UCfirst(item2) }}</a>
-								{% endif %}
+								<a href="{{ path('site_pageweb_' ~ item2.className, {itemSlug: item2.slug, parentSlug: item1.slug }) }}">{{ UCfirst(item2) }}</a>
 							</li>
 							{%- endfor %}
 						</ul>
@@ -66,8 +48,3 @@
 	</div><!--/left-sidebar-->
 </div><!--/colonne left-->
 {% endif %}
-{# 
-<hr style="clear:both;">
-dump(sitedata.menuArticle)
- #}
-

@@ -23,7 +23,11 @@ use \Exception;
  * @ORM\Entity(repositoryClass="site\adminBundle\Entity\itemRepository")
  * @ORM\InheritanceType("JOINED")
  * @ORM\DiscriminatorColumn(name="class_name", type="string")
- * @ORM\DiscriminatorMap({"article" = "article", "fiche" = "fiche", "pageweb" = "pageweb"})
+ * @ORM\DiscriminatorMap({
+ * 		"article" 		= "article",
+ * 		"fiche" 		= "fiche",
+ * 		"pageweb" 		= "pageweb"
+ * })
  * @ORM\HasLifecycleCallbacks
  * 
  * @ExclusionPolicy("all")

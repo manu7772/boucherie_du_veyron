@@ -26,7 +26,10 @@ use \SplFileInfo;
  * @ORM\Entity(repositoryClass="site\adminBundle\Entity\mediaRepository")
  * @ORM\InheritanceType("JOINED")
  * @ORM\DiscriminatorColumn(name="class_name", type="string")
- * @ORM\DiscriminatorMap({"image" = "image", "pdf" = "pdf"})
+ * @ORM\DiscriminatorMap({
+ * 		"image" 	= "image",
+ * 		"pdf" 		= "pdf"
+ * })
  * @ORM\HasLifecycleCallbacks
  *
  * @ExclusionPolicy("all")
