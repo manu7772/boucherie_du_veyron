@@ -18,10 +18,15 @@ use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Core\Authorization\AuthorizationChecker as SecurityContextInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 
-class SecurityController extends securityCtrl
-{
-    public function loginAction(Request $request)
-    {
+class SecurityController extends securityCtrl {
+
+    protected function getSiteData(&$data = null) {
+        if($data === null) $data = array();
+        $data['sitedata'] = $this->get('aetools.aeSite')->getDefaultSiteData();
+        return $data;
+    }
+
+    public function loginAction(Request $request) {
         /** @var $session \Symfony\Component\HttpFoundation\Session\Session */
         $session = $request->getSession();
 
@@ -67,8 +72,7 @@ class SecurityController extends securityCtrl
         ));
     }
 
-    public function loginInPageAction(Request $request)
-    {
+    public function loginInPageAction(Request $request) {
         /** @var $session \Symfony\Component\HttpFoundation\Session\Session */
         $session = $request->getSession();
 
@@ -122,23 +126,21 @@ class SecurityController extends securityCtrl
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    protected function renderLogin(array $data)
-    {
+    protected function renderLogin(array $data) {
+        $this->getSiteData($data);
         return $this->render('siteUserBundle:Security:login.html.twig', $data);
     }
 
-    protected function renderLoginInPage(array $data)
-    {
+    protected function renderLoginInPage(array $data) {
+        $this->getSiteData($data);
         return $this->render('siteUserBundle:Security:loginInPage.html.twig', $data);
     }
 
-    public function checkAction()
-    {
+    public function checkAction() {
         throw new \RuntimeException('You must configure the check path to be handled by the firewall using form_login in your security firewall configuration.');
     }
 
-    public function logoutAction()
-    {
+    public function logoutAction() {
         throw new \RuntimeException('You must activate the logout in your security firewall configuration.');
     }
 }
