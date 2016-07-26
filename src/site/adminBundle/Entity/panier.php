@@ -18,10 +18,9 @@ use \ReflectionClass;
 /**
  * panier
  *
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="site\adminBundle\Entity\panierRepository")
  * @ORM\Table(name="panier")
  * @ORM\HasLifecycleCallbacks
- * @ORM\Entity(repositoryClass="site\adminBundle\Entity\panierRepository")
  */
 class panier {
 

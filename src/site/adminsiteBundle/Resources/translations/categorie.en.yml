@@ -58,12 +58,13 @@ types:
     all: types
     multimedia: multimedias
     menu: menus
-    diapo: slides show
+    diapo: slideshows
     image: photographs
     article: products
     pdf: pdf files
     menu: menus
-    fiche: recipes
+    fiche_recettes: recipes cards
+    fiche_boissons: drinks cards
     marque: brands
     reseau: outlets
     boutique: stores

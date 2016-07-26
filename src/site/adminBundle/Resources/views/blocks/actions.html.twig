@@ -21,6 +21,15 @@
 	{% if action == "edit" %}
 		<a href="{{ self.entiteLink(entite, action, select) }}" type="button" class="btn btn-white btn-xs" data-toggle="tooltip" data-placement="bottom" title="{{ UCfirst('actions.modifier'|trans) }}"><i class="fa fa-pencil icon-wait-on-click"></i></a>
 	{% endif %}
+	{% if action == "vendable" %}
+		{% set defcol = 'white' %}
+		{% set state = 'set' %}
+		{% if entite.vendable %}
+			{% set defcol = 'primary' %}
+			{% set state = 'unset' %}
+		{% endif %}
+		<a href="{{ self.entiteLink(entite, action, select) }}" type="button" class="btn btn-{{ defcol }} btn-xs" data-toggle="tooltip" data-placement="bottom" title="{{ UCfirst(('vendable.' ~ state)|trans) }}"><i class="fa fa-shopping-cart icon-wait-on-click"></i></a>
+	{% endif %}
 	{% if (action == "delete" and ((entite.deletable|default(true) == true) or (app.environment in ['DEV', 'TEST']) or (is_granted('ROLE_SUPER_ADMIN')))) %}
 		<a href="{{ self.entiteLink(entite, action, select) }}" type="button" class="btn btn-white btn-xs need-confirmation" data-toggle="tooltip" data-placement="bottom" title="{{ UCfirst('actions.supprimer'|trans) }}" data-title="{{ UCfirst('actions.supprimer'|trans) }}" data-message="{{ UCfirst('actions.suppQuestion'|trans({'%name%': entite.nom|trans({}, entite.className)})) }}"><i class="fa fa-times icon-wait-on-click"></i></a>
 	{% endif %}
@@ -39,7 +48,7 @@
 {% endmacro %}
 
 {% macro entiteLink(entite, action, select, type_value_joiner) -%}
-	{% if entite.className == 'categorie' %}
+	{% if entite.className|default(null) == 'categorie' %}
 		{%- if action in ['list'] -%}
 			{%- if select.type_values|default(null) != null -%}
 				{{- path('siteadmin_list_categorie', {type_related: select.type_related, type_field: select.type_field, type_values: select.type_values|join(type_value_joiner)|url_encode}) -}}
@@ -79,6 +88,9 @@
 		{%- endif -%}
 		{%- if action in ['default'] -%}
 			{{- path('siteadmin_set_default', {id: entite.id, entite: entite.className, redir: path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params'))|url_encode()}) -}}
+		{%- endif -%}
+		{%- if action in ['vendable'] -%}
+			{{- path('siteadmin_set_vendable', {id: entite.id, entite: entite.className, redir: path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params'))|url_encode()}) -}}
 		{%- endif -%}
 	{% endif %}
 {%- endmacro %}
@@ -128,7 +140,7 @@
 			{% else %}
 			<span id="{{ item.className }}_{{ item.id }}" class="label m-r-xs m-b-xs inline{% if item in highlight|default([]) %} {{ classe|raw }}{% endif %}" style="display: inline-block; height: 20px; line-height: 15px;">
 				<i class="fa {{ self.icon(item) }} m-r-xs"></i>
-				{{ item|trans({}, item.className) }}
+				{{ item.nom|trans({}, item.className) }}
 			</span>
 			{% endif %}
 		{% elseif loop.index0 == limit %}
@@ -148,12 +160,12 @@
 			{% if item.className == 'categorie' and item.lvl|default(null) == 0 %}
 			<a id="{{ item.className }}_{{ item.id }}" href="{{ self.entiteLink(item, action, select, type_value_joiner) }}" class="sortable-disabled label inline {{ classeRoot|raw }} m-b-xs m-r-xs" style="display: inline-block; height: 20px; line-height: 15px;" title="{{ ('types.' ~ item.type)|trans({}, item.className) }}">
 				<i class="fa {{ self.icon(item) }} m-r-xs"></i>
-				{{ item|trans({}, item.className) }}
+				{{ item.nom|trans({}, item.className) }}
 			</a>
 			{% else %}
 			<a id="{{ item.className }}_{{ item.id }}" href="{{ self.entiteLink(item, action, select, type_value_joiner) }}" class="label inline{% if item in highlight|default([]) %} {{ classe|raw }}{% endif %} m-b-xs m-r-xs" style="display: inline-block; height: 20px; line-height: 15px;">
 				<i class="fa {{ self.icon(item) }} m-r-xs"></i>
-				{{ item|trans({}, item.className) }}
+				{{ item.nom|trans({}, item.className) }}
 			</a>
 			{% endif %}
 		{% elseif loop.index0 == limit %}
@@ -392,7 +404,7 @@
 	{% if id|default(null) != null %}<div id="{{ id }}" class="hierarchy">{% endif %}
 		<ul>
 			{% for name,data in hierarchy|default([]) %}
-			<li>
+			<li class="jstree-open">
 				{{ name }}
 				{% if data|length > 0 %}
 				{{ self.entitehierarchy(data, null) }}

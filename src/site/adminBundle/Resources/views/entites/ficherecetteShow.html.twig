@@ -58,19 +58,19 @@
 								<div class="clearfix"></div>
 								<hr>
 								<div class="row">
-								    <div class="col-md-6">
-								        <h5>{{ UCfirst('name_s'|trans({}, 'tag')) }}</h5>
-								        {% for tag in entite.tags %}
-								        <button class="btn btn-default btn-xs" type="button">{{ phraseCut(tag.nom, 30) }}</button>
-								        {% endfor %}
-								    </div>
-								    <div class="col-md-6">
-								        <div class="small text-right">
-								            <h5>{{ UCfirst('name_s'|trans({}, 'statistique')) }}</h5>
-								            <div> <i class="fa fa-shopping-cart"> </i> {{ 'x_found'|transchoice(entite.articles|length, {}, 'article') }}</div>
-								            <!-- <i class="fa fa-eye"> </i> 144 views -->
-								        </div>
-								    </div>
+									<div class="col-md-6">
+										<h5>{{ UCfirst('name_s'|trans({}, 'tag')) }}</h5>
+										{% for tag in entite.tags %}
+										<button class="btn btn-default btn-xs" type="button">{{ phraseCut(tag.nom, 30) }}</button>
+										{% endfor %}
+									</div>
+									<div class="col-md-6">
+										<div class="small text-right">
+											<h5>{{ UCfirst('name_s'|trans({}, 'statistique')) }}</h5>
+											<div><i class="fa fa-shopping-cart"></i> {{ 'x_found'|transchoice(entite.nestedParentsByGroup('article_' ~ entite.className)|length, {}, 'article') }}</div>
+											<!-- <i class="fa fa-eye"> </i> 144 views -->
+										</div>
+									</div>
 								</div>
 							</div>
 						</div>
@@ -79,7 +79,7 @@
 								<h3 class='text-navy visible-xs' style='margin-top:0px;'>{{ UCfirst('name_s'|trans({}, 'article')) }}</h3>
 								<hr class="m-t-xs m-b-xs visible-xs">
 								<div class="row">
-									{% for item in entite.articles %}{{ itemBloc.bloc1(item) }}{% endfor %}
+									{% for item in entite.nestedParentsByGroup('article_' ~ entite.className) %}{{ itemBloc.bloc1(item) }}{% endfor %}
 								</div>
 							</div>
 						</div>

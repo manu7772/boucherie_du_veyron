@@ -31,7 +31,7 @@ class superadminController extends baseController {
 		$this->get('aetools.aetools')->updateBundlesInConfig();
 		$data = array();
 		// Site data
-		$data['sitedata'] = $this->get('aetools.aeSite')->getDefaultSiteData();
+		$data['sitedata'] = $this->get('aetools.aeSite')->getSiteData();
 		// services
 		$data['services'] = array();
 		$listOfServices = $this->get('aetools.aetools')->getListOfServices();
@@ -49,7 +49,7 @@ class superadminController extends baseController {
 	public function panierTestAction() {
 		$this->get('aetools.aetools')->updateBundlesInConfig();
 		$data = array();
-		$data['sitedata'] = $this->get('aetools.aeSite')->getDefaultSiteData();
+		$data['sitedata'] = $this->get('aetools.aeSite')->getSiteData();
 		$data['articles'] = $this->getEntityService('article')->getRepo()->findAll();
 		$data['panier_user'] = $this->get('aetools.aePanier')->getArticlesOfUser($this->getUser());
 		$data['panier_articles'] = array();
@@ -67,7 +67,7 @@ class superadminController extends baseController {
 	 */
 	public function servicesAction($service) {
 		$data = array();
-		$data['sitedata'] = $this->get('aetools.aeSite')->getDefaultSiteData();
+		$data['sitedata'] = $this->get('aetools.aeSite')->getSiteData();
 		$data['name'] = $service;
 		$data['service_info'] = $this->get('aetools.aetools')->getObjectProperties($this->get($service));
 		return $this->render('siteadminBundle:superadmin:services.html.twig', $data);
@@ -80,7 +80,7 @@ class superadminController extends baseController {
 	 */
 	public function routesAction() {
 		$data = array();
-		$data['sitedata'] = $this->get('aetools.aeSite')->getDefaultSiteData();
+		$data['sitedata'] = $this->get('aetools.aeSite')->getSiteData();
 		// $data['params'] = $aetools->getRouteParameters();
 		$data['aetools_service'] = $this->get('aetools.aetools');
 		// via stack
@@ -96,7 +96,7 @@ class superadminController extends baseController {
 	 */
 	public function bundlesAction() {
 		$data = array();
-		$data['sitedata'] = $this->get('aetools.aeSite')->getDefaultSiteData();
+		$data['sitedata'] = $this->get('aetools.aeSite')->getSiteData();
 		$data['bundles'] = $this->get('aetools.aetools')->getBundlesList(true);
 		$data['bundle'] = $this->get('aetools.aetools')->getBundleName();
 		return $this->render('siteadminBundle:superadmin:bundles.html.twig', $data);
@@ -110,7 +110,7 @@ class superadminController extends baseController {
 	 */
 	public function entitiesAction($entity = null, $field = null) {
 		$data = array();
-		$data['sitedata'] = $this->get('aetools.aeSite')->getDefaultSiteData();
+		$data['sitedata'] = $this->get('aetools.aeSite')->getSiteData();
 		$aeEntities = $this->get('aetools.aeEntity');
 		$entities = $aeEntities->getListOfEnties(false, true, true);
 		// général
@@ -120,7 +120,9 @@ class superadminController extends baseController {
 			$data['entities'][$name]['classname'] = $name;
 			$data['entities'][$name]['single'] = $aeEntities->getFieldNamesOfEntity($name);
 			$data['entities'][$name]['association'] = $aeEntities->getAssociationNamesOfEntity($name);
-			$data['entities'][$name]['object'] = new $name();
+			if(!$aeEntities->isAbstract($name)) {
+				$data['entities'][$name]['object'] = new $name();
+			}
 		}
 		foreach ($aeEntities->getListOfEnties(true) as $name => $value) {
 			$data['entities'][$name]['shortname'] = $value;

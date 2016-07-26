@@ -53,9 +53,14 @@ siteadmin_form_action:
     path:     /form-action/{classname}
     defaults: { _controller: siteadminsiteBundle:entite:entitePostFormPage }
 
+# entite sets
 siteadmin_set_default:
     path:     /entite-set/as-default/{id}/{entite}/{redir}
     defaults: { _controller: siteadminsiteBundle:entite:entite_as_default, redir: 'siteadmin_homepage' }
+
+siteadmin_set_vendable:
+    path:     /entite-set/as-vendable/{id}/{entite}/{redir}
+    defaults: { _controller: siteadminsiteBundle:entite:entite_as_vendable, redir: 'siteadmin_homepage' }
 
 
 
@@ -138,10 +143,10 @@ siteUser_delete:
 
 # MEDIA / IMAGES / PDF
 siteMedia_saveRawFile:
-    path:     /media/save-raw-file/{entityShortName}
+    path:     /media/save-raw-file
     defaults: { _controller: siteadminsiteBundle:media:persistRawImage }
-    requirements:
-        entityShortName: image|pdf
+    # requirements:
+    #     entityShortName: image|pdf
 
 # siteMedia_action:
 #     path:     /media/action/{action}

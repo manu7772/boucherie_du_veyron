@@ -60,8 +60,8 @@
 							{{ actions.htmlicon(entite, 4, ['text-muted']) }}
 						</div>
 						<div class="col-xs-9 text-right">
-							<h2 class="font-bold text-muted ellipsis">{{ ('types.' ~ entite.type)|trans({}, entite.className) }}</h2>
-							<span class="text-muted"><a href="{{ actions.entiteLink(entite, 'edit', type) }}"><i class="fa fa-pencil text-muted"></i></a> {{ actions.colorDot(entite.couleur, '1x') }} {{ entite.group_categorie_parentChilds|length }}</span>
+							<h2 class="font-bold text-muted ellipsis" data-placement="bottom" data-toggle="tooltip" title="{{ UCfirst(entite.nom) }}">{{ UCfirst(entite.nom) }}</h2>
+							<span class="text-muted"><em>Type {{ UCfirst(('types.' ~ entite.type)|trans({}, entite.className)) }}</em> <a href="{{ actions.entiteLink(entite, 'edit', type) }}"><i class="fa fa-pencil text-muted"></i></a> {{ actions.colorDot(entite.couleur, '1x') }} {{ entite.group_categorie_parentChilds|length }}</span>
 						</div>
 					</div>
 				</div>
@@ -111,7 +111,7 @@
 								<p>{{ ('types.' ~ entite.type)|trans({}, entite_name) }}</p>
 								{% if entite.image|default(null) != null %}
 								<br>
-								<a href="{{ path('siteadmin_entite', {entite: entite.image.className, id: entite.image.id, action: 'show'}) }}" class="docs-tooltip" data-toggle="tooltip" title="{{ UCfirst('moredetails'|trans({'%name%': entite.image.nom}, entite.className)) }}">
+								<a href="{{ path('siteadmin_entite', {entite: entite.image.className, id: entite.image.id, action: 'show'}) }}" class="docs-tooltip" data-toggle="tooltip" data-placement="bottom" title="{{ UCfirst('moredetails'|trans({'%name%': entite.image.nom}, entite.className)) }}">
 									<img src="{{ entite.image.imgThumbnail(64, 64, 'cut')|raw }}" class="img-responsive img-thumbnail">
 								</a>
 								{% endif %}
@@ -131,7 +131,7 @@
 							{% endif %}
 							<td{{ bgcolor|raw }}>{{ actions.labelLinkList(entite.parents_inverse, [entite.parent], null, repo, type_value_joiner, 'show', limit) }}</td>
 							<td{{ bgcolor|raw }}>{{ actions.labelLinkList(entite.allCategorieChilds, entite.categorieChilds, null, repo, type_value_joiner, 'show', limit) }}</td>
-							<td{{ bgcolor|raw }}>{{ actions.labelLinkList(entite.allChildsByTypes(), entite.childsByTypes(), null, repo, type_value_joiner, 'show', limit) }}</td>
+							<td{{ bgcolor|raw }}>{{ actions.labelLinkList(entite.allNestedChildsByGroup(null, true), entite.nestedChildsByGroup(null, true), null, type, type_value_joiner, 'show', limit) }}</td>
 						</tr>
 						{% endfor %}
 					</tbody>

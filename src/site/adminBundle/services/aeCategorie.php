@@ -4,17 +4,17 @@ namespace site\adminBundle\services;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use site\adminBundle\services\aeNested;
 
-use site\adminBundle\Entity\categorie;
 use site\adminBundle\Entity\baseEntity;
-use site\adminBundle\Entity\categorieposition;
+use site\adminBundle\Entity\categorie;
+use site\adminBundle\Entity\nestedposition;
 
 // call in controller with $this->get('aetools.aeCategorie');
 class aeCategorie extends aeNested {
 
-
     const NAME                  = 'aeCategorie';        // nom du service
     const CALL_NAME             = 'aetools.aeCategorie'; // comment appeler le service depuis le controller/container
     const CLASS_ENTITY          = 'site\adminBundle\Entity\categorie';
+    const CLASS_SHORT_ENTITY    = 'categorie';
 
     public function __construct(ContainerInterface $container = null, $em = null) {
         parent::__construct($container, $em);

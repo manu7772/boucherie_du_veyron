@@ -67,7 +67,7 @@ class aeEntity extends aetools {
 			// autre données dépendant du controller
 		}
 
-		$this->setOnlyConcrete(true);
+		$this->setOnlyConcrete(false);
 		$this->container->get('aetools.debug')->debugNamedFile('listOfEntities', array("onlyConcrete" => $this->getOnlyConcrete()), true, true);
 		$this->getListOfEnties(true, true);
 		return $this;
@@ -175,8 +175,7 @@ class aeEntity extends aetools {
 		$extended ? $list = $this->getListOfAllEntities() : $list = $this->getListOfEnties() ;
 		// search…
 		if(in_array($name, $list)) {
-			$find = array_keys($list, $name)[0];
-			return $getShortName === true ? $name : $find;
+			return $getShortName === true ? $name : array_keys($list, $name)[0];
 		}
 		// le nom est déjà un nom long : on le renvoie tel quel
 		if(array_key_exists($name, $list)) {
@@ -664,6 +663,14 @@ class aeEntity extends aetools {
 
 
 	// INFORMATIONS SUR LES CHAMPS D'ENTITÉS
+
+	public function isAbstract($entite) {
+		$CMD = $this->getClassMetadata($this->getEntityClassName($entite));
+		if(is_object($CMD)) {
+			return $CMD->getReflectionClass()->isAbstract();
+		}
+		throw new Exception("aeEntity::isAbstract() error !", 1);
+	}
 
 	/**
 	 * Renvoie si le champ existe
@@ -1187,7 +1194,7 @@ class aeEntity extends aetools {
 
 	public function setAsDefault(&$entite, $set = null, $flush = true) {
 		if(method_exists($entite, 'setDefault') && method_exists($entite, 'getDefault')) {
-			if($entite->getDefault() === $set) return;
+			if($entite->getDefault() === $set) return null;
 			if($set === false || ($set == null && $entite->getDefault() === true)) {
 				// set false
 				$entite->setDefault(false);
@@ -1223,8 +1230,23 @@ class aeEntity extends aetools {
 			// flush
 			if($flush) $this->getEm()->flush();
 		}
+		return $entite->getDefault();
 	}
 
+	public function setAsVendable(&$entite, $set = null, $flush = true) {
+		if(method_exists($entite, 'setVendable') && method_exists($entite, 'getVendable')) {
+			if($entite->getVendable() === $set) return null;
+			if($set === false || ($set == null && $entite->getVendable() === true)) {
+				// set false
+				$entite->setVendable(false);
+			} else {
+				$entite->setVendable(true);
+			}
+			// flush
+			if($flush) $this->getEm()->flush();
+		}
+		return $entite->getVendable();
+	}
 
 	// DELETIONS
 
@@ -1414,45 +1436,45 @@ class aeEntity extends aetools {
 	 * @param baseEntity $entity
 	 * @return aeReponse
 	 */
-	// public function NOsave(baseEntity &$entity, $flush = true) {
-	// 	$aeReponse = $this->container->get('aetools.aeReponse');
-	// 	$response = true;
-	// 	$sadmin = false;
-	// 	$user = $this->container->get('security.context')->getToken()->getUser();
-	// 	if(is_object($user)) if($user->getBestRole() == 'ROLE_SUPER_ADMIN') $sadmin = true;
-	// 	$message = 'Entité enregistrée.';
-	// 	try {
-	// 		$this->_em->persist($entity);
-	// 	} catch (Exception $e) {
-	// 		$response = false;
-	// 		if(($this->isDev() && $sadmin) === true)
-	// 			$message = $e->getMessage();
-	// 			else $message = 'Erreur système.';
-	// 	}
-	// 	if($flush === true) {
-	// 		try {
-	// 			$this->_em->flush();
-	// 		} catch (Exception $e) {
-	// 			$response = false;
-	// 			if(($this->isDev() && $sadmin) === true)
-	// 				$message = $e->getMessage();
-	// 				else $message = 'Erreur système.';
-	// 		}
-	// 	}
-	// 	return $aeReponse
-	// 		->setResult($response)
-	// 		->setMessage($message)
-	// 		->setData(array('id' => $entity->getId()))
-	// 		;
-	// 	// return $this;
-	// }
+	public function save(baseEntity &$entity, $flush = true) {
+		$aeReponse = $this->container->get('aetools.aeReponse');
+		$response = true;
+		$sadmin = false;
+		$user = $this->container->get('security.context')->getToken()->getUser();
+		if(is_object($user)) if($user->getBestRole() == 'ROLE_SUPER_ADMIN') $sadmin = true;
+		$message = 'Entité enregistrée.';
+		if($entity->getId() == null) {
+			try {
+				$this->_em->persist($entity);
+			} catch (Exception $e) {
+				$response = false;
+				if($sadmin || $this->idDev()) $message = $e->getMessage();
+					else $message = 'Erreur système (persist).';
+			}
+		}
+		if($flush === true) {
+			try {
+				$this->_em->flush();
+			} catch (Exception $e) {
+				$response = false;
+				if($sadmin || $this->idDev()) $message = $e->getMessage();
+					else $message = 'Erreur système (flush).';
+			}
+		}
+		// echo('<h3>'.$message."</h3>");
+		return $aeReponse
+			->setResult($response)
+			->setMessage($message)
+			->setData(array('id' => $entity->getId()))
+			;
+	}
 
 	/**
 	 * Persist en flush a baseEntity / pour tests
 	 * @param baseEntity $entity
 	 * @return aeReponse
 	 */
-	public function save(baseEntity &$entity, $flush = true) {
+	public function NOsave(baseEntity &$entity, $flush = true) {
 		$response = true;
 		$message = 'Entité enregistrée.';
 		if($entity->getId() == null) $this->_em->persist($entity);

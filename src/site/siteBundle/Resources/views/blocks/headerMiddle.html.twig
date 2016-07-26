@@ -5,7 +5,7 @@
 		<div class="row">
 			<div class="col-xs-4 col-sm-3 col-md-3 content-logo">
 				<div class="logo pull-left">
-					{% if sitedata.image != null %}
+					{% if sitedata.image|default(null) != null %}
 					<a href="{{ path('sitesite_homepage') }}"><img src="{{ sitedata.image.img }}" alt="logo" /></a> {# sitedata.image.imgThumbnail(260, 118, in) #}
 					{% else %}
 					<a href="{{ path('sitesite_homepage') }}"><img src="{{ asset('bundles/sitesite/images/home/logo.jpg') }}" alt="logo" /></a>
@@ -18,13 +18,13 @@
 					<div class="row">
 						<div class="col-xs-7 col-sm-7 col-md-8">
 							<div class="pull-left">
-								<h1>{{ UCfirst(sitedata.accroche|raw) }}</h1>
+								<h1>{{ UCfirst(sitedata.accroche|default('')|raw) }}</h1>
 							</div>
 						</div>
 						<div class="col-xs-5 col-sm-5 col-md-4">
 							<div class="shop-menu pull-right">
 								<ul class="nav navbar-nav">
-									{% if is_granted("IS_AUTHENTICATED_REMEMBERED") and marketplace.active %}
+									{% if is_granted("IS_AUTHENTICATED_REMEMBERED") and marketplace.vente %}
 									<li><a href="#"><i class="fa fa-shopping-cart"></i> Panier</a></li>
 									{% endif %}
 									{% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
@@ -68,7 +68,7 @@
 						</div>
 						<div class="mainmenu pull-left">
 							<ul class="nav navbar-nav collapse navbar-collapse">
-								{% for item in sitedata.menuNav.nestedChilds|default([]) %}
+								{% for item in sitedata.menuNav.children|default([]) %}
 								{% if item.slug == infoRoute._route_params.pagewebSlug|default(null) %}
 								<li>
 									<a class="active">{{ item.nom }}</a>

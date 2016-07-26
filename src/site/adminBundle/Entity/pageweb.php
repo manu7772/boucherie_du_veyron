@@ -6,10 +6,6 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Doctrine\Common\Collections\ArrayCollection;
-use JMS\Serializer\Annotation\ExclusionPolicy;
-use JMS\Serializer\Annotation\Expose;
-// Slug
-use Gedmo\Mapping\Annotation as Gedmo;
 
 use site\adminBundle\Entity\item;
 use site\adminBundle\Entity\image;
@@ -19,12 +15,10 @@ use \DateTime;
 /**
  * pageweb
  *
- * @ORM\Entity
- * @ORM\Table(name="pageweb")
  * @ORM\Entity(repositoryClass="site\adminBundle\Entity\pagewebRepository")
+ * @ORM\Table(name="pageweb")
  * @ORM\HasLifecycleCallbacks
  * @UniqueEntity(fields={"nom"}, message="pageweb.existe")
- * @ExclusionPolicy("all")
  */
 class pageweb extends item {
 
@@ -46,6 +40,12 @@ class pageweb extends item {
 	 * @ORM\Column(name="code", type="text", nullable=true, unique=false)
 	 */
 	protected $code;
+
+	/**
+	 * @var boolean
+	 * @ORM\Column(name="extended", type="boolean", nullable=false, unique=false)
+	 */
+	protected $extended;
 
 	/**
 	 * @var string
@@ -71,18 +71,41 @@ class pageweb extends item {
 	 */
 	protected $modele;
 
+	// NESTED VIRTUAL GROUPS
+	// les noms doivent commencer par "$group_" et finir par "Parents" (pour les parents) ou "Childs" (pour les enfants)
+	// et la partie variable doit comporter au moins 3 lettres
+	// reconnaissance auto par : "#^(add|remove|get)(Group_).{3,}(Parent|Child)(s)?$#" (self::VIRTUALGROUPS_PARENTS_PATTERN et self::VIRTUALGROUPS_CHILDS_PATTERN)
+	protected $group_nestedsParents;
+	protected $group_nestedsChilds;
 
 	public function __construct() {
 		parent::__construct();
+		$this->code = null;
+		$this->extended = false;
+		$this->title = null;
+		$this->titreh1 = null;
+		$this->metadescription = null;
+		$this->modele = null;
+	}
+
+	public function getNestedAttributesParameters() {
+		$new = array(
+			'nesteds' => array(
+				'data-limit' => 0,
+				'class' => array('categorie'),
+				'required' => false,
+				),
+			);
+		return array_merge(parent::getNestedAttributesParameters(), $new);
 	}
 
 	// /**
 	//  * Renvoie l'image principale
 	//  * @return image
 	//  */
-	public function getMainMedia() {
-		return $this->getImage();
-	}
+	// public function getMainMedia() {
+	// 	return $this->getImage();
+	// }
 
 	/**
 	 * Set code
@@ -101,6 +124,24 @@ class pageweb extends item {
 	 */
 	public function getCode() {
 		return $this->code;
+	}
+
+	/**
+	 * Set extended
+	 * @param boolean $extended
+	 * @return pageweb
+	 */
+	public function setExtended($extended) {
+		$this->extended = (boolean)$extended;
+		return $this;
+	}
+
+	/**
+	 * Get extended
+	 * @return boolean 
+	 */
+	public function getExtended() {
+		return $this->extended;
 	}
 
 	/**

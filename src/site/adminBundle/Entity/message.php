@@ -15,10 +15,9 @@ use \ReflectionClass;
 /**
  * message
  *
- * @ORM\Table()
+ * @ORM\Entity(repositoryClass="site\adminBundle\Entity\messageRepository")
  * @ORM\Table(name="message")
  * @ORM\HasLifecycleCallbacks
- * @ORM\Entity(repositoryClass="site\adminBundle\Entity\messageRepository")
  */
 class message {
 

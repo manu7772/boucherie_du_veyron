@@ -3,18 +3,27 @@ site:
     data:
         -
             nom: 'Boucherie du Veyron'
-            accroche: 'Boucherie du Veyron'
+            accroche: 'La Boucherie du Veyron'
             default: 1
             couleur: 'rgba(163,64,18,1)'
+            menuNav:
+                field: nom
+                value: 'menu principal'
             menuArticle:
                 field: nom
                 value: 'La boutique'
+            diaporamaintro:
+                field: nom
+                value: 'Diaporamas accueil'
             categorieArticles:
                 field: nom
                 value: 'Promotions'
             categorieFooters:
                 field: nom
-                value: 'Infomations'
+                value: 
+                    - 'informations'
+                    - 'menu principal'
+                    - 'La boutique'
             boutiques:
                 field: nom
                 value: 'Boutique de Poncin'
@@ -24,12 +33,21 @@ site:
             descriptif: '<p>Version de test pour le site Boucherie du Veyron</p>'
             default: 0
             couleur: 'rgba(220,0,0,1)'
+            menuNav:
+                field: nom
+                value: 'menu principal'
             menuArticle:
                 field: nom
-                value: 'Menu latéral'
+                value: 'La boutique'
             categorieArticles:
                 field: nom
                 value: 'Promotions'
             categorieFooters:
                 field: nom
-                value: 'Infomations'
+                value: 
+                    - 'informations'
+                    - 'menu principal'
+                    - 'La boutique'
+            boutiques:
+                field: nom
+                value: 'Boutique de Poncin'

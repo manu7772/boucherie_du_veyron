@@ -1,0 +1,11 @@
+
+{% macro boxCategorie(item, categorie) %}
+{# Affichage d'une box pour articles #}
+{% if item.className matches "#^article#" %}
+{% import 'sitesiteBundle:blocks:articles_actions.html.twig' as articles_macros %}
+{{ articles_macros.boxArticle(item, categorie) }}
+{% elseif item.className matches "#^fiche#" %}
+<p>{{ item.nom }} <small><i>({{ item.className }}/{{ item.id }})</i></small></p>
+{% endif %}
+{% endmacro %}
+

@@ -518,7 +518,9 @@ class User extends BaseUser {
 	 * @return boolean
 	 */
 	public function haveRight(User $user) {
-		return $this->getBestRoleValue() >= $user->getBestRoleValue() ? true : false;
+		if($this->getId() === null) return false; 
+		if($user->getId() == $this->getId()) return true;
+		return $this->getBestRoleValue() >= $user->getBestRoleValue();
 	}
 
 

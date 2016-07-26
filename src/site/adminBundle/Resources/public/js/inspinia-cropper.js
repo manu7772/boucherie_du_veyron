@@ -1,7 +1,7 @@
 $(document).ready(function() {
 
-	// var dev = true;
-	var dev = false;
+	var dev = $('#hiddendata #environnementMode').text() == "dev";
+	// var dev = false;
 	// loading
 	var loading = false;
 	var croppername = '_cropper';
@@ -12,7 +12,7 @@ $(document).ready(function() {
 		/* VARIABLES / INITIALISATION  */
 		/*******************************/
 
-		if(dev) console.log('• Loading :', 'Cropper-image');
+		if(dev) console.log('• Loading :', 'Cropper-image / mode : '+$('#hiddendata #environnementMode').text()+" "+dev);
 		// load icon
 		var loadbutton = $('.loadOff', this);
 		var loadingbutton = $('.loadOn', this);
@@ -291,7 +291,8 @@ $(document).ready(function() {
 								}).done(function(returnData) {
 									returnData = $.parseJSON(returnData);
 									if(returnData.result != true) {
-										alert('Une erreur est survenue lors de l\'enregistrement. Veuillez recommencer, SVP.\nAttention : un fichier corrompu, non conforme ou trop lourd (Max. ' + cropperData.maxfilesize + 'Mo) peut faire échouer l\'opération.');
+										if(dev) alert('Une erreur est survenue lors de l\'enregistrement.\n-----------------------------\n'+returnData.message);
+											else alert('Une erreur est survenue lors de l\'enregistrement. Veuillez recommencer, SVP.\nAttention : un fichier corrompu, non conforme ou trop lourd (Max. ' + cropperData.maxfilesize + 'Mo) peut faire échouer l\'opération.');
 										data = olddata;
 										updateBoard();
 									} else {
@@ -306,8 +307,13 @@ $(document).ready(function() {
 										// updateIfIsPicture();
 									};
 								}).fail(function(jqXHR, textStatus) {
-									if(dev) alert('Une erreur est survenue lors de l\'enregistrement. Veuillez recommencer, SVP.\nAttention : un fichier corrompu, non conforme ou trop lourd (Max. ' + cropperData.maxfilesize + 'Mo) peut faire échouer l\'opération.\nRequest failed: ' + textStatus);
-									else alert('Une erreur est survenue lors de l\'enregistrement. Veuillez recommencer, SVP.\nAttention : un fichier corrompu, non conforme ou trop lourd (Max. ' + cropperData.maxfilesize + 'Mo) peut faire échouer l\'opération.');
+									// console.log("Error jqXHR : ", jqXHR);
+									if(dev) {
+										$('<div>'+jqXHR.responseText+'</div>').appendTo('body');
+										alert('Fail : une erreur est survenue lors de l\'enregistrement. Veuillez recommencer, SVP.\nAttention : un fichier corrompu, non conforme ou trop lourd (Max. ' + cropperData.maxfilesize + 'Mo) peut faire échouer l\'opération.\n• Request failed '+jqXHR.status+' : ' + jqXHR.statusText);
+									} else {
+										alert('Fail : une erreur est survenue lors de l\'enregistrement. Veuillez recommencer, SVP.\nAttention : un fichier corrompu, non conforme ou trop lourd (Max. ' + cropperData.maxfilesize + 'Mo) peut faire échouer l\'opération.');
+									}
 									data = olddata;
 									updateBoard();
 								}).always(function() {

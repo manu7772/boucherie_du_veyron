@@ -2,14 +2,168 @@ article:
     order: 10
     data:
         -
-            nom: 'steak haché'
-            descriptif: '<p>code</p>'
-            prix: '12.8'
+            nom: 'Plat de côte'
+            descriptif: '<p>Pot-au-feu</p>'
+            prix: '6.90'
+            group_nestedsParents:
+                field: slug
+                value: 'pieces-du-boucher'
         -
-            nom: 'filet de rumstec'
-            descriptif: '<p>code</p>'
-            prix: '18.4'
+            nom: 'Jarret'
+            descriptif: '<p></p>'
+            prix: '8.90'
+            group_nestedsParents:
+                field: slug
+                value: 'pieces-du-boucher'
         -
-            nom: 'faux filet'
-            descriptif: '<p>code</p>'
-            prix: '15.5'
+            nom: 'Collier'
+            descriptif: '<p></p>'
+            prix: '11.90'
+            group_nestedsParents:
+                field: slug
+                value: 'pieces-du-boucher'
+        -
+            nom: 'Bourguignon cat.1'
+            descriptif: '<p>Non gélatineux</p>'
+            prix: '11.90'
+            group_nestedsParents:
+                field: slug
+                value: 'pieces-du-boucher'
+        -
+            nom: 'Bourguignon cat.2'
+            descriptif: '<p>Gélatineux</p>'
+            prix: '9.90'
+            group_nestedsParents:
+                field: slug
+                value: 'pieces-du-boucher'
+        -
+            nom: 'Haché'
+            descriptif: '<p>(assaisonné)</p>'
+            prix: '15.90'
+            group_nestedsParents:
+                field: slug
+                value: 'pieces-du-boucher'
+        # -
+        #     nom: 'Braisés'
+        #     descriptif: '<p>(Basse-côte, macreuse, etc.)</p>'
+        #     prix: '15.90'
+        #     group_nestedsParents:
+        #         field: slug
+        #         value: 'pieces-du-boucher'
+        -
+            nom: 'Gite'
+            descriptif: '<p></p>'
+            prix: '16.90'
+            group_nestedsParents:
+                field: slug
+                value: 'a-rotir'
+        -
+            nom: 'Gite'
+            descriptif: '<p></p>'
+            prix: '16.90'
+            group_nestedsParents:
+                field: slug
+                value: 'a-rotir'
+        -
+            nom: 'Rond de gite'
+            descriptif: '<p></p>'
+            prix: '18.90'
+            group_nestedsParents:
+                field: slug
+                value: 'a-rotir'
+        -
+            nom: 'Plat de tranche'
+            descriptif: '<p></p>'
+            prix: '24.90'
+            group_nestedsParents:
+                field: slug
+                value: 'a-rotir'
+        -
+            nom: 'Tranche'
+            descriptif: '<p></p>'
+            prix: '24.90'
+            group_nestedsParents:
+                field: slug
+                value: 'a-griller'
+        -
+            nom: 'Aiguillette baronne'
+            descriptif: '<p></p>'
+            prix: '24.90'
+            group_nestedsParents:
+                field: slug
+                value: 'a-griller'
+        -
+            nom: 'Pièces parées'
+            descriptif: '<p></p>'
+            prix: '26.90'
+            group_nestedsParents:
+                field: slug
+                value: 'a-griller'
+        -
+            nom: 'Côte de bœuf'
+            descriptif: '<p></p>'
+            prix: '28.90'
+            group_nestedsParents:
+                field: slug
+                value: 'a-griller'
+        -
+            nom: 'Aiguillette de rumsteck'
+            descriptif: '<p></p>'
+            prix: '28.90'
+            group_nestedsParents:
+                field: slug
+                value: 'a-griller'
+        -
+            nom: 'Rond de Paris'
+            descriptif: '<p></p>'
+            prix: '29.90'
+            group_nestedsParents:
+                field: slug
+                value: 'a-griller'
+        -
+            nom: 'Rumsteck'
+            descriptif: '<p></p>'
+            prix: '29.90'
+            group_nestedsParents:
+                field: slug
+                value: 'a-griller'
+        -
+            nom: 'Entrecôte'
+            descriptif: '<p></p>'
+            prix: '29.90'
+            group_nestedsParents:
+                field: slug
+                value: 'a-braiser'
+        -
+            nom: 'Faux-filet'
+            descriptif: '<p></p>'
+            prix: '32.90'
+            group_nestedsParents:
+                field: slug
+                value: 'abats'
+        -
+            nom: 'Filet de rumsteck'
+            descriptif: '<p></p>'
+            prix: '36.90'
+            group_nestedsParents:
+                field: slug
+                value: 'abats'
+        -
+            nom: 'Filet'
+            descriptif: '<p></p>'
+            prix: '42.90'
+            group_nestedsParents:
+                field: slug
+                value: 'abats'
+
+
+
+
+
+
+
+
+
+
+
+

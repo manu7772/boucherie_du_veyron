@@ -51,6 +51,9 @@ hr.fine {
 	margin-top:4px;
 	margin-bottom:4px;
 }
+.full-width {
+  width: 100%;
+}
 
 .btn:hover,
 .btn:focus {
@@ -948,7 +951,11 @@ p.tab-info-category {
 .productinfo h2,
 .productinfo h2 small,
 .productinfo h2 small sup,
-.productinfo h2 small span {
+.productinfo h2 small span,
+.productinfo h4,
+.productinfo h4 small,
+.productinfo h4 small sup,
+.productinfo h4 small span {
   color: #3d6627;
 }
 .productinfo h2 {
@@ -964,6 +971,28 @@ p.tab-info-category {
   padding-right: 5px;
   margin-top: auto;
   margin-bottom: auto;
+}
+.productinfo h4 {
+  font-family: 'Trebuchet MS', Arial, Helvetica, sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  display: inline-block;
+  height: 28px;
+  vertical-align: middle;
+  line-height: 22px;
+  padding-top: 4px;
+  padding-right: 5px;
+  margin-top: auto;
+  margin-bottom: auto;
+}
+.order-group.for-fiche {
+  margin-bottom: 0px;
+  padding-bottom: 0px;
+  height: 28px;
+  width: 100%;
+  right: 0px;
+  float: right;
+  text-align: right;
 }
 .order-group.for-product {
   margin-bottom: 0px;

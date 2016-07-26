@@ -6,10 +6,6 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Doctrine\Common\Collections\ArrayCollection;
-use JMS\Serializer\Annotation\ExclusionPolicy;
-use JMS\Serializer\Annotation\Expose;
-// Slug
-use Gedmo\Mapping\Annotation as Gedmo;
 
 use site\adminBundle\Entity\item;
 
@@ -18,13 +14,14 @@ use \DateTime;
 /**
  * fiche
  *
- * @ORM\Entity
- * @ORM\Table(name="fiche", options={"comment":"fiches : modes d'emplois, recettes, notices, bricolage, etc."})
- * @ORM\HasLifecycleCallbacks
  * @ORM\Entity(repositoryClass="site\adminBundle\Entity\ficheRepository")
- * @ExclusionPolicy("all")
+ * @ORM\Table(name="fiche", options={"comment":"fiches : modes d'emplois, recettes, notices, bricolage, etc."})
+ * @ORM\InheritanceType("JOINED")
+ * @ORM\DiscriminatorColumn(name="class_name", type="string")
+ * @ORM\HasLifecycleCallbacks
+ * 
  */
-class fiche extends item {
+abstract class fiche extends item {
 
 	/**
 	 * @var string
@@ -61,87 +58,44 @@ class fiche extends item {
 	 */
 	protected $accroche;
 
-	/**
-	 * @var string
-	 * @ORM\Column(name="niveau", type="string", length=30, nullable=false, unique=false)
-	 */
-	protected $niveau;
+	// protected $listeTypentites = array(
+	// 	1 => "recette",
+	// 	2 => "boisson",
+	// 	);
 
-	/**
-	 * @var string
-	 * @ORM\Column(name="duree", type="string", length=20, nullable=false, unique=false)
-	 */
-	protected $duree;
-
-	/**
-	 * @var array - PROPRIÉTAIRE
-	 * @ORM\ManyToMany(targetEntity="site\adminBundle\Entity\article", inversedBy="fiches")
-	 * @ORM\JoinColumn(nullable=true, unique=false, onDelete="SET NULL")
-	 */
-	protected $articles;
-
-	protected $listeNiveaux = array(
-		1 => "niveaux.debutant",
-		2 => "niveaux.intermediaire",
-		3 => "niveaux.confirme",
-		);
-
-	protected $durees = array(
-        30    =>  "30\"",
-        60    =>  "1 h",
-        90    =>  "1 h 30\"",
-        120   =>  "2 h",
-        150   =>  "2 h 30\"",
-        180   =>  "3 h",
-        210   =>  "3 h 30\"",
-        240   =>  "4 h",
-        270   =>  "4 h 30\"",
-        300   =>  "5 h"
-        );
+	// NESTED VIRTUAL GROUPS
+	// les noms doivent commencer par "$group_" et finir par "Parents" (pour les parents) ou "Childs" (pour les enfants)
+	// et la partie variable doit comporter au moins 3 lettres
+	// reconnaissance auto par : "#^(add|remove|get)(Group_).{3,}(Parent|Child)(s)?$#" (self::VIRTUALGROUPS_PARENTS_PATTERN et self::VIRTUALGROUPS_CHILDS_PATTERN)
+	// categories
+	protected $group_nestedsParents;
+	protected $group_nestedsChilds;
+	// article
+	protected $group_fichesParents;
+	protected $group_fichesChilds;
 
 	public function __construct() {
 		parent::__construct();
 		$this->datePublication = new DateTime();
 		$this->dateExpiration = null;
-		$this->articles = new ArrayCollection();
-		$this->setNiveau(reset($this->listeNiveaux)); // Niveau par défaut
-		$this->duree = 30;
 	}
 
-	// public function memOldValues($addedfields = null) {
-	// 	$fields = array('articles');
-	// 	if(count($addedfields) > 0 && is_array($addedfields)) $fields = array_unique(array_merge($fields, $addedfields));
-	// 	parent::memOldValues($fields);
-	// 	return $this;
-	// }
- 
-    // public function getClassName(){
-    //     return parent::CLASS_FICHE;
-    // }
-
-	// /**
-	//  * Renvoie l'image principale
-	//  * @return image
-	//  */
-	// public function getMainMedia() {
-	// 	return $this->getImage();
-	// }
-
-	/**
-	 * get niveaux
-	 * @return array 
-	 */
-	public function getListeNiveaux() {
-		return $this->listeNiveaux;
+	public function getNestedAttributesParameters() {
+		$new = array(
+			'fiches' => array(				// groupe fiches => group_fichesParents / group_imagesChilds
+				'data-limit' => 10,				// nombre max. d'enfants / 0 = infini
+				'class' => array('fiche'),	// classes acceptées (array) / null = toutes les classes de nested
+				'required' => false,
+				),
+			'nesteds' => array(
+				'data-limit' => 0,
+				'class' => array('categorie'),
+				'required' => false,
+				),
+			);
+		return array_merge(parent::getNestedAttributesParameters(), $new);
 	}
 
-	/**
-	 * get durees
-	 * @return array 
-	 */
-	public function getDurees() {
-		return $this->durees;
-	}
 
 	/**
 	 * Set datePublication
@@ -197,92 +151,6 @@ class fiche extends item {
 	 */
 	public function getAccroche() {
 		return $this->accroche;
-	}
-
-	/**
-	 * Set niveau
-	 * @param string $niveau
-	 * @return fiche
-	 */
-	public function setNiveau($niveau = null) {
-		$this->niveau = $niveau;
-		return $this;
-	}
-
-	/**
-	 * Get niveau
-	 * @return string 
-	 */
-	public function getNiveau() {
-		return $this->niveau;
-	}
-
-	/**
-	 * Get niveauText
-	 * @return string 
-	 */
-	public function getNiveauText() {
-		return $this->listeNiveaux[$this->niveau];
-	}
-
-	/**
-	 * Set duree
-	 * @param string $duree
-	 * @return fiche
-	 */
-	public function setDuree($duree = null) {
-		$this->duree = $duree;
-		return $this;
-	}
-
-	/**
-	 * Get duree
-	 * @return string 
-	 */
-	public function getDuree() {
-		return $this->duree;
-	}
-
-	/**
-	 * Set articles
-	 * @param arrayCollection $articles
-	 * @return subentity
-	 */
-	public function setArticles(ArrayCollection $articles) {
-		// $this->articles->clear();
-		// incorporation avec "add" et "remove" au cas où il y aurait des opérations (inverse notamment)
-		foreach ($this->getArticles() as $article) if(!$articles->contains($article)) $this->removeArticle($article); // remove
-		foreach ($articles as $article) $this->addArticle($article); // add
-		return $this;
-	}
-
-	/**
-	 * Get articles
-	 * @return ArrayCollection 
-	 */
-	public function getArticles() {
-		return $this->articles;
-	}
-
-	/**
-	 * Add article
-	 * @param article $article
-	 * @return video
-	 */
-	public function addArticle(article $article) {
-		// $article->addFiche($this);
-		if(!$this->articles->contains($article)) $this->articles->add($article);
-		return $this;
-	}
-
-	/**
-	 * Remove article
-	 * @param article $article
-	 * @return boolean
-	 */
-	public function removeArticle(article $article) {
-		// $article->removeFiche($this);
-		return $this->articles->removeElement($article);
 	}
 
 }

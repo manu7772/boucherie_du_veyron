@@ -6,8 +6,6 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Doctrine\Common\Collections\ArrayCollection;
-// Slug
-// use Gedmo\Mapping\Annotation as Gedmo;
 
 use site\adminBundle\Entity\nested;
 use site\adminBundle\Entity\subentity;
@@ -17,11 +15,9 @@ use \DateTime;
 use \Exception;
 
 /**
- * @ORM\Entity
  * @ORM\Entity(repositoryClass="site\adminBundle\Entity\nestedRepository")
  * @ORM\InheritanceType("JOINED")
  * @ORM\DiscriminatorColumn(name="class_name", type="string")
- * @ORM\DiscriminatorMap({"item" = "item", "tier" = "tier", "media" = "media", "rawfile" = "rawfile", "categorie" = "categorie", "article" = "article", "fiche" = "fiche", "pageweb" = "pageweb", "boutique" = "boutique", "marque" = "marque", "reseau" = "reseau", "image" = "image", "pdf" = "pdf"})
  * 
  * @ORM\HasLifecycleCallbacks()
  */
@@ -60,6 +56,10 @@ abstract class nested extends subentity {
 
 	// NESTED VIRTUAL DATA
 	// virtuals
+	// parent categorie
+	protected $group_categorie_parentParents;
+	protected $group_categorie_parentChilds;
+
 	protected $nestedParents;
 	protected $nestedChilds;
 	// NESTED VIRTUAL GROUPS
@@ -86,7 +86,7 @@ abstract class nested extends subentity {
 
 	/**
 	 * Get names of attributes for nested data
-	 * renvoie array de type attribut => groupe : 'group_imagesParents' => 'images'
+	 * renvoie array de type longname => shortname : 'group_imagesParents' => 'images'
 	 * @return array
 	 */
 	public function getNestedAttributes() {
@@ -96,14 +96,42 @@ abstract class nested extends subentity {
 		return $result;
 	}
 
+	/**
+	 * has nested attribute
+	 * @param string $attribute (long name or short name)
+	 * @return boolean
+	 */
+	public function hasNestedAttribute($attribute) {
+		$nestedAttributes = $this->getNestedAttributes();
+		return in_array($attribute, $nestedAttributes) || array_key_exists($attribute, $nestedAttributes);
+	}
+
 	public function getNestedAttributesParameters() {
 		return array(
+			'categorie_parent' => array(			// groupe articles => group_articlesParents / group_imagesChilds
+				'data-limit' => 1,					// nombre max. d'enfants / 0 = infini
+				'class' => array('categorie'),		// classes acceptées (array) / null = toutes les classes de nested
+				'required' => false,
+				),
 			'images' => array(					// groupe images => group_imagesParents / group_imagesChilds
-				'data-limit' => 0,				// nombre max. d'enfants / 0 = infini
+				'data-limit' => 1000,			// nombre max. d'enfants / 0 = infini
 				'class' => array('image'),		// classes acceptées (array) / null = toutes les classes de nested
 				'required' => false,
 				),
 			);
+	}
+
+	public function getNestedAttributesClasses($attribute) {
+		$nestedAttributes = $this->getNestedAttributes();
+		$nestedAttributesParameters = $this->getNestedAttributesParameters();
+		$attr = array();
+		if(array_key_exists($attribute, $nestedAttributes)) $attribute = $nestedAttributes[$attribute];
+		if(isset($nestedAttributesParameters[$attribute]['class']))
+			$attr = $nestedAttributesParameters[$attribute]['class'];
+			else throw new Exception("Attribute ".json_encode($attribute)." has no definition for classes in nestedAttributes (".json_encode($nestedAttributes).").", 1);
+		if(count($attr) < 1)
+			throw new Exception("Attribute ".json_encode($attribute)." has no definition for nestedAttributes (".json_encode($nestedAttributes).").", 1);
+		return $attr;
 	}
 
 
@@ -127,13 +155,21 @@ abstract class nested extends subentity {
 		parent::check();
 	}
 
+	/**
+	 * @ORM\PostPersist
+	 * @ORM\PostUpdate
+	 */
+	public function postUpdatePersist() {
+		$this->postLoadConstructor();
+	}
+
 
 	/**
 	 * @ORM\PostLoad
 	 */
 	public function postLoadConstructor() {
 		$this->initNestedAttributes();
-		$this->initNesteds(null);
+		$this->initNesteds();
 	}
 
 	protected function initNestedAttributes() {
@@ -148,24 +184,25 @@ abstract class nested extends subentity {
 
 	/**
 	 * init nested values
-	 * $onlyThisGroup :
-	 *  - string : updates only this group
-	 *  - null : updates all groups
-	 *  - false : does not update groups
-	 * @param string $onlyThisGroup
 	 * @return nested
 	 */
-	public function initNesteds($onlyThisGroup = null) {
+	public function initNesteds() {
 		$groups = $this->getNestedAttributesParameters();
 		// PARENTS
-		foreach($this->nestedpositionParents as $link) {
+		foreach($this->nestedpositionParents as $link) if($link->getParent() != null) {
 			if($link->getChild() !== $this) throw new Exception("Link parent error !!", 1);
-			if($link->getParent() != null) $this->addNestedParent($link->getParent(), $link->getGroupName());
+			$this->addNestedParent($link->getParent(), $link->getGroupName());
 		}
 		// CHILDS
-		foreach($this->nestedpositionChilds as $link) {
+		// echo('<h3>• '.$this->getNom().'</h3>');
+		foreach($this->nestedpositionChilds as $link) if($link->getChild() != null) {
+			// echo('<p>- <i style="color:gray;">child</i> '.$link->getChild()->getNom().' ('.$link->getGroupName().')');
 			if($link->getParent() !== $this) throw new Exception("Link child error !!", 1);
-			if($link->getChild() != null) $this->addNestedChild($link->getChild(), $link->getGroupName());
+			// echo('<span style="color:green;"> -> add : </span>');
+			$this->addNestedChild($link->getChild(), $link->getGroupName());
+			// echo('</p>');
+		} else {
+			// echo('<p style="color:orange;">IS NULL : '.$link->getId().'</p>');
 		}
 		return $this;
 	}
@@ -254,7 +291,8 @@ abstract class nested extends subentity {
 	}
 
 	public function __set($property, $values) {
-		if(is_array($values)) $value1 = $values[0];
+		// echo('<h3 style="color:orange;">'.json_encode($values).'</h3>');
+		if(is_array($values)) $value1 = reset($values);
 			else $value1 = $values;
 		if(!property_exists($this, $property)) throw new Exception('Invalid property '.json_encode($property).' !', 1);
 		$short = preg_replace(self::VIRTUALGROUPS_ALL_PATTERN, '${2}', $property);
@@ -294,10 +332,10 @@ abstract class nested extends subentity {
 						}
 					}
 				} else {
-					throw new Exception("Element of type ".json_encode(gettype($value))." is not a valid attribute, should be ".json_encode($this->getNestedAttributesParameters()[$short]['class']).".", 1);
+					throw new Exception("Element of class (".json_encode(gettype($value)).") ".$value->getClassName()." is not a valid attribute, should be ".json_encode($this->getNestedAttributesParameters()[$short]['class']).".", 1);
 				}
 			} else {
-				throw new Exception("Element of type ".json_encode(gettype($value)).' is not instance of site\adminBundle\Entity\nested.', 1);
+				throw new Exception("Element of class (".json_encode(gettype($value)).") ".$value->getClassName()." is not instance of site\adminBundle\Entity\nested.", 1);
 			}
 		}
 		// $this->devecho(')</p>');
@@ -475,23 +513,18 @@ abstract class nested extends subentity {
 	/**
 	 * Add nestedParent
 	 * @param nested $nestedParent
+	 * @param string $group
 	 * @return nested
 	 */
 	public function addNestedParent(nested $nestedParent, $group = null) {
-		if(!$this->nestedParents->contains($nestedParent)) {
-			$this->nestedParents->add($nestedParent);
-		}
-		if($group != null) {
-			$groupAttr = 'group_'.$group.'Parents';
-			$groups = $this->getNestedAttributesParameters();
-			if(
-				property_exists($this, $groupAttr)
-				&& array_key_exists($group, $groups)
-				&& (!$this->$groupAttr->contains($nestedParent))
-				) {
-					// echo('<p>addNestedParent : '.$groupAttr.' ('.get_class($this->$groupAttr).' ['.count($this->$groupAttr).']) => '.$nestedParent->getClassName().' (name : '.$nestedParent.')</p>');
-					if($nestedParent->getId() != null) $this->$groupAttr->add($nestedParent);
-				}
+		if($nestedParent->getId() != null) {
+			// global "nested"
+			$this->nestedParents->set($nestedParent->getId(), $nestedParent);
+			// group
+			if($group != null) {
+				$groupAttr = 'group_'.$group.'Parents';
+				$this->$groupAttr->set($nestedParent->getId(), $nestedParent);
+			}
 		}
 		return $this;
 	}
@@ -499,6 +532,7 @@ abstract class nested extends subentity {
 	/**
 	 * Remove nestedParent
 	 * @param nested $nestedParent
+	 * @param string $group
 	 * @return boolean
 	 */
 	public function removeNestedParent(nested $nestedParent, $group = null) {
@@ -537,13 +571,23 @@ abstract class nested extends subentity {
 			return $this->getNestedParents();
 		} else {
 			$result = array();
-			foreach ((array)$classes as $classe) {
-				foreach ($this->getNestedParents() as $parent) {
-					if($parent->getClassName() == $classe) $result[] = $parent;
-				}
+			foreach ($this->getNestedParents() as $parent) {
+				if(in_array($parent->getClassName(), (array)$classes)) $result[] = $parent;
 			}
 			return array_unique($result);
 		}
+	}
+
+	/**
+	 * Get nestedParents by group
+	 * @param string $group
+	 * @return array 
+	 */
+	public function getNestedParentsByGroup($group) {
+		$groupAttr = 'group_'.$group.'Parents';
+		if(!$this->hasNestedAttribute($groupAttr)) throw new Exception("Group ".$groupAttr." does not exist !", 1);
+		$result =  $this->$groupAttr->toArray();
+		return array_unique($result);
 	}
 
 	/**
@@ -558,44 +602,23 @@ abstract class nested extends subentity {
 		return array_unique((array)$nestedParents);
 	}
 
-	// /**
-	//  * Get nestedParents by type
-	//  * @return array 
-	//  */
-	// public function getNestedParentsByType($types = []) {
-	// 	if(count((array)$types) == 0) {
-	// 		return $this->getNestedParents();
-	// 	} else {
-	// 		$result = array();
-	// 		foreach((array)$types as $type) {
-	// 			foreach ($this->getNestedParents() as $parent) {
-	// 				if($parent->getType() == $type) $result[] = $parent;
-	// 			}
-	// 		}
-	// 		return array_unique($result);
-	// 	}
-	// }
-
 	/**
 	 * Add nestedChild
 	 * @param nested $nestedChild
 	 * @return nested
 	 */
 	public function addNestedChild(nested $nestedChild, $group = null) {
-		if(!$this->nestedChilds->contains($nestedChild)) {
-			$this->nestedChilds->add($nestedChild);
-		}
-		if($group != null) {
-			$groupAttr = 'group_'.$group.'Childs';
-			$groups = $this->getNestedAttributesParameters();
-			if(
-				property_exists($this, $groupAttr)
-				&& array_key_exists($group, $groups)
-				&& (!$this->$groupAttr->contains($nestedChild))
-				) {
-					// echo('<p>addNestedChild : '.$groupAttr.' ('.get_class($this->$groupAttr).' ['.count($this->$groupAttr).']) => '.$nestedChild->getClassName().' (name : '.$nestedChild.')</p>');
-					if($nestedChild->getId() != null) $this->$groupAttr->add($nestedChild);
-				}
+		if($nestedChild->getId() != null) {
+			// global "nested"
+			$this->nestedChilds->set($nestedChild->getId(), $nestedChild);
+			// group
+			if($group != null) {
+				$groupAttr = 'group_'.$group.'Childs';
+				$this->$groupAttr->set($nestedChild->getId(), $nestedChild);
+			}
+			// echo('<span style="color:lightgreen;">OK</span>');
+		} else {
+			// echo('<span style="color:red;">NO</span>');
 		}
 		return $this;
 	}
@@ -629,25 +652,42 @@ abstract class nested extends subentity {
 	 * @param boolean $excludeNotAccepts = false
 	 * @return ArrayCollection 
 	 */
-	public function getNestedChilds($excludeNotAccepts = false) {
+	public function getNestedChilds() {
 		return $this->nestedChilds;
 	}
 
 	/**
-	 * Get ALL nestedChilds
+	 * Get nestedChilds
 	 * @param boolean $excludeNotAccepts = false
 	 * @return array 
 	 */
-	public function getAllNestedChilds($excludeNotAccepts = false, $limit = 100) {
-		$nestedChilds = $this->getNestedChilds($excludeNotAccepts);
-		if($nestedChilds instanceOf ArrayCollection) $nestedChilds = $nestedChilds->toArray();
-		foreach($nestedChilds as $child) if($limit > 0) {
-			$nestedChilds = array_merge($nestedChilds, $child->getAllNestedChilds($excludeNotAccepts, $limit - 1));
+	public function getNestedChildsByGroup($group = null, $addAlias = false) {
+		if($group != null) {
+			$groupAttr = 'group_'.$group.'Childs';
+			if(!$this->hasNestedAttribute($groupAttr)) throw new Exception("Group ".$groupAttr." does not exist !", 1);
+			$result =  $this->$groupAttr->toArray();
+		} else {
+			$result = $this->getNestedChilds()->toArray();
+		}
+		if($addAlias == false) {
+			foreach ($result as $key => $child) if($child->getClassName() == 'categorie') unset($result[$key]);
+		}
+		return $result;
+	}
+
+	/**
+	 * Get ALL nestedChilds
+	 * @return array 
+	 */
+	public function getAllNestedChilds($limit = 100) {
+		$nestedChilds = $this->getNestedChilds()->toArray();
+		if($limit > 0) {
+			foreach($nestedChilds as $child) {
+				$nestedChilds = array_merge($nestedChilds, $child->getAllNestedChilds($limit - 1));
+			}
 		}
 		return array_unique((array)$nestedChilds);
 	}
-
-
 
 
 }

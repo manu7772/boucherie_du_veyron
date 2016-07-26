@@ -40,6 +40,9 @@ icons:
 default:
     bydefault: Set as default element
     nomore: You can not either add element. Disable some other element if you want to attribute this one.
+vendable:
+    set: sale this product
+    unset: do not sale this product
 actions:
     name: actions
     voir: view

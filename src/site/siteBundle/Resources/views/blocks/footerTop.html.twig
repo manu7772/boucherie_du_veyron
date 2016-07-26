@@ -7,13 +7,10 @@
 			{% for item1 in sitedata.categorieFooters|default([]) %}
 			<div class="col-sm-2">
 				<div class="single-widget">
-					<h2>{{ item1 }}</h2>
+					<h2 title="{{ phraseCut(item1.descriptif|default(item1.nom)|striptags, 160) }}">{{ item1.nom }}</h2>
 					<ul class="nav nav-pills nav-stacked">
-						{%- for item2 in item1.group_nestedsChilds -%}
-						<li><a {{ actions.elementHref(item2, item1, '_self') }}>{{ UCfirst(item2) }}</a></li>
-						{%- endfor -%}
-						{%- for item2 in item1.group_categorie_parentChilds -%}
-						<li><a {{ actions.elementHref(item2, item1, '_self') }}>{{ UCfirst(item2) }}</a></li>
+						{%- for item2 in item1.children -%}
+						<li title="{{ phraseCut(item2.descriptif|default(item2.nom)|striptags, 160) }}"><a {{ actions.elementHref(item2, item1, '_self') }}>{{ UCfirst(item2.nom) }}</a></li>
 						{%- endfor -%}
 					</ul>
 				</div>

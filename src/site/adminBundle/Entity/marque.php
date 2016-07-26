@@ -6,10 +6,6 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Doctrine\Common\Collections\ArrayCollection;
-use JMS\Serializer\Annotation\ExclusionPolicy;
-use JMS\Serializer\Annotation\Expose;
-// Slug
-use Gedmo\Mapping\Annotation as Gedmo;
 
 use site\adminBundle\Entity\tier;
 
@@ -20,12 +16,10 @@ use \DateTime;
 /**
  * marque
  *
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="site\adminBundle\Entity\marqueRepository")
  * @ORM\Table(name="marque")
  * @ORM\HasLifecycleCallbacks
- * @ORM\Entity(repositoryClass="site\adminBundle\Entity\marqueRepository")
  * @UniqueEntity(fields={"nom"}, message="Cette marque est déjà enregistrée")
- * @ExclusionPolicy("all")
  */
 class marque extends tier {
 

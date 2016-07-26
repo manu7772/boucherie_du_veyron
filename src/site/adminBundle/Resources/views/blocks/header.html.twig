@@ -33,15 +33,12 @@
 		{% endif %}
 		<li class="dropdown">
 			<a class="dropdown-toggle count-info" data-toggle="dropdown" href="#">
-				<span class="{% if app.user.adminhelp %}text-info{% else %}text-muted{% endif %} switch-text-adminhelp"><i class="fa fa-question-circle"></i>Aide</span>
+				<span class="{% if app.user.adminhelp %}text-info{% else %}text-muted{% endif %} switch-text-adminhelp"><i class="fa fa-support"></i>{{ UCfirst('name'|trans({}, 'help')) }}</span>
 			</a>
 			<ul class="dropdown-menu">
 				<li>
-					{% if app.user.adminhelp|default(false) %}
-					<a href="#" class="switch-adminhelp swh-on">Désctiver l'aide</a>
-					{% else %}
-					<a href="#" class="switch-adminhelp swh-off">Activer l'aide</a>
-					{% endif %}
+					{% if app.user.adminhelp %}{% set adminhelp = 'swh-on' %}{% else %}{% set adminhelp = 'swh-off' %}{% endif %}
+					<a class="switch-adminhelp {{ adminhelp }}" data-txt-swh-seton="{{ 'actions.help.setOn'|trans({}, 'siteUserBundle') }}" data-txt-swh-setoff="{{ 'actions.help.setOff'|trans({}, 'siteUserBundle') }}" data-url-on="{{ path('change_user_help', {state: 1}) }}" data-url-off="{{ path('change_user_help', {state: 0}) }}"></a>
 				</li>
 			</ul>
 		</li>

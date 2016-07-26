@@ -1,9 +1,14 @@
+{% if sitedata is defined %}
+{% if sitedata.boutiques|default(null) != null %}
 <div class="footer-bottom">
 	<div class="container">
 		<div class="row">
 			{% set boutique = sitedata.boutiques.0|default(null) %}
-			<p class="pull-left">{{ 'footer.rights'|trans|capitalize }} © {{ annee() }} - {{ 'site'|trans }} {{ sitedata.nom }}{% if boutique.adresse is not null %} - {{ boutique.adresse.adresse }} - {{ boutique.adresse.cp }} {{ boutique.adresse.ville }}{% endif %}</p>
+			<p class="pull-left">{{ 'footer.rights'|trans|capitalize }} © {{ annee() }} - {{ 'site'|trans }} {{ sitedata.nom }}{% if boutique.adresse is not null %} - {{ boutique.adresse.adresse }} - {{ boutique.adresse.cp|default('') }} {{ boutique.adresse.ville|default('') }}{% endif %}</p>
 			<p class="pull-right">{{ 'footer.realisation'|trans({'%name%': 'Aequation-Webdesign.fr'})|capitalize }} </p>
 		</div>
 	</div>
 </div>
+{% endif %}
+{# {{ dump(sitedata) }} #}
+{% endif %}

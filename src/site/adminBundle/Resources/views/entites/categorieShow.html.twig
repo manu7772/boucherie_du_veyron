@@ -26,17 +26,6 @@
 {% block content %}
 <div class="row">
 
-	<!-- <div class="col-md-12"> -->
-		<!-- <h2 class="row"> -->
-			<!-- <div class="col-md-8 ellipsis">{{ actions.colorDot(entite.couleur, '1x') }} <i class="fa {{ actions.icon(entite) }} m-r-xs"></i>{{ entite.nom|trans({}, entite.className) }}</div> -->
-			<!-- <div class="col-md-4"> -->
-				<!-- <a href="{{ path('siteadmin_entite', {entite: entite.className, id: entite.id, action: 'delete'}) }}" type="button" class="btn btn-xs btn-danger btn-outline pull-right need-confirmation" title="{{ UCfirst('actions.suppression'|trans) }}" data-message="{{ 'actions.suppQuestion'|trans({'%name%': entite.nom}) }}"><i class="fa fa-times icon-wait-on-click"></i> {{ 'actions.supprimer'|trans }}</a> -->
-				<!-- <a href="{{ path('siteadmin_entite', {entite: entite.className, id: entite.id, action: 'edit'}) }}" type="button" class="btn btn-xs btn-warning pull-right"><i class="fa fa-pencil icon-wait-on-click"></i> {{ UCfirst('actions.modifier'|trans) }}</a> -->
-			<!-- </div> -->
-		<!-- </h2> -->
-		<!-- <hr class="m-t-none m-b-xs"> -->
-	<!-- </div> -->
-
 	<div class="col-md-6">
 		<div class="ibox float-e-margins">
 			<div class="ibox-content">
@@ -56,10 +45,11 @@
 								<hr class="m-t-xs m-b-xs visible-xs">
 								<div class="row">
 									<div class="col-xs-12">
-										<p class="m-b-xs">{{ UCfirst('fields.icon'|trans({}, entite.className)) }} : <i class="fa {{ actions.icon(entite) }}"></i>{% if entite.icon == null %} <i class="text-muted"><em>({{ 'icons.default_icon'|trans }})</em></i>{% endif %}</p>
+										<p class="m-b-xs">{{ UCfirst('fields.icon'|trans({}, entite.className)) }} : <i class="fa {{ actions.icon(entite) }}"></i>{% if entite.icon == null %} <i class="text-muted"><small>({{ 'icons.default_icon'|trans }})</small></i>{% endif %}</p>
+										<p class="m-b-xs">{{ UCfirst('fields.lvl'|trans({}, entite.className)) }} : {{ entite.lvl }}{% if not entite.hasParents() %} <i class="text-muted"><small>(Root)</small></i>{% endif %}</p>
 										<p class="m-b-xs">{{ UCfirst('fields.couleur'|trans({}, entite.className)) }} : {{ actions.colorDot(entite.couleur, '1x') }}</p>
 										<p class="m-b-xs">
-											Type {{ ('types.' ~ entite.type)|trans({}, entite.className) }}
+											Type <strong>{{ ('types.' ~ entite.type)|trans({}, entite.className) }}</strong>, éléments acceptés :
 											<p class="m-l-lg text-muted"><i>• {{ entite.accepts|join('<br>• ')|raw }}</i></p>
 										</p>
 									</div>
@@ -73,11 +63,16 @@
 								<hr class="m-t-xs m-b-xs visible-xs">
 								<div class="row">
 									<div class="col-xs-12">
-										{% if entite.allCategorieChilds|length > 0 %}
+										<h4>Enfants <small><span class="label inline label-primary"><i class="fa {{ actions.icon(entite) }}"></i></span> directs / <span class="label inline"><i class="fa {{ actions.icon(entite) }}"></i></span> indirects</small></h4>
+										{# {{ actions.labelLinkList(entite.group_categorie_parentChilds, entite.group_categorie_parentChilds, null, type, type_value_joiner, 'show') }} #}
+										{# {{ actions.labelLinkList(entite.allNestedChildsByGroup('categorie_parent'), entite.nestedChildsByGroup('categorie_parent'), null, type, type_value_joiner, 'show') }} #}
 										{{ actions.labelLinkList(entite.allCategorieChilds, entite.categorieChilds, null, type, type_value_joiner, 'show') }}
-										{% else %}
-										<h6><i class='text-muted'>{{ UCfirst('noChildren'|trans({}, entite.className)) }}</i></h6>
-										{% endif %}
+										<hr>
+										<h4>Alias <small>(liens symboliques)</small></h4>
+										{{ actions.labelLinkList(entite.allAlias(false), entite.alias(false), null, type, type_value_joiner, 'show') }}
+										<hr>
+										<h4>Enfants et Alias <small>(catégories et liens symboliques)</small></h4>
+										{{ actions.labelLinkList(entite.allCategorieChilds(true), entite.categorieChilds(true), null, type, type_value_joiner, 'show') }}
 									</div>
 								</div>
 							</div>
@@ -105,17 +100,24 @@
 								<hr class="m-t-xs m-b-xs visible-xs">
 								<div class="row">
 									<div class="col-xs-12">
-										<h4>Éléments {% if entite.group_nestedsChilds|length > 1 %} <i class="fa fa-unsorted text-muted"></i>{% endif %}</h4>
-										{% if entite.group_nestedsChilds|length > 0 %}
-										<span id="nesteds" class="{% if entite.group_nestedsChilds|length > 1 %}sortlist{% endif %}" data-parent="categorie_{{ entite.id }}" data-group="nesteds" data-url="{{ path('ajax_data_sort') }}">
-										{{ actions.labelLinkList(entite.group_nestedsChilds, [entite.nestedFirstChild("nesteds")], null, type, type_value_joiner, 'show') }}
+										{% set directNesteds = entite.nestedChildsByGroup(null, true) %}
+										<h4>Éléments {% if directNesteds|length > 1 %} <i class="fa fa-unsorted text-muted"></i>{% endif %}</h4>
+										{% if directNesteds|length > 0 %}
+										<span id="nesteds" class="{% if entite.getNestedChildsByGroup('nesteds')|length > 1 %}sortlist{% endif %}" data-parent="categorie_{{ entite.id }}" data-group="nesteds" data-url="{{ path('ajax_data_sort') }}">
+										{{ actions.labelLinkList(directNesteds, directNesteds, null, type, type_value_joiner, 'show') }}
 										{% endif %}
+										<hr>
+										<h4>Éléments d'enfants <small><i>(sans alias)</i></small></h4>
+										{{ actions.labelLinkList(entite.allNestedChildsByGroup(null, false), entite.nestedChildsByGroup(null, false), null, type, type_value_joiner, 'show') }}
+										<hr>
+										<h4>Éléments d'enfants <small><i>(avec alias)</i></small></h4>
+										{{ actions.labelLinkList(entite.allNestedChildsByGroup(null, true), directNesteds, null, type, type_value_joiner, 'show') }}
 									</div>
 								</div>
 							</div>
 						</div>
 
-<!-- 						<div id="tab-4" class="tab-pane">
+{# 						<div id="tab-4" class="tab-pane">
 							<div class="panel-body"{{ style|raw }}>
 								<h3 class='text-navy visible-xs m-t-none'>{{ UCfirst('fields.image'|trans({}, entite.className)) }}</h3>
 								<hr class="m-t-xs m-b-xs visible-xs">
@@ -129,7 +131,7 @@
 									</div>
 								</div>
 							</div>
-						</div> -->
+						</div> #}
 
 					</div>
 				</div>

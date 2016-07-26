@@ -22,11 +22,12 @@ class aeRawfile extends aeEntity {
 
     /**
      * Check entity after change (edit…)
-     * @param baseEntity $entity
-     * @return aeRawfile
+     * $butEntities permet d'éviter la récursion infinie !! Ne pas oublier !
+     * @param baseEntity &$entity
+     * @param baseEntity $butEntities = []
+     * @return aeEntity
      */
     public function checkAfterChange(&$entity, $butEntities = []) {
-        parent::checkAfterChange($entity, $butEntities);
         return $this;
     }
 
@@ -37,16 +38,6 @@ class aeRawfile extends aeEntity {
     public function callName() {
         return self::CALL_NAME;
     }
-
-    /**
-     * Persist and flush a rawfile
-     * @dev désactivée
-     * @param baseEntity $entity
-     * @return aeReponse
-     */
-    // public function save(baseEntity &$entity, $flush = true) {
-    //  return parent::save($entity, $flush);
-    // }
 
 	/**
 	 * Renvoie une nouvelle entité rawfile remplie avec les données de $data

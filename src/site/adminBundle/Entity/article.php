@@ -6,10 +6,6 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Doctrine\Common\Collections\ArrayCollection;
-use JMS\Serializer\Annotation\ExclusionPolicy;
-use JMS\Serializer\Annotation\Expose;
-// Slug
-use Gedmo\Mapping\Annotation as Gedmo;
 
 use site\adminBundle\Entity\item;
 
@@ -23,11 +19,9 @@ use \Exception;
 /**
  * article
  *
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="site\adminBundle\Entity\articleRepository")
  * @ORM\Table(name="article", options={"comment":"articles du site"})
  * @ORM\HasLifecycleCallbacks
- * @ORM\Entity(repositoryClass="site\adminBundle\Entity\articleRepository")
- * @ExclusionPolicy("all")
  */
 class article extends item {
 
@@ -52,6 +46,12 @@ class article extends item {
 	protected $accroche;
 
 	/**
+	 * @var boolean
+	 * @ORM\Column(name="vendable", type="boolean", nullable=false, unique=false)
+	 */
+	protected $vendable;
+
+	/**
 	 * @var float
 	 * @ORM\Column(name="prix", type="decimal", scale=2, nullable=true, unique=false)
 	 */
@@ -65,13 +65,13 @@ class article extends item {
 
 	/**
 	 * @var string
-	 * @ORM\ManyToOne(targetEntity="site\adminBundle\Entity\tauxTva")
+	 * @ORM\ManyToOne(targetEntity="site\adminBundle\Entity\tauxTva", cascade={"persist"})
 	 * @ORM\JoinColumn(nullable=false)
 	 */
 	protected $tauxTva;
 
 	/**
-	 * @ORM\ManyToOne(targetEntity="site\adminBundle\Entity\marque", inversedBy="articles")
+	 * @ORM\ManyToOne(targetEntity="site\adminBundle\Entity\marque", inversedBy="articles", cascade={"persist"})
 	 * @ORM\JoinColumn(nullable=true, unique=false, onDelete="SET NULL")
 	 */
 	protected $marque;
@@ -82,30 +82,36 @@ class article extends item {
 	 */
 	protected $pdf;
 
-	/**
-	 * @ORM\ManyToMany(targetEntity="site\adminBundle\Entity\fiche", mappedBy="articles")
-	 * @ORM\JoinColumn(nullable=true, unique=false, onDelete="SET NULL")
-	 */
-	protected $fiches;
-
 	// NESTED VIRTUAL GROUPS
 	// les noms doivent commencer par "$group_" et finir par "Parents" (pour les parents) ou "Childs" (pour les enfants)
 	// et la partie variable doit comporter au moins 3 lettres
 	// reconnaissance auto par : "#^(add|remove|get)(Group_).{3,}(Parent|Child)(s)?$#" (self::VIRTUALGROUPS_PARENTS_PATTERN et self::VIRTUALGROUPS_CHILDS_PATTERN)
+	// categories
+	protected $group_nestedsParents;
+	protected $group_nestedsChilds;
+	// article
 	protected $group_articlesParents;
 	protected $group_articlesChilds;
+	// reseau
 	protected $group_articles_reseausParents;
 	protected $group_articles_reseausChilds;
+	// fiche_recette
+	protected $group_article_ficherecetteParents;
+	protected $group_article_ficherecetteChilds;
+	// fiche_boisson
+	protected $group_article_ficheboissonParents;
+	protected $group_article_ficheboissonChilds;
 
 	public function __construct() {
 		parent::__construct();
+		$this->vendable = true;
 		$this->refFabricant = null;
 		$this->accroche = null;
 		$this->prix = 0;
 		$this->prixHT = 0;
 		$this->tauxTva = null;
 		$this->marque = null;
-		$this->fiches = new ArrayCollection();
+		$this->pdf = null;
 	}
 
 	public function getNestedAttributesParameters() {
@@ -118,6 +124,21 @@ class article extends item {
 			'articles_reseaus' => array(
 				'data-limit' => 0,
 				'class' => array('reseau'),
+				'required' => false,
+				),
+			'article_ficherecette' => array(
+				'data-limit' => 0,
+				'class' => array('fiche'),
+				'required' => false,
+				),
+			'article_ficheboisson' => array(
+				'data-limit' => 0,
+				'class' => array('fiche'),
+				'required' => false,
+				),
+			'nesteds' => array(
+				'data-limit' => 0,
+				'class' => array('categorie'),
 				'required' => false,
 				),
 			);
@@ -149,6 +170,24 @@ class article extends item {
 	// public function getMainMedia() {
 	// 	return $this->getImage();
 	// }
+
+	/**
+	 * Set vendable
+	 * @param string $vendable
+	 * @return article
+	 */
+	public function setVendable($vendable) {
+		$this->vendable = $vendable;
+		return $this;
+	}
+
+	/**
+	 * Get vendable
+	 * @return boolean 
+	 */
+	public function getVendable() {
+		return $this->vendable;
+	}
 
 	/**
 	 * Set refFabricant
@@ -293,44 +332,6 @@ class article extends item {
 	 */
 	public function getpdf() {
 		return $this->pdf;
-	}
-
-	/**
-	 * Set fiches
-	 * @param arrayCollection $fiches
-	 * @return subentity
-	 */
-	public function setFiches(ArrayCollection $fiches) {
-		// incorporation avec "add" et "remove" au cas où il y aurait des opérations (inverse notamment)
-		foreach ($this->getFiches() as $fiche) if(!$fiches->contains($fiche)) $this->removeFiche($fiche); // remove
-		foreach ($fiches as $fiche) $this->addFiche($fiche); // add
-		return $this;
-	}
-
-	/**
-	 * Add fiche
-	 * @param fiche $fiche
-	 * @return article
-	 */
-	public function addFiche(fiche $fiche) {
-		if(!$this->fiches->contains($fiche)) $this->fiches->add($fiche);
-		return $this;
-	}
-
-	/**
-	 * Remove fiche
-	 * @param fiche $fiche
-	 */
-	public function removeFiche(fiche $fiche) {
-		return $this->fiches->removeElement($fiche);
-	}
-
-	/**
-	 * Get fiches
-	 * @return ArrayCollection 
-	 */
-	public function getFiches() {
-		return $this->fiches;
 	}
 
 

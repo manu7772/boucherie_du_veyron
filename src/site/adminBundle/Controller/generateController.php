@@ -21,7 +21,7 @@ class generateController extends baseController {
 	public function indexAction($action = null, $entite = null) {
 		$this->get('aetools.aetools')->updateBundlesInConfig();
 		$data = array();
-		$data['sitedata'] = $this->get('aetools.aeSite')->getDefaultSiteData();
+		$data['sitedata'] = $this->get('aetools.aeSite')->getSiteData();
 		$data['action'] = $action;
 		$data['entite'] = $entite;
 		if($entite != null) $data['classname'] = $this->getClassname($entite);

@@ -18,8 +18,8 @@ use site\adminBundle\services\aetools;
  */
 class articleRepository extends itemRepository {
 
-	public function defaultValsListClosure(aetools $aeEntities = null, $data = null) {
-		$qb = parent::defaultValsListClosure($aeEntities, $data);
+	public function defaultValsListClosure(aetools $aeEntities = null, $data = null, $entity = NULL) {
+		$qb = parent::defaultValsListClosure($aeEntities, $data, $entity);
 		if(is_object($data)) {
 			$id = $data->getId();
 			if($id != null) {

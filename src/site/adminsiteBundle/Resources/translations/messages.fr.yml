@@ -40,6 +40,9 @@ icons:
 default:
     bydefault: Elément par défaut
     nomore: Vous ne pouvez plus attribuer d''élément supplémentaire. Désactivez un autre pour pouvoir attribuer celui-ci.
+vendable:
+    set: vendre cet article
+    unset: ne plus vendre cet article
 actions:
     name: actions
     voir: voir

@@ -16,12 +16,98 @@ use Doctrine\ORM\Mapping\ClassMetadata;
  */
 class nestedRepository extends EntityBaseRepository {
 
-	protected $icons;
+	public function findCategories($nestedId) {
+		return $this->findItemsByGroup($nestedId, 'categorie_parent', [], true);
+	}
 
-	// public function __construct(EntityManager $em, ClassMetadata $class) {
-	// 	parent::__construct($em, $class);
+	/**
+	 * 
+	 */
+	public function findItems($nestedId, $classes = [], $acceptAliasInResult = false) {
+		$qb = $this->addItems($nestedId, $classes, $acceptAliasInResult);
+		return $qb->getQuery()->getResult();
+	}
+
+	// public function findAlias($nestedId) {
+	// 	$qb = $this->createQueryBuilder(self::ELEMENT);
+	// 	$qb->selectAlias($qb);
+	// 	return $qb->getQuery()->getResult();
 	// }
 
+	public function findItemsByGroup($nestedId, $group, $classes = [], $acceptAliasInResult = false) {
+		$qb = $this->addItemsByGroup($nestedId, $group, $classes);
+		if($acceptAliasInResult === false) $this->excludeAlias($qb);
+		return $qb->getQuery()->getResult();
+	}
+
+	public function findAllItemsByGroup($nestedId, $group, $classes = [], $acceptAliasInResult = false, $addItemsInAlias = true, $maxlevels = 100) {
+		$items = $this->findItemsByGroup($nestedId, $group, $classes, true);
+		$categories = $this->findCategories($nestedId);
+		// echo('<h3>Categories enfants <i>('.count($categories).')</i></h3><ul>');
+		// foreach ($categories as $categorie) echo('<li>'.$categorie->getNom().'</li>');
+		// echo('</ul>');
+		if(count($items) == 0 && count($categories) == 0) return array();
+		foreach ($categories as $categorie) {
+			// echo('<p>Found categorie as hard : '.$categorie->getNom().'</p>');
+			$items = array_merge($items, $this->findAllItemsByGroup($categorie->getId(), $group, $classes, $acceptAliasInResult, $addItemsInAlias, $maxlevels - 1));
+		}
+		foreach ($items as $key => $item) if($item->getClassName() == 'categorie') {
+			// echo('<p>Found categorie as alias : '.$item->getNom());
+			$items = array_merge($items, $this->findAllItemsByGroup($item->getId(), $group, $classes, $acceptAliasInResult, $addItemsInAlias, $maxlevels - 1));
+			// enfin, on retire si necessaire…
+			if($acceptAliasInResult === false) {
+				unset($items[$key]);
+				// echo('<span style="color:red;"> DELETED</span>');
+			}
+			// echo('</p>');
+		}
+		return array_unique($items);
+	}
+
+	// CLOSURES
+
+	protected function addItems($nestedId, $classes = [], &$qb = null) {
+		$classes = (array)$classes;
+		if(!in_array('categorie', $classes)) $classes[] = 'categorie';
+
+		if($qb == null) $qb = $this->createQueryBuilder(self::ELEMENT);
+		$qb->join(self::ELEMENT.'.nestedpositionParents', 'nestposParents')
+			;
+		$listEntities = $this->aeEntities->getListOfEnties(false, false, true);
+		// select only $classes
+		$whr = 'andWhere';
+		foreach($this->verifEntities($classes) as $className) {
+			$qb->$whr(self::ELEMENT.' INSTANCE OF '.$className);
+			$whr = 'orWhere';
+		}
+		$this->contextStatut($qb, self::ELEMENT);
+		return $qb;
+	}
+
+	protected function addItemsByGroup($nestedId, $group, $classes = [], &$qb = null) {
+		$qb = $this->addItems($nestedId, $classes, $qb);
+		$group = $nestedId.'_'.$group;
+		$qb->andWhere($qb->expr()->in('nestposParents.group', array($group)))
+			->orderBy('nestposParents.position', 'ASC');
+		return $qb;
+	}
+
+	protected function addAlias(&$qb) {
+		$qb->andWhere(self::ELEMENT.' INSTANCE OF site\adminBundle\Entity\categorie');
+	}
+
+	protected function selectAlias(&$qb) {
+		$qb->where(self::ELEMENT.' INSTANCE OF site\adminBundle\Entity\categorie');
+	}
+
+	protected function excludeAlias(&$qb) {
+		$qb->andWhere(self::ELEMENT.' NOT INSTANCE OF site\adminBundle\Entity\categorie');
+	}
+
+
+
+
+	// TREE
 
 	public function findArrayTree($id, $types = 'all', $groups = null, $shortCutContext = false, $maxlevels = null) {
 		$types = (array)$types;
@@ -40,9 +126,6 @@ class nestedRepository extends EntityBaseRepository {
 			$qb->where(self::ELEMENT.'.id = :id')->setParameter('id', (integer)$elements);
 			$this->selectsJstree($qb, null, $shortCutContext, null);
 			$elements = $qb->getQuery()->getScalarResult();
-			// echo('<pre>');
-			// var_dump($elements);
-			// die('</pre>');
 		}
 		$this->computeForTree($elements, $groups);
 		// echo('<pre>');
@@ -75,7 +158,7 @@ class nestedRepository extends EntityBaseRepository {
 				// $qb = $this->_em->createQueryBuilder(self::ELEMENT)->from('site\adminBundle\Entity\nested', self::ELEMENT);
 				$qb = $this->createQueryBuilder(self::ELEMENT);
 				$this->selectsJstree($qb, $element, $shortCutContext, $searchgroups);
-				//
+				// 
 				$children = $qb->getQuery()->getScalarResult();
 				if(is_array($children)) if(count($children) > 0) {
 					if(!isset($elements[$key]['children'])) $elements[$key]['children'] = array();
@@ -118,6 +201,7 @@ class nestedRepository extends EntityBaseRepository {
 						unset($elements[$key][$field]);
 						break;
 					case 'element_deletable':
+					case 'element_slug':
 						// standard SANS conditions (si null)
 						$name = preg_replace("#^element_#", '', $field);
 						$elements[$key][$name] = $value;
@@ -130,6 +214,7 @@ class nestedRepository extends EntityBaseRepository {
 						break;
 					case 'element_nom':
 						$elements[$key]['text'] = $value;
+						$elements[$key]['nom'] = $value;
 						unset($elements[$key][$field]);
 						break;
 					case 'element_couleur':
@@ -150,6 +235,7 @@ class nestedRepository extends EntityBaseRepository {
 						break;
 					case 'element_class_name':
 						$elements[$key]['type'] = $elements[$key][$field];
+						$elements[$key]['className'] = $elements[$key][$field];
 						if(count($search) > 0) {
 							$class = 'site\\adminBundle\\Entity\\'.$elements[$key]['type'];
 							$object = new $class();

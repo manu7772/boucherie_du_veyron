@@ -68,7 +68,9 @@ class nestedposition {
 	}
 
 	public function getNom() {
-		return $this->getParent()->getNom().' / '.$this->getChild()->getNom();
+		$parentNom = $this->getParent() == null ? 'null' : $this->getParent()->getNom();
+		$childNom = $this->getChild() == null ? 'null' : $this->getChild()->getNom();
+		return $parentNom.'-'.$childNom;
 	}
 
     // abstract public function getClassName();
@@ -89,7 +91,9 @@ class nestedposition {
 	}
 
 	public function getId() {
-		return $this->getParent()->getId().'-'.$this->getChild()->getId();
+		$parentId = $this->getParent() == null ? 'null' : $this->getParent()->getId();
+		$childId = $this->getChild() == null ? 'null' : $this->getChild()->getId();
+		return $parentId.'-'.$childId;
 	}
 
 	/**

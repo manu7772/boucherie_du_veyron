@@ -26,6 +26,8 @@ class ficheType extends baseType {
 	public function buildForm(FormBuilderInterface $builder, array $options) {
 		// ajout de action si défini
 		$this->initBuilder($builder);
+		$data = $builder->getData();
+		$nestedAttributesParameters = $data->getNestedAttributesParameters();
 		// $this->imagesData = array(
 		// 	'image' => array(
 		// 		'owner' => 'fiche:image'
@@ -52,6 +54,14 @@ class ficheType extends baseType {
 				'attr' => array(
 					'data-height' => 400,
 					)
+				))
+			->add('typentite', 'choice', array(
+				"required"  => true,
+				"label"     => 'fields.typentite',
+				'translation_domain' => 'fiche',
+				'multiple'  => false,
+				// 'expanded'  => true,
+				"choices"   => $fiche->getListetypentites(),
 				))
 			->add('niveau', 'choice', array(
 				"required"  => true,
@@ -101,17 +111,26 @@ class ficheType extends baseType {
 					'class'			=> 'select2',
 					),
 				))
-			->add('articles', 'entity', array(
-				'label'		=> 'name_s',
-				'translation_domain' => 'article',
+			->add('group_article_recetteParents', 'entity', array(
+				'by_reference' => false,
+				"label"		=> 'fields.group_article_recetteParents',
+				'translation_domain' => 'fiche',
 				'property'	=> 'nom',
-				'class'		=> 'siteadminBundle:article',
+				'class'		=> 'siteadminBundle:nested',
 				'multiple'	=> true,
-				'required'	=> false,
+				'expanded'	=> false,
+				"required"	=> $nestedAttributesParameters['article_recette']['required'],
 				'placeholder'   => 'form.select',
 				'attr'		=> array(
 					'class'			=> 'select2',
+					'data-limit'	=> $nestedAttributesParameters['article_recette']['data-limit'],
 					),
+				'group_by' => 'class_name',
+				"query_builder" => function($repo) use ($data, $nestedAttributesParameters) {
+					if(method_exists($repo, 'defaultValsListClosure'))
+						return $repo->defaultValsListClosure($this->aeEntities, $nestedAttributesParameters['article_recette']['class']);
+						else return $repo->findAllClosure();
+					},
 				))
 			->add('datePublication', 'insDatepicker', array(
 				'label'		=> 'fields.datePublication',

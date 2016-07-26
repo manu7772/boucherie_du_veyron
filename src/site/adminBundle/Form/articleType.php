@@ -72,6 +72,11 @@ class articleType extends baseType {
 			// 	'translation_domain' => 'article',
 			// 	'required' => false,
 			// 	))
+			->add('vendable', 'checkbox', array(
+				'label'		=> 'fields.vendable',
+				'translation_domain' => 'article',
+				"required"  => false,
+				))
 			->add('prix', 'money', array(
 				'label'		=> 'fields.prixTTC',
 				'translation_domain' => 'article',
@@ -194,24 +199,24 @@ class articleType extends baseType {
 			// ->add('ficheTechniquePdf')
 			// ->add('categories')
 			// ->add('fiches')
-			->add('fiches', 'entity', array(
-				"label"		=> 'name_s',
-				'translation_domain' => 'fiche',
-				'property'	=> 'nom',
-				'class'		=> 'siteadminBundle:fiche',
-				'multiple'	=> true,
-				'expanded'	=> false,
-				"required"	=> false,
-				'placeholder'   => 'form.select',
-				'attr'		=> array(
-					'class'			=> 'select2',
-					),
-				"query_builder" => function($repo) {
-					if(method_exists($repo, 'defaultValsListClosure'))
-						return $repo->defaultValsListClosure($this->aeEntities);
-						else return $repo->findAllClosure();
-					},
-				))
+			// ->add('fiches', 'entity', array(
+			// 	"label"		=> 'name_s',
+			// 	'translation_domain' => 'fiche',
+			// 	'property'	=> 'nom',
+			// 	'class'		=> 'siteadminBundle:fiche',
+			// 	'multiple'	=> true,
+			// 	'expanded'	=> false,
+			// 	"required"	=> false,
+			// 	'placeholder'   => 'form.select',
+			// 	'attr'		=> array(
+			// 		'class'			=> 'select2',
+			// 		),
+			// 	"query_builder" => function($repo) {
+			// 		if(method_exists($repo, 'defaultValsListClosure'))
+			// 			return $repo->defaultValsListClosure($this->aeEntities);
+			// 			else return $repo->findAllClosure();
+			// 		},
+			// 	))
 			->add('tags', 'entity', array(
 				'label'		=> 'name_s',
 				'translation_domain' => 'tag',
@@ -227,6 +232,48 @@ class articleType extends baseType {
 				"query_builder" => function($repo) {
 					if(method_exists($repo, 'defaultValsListClosure'))
 						return $repo->defaultValsListClosure($this->aeEntities);
+						else return $repo->findAllClosure();
+					},
+				))
+			->add('group_article_ficherecetteChilds', 'entity', array(
+				'by_reference' => false,
+				"label"		=> 'fields.group_article_ficherecetteChilds',
+				'translation_domain' => 'article',
+				'property'	=> 'nom',
+				'class'		=> 'siteadminBundle:nested',
+				'multiple'	=> true,
+				'expanded'	=> false,
+				"required"	=> $nestedAttributesParameters['article_ficherecette']['required'],
+				'placeholder'   => 'form.select',
+				'attr'		=> array(
+					'class'			=> 'select2',
+					'data-limit'	=> $nestedAttributesParameters['article_ficherecette']['data-limit'],
+					),
+				'group_by' => 'class_name',
+				"query_builder" => function($repo) use ($data, $nestedAttributesParameters) {
+					if(method_exists($repo, 'defaultValsListClosure'))
+						return $repo->defaultValsListClosure($this->aeEntities, $nestedAttributesParameters['article_ficherecette']['class']);
+						else return $repo->findAllClosure();
+					},
+				))
+			->add('group_article_ficheboissonChilds', 'entity', array(
+				'by_reference' => false,
+				"label"		=> 'fields.group_article_ficheboissonChilds',
+				'translation_domain' => 'article',
+				'property'	=> 'nom',
+				'class'		=> 'siteadminBundle:nested',
+				'multiple'	=> true,
+				'expanded'	=> false,
+				"required"	=> $nestedAttributesParameters['article_ficheboisson']['required'],
+				'placeholder'   => 'form.select',
+				'attr'		=> array(
+					'class'			=> 'select2',
+					'data-limit'	=> $nestedAttributesParameters['article_ficheboisson']['data-limit'],
+					),
+				'group_by' => 'class_name',
+				"query_builder" => function($repo) use ($data, $nestedAttributesParameters) {
+					if(method_exists($repo, 'defaultValsListClosure'))
+						return $repo->defaultValsListClosure($this->aeEntities, $nestedAttributesParameters['article_ficheboisson']['class']);
 						else return $repo->findAllClosure();
 					},
 				))

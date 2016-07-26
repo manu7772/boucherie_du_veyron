@@ -5,10 +5,17 @@
 {% block page_heading %}
 <div class="row wrapper border-bottom white-bg page-heading">
 	<div class="col-lg-12 m-t-xs">
-		<ol class="breadcrumb">
-			<li><a href="{{ path('siteadmin_homepage') }}"><strong>Administration</strong></a></li>
-			<li>Support</li>
-		</ol>
+		<div class="row">
+			<div class="col-md-9">
+				<h2><i class="fa {{ 'entite.help'|trans({}, 'icon') }}"></i></h2>
+				<ol class="breadcrumb">
+					<li><a href="{{ path('siteadmin_homepage') }}"><strong>{{ UCfirst('administration'|trans) }}</strong></a></li>
+					<li>{{ UCfirst('name'|trans({}, 'help')) }}</li>
+				</ol>
+			</div>
+			{% block buttons %}
+			{% endblock buttons %}
+		</div>
 	</div>
 </div>
 {% endblock page_heading %}
@@ -18,7 +25,7 @@
 	<div class="col-md-12">
 		<div class="ibox-content m-b-sm border-bottom">
 			<div class="text-center p-lg">
-				<h2>Support d'application Labo</h2>
+				<h2>{{ UCfirst('longname'|trans({}, 'help')) }}</h2>
 				<span><strong>Webmaster : {{ webmaster.nom }} {{ webmaster.prenom }}</strong><br>Tél. : {{ webmaster.tel }} | Courriel : <a href="mailto:{{ webmaster.email }}">{{ webmaster.email }}</a></span>
 			</div>
 		</div>

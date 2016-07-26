@@ -1,0 +1,48 @@
+name_s: fiches boisson
+name: fiche boisson
+not_found: 'aucune fiche trouvée'
+x_found: '{0} aucune fiche trouvée|{1} 1 fiche trouvée|[2,+Inf] %count% fiches trouvées'
+create: 'créer une nouvelle fiche'
+create_btn: 'nouvelle fiche'
+backlist: 'retour à la liste des fiches'
+backlist_btn: 'retour liste'
+dontexist: 'cette fiche n''existe pas'
+moredetails: 'plus de détails sur %name%'
+existe: cette fiche existe déjà
+no_expiration: pas de date d''expiration
+no_typentite: pas de type
+niveaux:
+    debutant: débutant
+    intermediaire: intermédiaire
+    confirme: confirmé
+form:
+    select: Sélectionnez…
+fields:
+    id: id
+    nom: nom
+    accroche: introduction
+    descriptif: fiche
+    note: note
+    created: création
+    updated: mise à jour
+    datePublication: date de publication
+    dateExpiration: date de d'expiration
+    image: visuel
+    jamais: aucune modification
+    subEntitys: éléments
+    parents: parents
+    parent: parent
+    elements: éléments
+    icon: icône
+    typentite: type de fiche
+    group_article_boissonParents: articles conseillés
+notes:
+    bon: bon
+    tresbon: très bon
+    excellent: excellent
+typentite:
+    vin: vin
+    alcool: alcool
+    'sans alcool': 'sans alcool'
+
+

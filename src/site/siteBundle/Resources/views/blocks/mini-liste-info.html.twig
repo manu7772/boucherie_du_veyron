@@ -1,6 +1,7 @@
-{% if sitedata.categorieArticles is defined %}
-{% if sitedata.categorieArticles([])|length > 0 %}
-<section id="section-color">
+{% import 'sitesiteBundle:blocks:blocks_actions.html.twig' as blocks_actions %}
+{% if items|default([])|length > 0 %}
+{# <section id="section-color"> #}
+<section>
 
 	<div id="category-nav-tab">
 	
@@ -8,10 +9,13 @@
 							
 			<div class="category-tab"><!--category-tab-->                           
 				<ul class="nav nav-tabs">
-					{% for item in sitedata.categorieArticles %}
+					{% for cat,item in items if (item.className == 'categorie') %}
+					{% set listItems = item.allNestedChildsByGroup(null, true) %}
+					{% if listItems|length > 0 %}
 					<li class="{% if loop.first %}active{% endif %}" data-target="#recommended-item-carousel" data-slide-to="{{ loop.index0 }}">
-						<a href="#">{{ UCfirst(item) }}</a>
+						<a>{{ UCfirst(item.nom) }}</a>
 					</li>
+					{% endif %}
 					{% endfor %}
 				</ul>
 			</div><!--/category-tab--> 
@@ -25,52 +29,13 @@
 			<div class="col-sm-12">
 				<div id="recommended-item-carousel" class="carousel slide" data-ride="carousel">
 					<div class="carousel-inner">
-						{% for cat,item in sitedata.categorieArticles if item|default([])|length > 0 %}
-						<div class="item {% if loop.first %}active{% endif %}"><!--div images for tab 1-->
-							{% for element in item %}
-							{% if element.className == 'article' %}
-							<div class="col-sm-6 col-md-3"><!--div image 1 tab 1-->
-								<div class="product-image-wrapper">
-									<div class="single-products">
-										<div class="productinfo">
-											<img src="{{ asset('bundles/sitesite/images/tabs-recommend/recommend1.jpg') }}" alt="" />
-											<div class="product-bottom">
-												<div class="btn-group order-group for-product" role="group">
-													<h2>24<small>,50<sup>€</sup><span>/Kg</span></small></h2>
-													<button type="button" class="btn btn-default btn-commander"><i class="fa fa-shopping-cart fa-flip-horizontal"></i></button>
-													<input class="command_quantity" type="text" name="quantity" value="150g" autocomplete="off" size="10">
-													<span class="btn-quantity">
-														<a class="btn quantity-top" href="#"><i class="fa fa-angle-up"></i></a>
-														<a class="btn quantity-bottom" href="#"><i class="fa fa-angle-down"></i></a>
-													</span>
-												</div>                                                    
-											</div>
-										</div>
-										<p class="tab-name-product">{{ element.nom }}</p>
-										<p class="tab-info-category">{{ cat }}</p>
-									</div>
-								</div>
-							</div>
-							{% elseif element.className == 'fiche' %}
-							<div class="col-sm-6 col-md-3"><!--div image 1 tab 1-->
-								<div class="product-image-wrapper">
-									<div class="single-products">
-										<div class="productinfo">
-											<img src="{{ asset('bundles/sitesite/images/tabs-recommend/recommend1.jpg') }}" alt="" />
-											<div class="product-bottom">
-												<div class="btn-group order-group for-product" role="group">
-													<h2>{{ element.niveau }}</h2>
-												</div>                                                    
-											</div>
-										</div>
-										<p class="tab-name-product">{{ element.nom }}</p>
-										<p class="tab-info-category">{{ cat }}</p>
-									</div>
-								</div>
-							</div>
-							{% endif %}
-							{% endfor %}
+						{% for cat,item in items if (item.className == 'categorie') %}
+						{% set listItems = item.allNestedChildsByGroup(null, true) %}
+						{% if listItems|length > 0 %}
+						<div class="item {% if loop.first %} active{% endif %}"><!--div images for tab 1-->
+							{{ blocks_actions.list_blockmini(listItems, 4) }}
 						</div><!--/div images tab 1-->
+						{% endif %}
 						{% endfor %}
 					</div>
 					<a class="left recommended-item-control" href="#recommended-item-carousel" data-slide="prev">
@@ -78,7 +43,7 @@
 					</a>
 					<a class="right recommended-item-control" href="#recommended-item-carousel" data-slide="next">
 						<i class="fa fa-angle-right"></i>
-					</a>			
+					</a>
 				</div>
 			</div><!--/category-tab-->
 		</div><!--/cols-sm-12-->
@@ -86,4 +51,4 @@
 	<!--/container-->
 </section>
 {% endif %}
-{% endif %}
+

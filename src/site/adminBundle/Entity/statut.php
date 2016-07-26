@@ -6,23 +6,18 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Doctrine\Common\Collections\ArrayCollection;
-use JMS\Serializer\Annotation\ExclusionPolicy;
-use JMS\Serializer\Annotation\Expose;
-// Slug
-use Gedmo\Mapping\Annotation as Gedmo;
+
 use site\adminBundle\Entity\baseEntity;
-
 use site\UserBundle\Entity\User;
-
 use site\adminBundle\services\aetools;
+
 use \DateTime;
 
 /**
  * statut
  *
- * @ORM\Entity
- * @ORM\Table(name="statut")
  * @ORM\Entity(repositoryClass="site\adminBundle\Entity\statutRepository")
+ * @ORM\Table(name="statut")
  * @ORM\HasLifecycleCallbacks
  * @UniqueEntity(fields={"nom"}, message="statut.existe")
  */

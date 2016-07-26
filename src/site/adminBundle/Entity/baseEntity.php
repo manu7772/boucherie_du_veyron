@@ -15,15 +15,11 @@ use \Exception;
 use \DateTime;
 
 /**
- * @ORM\MappedSuperclass
+ * @ORM\InheritanceType("JOINED")
+ * @ORM\DiscriminatorColumn(name="class_name", type="string")
  * @ORM\HasLifecycleCallbacks
  */
 abstract class baseEntity {
-
-	// const CLASS_ITEM			= 'item';
-	// const CLASS_MEDIA		= 'media';
-	// const CLASS_STATUT		= 'statut';
-	// const CLASS_TAUXTVA		= 'tauxTva';
 
 	protected $id;
 
@@ -75,7 +71,7 @@ abstract class baseEntity {
 	}
 
 	public function __toString() {
-		return (string)$this->getNom();
+		return (string)$this->getId();
 	}
 
     // abstract public function getClassName();

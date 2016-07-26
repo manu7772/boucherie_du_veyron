@@ -36,7 +36,15 @@
         <default key="_controller">siteUserBundle:Default:changeUserLanguage</default>
         <default key="user">null</default>
         <requirement key="language">%default_locales%</requirement>
-        <requirement key="methods">GET</requirement>
+        <!-- <requirement key="methods">GET</requirement> -->
+    </route>
+
+    <route id="change_user_help" path="/user/change-user-help/{state}/{user}">
+        <default key="_controller">siteUserBundle:Default:changeUserHelp</default>
+        <default key="state">1</default>
+        <default key="user">null</default>
+        <requirement key="state">(0|1)</requirement>
+        <!-- <requirement key="methods">POST</requirement> -->
     </route>
 
 </routes>

@@ -67,7 +67,10 @@
 							<td{{ bgcolor|raw }}>{{ actions.labelLinkList(entite.nestedParents, [], null, type, type_value_joiner, 'show') }}</td>
 							{# <td{{ bgcolor|raw }}>{{ entite.title }}</td> #}
 							{# <td{{ bgcolor|raw }}>{{ entite.titreh1 }}</td> #}
-							<td{{ bgcolor|raw }}>{{ entite.modelename }}</td>
+							<td{{ bgcolor|raw }}>
+								{{ entite.modelename }}
+								{% if entite.extended|default(false) %} <i class="text-muted"><small>(ext.)</small></i>{% endif %}
+							</td>
 						</tr>
 						{% endfor %}
 					</tbody>

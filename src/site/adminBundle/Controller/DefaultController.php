@@ -32,7 +32,7 @@ class DefaultController extends baseController {
 	public function indexAction() {
 		$this->get('aetools.aetools')->updateBundlesInConfig();
 		$data = array();
-		$data['sitedata'] = $this->get('aetools.aeSite')->getDefaultSiteData();
+		$data['sitedata'] = $this->get('aetools.aeSite')->getSiteData();
 		$data['messages'] = $this->get('aetools.aeMessage')->getRepo()->findNotRead();
 		$data['bundle'] = $this->getBundle();
 		return $this->render('siteadminBundle:Default:index.html.twig', $data);
@@ -44,7 +44,7 @@ class DefaultController extends baseController {
 	 */
 	public function supportAction() {
 		$data = array();
-		$data['sitedata'] = $this->get('aetools.aeSite')->getDefaultSiteData();
+		$data['sitedata'] = $this->get('aetools.aeSite')->getSiteData();
 		$data['bundle'] = $this->getBundle();
 		return $this->render('siteadminBundle:Default:support.html.twig', $data);
 	}
@@ -65,7 +65,7 @@ class DefaultController extends baseController {
 
 	public function sidebarAction($option = null) {
 		$data = array();
-		$data['sitedata'] = $this->get('aetools.aeSite')->getDefaultSiteData();
+		$data['sitedata'] = $this->get('aetools.aeSite')->getSiteData();
 		$data['roles'] = $this->get('labo_user_roles')->getListOfRoles();
 		// variables diverses
 		$data['typeSelf'] = self::TYPE_SELF;

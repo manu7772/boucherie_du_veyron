@@ -29,7 +29,7 @@ class DefaultController extends Controller {
 	 */
 	public function indexAction($type = "all", $action = 'list', $params = null) {
 		$data = array();
-		$data['sitedata'] = $this->get('aetools.aeSite')->getDefaultSiteData();
+		$data['sitedata'] = $this->get('aetools.aeSite')->getSiteData();
 		$data['users'] = array();
 		$data["entite"] = self::ENTITE_NAME;
 		$userRoles = $this->get('labo_user_roles');
@@ -67,7 +67,7 @@ class DefaultController extends Controller {
 	 * @return Response
 	 */
 	public function showAction($username) {
-		$data['sitedata'] = $this->get('aetools.aeSite')->getDefaultSiteData();
+		$data['sitedata'] = $this->get('aetools.aeSite')->getSiteData();
 		$userManager = $this->get('fos_user.user_manager');
 		$data['user'] = $userManager->findUserByUsername($username);
 
@@ -92,7 +92,7 @@ class DefaultController extends Controller {
 		set_time_limit(300);
 		$memory = $this->get('aetools.aetools')->getConfigParameters('cropper.yml', 'memory_limit');
 		ini_set("memory_limit", $memory);
-		$data['sitedata'] = $this->get('aetools.aeSite')->getDefaultSiteData();
+		$data['sitedata'] = $this->get('aetools.aeSite')->getSiteData();
 		$request = $this->getRequest();
 		$userManager = $this->get('fos_user.user_manager');
 		$data['user'] = $userManager->findUserByUsername($username);
@@ -284,7 +284,7 @@ class DefaultController extends Controller {
 	}
 
 	public function checkUsersAction($params = null) {
-		$data['sitedata'] = $this->get('aetools.aeSite')->getDefaultSiteData();
+		$data['sitedata'] = $this->get('aetools.aeSite')->getSiteData();
 		set_time_limit(600);
 		// $userManager = $this->getDoctrine()->getManager()->getRepository(self::ENTITE_CLASSNAME);
 		$userManager = $this->get('fos_user.user_manager');
@@ -334,7 +334,7 @@ class DefaultController extends Controller {
 	 * @Route("/change-user-language/{language}/{user}", name="change_user_language")
 	 * @return JsonResponse
 	 */
-	public function changeUserLanguage($language, $user = null) {
+	public function changeUserLanguageAction($language, $user = null) {
 		$reponse['result'] = true;
 		if($user == null) {
 			$reponse['result'] = false;
@@ -347,5 +347,58 @@ class DefaultController extends Controller {
 		return new JsonResponse($reponse);
 	}
 
+	/**
+	 * Change user help mode (true if state is not defined / current user if user is not defined)
+	 * @param boolean $state = true
+	 * @param integer $user = null
+	 * @return JsonResponse
+	 */
+	public function changeUserHelpAction($state = true, $user = null) {
+		$trans = $this->get('translator');
+		$message = $trans->trans('found.not_found', array(), 'siteUserBundle');
+		$userUser = $this->getUser();
+		$result = false;
+		$user = $this->getUserById($user);
+		if(is_object($user)) {
+			if($userUser->haveRight($user)) {
+				$old = $user->getAdminhelp();
+				if($old !== (boolean)$state) {
+					$user->setAdminhelp((boolean)$state);
+					$this->get('fos_user.user_manager')->updateUser($user);
+					$result = true;
+					return $this->get('aetools.aeReponse')
+						->setResult($result)
+						->setMessage($trans->trans('found.found', array('%username%' => $user->getUsername()), 'siteUserBundle'))
+						->getJSONreponse()
+						;
+				} else {
+					$result = true;
+					$message = $trans->trans('actions.modif.no_change', array('%username%' => $user->getUsername()), 'siteUserBundle');
+				}
+			} else {
+				// $result = false;
+				$message = $trans->trans('actions.modif.forbidden', array('%username%' => $user->getUsername()), 'siteUserBundle');
+			}
+		}
+		return $this->get('aetools.aeReponse')
+			->setResult($result)
+			->setMessage($message)
+			->getJSONreponse()
+			;
+	}
+
+	/**
+	 * Get User (current User if User is not defined)
+	 * @param integer $user = null
+	 * @return User or false
+	 */
+	protected function getUserById($user = null) {
+		if($user != 'null' && $user != null) {
+			$objectUser = $this->get('fos_user.user_manager')->findUserBy(array('id' => $user));
+		} else {
+			$objectUser = $this->get('security.context')->getToken()->getUser();
+		}
+		return is_object($objectUser) ? $objectUser : false;
+	}
 
 }

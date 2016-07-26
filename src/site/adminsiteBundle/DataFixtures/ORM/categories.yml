@@ -14,12 +14,6 @@ categorie:
             descriptif: '<p>Diaporamas multimédia</p>'
             type: diapo
             open: true
-        # multimedia
-        -
-            nom: 'multimedias'
-            descriptif: '<p>Diaporamas multimédia</p>'
-            type: multimedia
-            open: true
         # pagewebs
         -
             nom: 'pages web'
@@ -41,232 +35,317 @@ categorie:
             open: true
         # fiches
         -
-            nom: 'fiches'
+            nom: 'recettes'
             descriptif: '<p>Collections de fiches recettes</p>'
-            type: fiche
+            type: fiche_recettes
             open: true
-        # boutiques
+        # fiches boissons, oenoligie et spiritueux
         -
-            nom: 'boutiques'
-            descriptif: '<p>Collections de boutiques</p>'
-            type: boutique
-            open: true
-        # pdfs
-        -
-            nom: 'pdf'
-            descriptif: '<p>Collections de fichiers PDF</p>'
-            type: pdf
+            nom: 'boissons, oenoligie et spiritueux'
+            descriptif: '<p>Collections de boissons, oenoligie et spiritueux</p>'
+            type: fiche_boissons
             open: true
 
     ### COLLECTIONS / DIAPORAMAS
-        # menu haut
+        # menu principal
         -
-            nom: 'menu haut'
-            descriptif: '<p>Menu haut du site</p>'
-            parents:
+            nom: 'menu principal'
+            descriptif: '<p>Menu principal du site</p>'
+            group_categorie_parentParents:
                 field: nom
                 value: 'menus'
         # menu produits
         -
             nom: 'menu produits'
             descriptif: '<p>Menu produits du site</p>'
-            parents:
-                field: nom
-                value: 'menus'
-        # menu footer
-        -
-            nom: 'menu footer'
-            descriptif: '<p>Menu de bas de page</p>'
-            parents:
+            group_categorie_parentParents:
                 field: nom
                 value: 'menus'
         # pages web d'informations
         -
             nom: 'informations'
             descriptif: '<p>Pages d''informations générales et légales</p>'
-            parents:
+            group_categorie_parentParents:
                 field: nom
                 value: 'pages web'
         # diaporamas
         -
+            nom: 'Diaporamas accueil'
+            descriptif: '<p>Diaporama de la page d''accueil</p>'
+            group_categorie_parentParents:
+                field: nom
+                value: 'diaporamas'
+        -
             nom: 'Diaporamas collections'
             descriptif: '<p>Diaporamas</p>'
-            parents:
+            group_categorie_parentParents:
                 field: nom
                 value: 'images'
         -
             nom: 'Diaporama accueil'
             descriptif: '<p>Diaporama de la page d''accueil du site</p>'
-            parents:
+            group_categorie_parentParents:
                 field: nom
                 value: 'images'
-        # Fiches
+        # Fiches recettes
         -
-            nom: 'Fiches collections'
-            descriptif: '<p>Collections de fiches recettes</p>'
-            parents:
-                field: nom
-                value: 'fiches'
-        -
-            nom: 'Recettes'
+            nom: 'Recettes classées'
             descriptif: '<p>Une sélection de recettes pour recevoir ou pour tous les jours</p>'
-            parents:
+            group_categorie_parentParents:
                 field: nom
-                value: 'fiches'
+                value: 'recettes'
+        -
+            nom: 'Bouchées'
+            descriptif: '<p>Une sélection de bouchées pour mettre en appétit</p>'
+            group_categorie_parentParents:
+                field: nom
+                value: 'Recettes classées'
+        -
+            nom: 'Entrées'
+            descriptif: '<p>Une sélection d''entrées</p>'
+            group_categorie_parentParents:
+                field: nom
+                value: 'Recettes classées'
+        -
+            nom: 'Plats'
+            descriptif: '<p>Une sélection de plats</p>'
+            group_categorie_parentParents:
+                field: nom
+                value: 'Recettes classées'
+        -
+            nom: 'Desserts'
+            descriptif: '<p>Une sélection de desserts</p>'
+            group_categorie_parentParents:
+                field: nom
+                value: 'Recettes classées'
         -
             nom: 'Recettes de fêtes'
             descriptif: '<p>Une sélection de savoureuses recettes pour vos repas de fêtes</p>'
-            parents:
+            group_categorie_parentParents:
                 field: nom
-                value: 'fiches'
+                value: 'recettes'
+        -
+            nom: 'Fêtes de Noël'
+            descriptif: '<p>Une sélection de recettes pour les fêtes de Noël</p>'
+            group_categorie_parentParents:
+                field: nom
+                value: 'Recettes de fêtes'
+        -
+            nom: 'Recettes pour Pâques'
+            descriptif: '<p>Une sélection de recettes pour votre repas de Pâques</p>'
+            group_categorie_parentParents:
+                field: nom
+                value: 'Recettes de fêtes'
         -
             nom: 'Recettes de Chefs'
             descriptif: '<p>Les recettes élaborées par les grands Chefs de la gastronomie</p>'
-            parents:
+            group_categorie_parentParents:
                 field: nom
-                value: 'fiches'
+                value: 'recettes'
+        # boissons, oenoligie et spiritueux
+        -
+            nom: 'vins'
+            descriptif: '<p>Les vins de France et de l''étranger</p>'
+            group_categorie_parentParents:
+                field: nom
+                value: 'boissons, oenoligie et spiritueux'
+        -
+            nom: 'vins de France'
+            descriptif: '<p>Les vins de France</p>'
+            group_categorie_parentParents:
+                field: nom
+                value: 'vins'
+        -
+            nom: 'Bordeaux'
+            descriptif: '<p>Les vins de Bordeaux</p>'
+            group_categorie_parentParents:
+                field: nom
+                value: 'vins de France'
+        -
+            nom: 'Bourgogne'
+            descriptif: '<p>Les vins de Bourgogne</p>'
+            group_categorie_parentParents:
+                field: nom
+                value: 'vins de France'
+        -
+            nom: 'Alsace'
+            descriptif: '<p>Les vins d''Alsace</p>'
+            group_categorie_parentParents:
+                field: nom
+                value: 'vins de France'
+        -
+            nom: 'Côtes de Provence'
+            descriptif: '<p>Les vins de Côtes de Provence</p>'
+            group_categorie_parentParents:
+                field: nom
+                value: 'vins de France'
+        -
+            nom: 'Côtes du Rhône'
+            descriptif: '<p>Les vins de Côtes du Rhône</p>'
+            group_categorie_parentParents:
+                field: nom
+                value: 'vins de France'
+        -
+            nom: 'vins de l''étranger'
+            descriptif: '<p>Les vins de l''étranger</p>'
+            group_categorie_parentParents:
+                field: nom
+                value: 'vins'
+        -
+            nom: 'vins du Chili'
+            descriptif: '<p>Les vins du chili</p>'
+            group_categorie_parentParents:
+                field: nom
+                value: 'vins de l''étranger'
+        -
+            nom: 'vins d''Espagne'
+            descriptif: '<p>Les vins d''Espagne</p>'
+            group_categorie_parentParents:
+                field: nom
+                value: 'vins de l''étranger'
+        -
+            nom: 'Vins d''italie'
+            descriptif: '<p>Les vins d''italie</p>'
+            group_categorie_parentParents:
+                field: nom
+                value: 'vins de l''étranger'
         # boutiques
-        -
-            nom: 'Boutiques Ain'
-            descriptif: "<p>Boutiques de l'Ain</p>"
-            parents:
-                field: nom
-                value: 'boutiques'
+        # -
+        #     nom: 'Boutiques Ain'
+        #     descriptif: "<p>Boutiques de l'Ain</p>"
+        #     group_categorie_parentParents:
+        #         field: nom
+        #         value: 'boutiques'
+
         # articles
-        -
-            nom: 'Articles collections'
-            descriptif: '<p>Collections d''articles</p>'
-            parents:
-                field: nom
-                value: 'articles'
         -
             nom: 'Promotions'
             descriptif: '<p>Promotions</p>'
-            parents:
+            group_categorie_parentParents:
                 field: nom
                 value: 'articles'
         -
             nom: 'Fêtes'
             descriptif: '<p>Pour vos fêtes</p>'
-            parents:
+            group_categorie_parentParents:
                 field: nom
                 value: 'articles'
-        # articles : La boutique
         -
             nom: 'La boutique'
             descriptif: '<p>La boutique du site avec articles classés</p>'
-            parents:
+            group_categorie_parentParents:
                 field: nom
                 value: 'articles'
+
         # articles : LE BŒUF
         -
             nom: 'Bœuf'
-            descriptif: '<p>La viande de bœuf</p>'
-            parents:
+            descriptif: '<p>Race à viande extra <i>(Blonde d’Aquitaine, Salers…)</i><br>Pour les viandes à fondue, les brochettes, etc., le prix correspond aux morceaux choisis. Valable pour toutes les sortes de viande, demandez conseil…</p>'
+            group_categorie_parentParents:
                 field: nom
                 value: 'La boutique'
         -
             nom: 'Pièces du boucher'
             descriptif: '<p>Pièces du boucher</p>'
-            parents:
+            group_categorie_parentParents:
                 field: nom
                 value: 'Bœuf'
         -
             nom: 'À rôtir'
             descriptif: '<p>À rôtir</p>'
-            parents:
+            group_categorie_parentParents:
                 field: nom
                 value: 'Bœuf'
         -
             nom: 'À griller'
             descriptif: '<p>À griller</p>'
-            parents:
+            group_categorie_parentParents:
                 field: nom
                 value: 'Bœuf'
         -
             nom: 'À braiser'
             descriptif: '<p>À braiser</p>'
-            parents:
+            group_categorie_parentParents:
                 field: nom
                 value: 'Bœuf'
         -
             nom: 'Abats'
             descriptif: '<p>Abats</p>'
-            parents:
+            group_categorie_parentParents:
                 field: nom
                 value: 'Bœuf'
         # articles : LE VEAU
         -
-            nom: 'Veau'
-            descriptif: '<p>Le veau</p>'
-            parents:
+            nom: 'Veau de lait'
+            descriptif: '<p>Le veau de lait</p>'
+            group_categorie_parentParents:
                 field: nom
                 value: 'La boutique'
         -
             nom: 'Pièces du boucher'
             descriptif: '<p>Pièces du boucher</p>'
-            parents:
+            group_categorie_parentParents:
                 field: nom
-                value: 'Veau'
+                value: 'Veau de lait'
         -
             nom: 'À rôtir'
             descriptif: '<p>À rôtir</p>'
-            parents:
+            group_categorie_parentParents:
                 field: nom
-                value: 'Veau'
+                value: 'Veau de lait'
         -
             nom: 'À griller'
             descriptif: '<p>À griller</p>'
-            parents:
+            group_categorie_parentParents:
                 field: nom
-                value: 'Veau'
+                value: 'Veau de lait'
         -
             nom: 'À braiser'
             descriptif: '<p>À braiser</p>'
-            parents:
+            group_categorie_parentParents:
                 field: nom
-                value: 'Veau'
+                value: 'Veau de lait'
         -
             nom: 'Abats'
             descriptif: '<p>Abats</p>'
-            parents:
+            group_categorie_parentParents:
                 field: nom
-                value: 'Veau'
+                value: 'Veau de lait'
         # articles : L'AGNEAU
         -
             nom: 'Agneau'
             descriptif: '<p>L''agneau</p>'
-            parents:
+            group_categorie_parentParents:
                 field: nom
                 value: 'La boutique'
         -
             nom: 'Pièces du boucher'
             descriptif: '<p>Pièces du boucher</p>'
-            parents:
+            group_categorie_parentParents:
                 field: nom
                 value: 'Agneau'
         -
             nom: 'À rôtir'
             descriptif: '<p>À rôtir</p>'
-            parents:
+            group_categorie_parentParents:
                 field: nom
                 value: 'Agneau'
         -
             nom: 'À griller'
             descriptif: '<p>À griller</p>'
-            parents:
+            group_categorie_parentParents:
                 field: nom
                 value: 'Agneau'
         -
             nom: 'À braiser'
             descriptif: '<p>À braiser</p>'
-            parents:
+            group_categorie_parentParents:
                 field: nom
                 value: 'Agneau'
         -
             nom: 'Abats'
             descriptif: '<p>Abats</p>'
-            parents:
+            group_categorie_parentParents:
                 field: nom
                 value: 'Agneau'
 
@@ -274,62 +353,62 @@ categorie:
         -
             nom: 'Porc'
             descriptif: '<p>La viande de porc</p>'
-            parents:
+            group_categorie_parentParents:
                 field: nom
                 value: 'La boutique'
         -
             nom: 'Pièces du boucher'
             descriptif: '<p>Pièces du boucher</p>'
-            parents:
+            group_categorie_parentParents:
                 field: nom
                 value: 'Porc'
         -
             nom: 'À rôtir'
             descriptif: '<p>À rôtir</p>'
-            parents:
+            group_categorie_parentParents:
                 field: nom
                 value: 'Porc'
         -
             nom: 'À griller'
             descriptif: '<p>À griller</p>'
-            parents:
+            group_categorie_parentParents:
                 field: nom
                 value: 'Porc'
         -
             nom: 'À braiser'
             descriptif: '<p>À braiser</p>'
-            parents:
+            group_categorie_parentParents:
                 field: nom
                 value: 'Porc'
         -
             nom: 'Abats'
             descriptif: '<p>Abats</p>'
-            parents:
+            group_categorie_parentParents:
                 field: nom
                 value: 'Porc'
         # articles : ÉPICERIE
         -
             nom: 'Épicerie'
             descriptif: '<p>L''épicerie</p>'
-            parents:
+            group_categorie_parentParents:
                 field: nom
                 value: 'La boutique'
         -
             nom: 'Bocaux'
             descriptif: '<p>Bocaux et conserves</p>'
-            parents:
+            group_categorie_parentParents:
                 field: nom
                 value: 'Épicerie'
         -
             nom: 'Les vins'
             descriptif: '<p>Vins et spiritueux</p>'
-            parents:
+            group_categorie_parentParents:
                 field: nom
                 value: 'Épicerie'
         -
             nom: 'Produits frais'
             descriptif: '<p>Les produits frais et artisanaux</p>'
-            parents:
+            group_categorie_parentParents:
                 field: nom
                 value: 'Épicerie'
 

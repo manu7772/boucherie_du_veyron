@@ -3,16 +3,13 @@
 namespace site\adminBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use JMS\Serializer\Annotation\ExclusionPolicy;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Doctrine\Common\Collections\ArrayCollection;
-// Slug
-use Gedmo\Mapping\Annotation as Gedmo;
-use site\adminBundle\Entity\nested;
 
 use site\adminBundle\services\aeImages;
 
+use site\adminBundle\Entity\nested;
 use site\adminBundle\Entity\item;
 use site\UserBundle\Entity\User;
 
@@ -22,17 +19,10 @@ use \SplFileInfo;
 
 
 /**
- * @ORM\Entity
  * @ORM\Entity(repositoryClass="site\adminBundle\Entity\mediaRepository")
  * @ORM\InheritanceType("JOINED")
  * @ORM\DiscriminatorColumn(name="class_name", type="string")
- * @ORM\DiscriminatorMap({
- * 		"image" 	= "image",
- * 		"pdf" 		= "pdf"
- * })
  * @ORM\HasLifecycleCallbacks
- *
- * @ExclusionPolicy("all")
  */
 abstract class media extends nested {
 

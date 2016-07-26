@@ -1,0 +1,10 @@
+{% extends 'sitesiteBundle::base_pages.html.twig' %}
+{% set cssjsloads = 'simple' %}
+
+{% block metatitles %}{{ parent() }}{% endblock metatitles %}
+{% block title %}{{ parent() }}{% endblock title %}
+
+{% block mainContainer %}
+    {{ include('sitesiteBundle:blocks:top-intro.html.twig') }}
+    {{ render(controller('sitesiteBundle:Default:miniListeInfo', {categorieArticles: sitedata.categorieArticles})) }}    
+{% endblock mainContainer %}

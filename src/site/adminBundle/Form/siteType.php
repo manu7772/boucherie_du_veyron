@@ -101,6 +101,24 @@ class siteType extends baseType {
                     'class'         => 'select2',
                     ),
                 ))
+            ->add('diaporamaintro', 'entity', array(
+                "label"     => 'fields.diaporamaintro',
+                'translation_domain' => 'site',
+                'class'     => 'siteadminBundle:categorie',
+                'property'  => 'nom',
+                'multiple'  => false,
+                'required' => false,
+                'group_by' => 'parent.nom',
+                "query_builder" => function($repo) {
+                    if(method_exists($repo, 'getElementsBySubTypeButRoot'))
+                        return $repo->getElementsBySubTypeButRoot(array('article', 'pageweb', 'fiche'));
+                        else return $repo->findAllClosure();
+                    },
+                'placeholder'   => 'form.select',
+                'attr'      => array(
+                    'class'         => 'select2',
+                    ),
+                ))
             ->add('categorieArticles', 'entity', array(
                 "label"     => 'fields.categorieArticles',
                 'translation_domain' => 'site',

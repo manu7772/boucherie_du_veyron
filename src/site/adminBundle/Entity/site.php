@@ -6,10 +6,6 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Doctrine\Common\Collections\ArrayCollection;
-use JMS\Serializer\Annotation\ExclusionPolicy;
-use JMS\Serializer\Annotation\Expose;
-// Slug
-use Gedmo\Mapping\Annotation as Gedmo;
 
 use site\adminBundle\Entity\subentity;
 use site\adminBundle\Entity\categorie;
@@ -24,10 +20,9 @@ use \Exception;
 /**
  * site
  *
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="site\adminBundle\Entity\siteRepository")
  * @ORM\Table(name="site")
  * @ORM\HasLifecycleCallbacks
- * @ORM\Entity(repositoryClass="site\adminBundle\Entity\siteRepository")
  */
 class site extends subentity {
 
@@ -65,16 +60,20 @@ class site extends subentity {
 	/**
 	 * @ORM\ManyToOne(targetEntity="site\adminBundle\Entity\categorie", cascade={"persist"})
 	 * @ORM\JoinColumn(nullable=true, unique=false, onDelete="SET NULL")
-	 * @ORM\JoinTable(name="site_cat_navmenu")
 	 */
 	protected $menuNav;
 
 	/**
 	 * @ORM\ManyToOne(targetEntity="site\adminBundle\Entity\categorie", cascade={"persist"})
 	 * @ORM\JoinColumn(nullable=true, unique=false, onDelete="SET NULL")
-	 * @ORM\JoinTable(name="site_cat_menu")
 	 */
 	protected $menuArticle;
+
+	/**
+	 * @ORM\ManyToOne(targetEntity="site\adminBundle\Entity\categorie", cascade={"persist"})
+	 * @ORM\JoinColumn(nullable=true, unique=false, onDelete="SET NULL")
+	 */
+	protected $diaporamaintro;
 
 	/**
 	 * @ORM\ManyToMany(targetEntity="site\adminBundle\Entity\categorie")
@@ -126,6 +125,7 @@ class site extends subentity {
 		$this->accroche = null;
 		$this->menuNav = null;
 		$this->menuArticle = null;
+		$this->diaporamaintro = null;
 		$this->categorieArticles = new ArrayCollection();
 		$this->categorieFooters = new ArrayCollection();
 		$this->boutiques = new ArrayCollection();
@@ -222,6 +222,24 @@ class site extends subentity {
 	 */
 	public function getMenuArticle() {
 		return $this->menuArticle;
+	}
+
+	/**
+	 * set diaporamaintro
+	 * @param categorie $diaporamaintro
+	 * @return site
+	 */
+	public function setDiaporamaintro(categorie $diaporamaintro = null) {
+		$this->diaporamaintro = $diaporamaintro;
+		return $this;
+	}
+
+	/**
+	 * get diaporamaintro
+	 * @return categorie
+	 */
+	public function getDiaporamaintro() {
+		return $this->diaporamaintro;
 	}
 
 	/**

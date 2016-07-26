@@ -16,26 +16,9 @@ use \DateTime;
 use \Exception;
 
 /**
- * @ORM\Entity
  * @ORM\Entity(repositoryClass="site\adminBundle\Entity\subentityRepository")
  * @ORM\InheritanceType("JOINED")
  * @ORM\DiscriminatorColumn(name="class_name", type="string")
- * @ORM\DiscriminatorMap({
- * 		"item" 			= "item",
- * 		"tier" 			= "tier",
- * 		"media" 		= "media",
- * 		"site" 			= "site",
- * 		"rawfile" 		= "rawfile",
- * 		"categorie" 	= "categorie",
- * 		"article" 		= "article",
- * 		"fiche" 		= "fiche",
- * 		"pageweb" 		= "pageweb",
- * 		"boutique" 		= "boutique",
- * 		"marque" 		= "marque",
- * 		"reseau" 		= "reseau",
- * 		"image" 		= "image",
- * 		"pdf" 			= "pdf"
- * })
  * 
  * @ORM\HasLifecycleCallbacks()
  */
@@ -79,7 +62,7 @@ abstract class subentity extends baseEntity {
 	protected $tags;
 
     /**
-     * @ORM\OneToOne(targetEntity="site\adminBundle\Entity\image", orphanRemoval=true, cascade={"all"})
+     * @ORM\OneToOne(targetEntity="site\adminBundle\Entity\image", orphanRemoval=true, cascade={"persist"})
 	 * @ORM\JoinColumn(nullable=true, unique=true, onDelete="SET NULL")
      */
     protected $image;
@@ -89,6 +72,14 @@ abstract class subentity extends baseEntity {
 	 * @ORM\Column(name="couleur", type="string", length=24, nullable=false, unique=false)
 	 */
 	protected $couleur;
+
+	/**
+	 * @var integer
+	 * @ORM\Column(name="typentite", type="integer", nullable=true, unique=false)
+	 */
+	protected $typentite;
+
+	protected $listeTypentites = array();
 
 	protected $class_name;
 
@@ -100,6 +91,7 @@ abstract class subentity extends baseEntity {
 		$this->tags = new ArrayCollection();
 		$this->image = null;
 		$this->couleur = "rgba(255,255,255,1)";
+		$this->setTypentite($this->getDefaultTypentite()); // Niveau par défaut
 	}
 
 
@@ -117,18 +109,12 @@ abstract class subentity extends baseEntity {
 
 	/**
 	 * Get keywords
-	 * @return string 
+	 * @return string
 	 */
 	public function getKeywords() {
-		return implode($this->getTags()->toArray(), ', ');
-	}
-
-	/**
-	 * Get keywords
-	 * @return array
-	 */
-	public function getArrayKeywords() {
-		return $this->getTags()->toArray();
+		$tags = array();
+		foreach ($this->getTags() as $tag) $tags[] = $tag->getNom();
+		return implode($tags, ', ');
 	}
 
 	/**
@@ -292,6 +278,49 @@ abstract class subentity extends baseEntity {
 	 */
 	public function getCouleur() {
 		return $this->couleur;
+	}
+
+	/**
+	 * Get list of typentites
+	 * @return array 
+	 */
+	public function getListeTypentites() {
+		return $this->listeTypentites;
+	}
+	/**
+	 * Get default typentite
+	 * @return integer
+	 */
+	public function getDefaultTypentite() {
+		$list = array_keys($this->getListeTypentites());
+		return count($list) > 0 ? $list[0] : null;
+	}
+
+	/**
+	 * Set typentite
+	 * @param string $typentite
+	 * @return fiche
+	 */
+	public function setTypentite($typentite = null) {
+		if($typentite != null) if(!in_array($typentite, array_keys($this->getListeTypentites()))) $typentite = null;
+		$this->typentite = $typentite;
+		return $this;
+	}
+
+	/**
+	 * Get typentite
+	 * @return string 
+	 */
+	public function getTypentite() {
+		return $this->typentite;
+	}
+
+	/**
+	 * Get typentite text
+	 * @return string 
+	 */
+	public function getTypentiteText() {
+		return isset($this->listeTypentites[$this->typentite]) ? $this->listeTypentites[$this->typentite] : null ;
 	}
 
 

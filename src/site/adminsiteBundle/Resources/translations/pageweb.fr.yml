@@ -33,4 +33,5 @@ fields:
     parent: parent
     elements: éléments
     icon: icône
+    extended: étendu
 pageweb_coll: collections pages web

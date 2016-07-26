@@ -34,8 +34,15 @@
 						</span>
 					</a>
 					<ul class="dropdown-menu animated fadeInRight m-t-xs">
-						<li><a href="{{ path('fos_user_profile_show') }}"><i class="fa fa-user"></i> {{ UCfirst('profile.name'|trans({}, 'siteUserBundle')) }}</a></li>
-						<li><a href="{{ path('fos_user_security_logout') }}"><i class="fa fa-sign-out"></i> {{ UCfirst('layout.logout'|trans({}, 'siteUserBundle')) }}</a></li>
+						<li>
+							{% if app.user.adminhelp %}{% set adminhelp = 'swh-on' %}{% else %}{% set adminhelp = 'swh-off' %}{% endif %}
+							<a class="switch-adminhelp {{ adminhelp }}" data-txt-target="span.helpinmenu" data-txt-swh-seton="{{ 'actions.help.setOn'|trans({}, 'siteUserBundle') }}" data-txt-swh-setoff="{{ 'actions.help.setOff'|trans({}, 'siteUserBundle') }}">
+								<i class="fa fa-support m-r-xs"></i><span class="helpinmenu"></span>
+							</a>
+						</li>
+						<li class="divider"></li>
+						<li><a href="{{ path('fos_user_profile_show') }}"><i class="fa fa-user m-r-xs"></i>{{ UCfirst('profile.name'|trans({}, 'siteUserBundle')) }}</a></li>
+						<li><a href="{{ path('fos_user_security_logout') }}"><i class="fa fa-sign-out m-r-xs"></i>{{ UCfirst('layout.logout'|trans({}, 'siteUserBundle')) }}</a></li>
 					</ul>
 					{% endif %}
 				</div>

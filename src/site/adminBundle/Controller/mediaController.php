@@ -32,7 +32,7 @@ class mediaController extends baseController {
 	 * Test : http://localhost/boucherie_du_veyron/web/app_dev.php/fr/admin/media/save-raw-file/image
 	 * @return aeReponse
 	 */
-	public function persistRawImageAction($entityShortName) {
+	public function persistRawImageAction() {
 		set_time_limit(300);
 		$memory = $this->get('aetools.aetools')->getConfigParameters('cropper.yml', 'memory_limit');
 		ini_set("memory_limit", $memory);
@@ -55,11 +55,37 @@ class mediaController extends baseController {
 		// supprime les temporaires précédents
 		if(!isset($data['rawfiles']['list'])) $data['rawfiles']['list'] = array();
 		if($data['rawfiles']['actual'] != '' && $data['rawfiles']['actual'] != null) $data['rawfiles']['list'][] = $data['rawfiles']['actual'];
-		$file = $this->get('aetools.debug')->debugFile($data);
 		$aeRawfile->deleteAllTemp('rawfile', $data['rawfiles']['list']);
 		// crée un nouveau rawfile
 		$rawfile = $aeRawfile->getNewRawfileWithData($data);
-		$aeReponse = $aeRawfile->checkAfterChange($rawfile)->save($rawfile);
+		// $this->get('aetools.debug')->debugFile($data);
+		$imgId = null;
+		if($rawfile->getImage() != null) {
+			$imgId = $rawfile->getImage()->getId();
+		}
+		$this->get('aetools.debug')->debugNamedFile('resultRaw', array(
+			'nom' => $rawfile->getNom(),
+			'id' => $rawfile->getId(),
+			'originalnom' => $rawfile->getOriginalnom(),
+			'format' => $rawfile->getFormat(),
+			'extension' => $rawfile->getExtension(),
+			'fileSize' => $rawfile->getFileSize(),
+			'width' => $rawfile->getWidth(),
+			'height' => $rawfile->getHeight(),
+			'binaryFile' => $rawfile->getBinaryFile(),
+			'binaryLowFile' => $rawfile->getBinaryLowFile(),
+			'slug' => $rawfile->getSlug(),
+			'imageId' => $imgId,
+			'data' => $data,
+		));
+		$aeRawfile->checkAfterChange($rawfile);
+		if($rawfile->getImage() != null) {
+			$rawfile->setImage(null);
+		}
+		$aeReponse = $aeRawfile->save($rawfile);
+		$i = 0;
+		$this->get('aetools.debug')->debugNamedFile('resultRaw', array('phase' => $i++));
+
 		if($aeReponse->getResult()) {
 			// OK
 			// $id = $rawfile->getId();
@@ -97,7 +123,7 @@ class mediaController extends baseController {
 	 * Renvoit un objet aeReponse avec l'ID de la nouvelle image
 	 * @return aeReponse
 	 */
-	public function NOpersistRawImageAction($entityShortName) {
+	public function NOpersistRawImageAction() {
 		set_time_limit(300);
 		$memory = $this->get('aetools.aetools')->getConfigParameters('cropper.yml', 'memory_limit');
 		ini_set("memory_limit", $memory);

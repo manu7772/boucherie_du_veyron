@@ -70,7 +70,7 @@ class pagewebType extends baseType {
 				'label' => 'fields.modele',
 				'translation_domain' => 'pageweb',
 				'required' => true,
-				'choice_list' => $this->pageweb->getPagewebChoices(),
+				'choice_list' => $this->pageweb->getPagewebChoices($builder->getData()->getExtended()),
 				))
 			// 1 image :
 			->add('image', new cropperType($this->controller, $this->imagesData), array(
@@ -95,6 +95,11 @@ class pagewebType extends baseType {
 						return $repo->defaultValsListClosure($this->aeEntities);
 						else return $repo->findAllClosure();
 					},
+				))
+			->add('extended', 'checkbox', array(
+				'label'		=> 'fields.extended',
+				'translation_domain' => 'pageweb',
+				"required"  => false,
 				))
 			// ->add('parents', 'entity', array(
 			// 	"label"     => 'name_s',

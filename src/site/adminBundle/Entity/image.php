@@ -4,20 +4,12 @@ namespace site\adminBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
-use Doctrine\Common\Collections\ArrayCollection;
-use JMS\Serializer\Annotation\ExclusionPolicy;
-use JMS\Serializer\Annotation\Expose;
-// Slug
-use Gedmo\Mapping\Annotation as Gedmo;
 
 use site\adminBundle\services\aeImages;
 use site\adminBundle\services\aetools;
 
 use site\adminBundle\Entity\subentity;
-// use site\adminBundle\Entity\media;
-// use site\adminBundle\Entity\tier;
-// use site\adminBundle\Entity\item;
+use site\adminBundle\Entity\media;
 use site\UserBundle\Entity\User;
 
 use \DateTime;
@@ -26,11 +18,9 @@ use \Exception;
 /**
  * image
  *
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="site\adminBundle\Entity\imageRepository")
  * @ORM\Table(name="image", options={"comment":"images du site"})
  * @ORM\HasLifecycleCallbacks
- * @ORM\Entity(repositoryClass="site\adminBundle\Entity\imageRepository")
- * @ExclusionPolicy("all")
  */
 class image extends media {
 

@@ -47,11 +47,6 @@ twig:
                     panier:
                         nom: 'Tests panier'
                         path: 'siteadmin_sadmin_panier'
-            traduction:
-                role: 'ROLE_TRANSLATOR'
-                nom: 'traduction.name'
-                path: 'sitetranslate_homepage'
-                icon: 'entite.translate'
             categories:
                 role: 'ROLE_EDITOR'
                 nom: 'name_s'
@@ -62,21 +57,21 @@ twig:
                     roots:
                         nom: 'types.all'
                         trans_domain: categorie
-                        role: 'ROLE_SUPER_ADMIN'
+                        # role: 'ROLE_SUPER_ADMIN'
                         icon: 'entite.categorie'
                         path: 
                             path: 'siteadmin_repo_categorie'
                             params:
                                 method: findRoots
                     cat_mixed:
-                        nom: 'types.multimedia'
+                        nom: 'types.diapo'
                         trans_domain: categorie
                         icon: 'entite.multimedia'
                         path:
                             path: 'siteadmin_repo_categorie'
                             params:
                                 method: findCollectionsByType
-                                repoParams: multimedia
+                                repoParams: diapo
                     cat_article:
                         nom: 'types.article'
                         trans_domain: categorie
@@ -97,14 +92,33 @@ twig:
                                 method: findCollectionsByType
                                 repoParams: pageweb
                     cat_fiche:
-                        nom: 'types.fiche'
-                        trans_domain: categorie
+                        nom: 'name_s'
+                        trans_domain: fiche
                         icon: 'entite.fiche'
-                        path:
+                        path: 
                             path: 'siteadmin_repo_categorie'
                             params:
                                 method: findCollectionsByType
                                 repoParams: fiche
+                        level3:
+                            cat_fiche_recettes:
+                                nom: 'types.fiche_recettes'
+                                trans_domain: categorie
+                                # icon: 'entite.fiche'
+                                path:
+                                    path: 'siteadmin_repo_categorie'
+                                    params:
+                                        method: findCollectionsByType
+                                        repoParams: fiche_recettes
+                            cat_fiche_boissons:
+                                nom: 'types.fiche_boissons'
+                                trans_domain: categorie
+                                # icon: 'entite.fiche'
+                                path:
+                                    path: 'siteadmin_repo_categorie'
+                                    params:
+                                        method: findCollectionsByType
+                                        repoParams: fiche_boissons
                     cat_images:
                         nom: 'types.image'
                         trans_domain: categorie
@@ -114,24 +128,24 @@ twig:
                             params:
                                 method: findCollectionsByType
                                 repoParams: image
-                    cat_boutiques:
-                        nom: 'types.boutique'
-                        trans_domain: categorie
-                        icon: 'entite.boutique'
-                        path:
-                            path: 'siteadmin_repo_categorie'
-                            params:
-                                method: findCollectionsByType
-                                repoParams: boutique
-                    cat_pdfs:
-                        nom: 'types.pdf'
-                        trans_domain: categorie
-                        icon: 'entite.pdf'
-                        path:
-                            path: 'siteadmin_repo_categorie'
-                            params:
-                                method: findCollectionsByType
-                                repoParams: pdf
+                    # cat_boutiques:
+                    #     nom: 'types.boutique'
+                    #     trans_domain: categorie
+                    #     icon: 'entite.boutique'
+                    #     path:
+                    #         path: 'siteadmin_repo_categorie'
+                    #         params:
+                    #             method: findCollectionsByType
+                    #             repoParams: boutique
+                    # cat_pdfs:
+                    #     nom: 'types.pdf'
+                    #     trans_domain: categorie
+                    #     icon: 'entite.pdf'
+                    #     path:
+                    #         path: 'siteadmin_repo_categorie'
+                    #         params:
+                    #             method: findCollectionsByType
+                    #             repoParams: pdf
             marketplace:
                 role: 'ROLE_ADMIN'
                 nom: 'marketplace.name'
@@ -321,6 +335,23 @@ twig:
                             path: 'siteadmin_entite'
                             params:
                                 entite: fiche
+                        level3:
+                            cat_fiche_recettes:
+                                nom: 'types.fiche_recettes'
+                                trans_domain: categorie
+                                # icon: 'entite.fiche'
+                                path:
+                                    path: 'siteadmin_entite'
+                                    params:
+                                        entite: ficherecette
+                            cat_fiche_boissons:
+                                nom: 'types.fiche_boissons'
+                                trans_domain: categorie
+                                # icon: 'entite.fiche'
+                                path:
+                                    path: 'siteadmin_entite'
+                                    params:
+                                        entite: ficheboisson
                     tags:
                         nom: 'name_s'
                         trans_domain: tag
@@ -444,15 +475,6 @@ twig:
                 path: 'siteadmin_homepage'
                 icon: 'entite.parametres'
                 level2: 
-                    statut:
-                        nom: 'name_s'
-                        role: %restrict_admin%
-                        icon: 'entite.statut'
-                        trans_domain: statut
-                        path: 
-                            path: 'siteadmin_entite'
-                            params:
-                                entite: statut
                     sites:
                         nom: 'name_s'
                         trans_domain: site
@@ -471,7 +493,22 @@ twig:
                             params:
                                 method: findCollectionsByType
                                 repoParams: menu
+                    statut:
+                        nom: 'name_s'
+                        role: %restrict_admin%
+                        icon: 'entite.statut'
+                        trans_domain: statut
+                        path: 
+                            path: 'siteadmin_entite'
+                            params:
+                                entite: statut
+            traduction:
+                role: 'ROLE_TRANSLATOR'
+                nom: 'traduction.name'
+                path: 'sitetranslate_homepage'
+                icon: 'entite.translate'
             help:
-                nom: 'help'
+                nom: 'name'
+                trans_domain: help
                 path: siteadmin_support
                 icon: 'entite.help'

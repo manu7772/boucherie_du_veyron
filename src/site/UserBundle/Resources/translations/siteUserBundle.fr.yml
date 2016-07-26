@@ -24,6 +24,23 @@ info:
     compte: Informations de compte
     autres: Autres Informations
 
+found:
+    not_found: Utilisateur non trouvé
+    found: Utilisateur trouvé %username%
+
+actions:
+    help:
+        on: Le mode help est activé
+        off: Le mode help est désactivé
+        setOn: 'Activer l''aide'
+        setOff: 'Désctiver l''aide'
+    langage:
+        is: Le language par défaut est %langage%
+    modif:
+        no_change: 'L''utilisateur %username% n''a enregistré aucune modification'
+        error: 'Erreur : l''utilisateur "%username%" n''a pu être modifié'
+        forbidden: 'Vous n''avez pas les droits sur cet utilisateur %username%'
+
 name: compte utilisateur
 # champs
 fields:

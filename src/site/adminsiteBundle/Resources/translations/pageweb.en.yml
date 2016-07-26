@@ -33,4 +33,5 @@ fields:
     parent: parent
     elements: elements
     icon: icon
+    extended: extended
 pageweb_coll: web pages collections

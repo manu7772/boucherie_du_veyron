@@ -22,7 +22,7 @@ class SecurityController extends securityCtrl {
 
     protected function getSiteData(&$data = null) {
         if($data === null) $data = array();
-        $data['sitedata'] = $this->get('aetools.aeSite')->getDefaultSiteData();
+        $data['sitedata'] = $this->get('aetools.aeSite')->getSiteData();
         return $data;
     }
 

@@ -6,8 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Doctrine\Common\Collections\ArrayCollection;
-// Slug
-use Gedmo\Mapping\Annotation as Gedmo;
+
 use site\adminBundle\Entity\baseEntity;
 
 use \DateTime;
@@ -15,10 +14,9 @@ use \DateTime;
 /**
  * tauxTva
  *
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="site\adminBundle\Entity\tauxTvaRepository")
  * @ORM\Table(name="tauxTva")
  * @ORM\HasLifecycleCallbacks
- * @ORM\Entity(repositoryClass="site\adminBundle\Entity\tauxTvaRepository")
  * @UniqueEntity(fields={"nom"}, message="Ce taux de tva existe déjà")
  */
 class tauxTva extends baseEntity {

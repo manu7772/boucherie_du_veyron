@@ -34,10 +34,13 @@ entite:
     adresse: fa-envelope-o
     pageweb: fa-desktop
     fiche: fa-file-text-o
+    ficherecette: fa-file-text-o
+    ficheboisson: fa-file-text-o
     marque: fa-trophy
     boutique: fa-building-o
     reseau: fa-share-alt
     categorie: fa-folder
+    nestedposition: fa-folder
     sub_categorie: fa-folder-o
     tauxTva: fa-calculator
     User: fa-user
@@ -56,5 +59,5 @@ entite:
     menu: fa-list-ul
     parametres: fa-gear
     help: fa-support
-    webmaster: fa-cogs
+    webmaster: 'fa-cogs fa-spin'
     texte: fa-list-ul

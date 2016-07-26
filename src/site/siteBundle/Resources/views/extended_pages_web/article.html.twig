@@ -12,7 +12,10 @@
 			<div class="col-sm-9 col-md-9 padding-left-resp">
 				<div class="content-page-right">
 					<h2 class="title">
-						<span style="font-weight:300;">{% if categorie is defined %}{{ categorie.nestedParents|join(' > ')|raw }} / {{ categorie }} / </span>{% endif %}{{ article }}
+						{% if categorie|default(null) != null and categorie.nestedParents|default([])|length > 0 %}<span style="font-weight:300;">
+						{% for parent in categorie.nestedParents %}{{ parent.nom }} / {% endfor %}
+						{{ categorie.nom }} / </span>{% endif %}
+						{{ article.nom }}
 					</h2>
 					<div class="single-section">
 						<div class="section-tabs">

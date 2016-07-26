@@ -14,6 +14,8 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage as
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormEvent;
 
+use site\adminBundle\Form\cropperType;
+
 use site\adminBundle\services\aeEntity;
 use site\adminBundle\Entity\statutRepository;
 

@@ -2,9 +2,7 @@
 
 namespace site\adminBundle\Entity;
 
-// use site\adminBundle\Entity\subentityRepository;
 use site\adminBundle\Entity\EntityBaseRepository;
-// use Gedmo\Sortable\Entity\Repository\SortableRepository;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\ORM\EntityManager;

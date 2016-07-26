@@ -66,8 +66,8 @@ class aeSite extends aeSubentity {
     //  return parent::save($entity, $flush);
     // }
 
-    public function getDefaultSiteData() {
-        return $this->getRepo()->findOneByDefault(true);
+    public function getSiteData($siteDataId = null) {
+        return $this->getRepo()->findSiteData($siteDataId);
     }
 
 }

@@ -152,7 +152,7 @@ class categorieController extends baseController {
 	protected function getEntiteData($entite, $action = null, $id = null, $type_related = null, $type_field = null, $type_values = null, $method = null, $repoParams = null) {
 		$data = array();
 		if(is_object($entite)) $entite = get_class($entite);
-		$data['sitedata'] = $this->get('aetools.aeSite')->getDefaultSiteData();
+		$data['sitedata'] = $this->get('aetools.aeSite')->getSiteData();
 		$data['entite_name'] = self::ENTITE_SHORTNAME;
 		$this->entityService = $this->getEntityService($data['entite_name']);
 		$repo = $this->entityService->getRepo();

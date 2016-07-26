@@ -77,8 +77,9 @@ parameters:
         pageweb:
             icon: fa-desktop
     marketplace:
-        active: true
-        paiement: true
+        active: true #gérer des articles, boutiques, etc.
+        vente: false #afficher les prix et remplir le panier
+        paiement: false #paiement en ligne
         statistiques: false
         devise:
             name: euro
@@ -86,12 +87,12 @@ parameters:
     categorie:
         descrition:
             defaults:
-                accepts: ['pageweb', 'article','image','fiche','marque','reseau','boutique','pdf', "categorie"]
+                accepts: ['pageweb', 'article','image','fiche','marque','reseau','boutique','pdf', 'categorie']
                 couleur: 'rgba(128,128,128,1)'
             types:
                 menu:
                     nom: 'types.menu'
-                    accepts: ['pageweb', 'article','image','fiche','marque','reseau','boutique','pdf', "categorie"]
+                    accepts: ['pageweb', 'article','image','fiche','marque','reseau','boutique','pdf', 'categorie']
                 # multimedia:
                 #     nom: 'types.multimedia'
                 #     accepts: ['pageweb', 'article','image','fiche','marque','reseau','boutique','pdf']
@@ -103,13 +104,16 @@ parameters:
                     accepts: ['pageweb']
                 article:
                     nom: 'types.article'
-                    accepts: ['article']
+                    accepts: ['article', 'categorie']
                 image:
                     nom: 'types.image'
                     accepts: ['image']
-                fiche:
-                    nom: 'types.fiche'
-                    accepts: ['fiche']
+                fiche_recettes:
+                    nom: 'types.fiche_recettes'
+                    accepts: ['ficherecette']
+                fiche_boissons:
+                    nom: 'types.fiche_boissons'
+                    accepts: ['ficheboisson']
                 # marque:
                 #     nom: 'types.marque'
                 #     accepts: ['marque']

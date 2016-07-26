@@ -13,6 +13,8 @@ use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\ClassMetadata;
 
+use site\adminBundle\services\aetools;
+
 use \Exception;
 
 /**
@@ -119,7 +121,7 @@ class categorieRepository extends nestedRepository {
 	 * @param boolean $shortCutContext = false
 	 * @return array
 	 */
-	public function findCollectionsByType($type = null, $level = null, $shortCutContext = false) {
+	public function findCollectionsByType($type = null, $level = 1, $shortCutContext = false) {
 		$qb = $this->createQueryBuilder(self::ELEMENT);
 		// if($types != null) $this->getElementsBySubType($types, $qb, $shortCutContext);
 		$qb->where(self::ELEMENT.'.type = :type')
@@ -148,6 +150,20 @@ class categorieRepository extends nestedRepository {
 	/********************************/
 	/*** CLOSURES                 ***/
 	/********************************/
+
+	public function defaultValsListClosure(aetools $aeEntities = null, $data = null, $entity = null) {
+		$qb = parent::defaultValsListClosure($aeEntities, $data, $entity);
+		// if(is_object($entity)) if(method_exists($entity, 'getType')) {
+		// 	$exp = explode('_', $entity->getType());
+		// 	if(count($exp) == 3) {
+		// 		$qb->andWhere(self::ELEMENT.'.'.$exp[1].' = '.$exp[2]);
+		// 	}
+		// }
+		// echo('<p>Returns : <p>'.implode('</p><p>- ', $qb->getQuery()->getResult()).'</p></p>');
+		// resultat
+		return $qb;
+	}
+
 
 	// Select selon ACCEPT / But root
 	public function getElementsBySubTypeButRoot($types, &$qb = null, $shortCutContext = false) {

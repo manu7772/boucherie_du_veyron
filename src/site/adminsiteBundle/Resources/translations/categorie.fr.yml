@@ -63,7 +63,8 @@ types:
     article: articles
     pdf: fichiers PDF
     menu: menus
-    fiche: recettes
+    fiche_recettes: fiches recettes
+    fiche_boissons: fiches boissons
     marque: marques
     reseau: reseaux
     boutique: boutiques

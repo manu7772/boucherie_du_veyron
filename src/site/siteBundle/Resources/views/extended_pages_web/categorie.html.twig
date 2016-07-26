@@ -1,0 +1,64 @@
+{% extends 'sitesiteBundle::base_pages.html.twig' %}
+{% set cssjsloads = 'simple' %}
+{% import 'sitesiteBundle:blocks:categories_actions.html.twig' as categories_macros %}
+
+{% block mainContainer %}
+<section>
+	<div class="container">
+		<div class="row">
+
+			{{ include('sitesiteBundle:blocks:mainmenu.html.twig') }}
+
+			<div class="col-sm-9 col-md-9 padding-left-resp">
+				<div class="content-page-right">
+					<h2 class="title">
+						{% if categorie|default(null) != null %}<span style="font-weight:300;">
+						{% for parent in categorie.nestedParents %}{{ parent.nom }} / {% endfor %}
+						</span>{% endif %}
+						{{ categorie.nom }}
+					</h2>
+					{% if pageweb.mainMedia|default(null) != null %}
+					<img src="{{ pageweb.mainMedia.imgThumbnail(280,null,'in')|raw }}" alt="{{ pageweb.mainMedia.nom|default('image') }}">
+					{% endif %}
+					{% if pageweb.code|default('') != '' %}
+					<p>{{ pageweb.code|raw }}</p>
+					{% endif %}
+					{% for item in items %}
+						{{ categories_macros.boxCategorie(item, categorie) }}
+					{% endfor %}
+
+					{% if is_granted('ROLE_SUPER_ADMIN') %}
+					<hr style="clear:both;">
+					{% for item in items %}
+						<p>{{ item.nom }} <small><i>({{ item.className }})</i></small></p>
+					{% endfor %}
+					{% endif %}
+
+				</div>
+			</div>
+
+		</div>
+	</div>
+</section>
+
+{% if sitedata.categorieArticles|length > 0 and items|length < 4 %}
+{{ render(controller('sitesiteBundle:Default:miniListeInfo', {categorieArticles: sitedata.categorieArticles})) }}    
+{% endif %}
+
+{% endblock mainContainer %}
+
+
+
+					{# -- items : ancienne méthode, via méthodes de l'entite categorie / ne plus utiliser !!!!! -- #}
+{# 					{% set noItem = true %}
+					{% if categorie|default(null) != null %}
+						{% for item in categorie.allNestedChildsByGroup(null, true) %}
+							{{ categories_macros.boxCategorie(item, categorie) }}
+							{% set noItem = false %}
+						{% endfor %}
+					{% endif %}
+					{% if noItem %}
+						<h4>{{ UCfirst('not_found'|trans({}, 'nested')) }}</h4>
+					{% endif %}
+ #}					{# -- items -- #}
+					{# <hr style="clear:both;"> #}

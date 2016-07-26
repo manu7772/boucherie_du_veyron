@@ -239,15 +239,25 @@ class aeFixtures extends aeEntity {
 		if($empty === true) $this->emptyEntity($entite);
 		$em = $this->container->get('doctrine')->getManager();
 		$newdata = array();
+		// echo('<pre>');
 		foreach ($data as $key => $dat) {
 			$newdata[$key] = new $classname();
+			// echo('<h1 style="color:orange;">Entity '.get_class($newdata[$key]).'</h1>');
 			$service = $this->getEntityService($newdata[$key]);
 			$service->checkStatuts($newdata[$key], false);
 			$service->checkTva($newdata[$key], false);
 			foreach ($dat as $attribute => $value) {
-				$m = $this->getMethodOfSetting($attribute, $newdata[$key]);
+				$m = $this->getMethodOfSetting($attribute, $newdata[$key], false);
+				$assoc = $this->hasAssociation($attribute, $newdata[$key]) ? '<i>(assoc.)</i>' : '<i>(field)</i>';
 				if(is_string($m)) {
-					if(!$this->hasAssociation($attribute, $newdata[$key])) {
+					// if(is_array($value))
+						// echo('<p style="margin:0px;">Method for <span style="color:blue;"><i>'.$attribute.'</i></span> : <span style="color:blue;"><strong>'.$m.'</strong></span> = '.json_encode($value).'</p>');
+					// else if(is_string($value))
+						// echo('<p style="margin:0px;">Method for <span style="color:blue;"><i>'.$attribute.'</i></span> : <span style="color:blue;"><strong>'.$m.'</strong></span> = '.json_encode(htmlspecialchars($value)).'</p>');
+					$isNested = false;
+					if(method_exists($newdata[$key], 'hasNestedAttribute')) $isNested = $newdata[$key]->hasNestedAttribute($attribute);
+					// if($isNested) echo('<p style="margin:0px;color:green;">Nested : '.$attribute.'</p>');
+					if(!$this->hasAssociation($attribute, $newdata[$key]) && !$isNested) {
 						// champ simple
 						switch ($this->getTypeOfField($attribute, $newdata[$key])) {
 							case Type::BOOLEAN:
@@ -270,20 +280,54 @@ class aeFixtures extends aeEntity {
 						}
 					} else {
 						// entité liée
-						$otherSideEntity = $this->getTargetEntity($attribute, $newdata[$key]);
-						$repo = $em->getRepository($otherSideEntity);
-						$ml = 'findBy'.ucfirst($value['field']);
-						if(!is_array($value['value'])) $value['value'] = array($value['value']);
-						foreach ($value['value'] as $value) {
-							$linkeds = $repo->$ml($value);
-							if(count($linkeds) > 0) {
-								foreach ($linkeds as $linked) {
-									$newdata[$key]->$m($linked);							
-									if(preg_match('#^set#', $m)) break 1;
+						if(preg_match('#^(group_)(.{3,})(Parent|Child)(s)?$#', $attribute)) {
+							// nested
+							$otherSideEntities = $newdata[$key]->getNestedAttributesClasses($attribute);
+							foreach ($otherSideEntities as $keyEntity => $entity) {
+								$otherSideEntities[$keyEntity] = $this->getEntityClassName($entity);
+							}
+							// echo('<h3>- List of entities :</h3>');
+							// var_dump($this->getListOfEnties());
+							// echo('<h3>- OtherSideEntities :</h3>');
+							// var_dump($otherSideEntities);
+						} else {
+							$otherSideEntities = array($this->getTargetEntity($attribute, $newdata[$key]));
+						}
+						foreach ($otherSideEntities as $otherSideEntity) {
+							// echo('<p style="margin:0px;">- Target class = '.$otherSideEntity.'</p>');
+							$repo = $em->getRepository($otherSideEntity);
+							$ml = 'findBy'.ucfirst($value['field']);
+							if(!is_array($value['value'])) $value['value'] = array($value['value']);
+							foreach ($value['value'] as $value) {
+								$linkeds = $repo->$ml($value);
+								if(count($linkeds) > 0) {
+									if(preg_match('#^set#', $m)) {
+										if($this->getTypeOfAssociation($attribute, $newdata[$key]) == self::SINGLE_ASSOC_NAME) {
+											// single
+											$newdata[$key]->$m($linkeds[0]);
+											break 1;
+										} else {
+											// collection
+											$newdata[$key]->$m($linkeds);
+										}
+									} else if(preg_match('#^add#', $m)) {
+										foreach ($linkeds as $linked) {
+											$newdata[$key]->$m($linked);							
+										}
+									}
 								}
 							}
 						}
 					}
+				} else {
+					// echo('<p style="margin:0px;color:red;">Method for '.$attribute.' does not exist !');
+					// echo('<p style="margin:0px;">Available methods :</p>');
+					// echo('<ul style="margin:0px;">');
+					// foreach ($newdata[$key]->getNestedAttributesParameters() as $attribute => $values) {
+						// echo('<li>'.json_encode($attribute).'</li>');
+					// }
+					// echo('</ul>');
+					// echo('</p>');
 				}
 			}
 			$service->checkAfterChange($newdata[$key]);
@@ -291,6 +335,8 @@ class aeFixtures extends aeEntity {
 			// $em->persist($newdata[$key]);
 			// $em->flush();
 		}
+		// echo('<p style="margin:0px;color:red;">DIE</p>');
+		// echo('</pre>');
 		return $newdata;
 	}
 

@@ -71,6 +71,12 @@ class EntityBaseRepository extends EntityRepository {
 		return $qb->getQuery()->getResult();
 	}
 
+	public function findWithArrayOfIds($ids, $shortCutContext = false) {
+		$qb = $this->createQueryBuilder(self::ELEMENT);
+		$qb->where($qb->expr()->in(self::ELEMENT.'.id', (array)$ids));
+		// if($shortCutContext == false) $this->contextStatut($qb);
+		return $qb->getQuery()->getResult();
+	}
 
 	/** Renvoie la(les) valeur(s) par défaut --> ATTENTION : dans un array()
 	* @param $defaults = liste des éléments par défaut
@@ -96,11 +102,26 @@ class EntityBaseRepository extends EntityRepository {
 		return $qb;		
 	}
 
-	public function defaultValsListClosure(aetools $aeEntities = null, $data = null) {
+	/**
+	 * Renvoie la liste d'entités valides dans un array $shortName = $className
+	 * @param array $shortClasses
+	 * @return array
+	 */
+	protected function verifEntities($shortClasses) {
+		$shortClasses = (array)$shortClasses;
+		$listEntities = $this->aeEntities->getListOfEnties(false, false, true);
+		$resultClasses = array();
+		foreach($shortClasses as $classe) if(array_key_exists($classe, $listEntities)) {
+			$resultClasses[$classe] = $listEntities[$classe];
+		}
+		return $resultClasses;
+	}
+
+	public function defaultValsListClosure(aetools $aeEntities = null, $data = null, $entity = null) {
 		$qb = $this->findAllClosure($aeEntities);
 		$whr = 'where';
-		if(is_array($data)) foreach ($data as $classname) if(is_string($classname)) {
-			$qb->$whr(self::ELEMENT.' INSTANCE OF site\adminBundle\Entity\\'.$classname);
+		if(is_array($data)) foreach ($this->verifEntities($data) as $classname) {
+			$qb->$whr(self::ELEMENT.' INSTANCE OF '.$classname);
 			$whr = 'orWhere';
 		}
 		// echo('<p>Returns : <p>'.implode('</p><p>- ', $qb->getQuery()->getResult()).'</p></p>');
@@ -311,6 +332,10 @@ class EntityBaseRepository extends EntityRepository {
 		if($this->context == true) {
 			if($elem == '_default') $elem = self::ELEMENT;
 			if(array_key_exists("statut", $this->getFields())) {
+				// echo('<p>Bundle : '.$this->bundle.'</p>');
+				// echo('<pre><h3>Roles</h3>');
+				// var_dump($this->roles);
+				// echo('</pre>');
 				// ROLES
 				$qb->join($elem.'.statut', 'statut')
 					->andWhere($qb->expr()->in('statut.niveau', $this->roles))

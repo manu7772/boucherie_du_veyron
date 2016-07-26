@@ -24,6 +24,23 @@ info:
     compte: account informations
     autres: other informations
 
+found:
+    not_found: User not found
+    found: User found %username%
+
+actions:
+    help:
+        on: 'Help mode is enabled'
+        off: 'Help is disabled'
+        setOn: 'Enable Help mode'
+        setOff: 'Disable Help mode'
+    langage:
+        is: Default langage is defined to %langage%
+    modif:
+        no_change: 'User %username% has no changes'
+        error: 'Error : user "%username%" has not been modified'
+        forbidden: 'You do not have rights on this user %username%'
+
 name: compte utilisateur
 # champs
 fields:

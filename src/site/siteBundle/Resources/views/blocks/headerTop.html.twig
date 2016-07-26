@@ -1,10 +1,11 @@
-<div class="header_top"><!--header_top-->
+{% if sitedata is defined %}
+<div class="header_top" style="background-color:{{ sitedata.couleur|default('darkred') }};"><!--header_top-->
 	<div class="container">
 		<div class="row">
 			<div class="col-sm-8">
 				<div class="contactinfo">
 					<ul class="nav nav-pills">
-						{% if sitedata.boutiques|length > 0 %}
+						{% if sitedata.boutiques|default([])|length > 0 %}
 						{% if sitedata.boutiques.0.telfixe is not null %}
 						<li><a><i class="fa fa-phone m-r-xs"></i> {{ sitedata.boutiques.0.telfixe }}</a></li>
 						{% endif %}
@@ -32,3 +33,4 @@
 		</div>
 	</div>
 </div><!--/header_top-->
+{% endif %}

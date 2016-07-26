@@ -102,7 +102,7 @@ class categorieType extends baseType {
 					'group_by' => 'class_name',
 					"query_builder" => function($repo) use ($categorie, $nestedAttributesParameters, $aeEntities) {
 						if(method_exists($repo, 'defaultValsListClosure'))
-							return $repo->defaultValsListClosure($aeEntities, $nestedAttributesParameters['pagewebs']['class']);
+							return $repo->defaultValsListClosure($aeEntities, $nestedAttributesParameters['pagewebs']['class'], $categorie);
 							else return $repo->findAllClosure($aeEntities);
 						},
 					))
@@ -136,7 +136,7 @@ class categorieType extends baseType {
 						'group_by' => 'class_name',
 						"query_builder" => function($repo) use ($categorie, $nestedAttributesParameters, $aeEntities) {
 							if(method_exists($repo, 'defaultValsListClosure'))
-								return $repo->defaultValsListClosure($aeEntities, $nestedAttributesParameters['categorie_parent']['class']);
+								return $repo->defaultValsListClosure($aeEntities, $nestedAttributesParameters['categorie_parent']['class'], $categorie);
 								else return $repo->findAllClosure($aeEntities);
 							},
 						))
@@ -172,7 +172,7 @@ class categorieType extends baseType {
 						'group_by' => 'class_name',
 						"query_builder" => function($repo) use ($categorie, $nestedAttributesParameters, $aeEntities) {
 							if(method_exists($repo, 'defaultValsListClosure'))
-								return $repo->defaultValsListClosure($aeEntities, $nestedAttributesParameters['nesteds']['class']);
+								return $repo->defaultValsListClosure($aeEntities, $nestedAttributesParameters['nesteds']['class'], $categorie);
 								else return $repo->findAllClosure($aeEntities);
 							},
 						))

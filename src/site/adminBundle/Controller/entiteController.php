@@ -24,7 +24,7 @@ class entiteController extends baseController {
 		if($action == null) $action = self::DEFAULT_ACTION;
 		if(is_object($entite)) $entite = get_class($entite);
 		$data = array();
-		$data['sitedata'] = $this->get('aetools.aeSite')->getDefaultSiteData();
+		$data['sitedata'] = $this->get('aetools.aeSite')->getSiteData();
 		// find names of entity
 		$data['entite_name'] = $this->get('aetools.aeEntity')->getEntityShortName($entite);
 		$data['classname'] = $this->get('aetools.aeEntity')->getEntityClassName($entite);
@@ -387,7 +387,7 @@ class entiteController extends baseController {
 		// echo('<pre>');
 		// var_dump($data);
 		// echo('</pre>');
-		// $data['sitedata'] = $this->get('aetools.aeSite')->getDefaultSiteData();
+		// $data['sitedata'] = $this->get('aetools.aeSite')->getSiteData();
 		// Entity service
 		$entityService = $this->getEntityService($data['entite_name']);
 
@@ -477,7 +477,28 @@ class entiteController extends baseController {
 				'text'		=> 'Cette page <strong>#"'.$id.'"</strong> n\'a pu être touvée',
 			));
 		} else {
-			$this->get('aetools.aeEntity')->setAsDefault($item);
+			$this->getEntityService($entite)->setAsDefault($item);
+		}
+		return $this->redirect(urldecode($redir));
+	}
+
+	/**
+	 * Désigne l'entite comme entite vnedable
+	 * @param integer $id
+	 * @param string $redir
+	 * @return redirectResponse
+	 */
+	public function entite_as_vendableAction($id, $entite, $redir) {
+		$item = $this->get('aetools.aeEntity')->getRepo('site\adminBundle\Entity\\'.$entite)->find($id);
+		// entité à mettre par défaut
+		if(!is_object($item)) {
+			$this->get('flash_messages')->send(array(
+				'title'		=> 'Elément introuvable',
+				'type'		=> flashMessage::MESSAGES_ERROR,
+				'text'		=> 'Cette page <strong>#"'.$id.'"</strong> n\'a pu être touvée',
+			));
+		} else {
+			$this->getEntityService($entite)->setAsVendable($item);
 		}
 		return $this->redirect(urldecode($redir));
 	}

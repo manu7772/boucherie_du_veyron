@@ -35,6 +35,12 @@
 							<td>{{ entite.prixHT|number_format(2, ',', '') }}€</td>
 						</tr>
 						<tr>
+							<td><strong>En vente</strong></td>
+							<td>
+								{% if entite.vendable %}OUI{% else %}NON{% endif %}&nbsp;{{ actions.entiteButtons(entite, ['vendable'], type) }}
+							</td>
+						</tr>
+						<tr>
 							<td><strong>{{ UCfirst('fields.TVA'|trans({}, entite.className)) }}</strong></td>
 							<td>{{ entite.tauxTVA.taux|number_format(2, ',', '') }}% <i>({{ entite.tauxTVA.nom }})</i></td>
 						</tr>
@@ -52,7 +58,7 @@
 						</tr>
 						<tr>
 							<td><strong>{{ UCfirst('fields.parents'|trans({}, entite.className)) }}</strong></td>
-							<td>{{ actions.labelLinkList(entite.nestedParents, [], null, type, type_value_joiner, 'show') }}</td>
+							<td>{{ actions.labelLinkList(entite.allNestedParentsByClass('categorie'), entite.nestedParentsByClass('categorie'), null, type, type_value_joiner, 'show') }}</td>
 						</tr>
 						<tr>
 							<td><strong>{{ UCfirst('fields.created'|trans({}, entite.className)) }}</strong></td>
@@ -135,10 +141,16 @@
 							<div class="panel-body"{{ style|raw }}>
 								<h3 class='text-navy' style='margin-top:0px;'>{{ UCfirst('name_s'|trans({}, 'fiche')) }}</h3>
 								<hr class="m-t-xs m-b-xs">
-								{% if entite.fiches|length > 0 %}
-								{{ actions.labelLinkList(entite.fiches, [], null, type, type_value_joiner, 'show') }}
+								{% if entite.nestedChildsByGroup('article_ficherecette')|length > 0 %}
+								{{ actions.labelLinkList(entite.nestedChildsByGroup('article_ficherecette'), [], null, type, type_value_joiner, 'show') }}
 								{% else %}
 								<p>{{ UCfirst('not_found'|trans({}, 'fiche')) }}</p>
+								{% endif %}
+								<hr class="m-t-xs m-b-xs">
+								{% if entite.nestedChildsByGroup('article_ficheboisson')|length > 0 %}
+								{{ actions.labelLinkList(entite.nestedChildsByGroup('article_ficheboisson'), [], null, type, type_value_joiner, 'show') }}
+								{% else %}
+								<p>Aucun conseil œnologique trouvé</p>
 								{% endif %}
 							</div>
 						</div>

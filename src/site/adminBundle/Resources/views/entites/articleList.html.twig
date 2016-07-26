@@ -57,7 +57,7 @@
 								{% endif %}
 							</td>
 							<td{{ bgcolor|raw }}>
-								{{ actions.entiteButtons(entite, ['show','edit','delete','active'], type) }}
+								{{ actions.entiteButtons(entite, ['show','edit','delete','active','vendable'], type) }}
 							</td>
 							{% if not DEVMODE %}
 							<td{{ bgcolor|raw }}>{{ entite.accroche|raw }}</td>
@@ -71,7 +71,7 @@
 								<p><strong>{{ UCfirst(name) }}</strong> <i>parents</i></p>
 								{{ actions.labelLinkList(entite.allNestedParentsByClass(attribute.class), entite.nestedParentsByClass(attribute.class), null, type, type_value_joiner, 'edit') }}
 								<p><strong>{{ UCfirst(name) }}</strong> <i>enfants</i></p>
-								{{ actions.labelLinkList(entite.allNestedChildsByClass(attribute.class), entite.nestedChildsByClass(attribute.class), null, type, type_value_joiner, 'edit') }}
+								{{ actions.labelLinkList(entite.nestedChildsByGroup(name), entite.nestedChildsByGroup(name), null, type, type_value_joiner, 'edit') }}
 								{% endfor %}
 							</td>
 							{% endif %}

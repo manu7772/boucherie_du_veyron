@@ -24,4 +24,89 @@ use \DateTime;
  */
 class siteRepository extends EntityBaseRepository {
 
+	public function findSiteData($siteDataId = null) {
+		$qb = $this->getQB($siteDataId);
+
+		$qb->leftJoin(self::ELEMENT.'.menuNav', 'menuNav')
+			->addSelect('menuNav.id menuNavId');
+		$qb->leftJoin(self::ELEMENT.'.menuArticle', 'menuArticle')
+			->addSelect('menuArticle.id menuArticleId');
+
+		// $qb->leftJoin(self::ELEMENT.'.categorieArticles', 'categorieArticles')
+		// 	->addSelect('categorieArticles.id categorieArticlesId');
+		// $qb->leftJoin(self::ELEMENT.'.categorieFooters', 'categorieFooters')
+		// 	->addSelect('categorieFooters.id categorieFootersId');
+
+		$qb->leftJoin(self::ELEMENT.'.boutiques', 'boutiques')
+			->addSelect('boutiques');
+		$qb->leftJoin('boutiques.adresse', 'adresse')
+			->addSelect('adresse');
+
+		// $qb->leftJoin(self::ELEMENT.'.collaborateurs', 'collaborateurs')
+		// 	->addSelect('collaborateurs');
+
+		$qb->leftJoin(self::ELEMENT.'.logo', 'logo')
+			->addSelect('logo');
+		$qb->leftJoin(self::ELEMENT.'.favicon', 'favicon')
+			->addSelect('favicon');
+		$qb->leftJoin(self::ELEMENT.'.adminLogo', 'adminLogo')
+			->addSelect('adminLogo');
+		// resultat
+		$result = $qb->getQuery()->getArrayResult();
+		if(!is_array($result)) throw new Exception("Can not find this site data : ".json_encode($siteDataId)." !", 1);
+		$result = reset($result);
+		$globalresult = $result[0];
+
+		$nestedRepo = $this->_em->getRepository('site\adminBundle\Entity\nested');
+		if(is_int($result['menuNavId'])) $globalresult['menuNav'] = $nestedRepo->findArrayTree($result['menuNavId'], 'all', null, false, 1)[0];
+		if(is_int($result['menuArticleId'])) $globalresult['menuArticle'] = $nestedRepo->findArrayTree($result['menuArticleId'], 'categorie', null, false, 2)[0];
+
+		$qb = $this->getQB($siteDataId);
+		$qb->leftJoin(self::ELEMENT.'.categorieArticles', 'categorieArticles')
+			->select('categorieArticles.id')
+			->addSelect('categorieArticles.nom')
+			->groupBy('categorieArticles.id')
+			;
+		$categorieArticles = $qb->getQuery()->getArrayResult();
+		foreach ($categorieArticles as $item) {
+			$globalresult['categorieArticles'][$item['id']] = array();
+			$r = $nestedRepo->findArrayTree($item['id'], 'all', null, false, 1);
+			if(count($r) > 0) $globalresult['categorieArticles'][$item['id']] = $r[0];
+		}
+
+		$qb = $this->getQB($siteDataId);
+		$qb->leftJoin(self::ELEMENT.'.categorieFooters', 'categorieFooters')
+			->select('categorieFooters.id')
+			->addSelect('categorieFooters.nom')
+			->groupBy('categorieFooters.id')
+			;
+		$categorieFooters = $qb->getQuery()->getArrayResult();
+		foreach ($categorieFooters as $item) {
+			$globalresult['categorieFooters'][$item['id']] = array();
+			$r = $nestedRepo->findArrayTree($item['id'], 'all', null, false, 1);
+			if(count($r) > 0) $globalresult['categorieFooters'][$item['id']] = $r[0];
+		}
+
+		// echo('<pre>');
+		// var_dump($result);
+		// die('</pre>');
+
+		return $globalresult;
+	}
+
+	// $qb = $this->_em->createQueryBuilder(self::ELEMENT)->from('site\adminBundle\Entity\categorie', self::ELEMENT);
+
+	protected function getQB($siteDataId = null) {
+		$qb = $this->createQueryBuilder(self::ELEMENT);
+		if($siteDataId == null)
+			$qb->where(self::ELEMENT.'.default = :def')
+				->setParameter('def', 1)
+				;
+			else 
+				$qb->where(self::ELEMENT.'.id = :id')
+					->setParameter('id', $siteDataId)
+					;
+		return $this->contextStatut($qb);
+	}
+
 }

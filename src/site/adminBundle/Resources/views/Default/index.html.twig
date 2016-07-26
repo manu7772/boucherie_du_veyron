@@ -20,6 +20,7 @@
 {% endblock page_heading %}
 
 {% block content %}
+
 <div class="row">
 	<div class="col-sm-12 col-md-6 col-lg-4">
 		<div class="ibox float-e-margins">
@@ -46,7 +47,27 @@
 			</div>
 		</div>
 	</div>
-	{% for entite in ['article', 'pageweb', 'categorie', 'User', 'fiche'] %}
+	{% set entite = 'categorie' %}
+	<div class="col-sm-12 col-md-6 col-lg-8">
+		<div class="ibox float-e-margins">
+			<div class="ibox-content">
+				<h3><i class="fa {{ ('entite.' ~ entite)|trans({}, 'icon') }} m-r-xs"></i>{{ UCfirst(('name_s')|trans({}, entite)) }}</h3>
+				<hr class="m-t-md m-b-sm">
+				<!-- Liste -->
+				<a href="{{ path('siteadmin_repo_categorie', {method:'findRoots'}) }}" class="btn btn-primary btn-sm full-width"><i class="fa fa-eye fa-2x pull-left"></i> <strong class="m-t-xs pull-right">{{ UCfirst('actions.voir'|trans) }}</strong></a>
+				{# <!-- Ajouter --> #}
+				{# <a href="{{ path('siteadmin_entite', {entite: entite, action:'create'}) }}" class="btn btn-info btn-sm full-width"><i class="fa fa-plus fa-2x pull-left"></i> <strong class="m-t-xs pull-right">{{ UCfirst('actions.creation'|trans) }}</strong></a> #}
+				<!-- Statistiques -->
+				<a href="{{ path('siteadmin_entite', {entite: entite, action:'list'}) }}" class="btn btn-warning btn-sm full-width{% if marketplace.statistiques == false %} disabled{% endif %}"><i class="fa fa-area-chart fa-2x pull-left"></i> <strong class="m-t-xs pull-right">{{ UCfirst('actions.analyse'|trans) }}</strong></a>
+			</div>
+		</div>
+	</div>
+</div>
+
+<hr class='m-t-none m-b-sm'>
+
+<div class="row">
+	{% for entite in ['article', 'pageweb', 'User', 'ficherecette', 'ficheboisson'] %}
 	<div class="col-sm-12 col-md-6 col-lg-4">
 		<div class="ibox float-e-margins">
 			<div class="ibox-content">
@@ -63,4 +84,5 @@
 	</div>
 	{% endfor %}
 </div>
+
 {% endblock content %}

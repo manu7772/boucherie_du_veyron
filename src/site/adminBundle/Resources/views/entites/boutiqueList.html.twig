@@ -64,7 +64,9 @@
 							<td{{ bgcolor|raw }}>
 								<address>
 									<p>
+										{% if entite.adresse|default(null) != null %}
 										{{  entite.adresse.adresse }} - {{  entite.adresse.cp }} {{  entite.adresse.ville }}<br>
+										{% endif %}
 										Tel. {{ entite.telfixe|default('<i>(aucun)</i>')|raw }}<br>
 										Mobile {{ entite.mobile|default('<i>(aucun)</i>')|raw }}<br>
 										Email {{ entite.email|default('<i>(aucun)</i>')|raw }}

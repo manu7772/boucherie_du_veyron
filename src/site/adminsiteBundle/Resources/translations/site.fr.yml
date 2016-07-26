@@ -28,6 +28,7 @@ fields:
     couleur: couleur
     menuNav: menu navigation
     menuArticle: menu articles
+    diaporamaintro: diaporama intro
     categorieArticles: collections de promo
     categorieFooters: collections pour footer
     boutiques: boutiques

@@ -6,12 +6,8 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Doctrine\Common\Collections\ArrayCollection;
-use JMS\Serializer\Annotation\ExclusionPolicy;
-use JMS\Serializer\Annotation\Expose;
-// Slug
-use Gedmo\Mapping\Annotation as Gedmo;
-use site\adminBundle\Entity\baseEntity;
 
+use site\adminBundle\Entity\baseEntity;
 use site\adminBundle\Entity\item;
 
 use \DateTime;
@@ -19,9 +15,8 @@ use \DateTime;
 /**
  * tag
  *
- * @ORM\Entity
- * @ORM\Table(name="tag")
  * @ORM\Entity(repositoryClass="site\adminBundle\Entity\tagRepository")
+ * @ORM\Table(name="tag")
  * @ORM\HasLifecycleCallbacks
  * @UniqueEntity(fields={"nom"}, message="tag.existe")
  */
