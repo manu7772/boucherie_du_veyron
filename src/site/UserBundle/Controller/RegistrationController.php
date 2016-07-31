@@ -135,7 +135,7 @@ class RegistrationController extends BaseController {
      * Tell the user his account is now confirmed
      */
     // public function confirmedAction() {
-    //     $user = $this->container->get('security.context')->getToken()->getUser();
+    //     $user = $this->container->get('security.token_storage')->getToken()->getUser();
     //     if (!is_object($user) || !$user instanceof UserInterface) {
     //         throw new AccessDeniedException('This user does not have access to this section.');
     //     }
@@ -150,7 +150,7 @@ class RegistrationController extends BaseController {
      * version POPUP
      */
     // public function confirmed_popupAction() {
-    //     $user = $this->container->get('security.context')->getToken()->getUser();
+    //     $user = $this->container->get('security.token_storage')->getToken()->getUser();
     //     if (!is_object($user) || !$user instanceof UserInterface) {
     //         throw new AccessDeniedException('This user does not have access to this section.');
     //     }

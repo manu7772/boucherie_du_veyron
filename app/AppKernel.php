@@ -20,13 +20,14 @@ class AppKernel extends Kernel
             new FOS\UserBundle\FOSUserBundle(),
             new Stof\DoctrineExtensionsBundle\StofDoctrineExtensionsBundle(),
 
+            new Labo\Bundle\AdminBundle\LaboAdminBundle(),
+
+            new site\adminsiteBundle\siteadminsiteBundle(),
             new site\UserBundle\siteUserBundle(),
             new site\siteBundle\sitesiteBundle(),
             new site\graphicsBundle\sitegraphicsBundle(),
             new site\translateBundle\sitetranslateBundle(),
             new site\editionBundle\siteeditionBundle(),
-            new site\adminBundle\siteadminBundle(),
-            new site\adminsiteBundle\siteadminsiteBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {

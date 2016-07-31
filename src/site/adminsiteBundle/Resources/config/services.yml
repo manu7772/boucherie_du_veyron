@@ -1,7 +1,115 @@
 parameters:
-#    siteadminsite.example.class: site\adminsiteBundle\Example
+#    acme_grouplabo_inspinia.example.class: Labo\Bundle\AdminBundle\Example
+    LaboAdminBundleservices:   	Labo\Bundle\AdminBundle\services
+    adminFormType:   	        Labo\Bundle\AdminBundle\Form\Type\
 
 services:
-#    siteadminsite.example:
-#        class: %siteadminsite.example.class%
+#    acme_grouplabo_inspinia.example:
+#        class: %acme_grouplabo_inspinia.example.class%
 #        arguments: [@service_id, "plain_value", %parameter%]
+
+    labo_subQueryBlocks:
+        class: %LaboAdminBundleservices%\subQueryBlocks
+        arguments: [@service_container]
+        tags:
+            - { name: twig.extension }
+
+    labo_user_roles:
+        class: %LaboAdminBundleservices%\RolesService
+        arguments: ['%security.role_hierarchy.roles%']
+        tags:
+            - { name: twig.extension }
+
+    tools_json:
+        class: %LaboAdminBundleservices%\toolsJson
+        arguments: []
+
+    # aetools.aeMenus:
+    #     class: %LaboAdminBundleservices%\aeMenus
+    #     arguments: [@service_container]
+
+    # fonctionnalités de messages (flashbag) & Exceptions
+    aetools.aeExceptions:
+        class: %LaboAdminBundleservices%\aeMessages
+        arguments: [@service_container]
+
+    flash_messages:
+        class: %LaboAdminBundleservices%\flashMessages
+        arguments: [@service_container]
+
+    # fonctionnalités de commandes en annotations dans fichiers Twig
+    aeTwigdescriptions:
+        class: %LaboAdminBundleservices%\aeTwigdescriptions
+        arguments: [@service_container]
+
+    ###################################
+    ### ELEMENTS DE FORMULAIRES
+    ###################################
+
+    # Éléments de formulaires personnalisés
+    form.type.filecropper:
+        class: %adminFormType%filecropperType
+        tags:
+            - { name: form.type, alias: filecropper }
+
+    form.type.insColorpicker:
+        class: %adminFormType%insColorpickerType
+        tags:
+            - { name: form.type, alias: insColorpicker }
+
+    form.type.bs_button:
+        class: %adminFormType%bs_buttonType
+        tags:
+            - { name: form.type, alias: bs_button }
+
+    form.type.insTelephone:
+        class: %adminFormType%insTelephoneType
+        tags:
+            - { name: form.type, alias: insTelephone }
+
+    form.type.insDept:
+        class: %adminFormType%insDeptType
+        tags:
+            - { name: form.type, alias: insDept }
+
+    form.type.insCpostal:
+        class: %adminFormType%insCpostalType
+        tags:
+            - { name: form.type, alias: insCpostal }
+
+    form.type.insSiren:
+        class: %adminFormType%insSirenType
+        tags:
+            - { name: form.type, alias: insSiren }
+
+    form.type.insSiret:
+        class: %adminFormType%insSiretType
+        tags:
+            - { name: form.type, alias: insSiret }
+
+    form.type.insRichtext:
+        class: %adminFormType%insRichtextType
+        tags:
+            - { name: form.type, alias: insRichtext }
+
+    form.type.insRadio:
+        class: %adminFormType%insRadioType
+        tags:
+            - { name: form.type, alias: insRadio }
+
+    form.type.insCheck:
+        class: %adminFormType%insCheckType
+        tags:
+            - { name: form.type, alias: insCheck }
+
+    form.type.multiCollection:
+        class: %adminFormType%multiCollectionType
+        tags:
+            - { name: form.type, alias: multiCollection }
+
+    form.type.insDatepicker:
+        class: %adminFormType%insDatepickerType
+        arguments:
+            - "%formatDate%"
+        tags:
+            - { name: form.type, alias: insDatepicker }

@@ -14,7 +14,6 @@ statut:
                 - 'sitetranslateBundle'
                 - 'siteeditionBundle'
                 - 'siteadminsiteBundle'
-                - 'siteadminBundle'
         -
             nom: 'Inactif'
             descriptif: '<p>Statut inactif</p>'
@@ -27,7 +26,6 @@ statut:
                 - 'sitetranslateBundle'
                 - 'siteeditionBundle'
                 - 'siteadminsiteBundle'
-                - 'siteadminBundle'
         -
             nom: 'Expired'
             descriptif: '<p>Statut expiré</p>'
@@ -40,7 +38,6 @@ statut:
                 - 'sitetranslateBundle'
                 - 'siteeditionBundle'
                 - 'siteadminsiteBundle'
-                - 'siteadminBundle'
         -
             nom: 'Webmaster'
             descriptif: '<p>Élément pour la gestion du site, visibles uniquement par le webmaster (ROLE_SUPER_ADMIN)</p>'
@@ -53,7 +50,6 @@ statut:
                 - 'sitetranslateBundle'
                 - 'siteeditionBundle'
                 - 'siteadminsiteBundle'
-                - 'siteadminBundle'
         -
             nom: 'Deleted'
             descriptif: '<p>Effacé pour tous, sauf ROLE_SUPER_ADMIN</p>'
@@ -66,7 +62,6 @@ statut:
                 - 'sitetranslateBundle'
                 - 'siteeditionBundle'
                 - 'siteadminsiteBundle'
-                - 'siteadminBundle'
         -
             nom: 'Temp'
             descriptif: '<p>Éléments temporaires <small>Doivent pouvoir être supprimés à tout moment</small></p>'
@@ -79,7 +74,6 @@ statut:
                 - 'sitetranslateBundle'
                 - 'siteeditionBundle'
                 - 'siteadminsiteBundle'
-                - 'siteadminBundle'
         -
             nom: 'Dev'
             descriptif: '<p>Statut pour dev uniquement</p>'
@@ -92,7 +86,6 @@ statut:
                 - 'sitetranslateBundle'
                 - 'siteeditionBundle'
                 - 'siteadminsiteBundle'
-                - 'siteadminBundle'
         -
             nom: 'Test'
             descriptif: '<p>Statut pour tests uniquement</p>'
@@ -105,4 +98,3 @@ statut:
                 - 'sitetranslateBundle'
                 - 'siteeditionBundle'
                 - 'siteadminsiteBundle'
-                - 'siteadminBundle'

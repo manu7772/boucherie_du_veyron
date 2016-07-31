@@ -6,18 +6,18 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
-use site\adminBundle\Entity\message;
-use site\adminBundle\Form\contactmessageType;
+use site\adminsiteBundle\Entity\message;
+use Labo\Bundle\AdminBundle\Form\contactmessageType;
 use \DateTime;
 
-use site\adminBundle\Entity\panier;
-use site\adminBundle\Entity\article;
+use site\adminsiteBundle\Entity\panier;
+use site\adminsiteBundle\Entity\article;
 
 class panierController extends Controller {
 
 	public function panierAction($action = 'add', $id = null, $param = null) {
 		$servicePanier = $this->get('aetools.aePanier');
-		if($id != null) $id = $this->getDoctrine()->GetManager()->getRepository('site\adminBundle\Entity\article')->find($id);
+		if($id != null) $id = $this->getDoctrine()->GetManager()->getRepository('site\adminsiteBundle\Entity\article')->find($id);
 		if($param == null) $param = 1;
 		switch ($action) {
 			case 'add':
@@ -35,7 +35,7 @@ class panierController extends Controller {
 		}
 		
 		//
-		return $this->redirect($this->generateUrl('siteadmin_sadmin_panier'));
+		return $this->redirectToRoute('siteadmin_sadmin_panier');
 	}
 
 }

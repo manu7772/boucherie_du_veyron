@@ -23,8 +23,8 @@ use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormEvent;
 
 use site\UserBundle\Entity\User;
-use site\adminBundle\Form\imageType;
-use site\adminBundle\Form\cropperType;
+use Labo\Bundle\AdminBundle\Form\imageType;
+use Labo\Bundle\AdminBundle\Form\cropperType;
 
 use FOS\UserBundle\Form\Type\ProfileFormType as BaseType;
 

@@ -5,11 +5,11 @@ namespace site\siteBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use site\adminBundle\services\flashMessage;
+use Labo\Bundle\AdminBundle\services\flashMessage;
 
-use site\adminBundle\Entity\message;
-use site\adminBundle\Entity\pageweb;
-use site\adminBundle\Form\contactmessageType;
+use site\adminsiteBundle\Entity\message;
+use site\adminsiteBundle\Entity\pageweb;
+use site\adminsiteBundle\Form\contactmessageType;
 
 use \DateTime;
 use \Exception;
@@ -43,12 +43,12 @@ class DefaultController extends Controller {
 			$locale = $this->get('request')->getLocale();
 			echo('<p>No data in base : user creation…</p>');
 			echo('<p><strong>'.$httpHost.' / '.$locale.'</strong></p>');
-			$userService = $this->get('service.users');
+			$userService = $this->get('aetools.aeUser');
 			$userService->usersExist(true);
 			switch ($httpHost) {
 				case 'http://localhost':
 					// LOCALHOST
-					return $this->redirect($this->generateUrl('generate'));
+					return $this->redirectToRoute('generate');
 					break;
 				default:
 					// WEB SITE
@@ -72,7 +72,7 @@ class DefaultController extends Controller {
 		// $data['pageweb'] = $this->get('aetools.aePageweb')->getDefaultPage();
 		if(is_object($pagewebSlug)) $data['pageweb'] = $pagewebSlug;
 			else $data['pageweb'] = $this->get('aetools.aePageweb')->getRepo()->findOneBySlug($pagewebSlug);
-		// $data['marques'] = $this->get('aetools.aeEntity')->getRepo('site\adminBundle\Entity\marque')->findAll();
+		// $data['marques'] = $this->get('aetools.aeEntity')->getRepo('site\adminsiteBundle\Entity\marque')->findAll();
 		if(is_object($data['pageweb'])) {
 			$this->pagewebactions($data);
 			// chargement de la pageweb
@@ -83,10 +83,10 @@ class DefaultController extends Controller {
 			}
 		} else {
 			// si aucune page web… chargement de la page par défaut…
-			return $this->redirect($this->generateUrl('sitesite_homepage'));
-			// $userService = $this->get('service.users');
+			return $this->redirectToRoute('sitesite_homepage');
+			// $userService = $this->get('aetools.aeUser');
 			// $userService->usersExist(true);
-			// return $this->redirect($this->generateUrl('generate'));
+			// return $this->redirectToRoute('generate');
 		}
 	}
 
@@ -147,9 +147,9 @@ class DefaultController extends Controller {
 		switch ($data['pageweb']->getModelename()) {
 			case 'contact':
 				// page contact
-				$message = $this->getNewEntity('site\adminBundle\Entity\message');
+				$message = $this->getNewEntity('site\adminsiteBundle\Entity\message');
 				$form = $this->createForm(new contactmessageType($this, []), $message);
-				// $this->repo = $this->em->getRepository('site\adminBundle\Entity\message');
+				// $this->repo = $this->em->getRepository('site\adminsiteBundle\Entity\message');
 				$request = $this->getRequest();
 				if($request->getMethod() == 'POST') {
 					// formulaire reçu
@@ -175,7 +175,7 @@ class DefaultController extends Controller {
 							'text'		=> ucfirst($trans->trans('message.success')),
 						));
 						// nouveau formulaire
-						$new_message = $this->getNewEntity('site\adminBundle\Entity\message');
+						$new_message = $this->getNewEntity('site\adminsiteBundle\Entity\message');
 						$new_message->setNom($message->getNom());
 						$new_message->setPrenom($message->getPrenom());
 						$new_message->setTelephone($message->getTelephone());
@@ -211,7 +211,7 @@ class DefaultController extends Controller {
 		$this->em = $this->getDoctrine()->getManager();
 		if(method_exists($newEntity, 'setStatut')) {
 			// si un champ statut existe
-			$statut = $this->em->getRepository('site\adminBundle\Entity\statut')->defaultVal();
+			$statut = $this->em->getRepository('Labo\Bundle\AdminBundle\Entity\statut')->defaultVal();
 			if(is_array($statut)) $statut = reset($statut);
 			$newEntity->setStatut($statut);
 		}

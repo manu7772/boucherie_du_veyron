@@ -52,9 +52,9 @@ class DefaultController extends Controller {
             $msg->addFlashMessage('error.name', 'error.operation', 'error', 'exceptions');
         // redirection
         if($current == null) {
-            return $this->redirect($this->generateUrl('sitetranslate_homepage'));
+            return $this->redirectToRoute('sitetranslate_homepage');
         } else {
-            return $this->redirect($this->generateUrl('edit_traduction', array("bundle" => $bundle, "domain" => $domain, "language" => $current)));
+            return $this->redirectToRoute('edit_traduction', array("bundle" => $bundle, "domain" => $domain, "language" => $current));
         }
     }
 
@@ -74,7 +74,7 @@ class DefaultController extends Controller {
         $data['langues']['list'] = $aeTrans->getLanguages();
         if(!in_array($language, $data['langues']['list'])) {
             // langage inconnu
-            return $this->redirect($this->generateUrl('sitetranslate_homepage'));
+            return $this->redirectToRoute('sitetranslate_homepage');
         }
         $data['langues']['bundles'] = $aeTrans->getLanguagesByBundles();
         $data['langues']['default'] = $aeTrans->getDefaultLocale();
@@ -123,7 +123,7 @@ class DefaultController extends Controller {
         // var_dump($all);
         // echo('</pre>');
         // return new Response('ok');
-        return $this->redirect($this->generateUrl('edit_traduction', array("bundle" => $bundle, "domain" => $domain, "language" => $language)));
+        return $this->redirectToRoute('edit_traduction', array("bundle" => $bundle, "domain" => $domain, "language" => $language));
     }
 
 }

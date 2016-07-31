@@ -14,7 +14,6 @@ parameters:
             extensions:
                 - 'fr'
             path: '/admin'
-    siteadminBundle: siteadminsite
     default_color: 'rgba(128,128,128,1)'
     mail:
         address: no-reply@boucherie-du-veyron.fr

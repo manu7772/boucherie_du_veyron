@@ -7,7 +7,7 @@ use Symfony\Component\Yaml\Parser;
 use Symfony\Component\Yaml\Dumper;
 use Symfony\Component\Yaml\Exception\ParseException;
 // aetools
-use site\adminBundle\services\aetools;
+use Labo\Bundle\AdminBundle\services\aetools;
 
 /**
  * Service aeTranslate

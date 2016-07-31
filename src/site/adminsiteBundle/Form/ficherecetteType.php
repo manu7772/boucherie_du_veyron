@@ -2,7 +2,7 @@
 
 namespace site\adminsiteBundle\Form;
 
-use site\adminBundle\Form\baseType;
+use Labo\Bundle\AdminBundle\Form\baseType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -14,8 +14,8 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage as
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormEvent;
 
-use site\adminBundle\Form\cropperType;
-use site\adminBundle\Form\imageType;
+use site\adminsiteBundle\Form\cropperType;
+use site\adminsiteBundle\Form\imageType;
 use site\adminsiteBundle\Entity\ficherecette;
 
 class ficherecetteType extends baseType {
@@ -90,7 +90,7 @@ class ficherecetteType extends baseType {
 			// ->add('dateMaj')
 			// ->add('slug')
 			// ->add('statut', 'entity', array(
-			// 	'class'     => 'siteadminBundle:statut',
+			// 	'class'     => 'siteadminsiteBundle:statut',
 			// 	'property'  => 'nom',
 			// 	'multiple'  => false,
 			// 	"label"     => 'name',
@@ -110,7 +110,7 @@ class ficherecetteType extends baseType {
 				'label'		=> 'name_s',
 				'translation_domain' => 'tag',
 				'property'	=> 'nom',
-				'class'		=> 'siteadminBundle:tag',
+				'class'		=> 'LaboAdminBundle:tag',
 				'multiple'	=> true,
 				'required'	=> false,
 				'placeholder'   => 'form.select',
@@ -123,7 +123,7 @@ class ficherecetteType extends baseType {
 				"label"		=> 'fields.group_article_ficherecetteParents',
 				'translation_domain' => 'ficherecette',
 				'property'	=> 'nom',
-				'class'		=> 'siteadminBundle:nested',
+				'class'		=> 'LaboAdminBundle:nested',
 				'multiple'	=> true,
 				'expanded'	=> false,
 				"required"	=> $nestedAttributesParameters['article_ficherecette']['required'],

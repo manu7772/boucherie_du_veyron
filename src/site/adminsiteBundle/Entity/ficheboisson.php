@@ -6,23 +6,17 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Doctrine\Common\Collections\ArrayCollection;
-use JMS\Serializer\Annotation\ExclusionPolicy;
-use JMS\Serializer\Annotation\Expose;
-// Slug
-use Gedmo\Mapping\Annotation as Gedmo;
 
-use site\adminBundle\Entity\fiche;
+use site\adminsiteBundle\Entity\fiche;
 
 use \DateTime;
 
 /**
  * ficheboisson
  *
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="site\adminsiteBundle\Entity\ficheboissonRepository")
  * @ORM\Table(name="ficheboisson", options={"comment":"fiches boissons"})
  * @ORM\HasLifecycleCallbacks
- * @ORM\Entity(repositoryClass="site\adminsiteBundle\Entity\ficheboissonRepository")
- * @ExclusionPolicy("all")
  */
 class ficheboisson extends fiche {
 

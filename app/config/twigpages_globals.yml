@@ -1,6 +1,5 @@
 twig:
     globals:
-        siteadminBundle: %siteadminBundle%
         keywords:
             title: site.title
             description: site.description

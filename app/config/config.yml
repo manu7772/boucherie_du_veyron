@@ -68,8 +68,9 @@ assetic:
     debug:          "%kernel.debug%"
     use_controller: false
     bundles:
+        - LaboAdminBundle
+        - siteadminsiteBundle
         - sitesiteBundle
-        - siteadminBundle
         - siteUserBundle
         - FOSUserBundle
     #java: /usr/bin/java

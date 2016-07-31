@@ -1,7 +1,8 @@
 # Learn more about services, parameters and containers at
 # http://symfony.com/doc/current/book/service_container.html
 parameters:
-    ae_services:           site\adminBundle\services\
+    ae_services:           Labo\Bundle\AdminBundle\services\
+    site_services:         site\adminsiteBundle\services\
 
 services:
     #service_name:
@@ -23,53 +24,48 @@ services:
         class: %ae_services%aeJstree
         arguments: [@service_container]
 
-    # fonctionnalités d'entités
-    # aetools.aeEntities:
-    #     class: %ae_services%aeEntities
-    #     arguments: [@service_container]
-
     # fonctionnalités d'entités BIS
     aetools.aeEntity:
-        class: %ae_services%aeEntity
+        class: %ae_services%aeServiceEntity
         arguments: [@service_container]
 
     aetools.aeSubentity:
-        class: %ae_services%aeSubentity
+        class: %ae_services%aeServiceSubentity
         arguments: [@service_container]
 
     # fonctionnalités nested
     aetools.aeNested:
-        class: %ae_services%aeNested
+        class: %ae_services%aeServiceNested
         arguments: [@service_container]
 
     # fonctionnalités de site
     aetools.aeSite:
-        class: %ae_services%aeSite
+        class: %site_services%aeServiceSite
         arguments: [@service_container]
 
     # fonctionnalités de categorie
     aetools.aeCategorie:
-        class: %ae_services%aeCategorie
+        class: %site_services%aeServiceCategorie
         arguments: [@service_container]
 
     # fonctionnalités de tag
     aetools.aeTag:
-        class: %ae_services%aeTag
+        class: %ae_services%aeServiceTag
         arguments: [@service_container]
 
     # fonctionnalités de statut
     aetools.aeStatut:
-        class: %ae_services%aeStatut
+        class: %ae_services%aeServiceStatut
         arguments: [@service_container]
 
     # fonctionnalités de message
     aetools.aeMessage:
-        class: %ae_services%aeMessage
+        class: %site_services%aeServiceMessage
         arguments: [@service_container]
 
     # fonctionnalités de panier
     aetools.aePanier:
-        class: %ae_services%aePanier
+        class: %ae_services%aeServicePanier
         arguments: [@service_container]
 
     #######################
@@ -78,22 +74,22 @@ services:
 
     # fonctionnalités de item
     aetools.aeItem:
-        class: %ae_services%aeItem
+        class: %ae_services%aeServiceItem
         arguments: [@service_container]
 
     # fonctionnalités de article
     aetools.aeArticle:
-        class: %ae_services%aeArticle
+        class: %site_services%aeServiceArticle
         arguments: [@service_container]
 
     # fonctionnalités de pageweb
     aetools.aePageweb:
-        class: %ae_services%aePageweb
+        class: %site_services%aeServicePageweb
         arguments: [@service_container]
 
     # fonctionnalités de fiche
     aetools.aeFiche:
-        class: %ae_services%aeFiche
+        class: %site_services%aeServiceFiche
         arguments: [@service_container]
 
     #######################
@@ -102,7 +98,7 @@ services:
 
     # fonctionnalités de tier
     aetools.aeTier:
-        class: %ae_services%aeTier
+        class: %ae_services%aeServiceTier
         arguments: [@service_container]
 
     #######################
@@ -111,25 +107,34 @@ services:
 
     # fonctionnalités de media
     aetools.aeMedia:
-        class: %ae_services%aeMedia
+        class: %ae_services%aeServiceMedia
         arguments: [@service_container]
 
     # fonctionnalités de image
     aetools.aeImage:
-        class: %ae_services%aeImage
+        class: %ae_services%aeServiceImage
         arguments: [@service_container]
 
     # fonctionnalités de pdf
     aetools.aePdf:
-        class: %ae_services%aePdf
+        class: %ae_services%aeServicePdf
         arguments: [@service_container]
 
     # fonctionnalités de rawfile
     aetools.aeRawfile:
-        class: %ae_services%aeRawfile
+        class: %ae_services%aeServiceRawfile
         arguments: [@service_container]
 
 
+
+    #######################
+    ### CACHE           ###
+    #######################
+
+    # fonctionnalités de fixtures
+    aetools.cache:
+        class: %ae_services%aeCache
+        arguments: [@service_container]
 
     #######################
     ### DEBUG           ###

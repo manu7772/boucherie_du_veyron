@@ -31,7 +31,7 @@ entite:
     site: fa-building
     article: fa-shopping-cart
     panier: fa-shopping-cart
-    adresse: fa-envelope-o
+    adresse: fa-map-marker
     pageweb: fa-desktop
     fiche: fa-file-text-o
     ficherecette: fa-file-text-o

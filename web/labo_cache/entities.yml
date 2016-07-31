@@ -1,0 +1,2603 @@
+'2016-08-01 00:00:55':
+    Gedmo\Translatable\Entity\MappedSuperclass\AbstractPersonalTranslation:
+        class: AbstractPersonalTranslation
+        classname: Gedmo\Translatable\Entity\MappedSuperclass\AbstractPersonalTranslation
+        is_abstract: true
+        is_interface: false
+        is_instantiable: false
+        service: aetools.aeEntity
+        single: {  }
+        association: {  }
+    Gedmo\Translatable\Entity\MappedSuperclass\AbstractTranslation:
+        class: AbstractTranslation
+        classname: Gedmo\Translatable\Entity\MappedSuperclass\AbstractTranslation
+        is_abstract: true
+        is_interface: false
+        is_instantiable: false
+        service: aetools.aeEntity
+        single: {  }
+        association: {  }
+    Gedmo\Translatable\Entity\Translation:
+        class: Translation
+        classname: Gedmo\Translatable\Entity\Translation
+        is_abstract: false
+        is_interface: false
+        is_instantiable: true
+        service: aetools.aeEntity
+        single:
+            id:
+                - 1
+                - 2
+                - 3
+            locale:
+                - 1
+                - 2
+                - 3
+            objectClass:
+                - 1
+                - 2
+                - 3
+            field:
+                - 1
+                - 2
+                - 3
+            foreignKey:
+                - 1
+                - 2
+                - 3
+            content:
+                - 1
+                - 2
+                - 3
+        association: {  }
+    Gedmo\Translator\Entity\Translation:
+        class: Translation
+        classname: Gedmo\Translator\Entity\Translation
+        is_abstract: true
+        is_interface: false
+        is_instantiable: false
+        service: aetools.aeEntity
+        single: {  }
+        association: {  }
+    Gedmo\Loggable\Entity\MappedSuperclass\AbstractLogEntry:
+        class: AbstractLogEntry
+        classname: Gedmo\Loggable\Entity\MappedSuperclass\AbstractLogEntry
+        is_abstract: true
+        is_interface: false
+        is_instantiable: false
+        service: aetools.aeEntity
+        single: {  }
+        association: {  }
+    Gedmo\Loggable\Entity\LogEntry:
+        class: LogEntry
+        classname: Gedmo\Loggable\Entity\LogEntry
+        is_abstract: false
+        is_interface: false
+        is_instantiable: true
+        service: aetools.aeEntity
+        single:
+            id:
+                - 1
+                - 2
+                - 3
+            action:
+                - 1
+                - 2
+                - 3
+            loggedAt:
+                - 1
+                - 2
+                - 3
+            objectId:
+                - 1
+                - 2
+                - 3
+            objectClass:
+                - 1
+                - 2
+                - 3
+            version:
+                - 1
+                - 2
+                - 3
+            data:
+                - 1
+                - 2
+                - 3
+            username:
+                - 1
+                - 2
+                - 3
+        association: {  }
+    Gedmo\Tree\Entity\MappedSuperclass\AbstractClosure:
+        class: AbstractClosure
+        classname: Gedmo\Tree\Entity\MappedSuperclass\AbstractClosure
+        is_abstract: true
+        is_interface: false
+        is_instantiable: false
+        service: aetools.aeEntity
+        single: {  }
+        association: {  }
+    Labo\Bundle\AdminBundle\Entity\LaboUser:
+        class: LaboUser
+        classname: Labo\Bundle\AdminBundle\Entity\LaboUser
+        is_abstract: true
+        is_interface: false
+        is_instantiable: false
+        service: aetools.aeLaboUser
+        single:
+            username:
+                - 1
+                - 2
+                - 3
+            usernameCanonical:
+                - 1
+                - 2
+                - 3
+            email:
+                - 1
+                - 2
+                - 3
+            emailCanonical:
+                - 1
+                - 2
+                - 3
+            enabled:
+                - 1
+                - 2
+                - 3
+            salt:
+                - 1
+                - 2
+                - 3
+            password:
+                - 1
+                - 2
+                - 3
+            lastLogin:
+                - 1
+                - 2
+                - 3
+            locked:
+                - 1
+                - 2
+                - 3
+            expired:
+                - 1
+                - 2
+                - 3
+            expiresAt:
+                - 1
+                - 2
+                - 3
+            confirmationToken:
+                - 1
+                - 2
+                - 3
+            passwordRequestedAt:
+                - 1
+                - 2
+                - 3
+            roles:
+                - 1
+                - 2
+                - 3
+            credentialsExpired:
+                - 1
+                - 2
+                - 3
+            credentialsExpireAt:
+                - 1
+                - 2
+                - 3
+            id:
+                - 1
+                - 2
+                - 3
+            nom:
+                - 1
+                - 2
+                - 3
+            prenom:
+                - 1
+                - 2
+                - 3
+            telephone:
+                - 1
+                - 2
+                - 3
+            adminhelp:
+                - 1
+                - 2
+                - 3
+            admintheme:
+                - 1
+                - 2
+                - 3
+            langue:
+                - 1
+                - 2
+                - 3
+        association:
+            adresse:
+                - 4
+                - 5
+                - 6
+            adresseLivraison:
+                - 4
+                - 5
+                - 6
+            paniers:
+                - 4
+                - 5
+                - 6
+            messages:
+                - 4
+                - 5
+                - 6
+            avatar:
+                - 4
+                - 5
+                - 6
+            sites:
+                - 4
+                - 5
+                - 6
+    Labo\Bundle\AdminBundle\Entity\baseEntity:
+        class: baseEntity
+        classname: Labo\Bundle\AdminBundle\Entity\baseEntity
+        is_abstract: true
+        is_interface: false
+        is_instantiable: false
+        service: aetools.aeEntity
+        single: {  }
+        association: {  }
+    Labo\Bundle\AdminBundle\Entity\subentity:
+        class: subentity
+        classname: Labo\Bundle\AdminBundle\Entity\subentity
+        is_abstract: true
+        is_interface: false
+        is_instantiable: false
+        service: aetools.aeSubentity
+        single:
+            id:
+                - 1
+                - 2
+                - 3
+            descriptif:
+                - 1
+                - 2
+                - 3
+            deletable:
+                - 1
+                - 2
+                - 3
+            couleur:
+                - 1
+                - 2
+                - 3
+            typentite:
+                - 1
+                - 2
+                - 3
+            nom:
+                - 1
+                - 2
+                - 3
+            icon:
+                - 1
+                - 2
+                - 3
+            created:
+                - 1
+                - 2
+                - 3
+            updated:
+                - 1
+                - 2
+                - 3
+            slug:
+                - 1
+                - 2
+                - 3
+            default:
+                - 1
+                - 2
+                - 3
+        association:
+            collaborateurs:
+                - 4
+                - 5
+                - 6
+            statut:
+                - 4
+                - 5
+                - 6
+            tags:
+                - 4
+                - 5
+                - 6
+            image:
+                - 4
+                - 5
+                - 6
+    Labo\Bundle\AdminBundle\Entity\nested:
+        class: nested
+        classname: Labo\Bundle\AdminBundle\Entity\nested
+        is_abstract: true
+        is_interface: false
+        is_instantiable: false
+        service: aetools.aeNested
+        single:
+            id:
+                - 1
+                - 2
+                - 3
+            descriptif:
+                - 1
+                - 2
+                - 3
+            deletable:
+                - 1
+                - 2
+                - 3
+            couleur:
+                - 1
+                - 2
+                - 3
+            typentite:
+                - 1
+                - 2
+                - 3
+            nom:
+                - 1
+                - 2
+                - 3
+            icon:
+                - 1
+                - 2
+                - 3
+            created:
+                - 1
+                - 2
+                - 3
+            updated:
+                - 1
+                - 2
+                - 3
+            slug:
+                - 1
+                - 2
+                - 3
+            default:
+                - 1
+                - 2
+                - 3
+        association:
+            collaborateurs:
+                - 4
+                - 5
+                - 6
+            statut:
+                - 4
+                - 5
+                - 6
+            tags:
+                - 4
+                - 5
+                - 6
+            image:
+                - 4
+                - 5
+                - 6
+            nestedpositionParents:
+                - 4
+                - 5
+                - 6
+            nestedpositionChilds:
+                - 4
+                - 5
+                - 6
+    Labo\Bundle\AdminBundle\Entity\item:
+        class: item
+        classname: Labo\Bundle\AdminBundle\Entity\item
+        is_abstract: true
+        is_interface: false
+        is_instantiable: false
+        service: aetools.aeItem
+        single:
+            id:
+                - 1
+                - 2
+                - 3
+            descriptif:
+                - 1
+                - 2
+                - 3
+            deletable:
+                - 1
+                - 2
+                - 3
+            couleur:
+                - 1
+                - 2
+                - 3
+            typentite:
+                - 1
+                - 2
+                - 3
+            nom:
+                - 1
+                - 2
+                - 3
+            icon:
+                - 1
+                - 2
+                - 3
+            created:
+                - 1
+                - 2
+                - 3
+            updated:
+                - 1
+                - 2
+                - 3
+            slug:
+                - 1
+                - 2
+                - 3
+            default:
+                - 1
+                - 2
+                - 3
+        association:
+            collaborateurs:
+                - 4
+                - 5
+                - 6
+            statut:
+                - 4
+                - 5
+                - 6
+            tags:
+                - 4
+                - 5
+                - 6
+            image:
+                - 4
+                - 5
+                - 6
+            nestedpositionParents:
+                - 4
+                - 5
+                - 6
+            nestedpositionChilds:
+                - 4
+                - 5
+                - 6
+    Labo\Bundle\AdminBundle\Entity\media:
+        class: media
+        classname: Labo\Bundle\AdminBundle\Entity\media
+        is_abstract: true
+        is_interface: false
+        is_instantiable: false
+        service: aetools.aeMedia
+        single:
+            id:
+                - 1
+                - 2
+                - 3
+            descriptif:
+                - 1
+                - 2
+                - 3
+            deletable:
+                - 1
+                - 2
+                - 3
+            couleur:
+                - 1
+                - 2
+                - 3
+            typentite:
+                - 1
+                - 2
+                - 3
+            nom:
+                - 1
+                - 2
+                - 3
+            icon:
+                - 1
+                - 2
+                - 3
+            created:
+                - 1
+                - 2
+                - 3
+            updated:
+                - 1
+                - 2
+                - 3
+            slug:
+                - 1
+                - 2
+                - 3
+            default:
+                - 1
+                - 2
+                - 3
+            originalnom:
+                - 1
+                - 2
+                - 3
+            binaryFile:
+                - 1
+                - 2
+                - 3
+            format:
+                - 1
+                - 2
+                - 3
+            extension:
+                - 1
+                - 2
+                - 3
+            stockage:
+                - 1
+                - 2
+                - 3
+            croppingInfo:
+                - 1
+                - 2
+                - 3
+            fileSize:
+                - 1
+                - 2
+                - 3
+        association:
+            collaborateurs:
+                - 4
+                - 5
+                - 6
+            statut:
+                - 4
+                - 5
+                - 6
+            tags:
+                - 4
+                - 5
+                - 6
+            image:
+                - 4
+                - 5
+                - 6
+            nestedpositionParents:
+                - 4
+                - 5
+                - 6
+            nestedpositionChilds:
+                - 4
+                - 5
+                - 6
+            rawfile:
+                - 4
+                - 5
+                - 6
+    Labo\Bundle\AdminBundle\Entity\message:
+        class: message
+        classname: Labo\Bundle\AdminBundle\Entity\message
+        is_abstract: true
+        is_interface: false
+        is_instantiable: false
+        service: aetools.aeMessage
+        single:
+            read:
+                - 1
+                - 2
+                - 3
+            nom:
+                - 1
+                - 2
+                - 3
+            prenom:
+                - 1
+                - 2
+                - 3
+            email:
+                - 1
+                - 2
+                - 3
+            telephone:
+                - 1
+                - 2
+                - 3
+            objet:
+                - 1
+                - 2
+                - 3
+            message:
+                - 1
+                - 2
+                - 3
+            creation:
+                - 1
+                - 2
+                - 3
+            ip:
+                - 1
+                - 2
+                - 3
+        association: {  }
+    Labo\Bundle\AdminBundle\Entity\nestedposition:
+        class: nestedposition
+        classname: Labo\Bundle\AdminBundle\Entity\nestedposition
+        is_abstract: false
+        is_interface: false
+        is_instantiable: true
+        service: aetools.aeEntity
+        single:
+            group:
+                - 1
+                - 2
+                - 3
+            position:
+                - 1
+                - 2
+                - 3
+        association:
+            parent:
+                - 4
+                - 5
+                - 6
+            child:
+                - 4
+                - 5
+                - 6
+    Labo\Bundle\AdminBundle\Entity\rawfile:
+        class: rawfile
+        classname: Labo\Bundle\AdminBundle\Entity\rawfile
+        is_abstract: false
+        is_interface: false
+        is_instantiable: true
+        service: aetools.aeRawfile
+        single:
+            id:
+                - 1
+                - 2
+                - 3
+            descriptif:
+                - 1
+                - 2
+                - 3
+            deletable:
+                - 1
+                - 2
+                - 3
+            couleur:
+                - 1
+                - 2
+                - 3
+            typentite:
+                - 1
+                - 2
+                - 3
+            nom:
+                - 1
+                - 2
+                - 3
+            icon:
+                - 1
+                - 2
+                - 3
+            created:
+                - 1
+                - 2
+                - 3
+            updated:
+                - 1
+                - 2
+                - 3
+            slug:
+                - 1
+                - 2
+                - 3
+            default:
+                - 1
+                - 2
+                - 3
+            originalnom:
+                - 1
+                - 2
+                - 3
+            format:
+                - 1
+                - 2
+                - 3
+            extension:
+                - 1
+                - 2
+                - 3
+            fileSize:
+                - 1
+                - 2
+                - 3
+            width:
+                - 1
+                - 2
+                - 3
+            height:
+                - 1
+                - 2
+                - 3
+            binaryFile:
+                - 1
+                - 2
+                - 3
+            binaryLowFile:
+                - 1
+                - 2
+                - 3
+        association:
+            collaborateurs:
+                - 4
+                - 5
+                - 6
+            statut:
+                - 4
+                - 5
+                - 6
+            tags:
+                - 4
+                - 5
+                - 6
+            image:
+                - 4
+                - 5
+                - 6
+    Labo\Bundle\AdminBundle\Entity\statut:
+        class: statut
+        classname: Labo\Bundle\AdminBundle\Entity\statut
+        is_abstract: false
+        is_interface: false
+        is_instantiable: true
+        service: aetools.aeStatut
+        single:
+            id:
+                - 1
+                - 2
+                - 3
+            nom:
+                - 1
+                - 2
+                - 3
+            descriptif:
+                - 1
+                - 2
+                - 3
+            niveau:
+                - 1
+                - 2
+                - 3
+            bundles:
+                - 1
+                - 2
+                - 3
+            couleur:
+                - 1
+                - 2
+                - 3
+            icon:
+                - 1
+                - 2
+                - 3
+            created:
+                - 1
+                - 2
+                - 3
+            updated:
+                - 1
+                - 2
+                - 3
+            slug:
+                - 1
+                - 2
+                - 3
+            default:
+                - 1
+                - 2
+                - 3
+        association: {  }
+    Labo\Bundle\AdminBundle\Entity\tag:
+        class: tag
+        classname: Labo\Bundle\AdminBundle\Entity\tag
+        is_abstract: false
+        is_interface: false
+        is_instantiable: true
+        service: aetools.aeTag
+        single:
+            id:
+                - 1
+                - 2
+                - 3
+            nom:
+                - 1
+                - 2
+                - 3
+            icon:
+                - 1
+                - 2
+                - 3
+            created:
+                - 1
+                - 2
+                - 3
+            updated:
+                - 1
+                - 2
+                - 3
+            slug:
+                - 1
+                - 2
+                - 3
+            default:
+                - 1
+                - 2
+                - 3
+        association: {  }
+    Labo\Bundle\AdminBundle\Entity\tier:
+        class: tier
+        classname: Labo\Bundle\AdminBundle\Entity\tier
+        is_abstract: true
+        is_interface: false
+        is_instantiable: false
+        service: aetools.aeTier
+        single:
+            id:
+                - 1
+                - 2
+                - 3
+            descriptif:
+                - 1
+                - 2
+                - 3
+            deletable:
+                - 1
+                - 2
+                - 3
+            couleur:
+                - 1
+                - 2
+                - 3
+            typentite:
+                - 1
+                - 2
+                - 3
+            nom:
+                - 1
+                - 2
+                - 3
+            icon:
+                - 1
+                - 2
+                - 3
+            created:
+                - 1
+                - 2
+                - 3
+            updated:
+                - 1
+                - 2
+                - 3
+            slug:
+                - 1
+                - 2
+                - 3
+            default:
+                - 1
+                - 2
+                - 3
+            telfixe:
+                - 1
+                - 2
+                - 3
+            mobile:
+                - 1
+                - 2
+                - 3
+            email:
+                - 1
+                - 2
+                - 3
+        association:
+            collaborateurs:
+                - 4
+                - 5
+                - 6
+            statut:
+                - 4
+                - 5
+                - 6
+            tags:
+                - 4
+                - 5
+                - 6
+            image:
+                - 4
+                - 5
+                - 6
+            nestedpositionParents:
+                - 4
+                - 5
+                - 6
+            nestedpositionChilds:
+                - 4
+                - 5
+                - 6
+            adresse:
+                - 4
+                - 5
+                - 6
+            logo:
+                - 4
+                - 5
+                - 6
+    site\adminsiteBundle\Entity\adresse:
+        class: adresse
+        classname: site\adminsiteBundle\Entity\adresse
+        is_abstract: false
+        is_interface: false
+        is_instantiable: true
+        service: aetools.aeEntity
+        single:
+            id:
+                - 1
+                - 2
+                - 3
+            nom:
+                - 1
+                - 2
+                - 3
+            url:
+                - 1
+                - 2
+                - 3
+            type:
+                - 1
+                - 2
+                - 3
+            adresse:
+                - 1
+                - 2
+                - 3
+            cp:
+                - 1
+                - 2
+                - 3
+            ville:
+                - 1
+                - 2
+                - 3
+            commentaire:
+                - 1
+                - 2
+                - 3
+            icon:
+                - 1
+                - 2
+                - 3
+            created:
+                - 1
+                - 2
+                - 3
+            updated:
+                - 1
+                - 2
+                - 3
+            slug:
+                - 1
+                - 2
+                - 3
+            default:
+                - 1
+                - 2
+                - 3
+        association:
+            user:
+                - 4
+                - 5
+                - 6
+            userLivraison:
+                - 4
+                - 5
+                - 6
+            tier:
+                - 4
+                - 5
+                - 6
+    site\adminsiteBundle\Entity\article:
+        class: article
+        classname: site\adminsiteBundle\Entity\article
+        is_abstract: false
+        is_interface: false
+        is_instantiable: true
+        service: aetools.aeArticle
+        single:
+            id:
+                - 1
+                - 2
+                - 3
+            descriptif:
+                - 1
+                - 2
+                - 3
+            deletable:
+                - 1
+                - 2
+                - 3
+            couleur:
+                - 1
+                - 2
+                - 3
+            typentite:
+                - 1
+                - 2
+                - 3
+            nom:
+                - 1
+                - 2
+                - 3
+            icon:
+                - 1
+                - 2
+                - 3
+            created:
+                - 1
+                - 2
+                - 3
+            updated:
+                - 1
+                - 2
+                - 3
+            slug:
+                - 1
+                - 2
+                - 3
+            default:
+                - 1
+                - 2
+                - 3
+            refFabricant:
+                - 1
+                - 2
+                - 3
+            accroche:
+                - 1
+                - 2
+                - 3
+            vendable:
+                - 1
+                - 2
+                - 3
+            prix:
+                - 1
+                - 2
+                - 3
+            prixHT:
+                - 1
+                - 2
+                - 3
+        association:
+            collaborateurs:
+                - 4
+                - 5
+                - 6
+            statut:
+                - 4
+                - 5
+                - 6
+            tags:
+                - 4
+                - 5
+                - 6
+            image:
+                - 4
+                - 5
+                - 6
+            nestedpositionParents:
+                - 4
+                - 5
+                - 6
+            nestedpositionChilds:
+                - 4
+                - 5
+                - 6
+            tauxTva:
+                - 4
+                - 5
+                - 6
+            marque:
+                - 4
+                - 5
+                - 6
+            pdf:
+                - 4
+                - 5
+                - 6
+    site\adminsiteBundle\Entity\boutique:
+        class: boutique
+        classname: site\adminsiteBundle\Entity\boutique
+        is_abstract: false
+        is_interface: false
+        is_instantiable: true
+        service: aetools.aeTier
+        single:
+            id:
+                - 1
+                - 2
+                - 3
+            descriptif:
+                - 1
+                - 2
+                - 3
+            deletable:
+                - 1
+                - 2
+                - 3
+            couleur:
+                - 1
+                - 2
+                - 3
+            typentite:
+                - 1
+                - 2
+                - 3
+            nom:
+                - 1
+                - 2
+                - 3
+            icon:
+                - 1
+                - 2
+                - 3
+            created:
+                - 1
+                - 2
+                - 3
+            updated:
+                - 1
+                - 2
+                - 3
+            slug:
+                - 1
+                - 2
+                - 3
+            default:
+                - 1
+                - 2
+                - 3
+            telfixe:
+                - 1
+                - 2
+                - 3
+            mobile:
+                - 1
+                - 2
+                - 3
+            email:
+                - 1
+                - 2
+                - 3
+        association:
+            collaborateurs:
+                - 4
+                - 5
+                - 6
+            statut:
+                - 4
+                - 5
+                - 6
+            tags:
+                - 4
+                - 5
+                - 6
+            image:
+                - 4
+                - 5
+                - 6
+            nestedpositionParents:
+                - 4
+                - 5
+                - 6
+            nestedpositionChilds:
+                - 4
+                - 5
+                - 6
+            adresse:
+                - 4
+                - 5
+                - 6
+            logo:
+                - 4
+                - 5
+                - 6
+            sites:
+                - 4
+                - 5
+                - 6
+    site\adminsiteBundle\Entity\categorie:
+        class: categorie
+        classname: site\adminsiteBundle\Entity\categorie
+        is_abstract: false
+        is_interface: false
+        is_instantiable: true
+        service: aetools.aeCategorie
+        single:
+            id:
+                - 1
+                - 2
+                - 3
+            descriptif:
+                - 1
+                - 2
+                - 3
+            deletable:
+                - 1
+                - 2
+                - 3
+            couleur:
+                - 1
+                - 2
+                - 3
+            typentite:
+                - 1
+                - 2
+                - 3
+            nom:
+                - 1
+                - 2
+                - 3
+            icon:
+                - 1
+                - 2
+                - 3
+            created:
+                - 1
+                - 2
+                - 3
+            updated:
+                - 1
+                - 2
+                - 3
+            slug:
+                - 1
+                - 2
+                - 3
+            default:
+                - 1
+                - 2
+                - 3
+            lvl:
+                - 1
+                - 2
+                - 3
+            open:
+                - 1
+                - 2
+                - 3
+            accepts:
+                - 1
+                - 2
+                - 3
+            type:
+                - 1
+                - 2
+                - 3
+        association:
+            collaborateurs:
+                - 4
+                - 5
+                - 6
+            statut:
+                - 4
+                - 5
+                - 6
+            tags:
+                - 4
+                - 5
+                - 6
+            image:
+                - 4
+                - 5
+                - 6
+            nestedpositionParents:
+                - 4
+                - 5
+                - 6
+            nestedpositionChilds:
+                - 4
+                - 5
+                - 6
+    site\adminsiteBundle\Entity\fiche:
+        class: fiche
+        classname: site\adminsiteBundle\Entity\fiche
+        is_abstract: true
+        is_interface: false
+        is_instantiable: false
+        service: aetools.aeFiche
+        single:
+            id:
+                - 1
+                - 2
+                - 3
+            descriptif:
+                - 1
+                - 2
+                - 3
+            deletable:
+                - 1
+                - 2
+                - 3
+            couleur:
+                - 1
+                - 2
+                - 3
+            typentite:
+                - 1
+                - 2
+                - 3
+            nom:
+                - 1
+                - 2
+                - 3
+            icon:
+                - 1
+                - 2
+                - 3
+            created:
+                - 1
+                - 2
+                - 3
+            updated:
+                - 1
+                - 2
+                - 3
+            slug:
+                - 1
+                - 2
+                - 3
+            default:
+                - 1
+                - 2
+                - 3
+            datePublication:
+                - 1
+                - 2
+                - 3
+            dateExpiration:
+                - 1
+                - 2
+                - 3
+            accroche:
+                - 1
+                - 2
+                - 3
+        association:
+            collaborateurs:
+                - 4
+                - 5
+                - 6
+            statut:
+                - 4
+                - 5
+                - 6
+            tags:
+                - 4
+                - 5
+                - 6
+            image:
+                - 4
+                - 5
+                - 6
+            nestedpositionParents:
+                - 4
+                - 5
+                - 6
+            nestedpositionChilds:
+                - 4
+                - 5
+                - 6
+    site\adminsiteBundle\Entity\ficheboisson:
+        class: ficheboisson
+        classname: site\adminsiteBundle\Entity\ficheboisson
+        is_abstract: false
+        is_interface: false
+        is_instantiable: true
+        service: aetools.aeFiche
+        single:
+            id:
+                - 1
+                - 2
+                - 3
+            descriptif:
+                - 1
+                - 2
+                - 3
+            deletable:
+                - 1
+                - 2
+                - 3
+            couleur:
+                - 1
+                - 2
+                - 3
+            typentite:
+                - 1
+                - 2
+                - 3
+            nom:
+                - 1
+                - 2
+                - 3
+            icon:
+                - 1
+                - 2
+                - 3
+            created:
+                - 1
+                - 2
+                - 3
+            updated:
+                - 1
+                - 2
+                - 3
+            slug:
+                - 1
+                - 2
+                - 3
+            default:
+                - 1
+                - 2
+                - 3
+            datePublication:
+                - 1
+                - 2
+                - 3
+            dateExpiration:
+                - 1
+                - 2
+                - 3
+            accroche:
+                - 1
+                - 2
+                - 3
+            note:
+                - 1
+                - 2
+                - 3
+        association:
+            collaborateurs:
+                - 4
+                - 5
+                - 6
+            statut:
+                - 4
+                - 5
+                - 6
+            tags:
+                - 4
+                - 5
+                - 6
+            image:
+                - 4
+                - 5
+                - 6
+            nestedpositionParents:
+                - 4
+                - 5
+                - 6
+            nestedpositionChilds:
+                - 4
+                - 5
+                - 6
+    site\adminsiteBundle\Entity\ficherecette:
+        class: ficherecette
+        classname: site\adminsiteBundle\Entity\ficherecette
+        is_abstract: false
+        is_interface: false
+        is_instantiable: true
+        service: aetools.aeFiche
+        single:
+            id:
+                - 1
+                - 2
+                - 3
+            descriptif:
+                - 1
+                - 2
+                - 3
+            deletable:
+                - 1
+                - 2
+                - 3
+            couleur:
+                - 1
+                - 2
+                - 3
+            typentite:
+                - 1
+                - 2
+                - 3
+            nom:
+                - 1
+                - 2
+                - 3
+            icon:
+                - 1
+                - 2
+                - 3
+            created:
+                - 1
+                - 2
+                - 3
+            updated:
+                - 1
+                - 2
+                - 3
+            slug:
+                - 1
+                - 2
+                - 3
+            default:
+                - 1
+                - 2
+                - 3
+            datePublication:
+                - 1
+                - 2
+                - 3
+            dateExpiration:
+                - 1
+                - 2
+                - 3
+            accroche:
+                - 1
+                - 2
+                - 3
+            niveau:
+                - 1
+                - 2
+                - 3
+            duree:
+                - 1
+                - 2
+                - 3
+        association:
+            collaborateurs:
+                - 4
+                - 5
+                - 6
+            statut:
+                - 4
+                - 5
+                - 6
+            tags:
+                - 4
+                - 5
+                - 6
+            image:
+                - 4
+                - 5
+                - 6
+            nestedpositionParents:
+                - 4
+                - 5
+                - 6
+            nestedpositionChilds:
+                - 4
+                - 5
+                - 6
+    site\adminsiteBundle\Entity\image:
+        class: image
+        classname: site\adminsiteBundle\Entity\image
+        is_abstract: false
+        is_interface: false
+        is_instantiable: true
+        service: aetools.aeImage
+        single:
+            id:
+                - 1
+                - 2
+                - 3
+            descriptif:
+                - 1
+                - 2
+                - 3
+            deletable:
+                - 1
+                - 2
+                - 3
+            couleur:
+                - 1
+                - 2
+                - 3
+            typentite:
+                - 1
+                - 2
+                - 3
+            nom:
+                - 1
+                - 2
+                - 3
+            icon:
+                - 1
+                - 2
+                - 3
+            created:
+                - 1
+                - 2
+                - 3
+            updated:
+                - 1
+                - 2
+                - 3
+            slug:
+                - 1
+                - 2
+                - 3
+            default:
+                - 1
+                - 2
+                - 3
+            originalnom:
+                - 1
+                - 2
+                - 3
+            binaryFile:
+                - 1
+                - 2
+                - 3
+            format:
+                - 1
+                - 2
+                - 3
+            extension:
+                - 1
+                - 2
+                - 3
+            stockage:
+                - 1
+                - 2
+                - 3
+            croppingInfo:
+                - 1
+                - 2
+                - 3
+            fileSize:
+                - 1
+                - 2
+                - 3
+            owner:
+                - 1
+                - 2
+                - 3
+            ratioIndex:
+                - 1
+                - 2
+                - 3
+            width:
+                - 1
+                - 2
+                - 3
+            height:
+                - 1
+                - 2
+                - 3
+        association:
+            collaborateurs:
+                - 4
+                - 5
+                - 6
+            statut:
+                - 4
+                - 5
+                - 6
+            tags:
+                - 4
+                - 5
+                - 6
+            image:
+                - 4
+                - 5
+                - 6
+            nestedpositionParents:
+                - 4
+                - 5
+                - 6
+            nestedpositionChilds:
+                - 4
+                - 5
+                - 6
+            rawfile:
+                - 4
+                - 5
+                - 6
+            element:
+                - 4
+                - 5
+                - 6
+            userAvatar:
+                - 4
+                - 5
+                - 6
+    site\adminsiteBundle\Entity\marque:
+        class: marque
+        classname: site\adminsiteBundle\Entity\marque
+        is_abstract: false
+        is_interface: false
+        is_instantiable: true
+        service: aetools.aeTier
+        single:
+            id:
+                - 1
+                - 2
+                - 3
+            descriptif:
+                - 1
+                - 2
+                - 3
+            deletable:
+                - 1
+                - 2
+                - 3
+            couleur:
+                - 1
+                - 2
+                - 3
+            typentite:
+                - 1
+                - 2
+                - 3
+            nom:
+                - 1
+                - 2
+                - 3
+            icon:
+                - 1
+                - 2
+                - 3
+            created:
+                - 1
+                - 2
+                - 3
+            updated:
+                - 1
+                - 2
+                - 3
+            slug:
+                - 1
+                - 2
+                - 3
+            default:
+                - 1
+                - 2
+                - 3
+            telfixe:
+                - 1
+                - 2
+                - 3
+            mobile:
+                - 1
+                - 2
+                - 3
+            email:
+                - 1
+                - 2
+                - 3
+        association:
+            collaborateurs:
+                - 4
+                - 5
+                - 6
+            statut:
+                - 4
+                - 5
+                - 6
+            tags:
+                - 4
+                - 5
+                - 6
+            image:
+                - 4
+                - 5
+                - 6
+            nestedpositionParents:
+                - 4
+                - 5
+                - 6
+            nestedpositionChilds:
+                - 4
+                - 5
+                - 6
+            adresse:
+                - 4
+                - 5
+                - 6
+            logo:
+                - 4
+                - 5
+                - 6
+            articles:
+                - 4
+                - 5
+                - 6
+    site\adminsiteBundle\Entity\message:
+        class: message
+        classname: site\adminsiteBundle\Entity\message
+        is_abstract: false
+        is_interface: false
+        is_instantiable: true
+        service: aetools.aeMessage
+        single:
+            read:
+                - 1
+                - 2
+                - 3
+            nom:
+                - 1
+                - 2
+                - 3
+            prenom:
+                - 1
+                - 2
+                - 3
+            email:
+                - 1
+                - 2
+                - 3
+            telephone:
+                - 1
+                - 2
+                - 3
+            objet:
+                - 1
+                - 2
+                - 3
+            message:
+                - 1
+                - 2
+                - 3
+            creation:
+                - 1
+                - 2
+                - 3
+            ip:
+                - 1
+                - 2
+                - 3
+            id:
+                - 1
+                - 2
+                - 3
+        association:
+            statut:
+                - 4
+                - 5
+                - 6
+            user:
+                - 4
+                - 5
+                - 6
+    site\adminsiteBundle\Entity\pageweb:
+        class: pageweb
+        classname: site\adminsiteBundle\Entity\pageweb
+        is_abstract: false
+        is_interface: false
+        is_instantiable: true
+        service: aetools.aePageweb
+        single:
+            id:
+                - 1
+                - 2
+                - 3
+            descriptif:
+                - 1
+                - 2
+                - 3
+            deletable:
+                - 1
+                - 2
+                - 3
+            couleur:
+                - 1
+                - 2
+                - 3
+            typentite:
+                - 1
+                - 2
+                - 3
+            nom:
+                - 1
+                - 2
+                - 3
+            icon:
+                - 1
+                - 2
+                - 3
+            created:
+                - 1
+                - 2
+                - 3
+            updated:
+                - 1
+                - 2
+                - 3
+            slug:
+                - 1
+                - 2
+                - 3
+            default:
+                - 1
+                - 2
+                - 3
+            code:
+                - 1
+                - 2
+                - 3
+            extended:
+                - 1
+                - 2
+                - 3
+            title:
+                - 1
+                - 2
+                - 3
+            titreh1:
+                - 1
+                - 2
+                - 3
+            metadescription:
+                - 1
+                - 2
+                - 3
+            modele:
+                - 1
+                - 2
+                - 3
+        association:
+            collaborateurs:
+                - 4
+                - 5
+                - 6
+            statut:
+                - 4
+                - 5
+                - 6
+            tags:
+                - 4
+                - 5
+                - 6
+            image:
+                - 4
+                - 5
+                - 6
+            nestedpositionParents:
+                - 4
+                - 5
+                - 6
+            nestedpositionChilds:
+                - 4
+                - 5
+                - 6
+    site\adminsiteBundle\Entity\panier:
+        class: panier
+        classname: site\adminsiteBundle\Entity\panier
+        is_abstract: false
+        is_interface: false
+        is_instantiable: true
+        service: aetools.aePanier
+        single:
+            position:
+                - 1
+                - 2
+                - 3
+            quantite:
+                - 1
+                - 2
+                - 3
+            created:
+                - 1
+                - 2
+                - 3
+            updated:
+                - 1
+                - 2
+                - 3
+        association:
+            user:
+                - 4
+                - 5
+                - 6
+            article:
+                - 4
+                - 5
+                - 6
+    site\adminsiteBundle\Entity\pdf:
+        class: pdf
+        classname: site\adminsiteBundle\Entity\pdf
+        is_abstract: false
+        is_interface: false
+        is_instantiable: true
+        service: aetools.aePdf
+        single:
+            id:
+                - 1
+                - 2
+                - 3
+            descriptif:
+                - 1
+                - 2
+                - 3
+            deletable:
+                - 1
+                - 2
+                - 3
+            couleur:
+                - 1
+                - 2
+                - 3
+            typentite:
+                - 1
+                - 2
+                - 3
+            nom:
+                - 1
+                - 2
+                - 3
+            icon:
+                - 1
+                - 2
+                - 3
+            created:
+                - 1
+                - 2
+                - 3
+            updated:
+                - 1
+                - 2
+                - 3
+            slug:
+                - 1
+                - 2
+                - 3
+            default:
+                - 1
+                - 2
+                - 3
+            originalnom:
+                - 1
+                - 2
+                - 3
+            binaryFile:
+                - 1
+                - 2
+                - 3
+            format:
+                - 1
+                - 2
+                - 3
+            extension:
+                - 1
+                - 2
+                - 3
+            stockage:
+                - 1
+                - 2
+                - 3
+            croppingInfo:
+                - 1
+                - 2
+                - 3
+            fileSize:
+                - 1
+                - 2
+                - 3
+        association:
+            collaborateurs:
+                - 4
+                - 5
+                - 6
+            statut:
+                - 4
+                - 5
+                - 6
+            tags:
+                - 4
+                - 5
+                - 6
+            image:
+                - 4
+                - 5
+                - 6
+            nestedpositionParents:
+                - 4
+                - 5
+                - 6
+            nestedpositionChilds:
+                - 4
+                - 5
+                - 6
+            rawfile:
+                - 4
+                - 5
+                - 6
+            article:
+                - 4
+                - 5
+                - 6
+    site\adminsiteBundle\Entity\reseau:
+        class: reseau
+        classname: site\adminsiteBundle\Entity\reseau
+        is_abstract: false
+        is_interface: false
+        is_instantiable: true
+        service: aetools.aeTier
+        single:
+            id:
+                - 1
+                - 2
+                - 3
+            descriptif:
+                - 1
+                - 2
+                - 3
+            deletable:
+                - 1
+                - 2
+                - 3
+            couleur:
+                - 1
+                - 2
+                - 3
+            typentite:
+                - 1
+                - 2
+                - 3
+            nom:
+                - 1
+                - 2
+                - 3
+            icon:
+                - 1
+                - 2
+                - 3
+            created:
+                - 1
+                - 2
+                - 3
+            updated:
+                - 1
+                - 2
+                - 3
+            slug:
+                - 1
+                - 2
+                - 3
+            default:
+                - 1
+                - 2
+                - 3
+            telfixe:
+                - 1
+                - 2
+                - 3
+            mobile:
+                - 1
+                - 2
+                - 3
+            email:
+                - 1
+                - 2
+                - 3
+        association:
+            collaborateurs:
+                - 4
+                - 5
+                - 6
+            statut:
+                - 4
+                - 5
+                - 6
+            tags:
+                - 4
+                - 5
+                - 6
+            image:
+                - 4
+                - 5
+                - 6
+            nestedpositionParents:
+                - 4
+                - 5
+                - 6
+            nestedpositionChilds:
+                - 4
+                - 5
+                - 6
+            adresse:
+                - 4
+                - 5
+                - 6
+            logo:
+                - 4
+                - 5
+                - 6
+    site\adminsiteBundle\Entity\site:
+        class: site
+        classname: site\adminsiteBundle\Entity\site
+        is_abstract: false
+        is_interface: false
+        is_instantiable: true
+        service: aetools.aeSite
+        single:
+            id:
+                - 1
+                - 2
+                - 3
+            descriptif:
+                - 1
+                - 2
+                - 3
+            deletable:
+                - 1
+                - 2
+                - 3
+            couleur:
+                - 1
+                - 2
+                - 3
+            typentite:
+                - 1
+                - 2
+                - 3
+            nom:
+                - 1
+                - 2
+                - 3
+            icon:
+                - 1
+                - 2
+                - 3
+            created:
+                - 1
+                - 2
+                - 3
+            updated:
+                - 1
+                - 2
+                - 3
+            slug:
+                - 1
+                - 2
+                - 3
+            default:
+                - 1
+                - 2
+                - 3
+            accroche:
+                - 1
+                - 2
+                - 3
+        association:
+            collaborateurs:
+                - 4
+                - 5
+                - 6
+            statut:
+                - 4
+                - 5
+                - 6
+            tags:
+                - 4
+                - 5
+                - 6
+            image:
+                - 4
+                - 5
+                - 6
+            menuNav:
+                - 4
+                - 5
+                - 6
+            menuArticle:
+                - 4
+                - 5
+                - 6
+            diaporamaintro:
+                - 4
+                - 5
+                - 6
+            categorieArticles:
+                - 4
+                - 5
+                - 6
+            categorieFooters:
+                - 4
+                - 5
+                - 6
+            boutiques:
+                - 4
+                - 5
+                - 6
+            logo:
+                - 4
+                - 5
+                - 6
+            favicon:
+                - 4
+                - 5
+                - 6
+            adminLogo:
+                - 4
+                - 5
+                - 6
+    site\adminsiteBundle\Entity\tauxTva:
+        class: tauxTva
+        classname: site\adminsiteBundle\Entity\tauxTva
+        is_abstract: false
+        is_interface: false
+        is_instantiable: true
+        service: aetools.aeEntity
+        single:
+            id:
+                - 1
+                - 2
+                - 3
+            nom:
+                - 1
+                - 2
+                - 3
+            descriptif:
+                - 1
+                - 2
+                - 3
+            taux:
+                - 1
+                - 2
+                - 3
+            icon:
+                - 1
+                - 2
+                - 3
+            created:
+                - 1
+                - 2
+                - 3
+            updated:
+                - 1
+                - 2
+                - 3
+            slug:
+                - 1
+                - 2
+                - 3
+            default:
+                - 1
+                - 2
+                - 3
+        association: {  }
+    site\UserBundle\Entity\User:
+        class: User
+        classname: site\UserBundle\Entity\User
+        is_abstract: false
+        is_interface: false
+        is_instantiable: true
+        service: aetools.aeUser
+        single:
+            username:
+                - 1
+                - 2
+                - 3
+            usernameCanonical:
+                - 1
+                - 2
+                - 3
+            email:
+                - 1
+                - 2
+                - 3
+            emailCanonical:
+                - 1
+                - 2
+                - 3
+            enabled:
+                - 1
+                - 2
+                - 3
+            salt:
+                - 1
+                - 2
+                - 3
+            password:
+                - 1
+                - 2
+                - 3
+            lastLogin:
+                - 1
+                - 2
+                - 3
+            locked:
+                - 1
+                - 2
+                - 3
+            expired:
+                - 1
+                - 2
+                - 3
+            expiresAt:
+                - 1
+                - 2
+                - 3
+            confirmationToken:
+                - 1
+                - 2
+                - 3
+            passwordRequestedAt:
+                - 1
+                - 2
+                - 3
+            roles:
+                - 1
+                - 2
+                - 3
+            credentialsExpired:
+                - 1
+                - 2
+                - 3
+            credentialsExpireAt:
+                - 1
+                - 2
+                - 3
+            id:
+                - 1
+                - 2
+                - 3
+            nom:
+                - 1
+                - 2
+                - 3
+            prenom:
+                - 1
+                - 2
+                - 3
+            telephone:
+                - 1
+                - 2
+                - 3
+            adminhelp:
+                - 1
+                - 2
+                - 3
+            admintheme:
+                - 1
+                - 2
+                - 3
+            langue:
+                - 1
+                - 2
+                - 3
+        association:
+            adresse:
+                - 4
+                - 5
+                - 6
+            adresseLivraison:
+                - 4
+                - 5
+                - 6
+            paniers:
+                - 4
+                - 5
+                - 6
+            messages:
+                - 4
+                - 5
+                - 6
+            avatar:
+                - 4
+                - 5
+                - 6
+            sites:
+                - 4
+                - 5
+                - 6
+    FOS\UserBundle\Model\Group:
+        class: Group
+        classname: FOS\UserBundle\Model\Group
+        is_abstract: true
+        is_interface: false
+        is_instantiable: false
+        service: aetools.aeEntity
+        single:
+            name:
+                - 1
+                - 2
+                - 3
+            roles:
+                - 1
+                - 2
+                - 3
+        association: {  }
+    FOS\UserBundle\Model\User:
+        class: User
+        classname: FOS\UserBundle\Model\User
+        is_abstract: true
+        is_interface: false
+        is_instantiable: false
+        service: aetools.aeUser
+        single:
+            username:
+                - 1
+                - 2
+                - 3
+            usernameCanonical:
+                - 1
+                - 2
+                - 3
+            email:
+                - 1
+                - 2
+                - 3
+            emailCanonical:
+                - 1
+                - 2
+                - 3
+            enabled:
+                - 1
+                - 2
+                - 3
+            salt:
+                - 1
+                - 2
+                - 3
+            password:
+                - 1
+                - 2
+                - 3
+            lastLogin:
+                - 1
+                - 2
+                - 3
+            locked:
+                - 1
+                - 2
+                - 3
+            expired:
+                - 1
+                - 2
+                - 3
+            expiresAt:
+                - 1
+                - 2
+                - 3
+            confirmationToken:
+                - 1
+                - 2
+                - 3
+            passwordRequestedAt:
+                - 1
+                - 2
+                - 3
+            roles:
+                - 1
+                - 2
+                - 3
+            credentialsExpired:
+                - 1
+                - 2
+                - 3
+            credentialsExpireAt:
+                - 1
+                - 2
+                - 3
+        association: {  }

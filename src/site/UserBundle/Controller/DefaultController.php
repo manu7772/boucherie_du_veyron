@@ -126,7 +126,7 @@ class DefaultController extends Controller {
 				}
 				$userManager->updateUser($data['user']);
 				//
-				return $this->redirect($this->generateUrl('siteUser_info', array('username' => $username)));
+				return $this->redirectToRoute('siteUser_info', array('username' => $username));
 			}
 			$data['htitle'] = self::USER_NAME.' '.$data['user']->getUsername();
 			$data['edit_form'] = $form->createView();
@@ -194,14 +194,14 @@ class DefaultController extends Controller {
 				'type'		=> 'success',
 				'text'		=> 'L\'utilisateur '.$username.' a été supprimé.'
 			));
-			return $this->redirect($this->generateUrl('labo_users'));
+			return $this->redirectToRoute('labo_users');
 		} else {
 			$message = $this->get('flash_messages')->send(array(
 				'title'		=> 'Échec suppression',
 				'type'		=> 'error',
 				'text'		=> 'L\'utilisateur'.$username.' n\'a pu être trouvée.'
 			));
-			return $this->redirect($this->generateUrl('labo_users'));
+			return $this->redirectToRoute('labo_users');
 		}
 	}
 
@@ -396,7 +396,7 @@ class DefaultController extends Controller {
 		if($user != 'null' && $user != null) {
 			$objectUser = $this->get('fos_user.user_manager')->findUserBy(array('id' => $user));
 		} else {
-			$objectUser = $this->get('security.context')->getToken()->getUser();
+			$objectUser = $this->get('security.token_storage')->getToken()->getUser();
 		}
 		return is_object($objectUser) ? $objectUser : false;
 	}
