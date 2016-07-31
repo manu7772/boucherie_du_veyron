@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "26b23bc61d18b1bf9607897d92ae8f9e",
-    "content-hash": "5cc57d710b915067a1ce8fc214846247",
+    "hash": "7dca6fa1516c33f96be251f41f6b214d",
+    "content-hash": "3aa19b0f3a3550cf50536df811a1cd0d",
     "packages": [
         {
             "name": "behat/transliterator",
@@ -1022,12 +1022,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/FriendsOfSymfony/FOSUserBundle.git",
-                "reference": "42ad0730ee22406de20da75fa9a3f4d74c565a83"
+                "reference": "edbf8401e81faaf570e54dcd3b35cfda953f1338"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/FriendsOfSymfony/FOSUserBundle/zipball/42ad0730ee22406de20da75fa9a3f4d74c565a83",
-                "reference": "42ad0730ee22406de20da75fa9a3f4d74c565a83",
+                "url": "https://api.github.com/repos/FriendsOfSymfony/FOSUserBundle/zipball/edbf8401e81faaf570e54dcd3b35cfda953f1338",
+                "reference": "edbf8401e81faaf570e54dcd3b35cfda953f1338",
                 "shasum": ""
             },
             "require": {
@@ -1036,6 +1036,9 @@
                 "symfony/framework-bundle": "~2.3|~3.0",
                 "symfony/security-bundle": "~2.3|~3.0",
                 "symfony/twig-bundle": "~2.3|~3.0"
+            },
+            "conflict": {
+                "symfony/doctrine-bridge": "<2.3"
             },
             "require-dev": {
                 "doctrine/doctrine-bundle": "~1.3",
@@ -1083,7 +1086,7 @@
             "keywords": [
                 "User management"
             ],
-            "time": "2016-07-19 12:01:22"
+            "time": "2016-07-31 15:14:05"
         },
         {
             "name": "gedmo/doctrine-extensions",
@@ -1570,6 +1573,52 @@
                 "minification"
             ],
             "time": "2015-11-12 13:51:40"
+        },
+        {
+            "name": "labo/admin-bundle",
+            "version": "dev-master",
+            "target-dir": "Labo/Bundle/AdminBundle",
+            "source": {
+                "type": "git",
+                "url": "https://bitbucket.org/manu7772/laboadminbundle.git",
+                "reference": "90b8f8cb893543a358eea4d6d31b62c91f6d2fcd"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://bitbucket.org/manu7772/laboadminbundle/get/90b8f8cb893543a358eea4d6d31b62c91f6d2fcd.zip",
+                "reference": "90b8f8cb893543a358eea4d6d31b62c91f6d2fcd",
+                "shasum": ""
+            },
+            "require": {
+                "doctrine/doctrine-bundle": "*",
+                "friendsofsymfony/user-bundle": "dev-master",
+                "php": ">=5.6",
+                "symfony/framework-bundle": ">=2.7,<3.0",
+                "twig/twig": "*"
+            },
+            "type": "symfony-bundle",
+            "autoload": {
+                "psr-0": {
+                    "Labo\\Bundle\\AdminBundle": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-3.0+"
+            ],
+            "authors": [
+                {
+                    "name": "Dujardin",
+                    "email": "manu7772@gmail.com",
+                    "homepage": "http://dev.aequation.com"
+                }
+            ],
+            "description": "Symfony AdminBundle",
+            "keywords": [
+                "admin",
+                "labo"
+            ],
+            "time": "2016-07-31 21:53:27"
         },
         {
             "name": "leafo/lessphp",
@@ -2618,16 +2667,16 @@
         },
         {
             "name": "symfony/symfony",
-            "version": "v2.7.15",
+            "version": "v2.7.16",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/symfony.git",
-                "reference": "06b07dd78555df0fce66ffe1d705de3c288ffda9"
+                "reference": "42199fef6e9b448947d395add058642975e59127"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/symfony/zipball/06b07dd78555df0fce66ffe1d705de3c288ffda9",
-                "reference": "06b07dd78555df0fce66ffe1d705de3c288ffda9",
+                "url": "https://api.github.com/repos/symfony/symfony/zipball/42199fef6e9b448947d395add058642975e59127",
+                "reference": "42199fef6e9b448947d395add058642975e59127",
                 "shasum": ""
             },
             "require": {
@@ -2741,7 +2790,7 @@
             "keywords": [
                 "framework"
             ],
-            "time": "2016-06-30 15:14:45"
+            "time": "2016-07-30 08:15:52"
         },
         {
             "name": "tecnickcom/tcpdf",
@@ -3016,7 +3065,8 @@
         "doctrine/doctrine-fixtures-bundle": 20,
         "friendsofsymfony/user-bundle": 20,
         "jms/serializer-bundle": 20,
-        "spipu/html2pdf": 20
+        "spipu/html2pdf": 20,
+        "labo/admin-bundle": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,
