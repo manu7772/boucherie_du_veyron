@@ -13,7 +13,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage as
 // Paramétrage de formulaire
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormEvent;
-use site\adminsiteBundle\services\aetools;
+use Labo\Bundle\AdminBundle\services\aetools;
 
 class imageType extends baseType {
 
