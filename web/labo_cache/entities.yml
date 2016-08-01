@@ -1,4 +1,4 @@
-'2016-08-01 02:17:39':
+'2016-08-01 10:36:18':
     Gedmo\Translatable\Entity\MappedSuperclass\AbstractPersonalTranslation:
         class: AbstractPersonalTranslation
         classname: Gedmo\Translatable\Entity\MappedSuperclass\AbstractPersonalTranslation

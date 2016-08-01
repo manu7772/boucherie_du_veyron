@@ -284,10 +284,10 @@ class categorie extends nested {
 	 * Get ALL nested childs of type $types. 
 	 * Can define witch types in $types array (or one type in a string shortname). 
 	 * @param mixed $types = []
-	 * @param integer $limit = 100
+	 * @param integer $limit = 25
 	 * @return array
 	 */
-	public function getAllChildsByTypes($types = [], $limit = 100) {
+	public function getAllChildsByTypes($types = [], $limit = 25) {
 		if(is_string($types)) $types = array($types);
 		if(count($types) < 1) $types = $this->getAccepts();
 		// if(in_array(self::CLASS_CATEGORIE, $types)) unset($types[self::CLASS_CATEGORIE]);
@@ -315,10 +315,10 @@ class categorie extends nested {
 
 	/**
 	 * Get all child categories
-	 * @param integer $limit = 100;
+	 * @param integer $limit = 25;
 	 * @return array
 	 */
-	public function getAllCategorieChilds($addAlias = false, $limit = 100) {
+	public function getAllCategorieChilds($addAlias = false, $limit = 25) {
 		$allCategorieChilds = $this->getCategorieChilds($addAlias);
 		if($limit > 0) {
 			foreach($allCategorieChilds as $categorieChild) {
@@ -364,10 +364,10 @@ class categorie extends nested {
 	/**
 	 * Get ALL nestedChilds by group
 	 * @param string $group = null
-	 * @param integer $limit = 100
+	 * @param integer $limit = 25
 	 * @return array 
 	 */
-	public function getAllNestedChildsByGroup($group = null, $addAlias = false, $limit = 100) {
+	public function getAllNestedChildsByGroup($group = null, $addAlias = false, $limit = 25) {
 		$nestedChilds = $this->getNestedChildsByGroup($group, $addAlias);
 		if((integer)$limit > 0) {
 			if($addAlias == false) {
