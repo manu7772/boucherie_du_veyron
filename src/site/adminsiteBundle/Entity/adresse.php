@@ -8,7 +8,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Doctrine\Common\Collections\ArrayCollection;
 
 use Labo\Bundle\AdminBundle\Entity\baseEntity;
-use site\adminsiteBundle\Entity\tier;
+use Labo\Bundle\AdminBundle\Entity\tier;
 use site\UserBundle\Entity\User;
 
 use \DateTime;
