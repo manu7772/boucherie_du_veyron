@@ -12,9 +12,6 @@ site:
             menuArticle:
                 field: nom
                 value: 'La boutique'
-            diaporamaintro:
-                field: nom
-                value: 'Diaporamas accueil'
             categorieArticles:
                 field: nom
                 value: 'Promotions'
