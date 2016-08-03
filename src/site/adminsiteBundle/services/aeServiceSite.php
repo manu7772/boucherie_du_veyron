@@ -16,9 +16,14 @@ class aeServiceSite extends aeServiceSubentity {
     const CLASS_ENTITY          = 'site\adminsiteBundle\Entity\site';
     const CLASS_SHORT_ENTITY    = 'site';
 
+    protected $siteData;
+    protected $cpt;
+
     public function __construct(ContainerInterface $container = null, $em = null) {
         parent::__construct($container, $em);
         $this->defineEntity(self::CLASS_ENTITY);
+        $this->siteData = null;
+        $this->cpt = 0;
         return $this;
     }
 
@@ -37,21 +42,23 @@ class aeServiceSite extends aeServiceSubentity {
      */
     public function checkAfterChange(&$entity, $butEntities = []) {
         // check images
-        $fields = array('image', 'logo', 'favicon', 'adminLogo');
+        $fields = array('logo', 'favicon', 'adminLogo');
         foreach ($fields as $field) {
-            $get = $this->getMethodOfSetting($field, $entity, true);
-            $set = $this->getMethodOfGetting($field, $entity, true);
-            $image = $entity->$get();
-            if($image instanceOf site\adminsiteBundle\Entity\image) {
-                $infoForPersist = $image->getInfoForPersist();
-                $this->container->get('aetools.debug')->debugFile($infoForPersist);
-                if($infoForPersist['removeImage'] === true || $infoForPersist['removeImage'] === 'true') {
-                    // Supression de l'image
-                    $entity->$set(null);
-                } else {
-                    // Gestion de l'image
-                    $service = $this->container->get('aetools.aeEntity')->getEntityService($image);
-                    $service->checkAfterChange($image);
+            $get = $this->getMethodOfGetting($field, $entity);
+            $set = $this->getMethodOfSetting($field, $entity);
+            if(is_string($set) && is_string($get)) {
+                $image = $entity->$get();
+                if(is_object($image)) {
+                    $infoForPersist = $image->getInfoForPersist();
+                    // $this->container->get('aetools.debug')->debugFile($infoForPersist);
+                    if($infoForPersist['removeImage'] === true || $infoForPersist['removeImage'] === 'true') {
+                        // Supression de l'image
+                        $entity->$set(null);
+                    } else {
+                        // Gestion de l'image
+                        $service = $this->container->get('aetools.aeEntity')->getEntityService($image);
+                        $service->checkAfterChange($image);
+                    }
                 }
             }
         }
@@ -59,9 +66,13 @@ class aeServiceSite extends aeServiceSubentity {
         return $this;
     }
 
-    public function getSiteData($siteDataId = null) {
-        $repo = $this->getRepo();
-        return is_object($repo) ? $repo->findSiteData($siteDataId) : array();
+    public function getSiteData() {
+        $this->container->get('aetools.debug')->startChrono();
+        if($this->siteData == null)
+            $this->siteData = $this->getRepo()->findSiteData();
+        $this->container->get('aetools.debug')->printChrono('Get site data N°'.$this->cpt++, true);
+        return $this->siteData;
     }
+
 
 }

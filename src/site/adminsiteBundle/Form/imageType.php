@@ -4,7 +4,7 @@ namespace site\adminsiteBundle\Form;
 
 use Labo\Bundle\AdminBundle\Form\baseType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 // Transformer
 use Symfony\Component\Form\CallbackTransformer;
@@ -145,9 +145,9 @@ class imageType extends baseType {
 	}
 
 	/**
-	 * @param OptionsResolverInterface $resolver
+	 * @param OptionsResolver $resolver
 	 */
-	public function setDefaultOptions(OptionsResolverInterface $resolver)
+	public function configureOptions(OptionsResolver $resolver)
 	{
 		$resolver->setDefaults(array(
 			'data_class' => 'site\adminsiteBundle\Entity\image'

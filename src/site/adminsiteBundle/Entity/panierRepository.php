@@ -16,4 +16,8 @@ use Doctrine\ORM\Mapping\ClassMetadata;
  */
 class panierRepository extends aepanierRepository {
 
+	public function defaultVal() {
+		return array();
+	}
+
 }

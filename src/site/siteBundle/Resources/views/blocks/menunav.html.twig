@@ -1,0 +1,16 @@
+{% import 'sitesiteBundle:blocks:actions.html.twig' as actions %}
+<div class="mainmenu pull-left">
+	<ul class="nav navbar-nav collapse navbar-collapse">
+		{% for item in menuNav.children|default([]) %}
+		{% if item.slug == infoRoute._route_params.pagewebSlug|default(null) %}
+		<li>
+			<a class="active">{{ item.nom }}</a>
+		</li>
+		{% else %}
+		<li>
+			<a {{ actions.elementHref(item, '_self') }}>{{ item.nom }}</a>
+		</li>
+		{% endif %}
+		{% endfor %}
+	</ul>
+</div>

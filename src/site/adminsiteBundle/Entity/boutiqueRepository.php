@@ -16,4 +16,8 @@ use Doctrine\ORM\Mapping\ClassMetadata;
  */
 class boutiqueRepository extends tierRepository {
 
+	public function defaultVal() {
+		return array();
+	}
+
 }

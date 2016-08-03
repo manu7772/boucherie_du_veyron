@@ -26,4 +26,8 @@ class message extends aemessage {
 	 */
 	private $id;
 
+	public function getId() {
+		return $this->id;
+	}
+
 }

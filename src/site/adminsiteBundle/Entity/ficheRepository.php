@@ -16,4 +16,8 @@ use Doctrine\ORM\Mapping\ClassMetadata;
  */
 class ficheRepository extends itemRepository {
 
+	public function defaultVal() {
+		return array();
+	}
+
 }

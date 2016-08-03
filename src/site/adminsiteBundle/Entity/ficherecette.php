@@ -6,8 +6,6 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Doctrine\Common\Collections\ArrayCollection;
-// Slug
-use Gedmo\Mapping\Annotation as Gedmo;
 
 use site\adminsiteBundle\Entity\fiche;
 
@@ -66,6 +64,7 @@ class ficherecette extends fiche {
 		parent::__construct();
 		$this->setNiveau($this->getDefaultNiveau()); // Niveau par défaut
 		$this->setDuree($this->getDefaultDuree());
+		$this->setTypentite(2);
 	}
 
 	public function getNestedAttributesParameters() {

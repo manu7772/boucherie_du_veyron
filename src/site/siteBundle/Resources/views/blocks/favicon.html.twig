@@ -1,16 +1,4 @@
-<!-- Favicone Icon -->
-{% if sitedata is defined %}
-{% if sitedata.favicon|default(null) != null %}
-<link rel="shortcut icon" type="image/x-icon" href="{{ sitedata.favicon.img }}">
-<link rel="icon" type="image/png" href="{{ sitedata.favicon.img }}">
-<link rel="apple-touch-icon" href="{{ sitedata.favicon.img }}">
-{% else %}
-<link rel="shortcut icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
-<link rel="icon" type="image/png" href="{{ asset('favicon.png') }}">
-<link rel="apple-touch-icon" href="{{ asset('favicon.png') }}">
-{% endif %}
-{% else %}
-<link rel="shortcut icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
-<link rel="icon" type="image/png" href="{{ asset('favicon.png') }}">
-<link rel="apple-touch-icon" href="{{ asset('favicon.png') }}">
-{% endif %}
+{% extends 'LaboAdminBundle:blocks:favicon.html.twig' %}
+{% block faviconPrint %}
+	{{ parent() }}
+{% endblock faviconPrint %}

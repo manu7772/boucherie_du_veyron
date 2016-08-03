@@ -4,7 +4,7 @@ namespace site\adminsiteBundle\Form;
 
 use Labo\Bundle\AdminBundle\Form\baseType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 // Transformer
 use Symfony\Component\Form\CallbackTransformer;
@@ -33,7 +33,7 @@ class tagType extends baseType {
             // ->add('pagewebs', 'entity', array(
             //     "label"     => 'pageweb.name_s',
             //     'translation_domain' => 'messages',
-            //     'property'  => 'nom',
+            //     'choice_label'  => 'nom',
             //     'class'     => 'LaboAdminBundle:pageweb',
             //     'multiple'  => true,
             //     'expanded'  => false,
@@ -46,7 +46,7 @@ class tagType extends baseType {
             // ->add('articles', 'entity', array(
             //     "label"     => 'article.name_s',
             //     'translation_domain' => 'messages',
-            //     'property'  => 'nom',
+            //     'choice_label'  => 'nom',
             //     'class'     => 'LaboAdminBundle:article',
             //     'multiple'  => true,
             //     'expanded'  => false,
@@ -59,7 +59,7 @@ class tagType extends baseType {
             // ->add('fiches', 'entity', array(
             //     "label"     => 'fiche.name_s',
             //     'translation_domain' => 'messages',
-            //     'property'  => 'nom',
+            //     'choice_label'  => 'nom',
             //     'class'     => 'LaboAdminBundle:fiche',
             //     'multiple'  => true,
             //     'expanded'  => false,
@@ -75,9 +75,9 @@ class tagType extends baseType {
     }
 
     /**
-     * @param OptionsResolverInterface $resolver
+     * @param OptionsResolver $resolver
      */
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
             'data_class' => 'site\adminsiteBundle\Entity\tag'

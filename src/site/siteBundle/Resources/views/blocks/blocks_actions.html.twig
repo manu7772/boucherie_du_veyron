@@ -32,10 +32,10 @@
 				</div>
 				<p class="tab-name-product">
 					{{ item.nom }}
-					{%- if EDITORMODE %} <a href="{{ path('siteadmin_entite', {entite: item.className, id: item.id, action: 'show'}) }}"><i class="fa fa-eye icon-wait-on-click"></i></a>{% endif %}
-					{%- if EDITORMODE %} <a href="{{ path('siteadmin_entite', {entite: item.className, id: item.id, action: 'edit'}) }}"><i class="fa fa-pencil icon-wait-on-click"></i></a>{% endif %}
+					{%- if EDITORMODE %} <a href="{{ path('siteadmin_entite', {entite: item.className, id: item['element_id'], action: 'show'}) }}"><i class="fa fa-eye icon-wait-on-click"></i></a>{% endif %}
+					{%- if EDITORMODE %} <a href="{{ path('siteadmin_entite', {entite: item.className, id: item['element_id'], action: 'edit'}) }}"><i class="fa fa-pencil icon-wait-on-click"></i></a>{% endif %}
 				</p>
-				<p class="tab-info-category">{{ item.nestedParents.0.nom|default('<i>' ~ item.nom ~ '</i>')|raw }}</p>
+				{# <p class="tab-info-category">{{ item.nestedParents.0.nom|default('<i>' ~ item.nom ~ '</i>')|raw }}</p> #}
 			</div>
 		</div>
 	</div>
@@ -57,10 +57,10 @@
 				</div>
 				<p class="tab-name-product">
 					{{ item.nom }}
-					{%- if EDITORMODE %} <a href="{{ path('siteadmin_entite', {entite: item.className, id: item.id, action: 'show'}) }}"><i class="fa fa-eye icon-wait-on-click"></i></a>{% endif %}
-					{%- if EDITORMODE %} <a href="{{ path('siteadmin_entite', {entite: item.className, id: item.id, action: 'edit'}) }}"><i class="fa fa-pencil icon-wait-on-click"></i></a>{% endif %}
+					{%- if EDITORMODE %} <a href="{{ path('siteadmin_entite', {entite: item.className, id: item['element_id'], action: 'show'}) }}"><i class="fa fa-eye icon-wait-on-click"></i></a>{% endif %}
+					{%- if EDITORMODE %} <a href="{{ path('siteadmin_entite', {entite: item.className, id: item['element_id'], action: 'edit'}) }}"><i class="fa fa-pencil icon-wait-on-click"></i></a>{% endif %}
 				</p>
-				<p class="tab-info-category">{{ item.nestedParents.0.nom|default('<i>' ~ item.nom ~ '</i>')|raw }}</p>
+				{# <p class="tab-info-category">{{ item.nestedParents.0.nom|default('<i>' ~ item.nom ~ '</i>')|raw }}</p> #}
 			</div>
 		</div>
 	</div>

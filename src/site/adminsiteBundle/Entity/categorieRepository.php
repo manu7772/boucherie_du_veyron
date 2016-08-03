@@ -138,7 +138,18 @@ class categorieRepository extends nestedRepository {
 		return $qb->getQuery()->getResult();
 	}
 
-
+	// public function findWithArrayOfIdsWithChilds($ids, $levels = 1, $shortCutContext = false) {
+	// 	$qb = $this->createQueryBuilder(self::ELEMENT);
+	// 	$qb->where($qb->expr()->in(self::ELEMENT.'.id', '?1'))
+	// 		->setParameter('1', $ids);
+	// 		;
+	// 	// équivalent :
+	// 	// $qb->where(self::ELEMENT.'.id IN (:ids)')
+	// 	// 	->setParameter('ids', $ids, \Doctrine\DBAL\Connection::PARAM_STR_ARRAY)
+	// 	// 	;
+	// 	if($shortCutContext == false) $this->contextStatut($qb);
+	// 	return $qb->getQuery()->getArrayResult();
+	// }
 
 	/********************************/
 	/*** CLOSURES                 ***/

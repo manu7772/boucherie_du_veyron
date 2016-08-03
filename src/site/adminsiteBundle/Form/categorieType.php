@@ -4,7 +4,7 @@ namespace site\adminsiteBundle\Form;
 
 use Labo\Bundle\AdminBundle\Form\baseType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 // Transformer
 use Symfony\Component\Form\CallbackTransformer;
@@ -89,7 +89,7 @@ class categorieType extends baseType {
 					'by_reference' => false,
 					"label"		=> 'fields.group_pagewebsChilds',
 					'translation_domain' => 'categorie',
-					'property'	=> 'nom',
+					'choice_label'	=> 'nom',
 					'class'		=> 'LaboAdminBundle:nested',
 					'multiple'	=> function() use ($nestedAttributesParameters) { return $nestedAttributesParameters['pagewebs']['data-limit'] > 1; },
 					'expanded'	=> false,
@@ -123,7 +123,7 @@ class categorieType extends baseType {
 						'by_reference' => false,
 						"label"		=> 'fields.group_categorie_parentParents',
 						'translation_domain' => 'categorie',
-						'property'	=> 'nom',
+						'choice_label'	=> 'nom',
 						'class'		=> 'LaboAdminBundle:nested',
 						'multiple'	=> function() use ($nestedAttributesParameters) { return $nestedAttributesParameters['categorie_parent']['data-limit'] > 1; },
 						'expanded'	=> false,
@@ -159,7 +159,7 @@ class categorieType extends baseType {
 						'by_reference' => false,
 						"label"		=> 'fields.group_nestedsChilds',
 						'translation_domain' => 'categorie',
-						'property'	=> 'nom',
+						'choice_label'	=> 'nom',
 						'class'		=> 'LaboAdminBundle:nested',
 						'multiple'	=> function() use ($nestedAttributesParameters) { return $nestedAttributesParameters['nesteds']['data-limit'] > 1; },
 						'expanded'	=> false,
@@ -184,9 +184,9 @@ class categorieType extends baseType {
 	}
 
 	/**
-	 * @param OptionsResolverInterface $resolver
+	 * @param OptionsResolver $resolver
 	 */
-	public function setDefaultOptions(OptionsResolverInterface $resolver) {
+	public function configureOptions(OptionsResolver $resolver) {
 		$resolver->setDefaults(array(
 			'data_class' => 'site\adminsiteBundle\Entity\categorie'
 		));

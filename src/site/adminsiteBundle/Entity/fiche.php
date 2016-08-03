@@ -54,11 +54,6 @@ abstract class fiche extends item {
 	 */
 	protected $accroche;
 
-	// protected $listeTypentites = array(
-	// 	1 => "recette",
-	// 	2 => "boisson",
-	// 	);
-
 	// NESTED VIRTUAL GROUPS
 	// les noms doivent commencer par "$group_" et finir par "Parents" (pour les parents) ou "Childs" (pour les enfants)
 	// et la partie variable doit comporter au moins 3 lettres
@@ -74,6 +69,14 @@ abstract class fiche extends item {
 		parent::__construct();
 		$this->datePublication = new DateTime();
 		$this->dateExpiration = null;
+		$this->postLoad();
+	}
+
+	/**
+	 * @ORM\PostLoad
+	 */
+	public function postLoad() {
+		$this->listeTypentites = array(1 => 'boisson', 2 => 'recette');
 	}
 
 	public function getNestedAttributesParameters() {

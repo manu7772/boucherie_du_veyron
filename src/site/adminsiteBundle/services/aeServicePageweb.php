@@ -54,7 +54,21 @@ class aeServicePageweb extends aeServiceItem {
     }
 
     public function getDefaultPage() {
-        return $this->getRepo()->findOneByDefault(1);
+        $this->container->get('aetools.debug')->startChrono();
+        $page = $this->getRepo()->findDefaultPage();
+        if(is_array($page)) $page = reset($page);
+        $this->completePageweb($page);
+        $this->container->get('aetools.debug')->printChrono('Get default pagweb', true);
+        return $page;
+    }
+
+    public function getPageBySlug($itemSlug) {
+        $this->container->get('aetools.debug')->startChrono();
+        $page = $this->getRepo()->getPageBySlug($itemSlug);
+        if(is_array($page)) $page = reset($page);
+        $this->completePageweb($page);
+        $this->container->get('aetools.debug')->printChrono('Get "'.$itemSlug.'" pagweb', true);
+        return $page;
     }
 
     protected function initFiles() {
@@ -108,4 +122,21 @@ class aeServicePageweb extends aeServiceItem {
         return new ChoiceList(array_keys($models), array_values($models));
     }
 
+    public function completePageweb(&$pageweb) {
+        if(is_object($pageweb)) return $pageweb;
+        if(!is_array($pageweb)) return $pageweb;
+        // template
+        $path = preg_split('#(src/|Resources/|views/|/)#', $pageweb['pageweb']["modele"]);
+        $pageweb['pageweb']["template"] = implode(array_slice($path, 0, -2)).':'.$path[count($path)-2].':'.$path[count($path)-1];
+        // model name
+        $path = explode("/", $pageweb['pageweb']["modele"]);
+        $pageweb['pageweb']["modelename"] = preg_replace("#\.html\.twig$#", '', end($path));
+        // intégration id liés
+        foreach ($pageweb as $key => $value) if($key != 'pageweb') {
+            $pageweb['pageweb']['#'.$key] = $value;
+        }
+        $pageweb = $pageweb['pageweb'];
+        // result
+        return $pageweb;
+    }
 }

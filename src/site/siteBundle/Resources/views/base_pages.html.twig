@@ -18,7 +18,7 @@
 	{% block footers %}
 	<footer id="footer"><!--Footer-->
 		{% block footerTop %}
-			{{ include("sitesiteBundle:blocks:footerTop.html.twig") }}
+			{{ render(controller("sitesiteBundle:Default:footerTop")) }}
 		{% endblock footerTop %}
 		{% block footerBottom %}
 			{{ include("sitesiteBundle:blocks:footerBottom.html.twig") }}

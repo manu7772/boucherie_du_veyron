@@ -64,6 +64,12 @@ class pageweb extends item {
 	protected $metadescription;
 
 	/**
+	 * @ORM\ManyToOne(targetEntity="site\adminsiteBundle\Entity\categorie", cascade={"persist"})
+	 * @ORM\JoinColumn(nullable=true, unique=false, onDelete="SET NULL")
+	 */
+	protected $diaporama;
+
+	/**
 	 * @var string
 	 * @ORM\Column(name="modele", type="string", length=255, nullable=true, unique=false)
 	 */
@@ -84,6 +90,7 @@ class pageweb extends item {
 		$this->titreh1 = null;
 		$this->metadescription = null;
 		$this->modele = null;
+		$this->diaporama = null;
 	}
 
 	public function getNestedAttributesParameters() {
@@ -197,6 +204,25 @@ class pageweb extends item {
 	}
 
 	/**
+	 * set diaporama
+	 * @param categorie $diaporama
+	 * @return pageweb
+	 */
+	public function setDiaporama(categorie $diaporama = null) {
+		$this->diaporama = $diaporama;
+		return $this;
+	}
+
+	/**
+	 * get diaporama
+	 * @return categorie
+	 */
+	public function getDiaporama() {
+		return $this->diaporama;
+	}
+
+
+	/**
 	 * Set modele
 	 * @param string $modele
 	 * @return pageweb
@@ -219,7 +245,7 @@ class pageweb extends item {
 	 * @return string 
 	 */
 	public function getModelename() {
-		$path = explode("/", $this->modele);		
+		$path = explode("/", $this->modele);
 		return preg_replace("#\.html\.twig$#", '', end($path));
 	}
 

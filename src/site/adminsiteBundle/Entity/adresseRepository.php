@@ -16,4 +16,8 @@ use Doctrine\ORM\Mapping\ClassMetadata;
  */
 class adresseRepository extends subentityRepository {
 
+	public function defaultVal() {
+		return array();
+	}
+
 }

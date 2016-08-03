@@ -24,7 +24,7 @@ use Symfony\Component\Form\FormEvent;
 
 use site\UserBundle\Entity\User;
 use Labo\Bundle\AdminBundle\Form\imageType;
-use Labo\Bundle\AdminBundle\Form\cropperType;
+use site\adminsiteBundle\Form\cropperType;
 
 use FOS\UserBundle\Form\Type\ProfileFormType as BaseType;
 
@@ -153,7 +153,7 @@ class ProfileFormType extends BaseType {
 
 	}
 
-	public function setDefaultOptions(OptionsResolverInterface $resolver) {
+	public function configureOptions(OptionsResolverInterface $resolver) {
 		$resolver->setDefaults(array(
 			'data_class' => 'site\UserBundle\Entity\User',
 			'intention'  => 'profile',

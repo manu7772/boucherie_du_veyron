@@ -1,12 +1,10 @@
-{% import 'sitesiteBundle:blocks:actions.html.twig' as actions %}
-
 <div class="header-middle"><!--header-middle-->
 	<div class="container">
 		<div class="row">
 			<div class="col-xs-4 col-sm-3 col-md-3 content-logo">
 				<div class="logo pull-left">
-					{% if sitedata.image|default(null) != null %}
-					<a href="{{ path('sitesite_homepage') }}"><img src="{{ sitedata.image.img }}" alt="logo" /></a> {# sitedata.image.imgThumbnail(260, 118, in) #}
+					{% if sitedata.image_id|default(null) != null %}
+					<a href="{{ path('sitesite_homepage') }}"><img src="{{ imageB64sized(sitedata.image_id) }}" alt="logo" /></a> {# sitedata.image.imgThumbnail(260, 118, in) #}
 					{% else %}
 					<a href="{{ path('sitesite_homepage') }}"><img src="{{ asset('bundles/sitesite/images/home/logo.jpg') }}" alt="logo" /></a>
 					{% endif %}
@@ -56,7 +54,6 @@
 							</div>
 						</div>
 					</div>
-
 					<div class="menu-interne col-sm-12">
 						<div class="navbar-header"><!--interne-menu-->
 							<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -66,21 +63,7 @@
 								<span class="icon-bar"></span>
 							</button>
 						</div>
-						<div class="mainmenu pull-left">
-							<ul class="nav navbar-nav collapse navbar-collapse">
-								{% for item in sitedata.menuNav.children|default([]) %}
-								{% if item.slug == infoRoute._route_params.pagewebSlug|default(null) %}
-								<li>
-									<a class="active">{{ item.nom }}</a>
-								</li>
-								{% else %}
-								<li>
-									<a {{ actions.elementHref(item, '_self') }}>{{ item.nom }}</a>
-								</li>
-								{% endif %}
-								{% endfor %}
-							</ul>
-						</div>
+						{{ render(controller("sitesiteBundle:Default:menuNav")) }}
 					</div><!--/interne-menu-->
 				</div>
 

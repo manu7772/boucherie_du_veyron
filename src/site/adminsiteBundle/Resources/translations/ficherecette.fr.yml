@@ -37,3 +37,5 @@ fields:
     icon: icône
     typentite: type de fiche
     group_article_recetteParents: articles conseillés
+typentite:
+    recette: recette

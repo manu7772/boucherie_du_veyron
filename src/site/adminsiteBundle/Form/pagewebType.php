@@ -4,7 +4,7 @@ namespace site\adminsiteBundle\Form;
 
 use Labo\Bundle\AdminBundle\Form\baseType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 // Transformer
 use Symfony\Component\Form\CallbackTransformer;
@@ -72,16 +72,39 @@ class pagewebType extends baseType {
 				'required' => true,
 				'choice_list' => $this->pageweb->getPagewebChoices($builder->getData()->getExtended()),
 				))
+			->add('extended', 'checkbox', array(
+				'label'		=> 'fields.extended',
+				'translation_domain' => 'pageweb',
+				"required"  => false,
+				))
 			// 1 image :
 			->add('image', new cropperType($this->controller, $this->imagesData), array(
 				'label' => 'fields.image',
 				'translation_domain' => 'pageweb',
 				'required' => false,
 				))
+            ->add('diaporama', 'entity', array(
+                "label"     => 'fields.diaporama',
+                'translation_domain' => 'pageweb',
+                'class'     => 'siteadminsiteBundle:categorie',
+                'choice_label'  => 'nom',
+                'multiple'  => false,
+                'required' => false,
+                'group_by' => 'parent.nom',
+                "query_builder" => function($repo) {
+                    if(method_exists($repo, 'getElementsBySubTypeButRoot'))
+                        return $repo->getElementsBySubTypeButRoot(array('article', 'pageweb', 'fiche'));
+                        else return $repo->findAllClosure();
+                    },
+                'placeholder'   => 'form.select',
+                'attr'      => array(
+                    'class'         => 'select2',
+                    ),
+                ))
 			->add('tags', 'entity', array(
 				'label' => 'fields.tags',
 				'translation_domain' => 'pageweb',
-				'property' => 'nom',
+				'choice_label' => 'nom',
 				'class' => 'LaboAdminBundle:tag',
 				'multiple' => true,
 				'required' => false,
@@ -96,16 +119,11 @@ class pagewebType extends baseType {
 						else return $repo->findAllClosure();
 					},
 				))
-			->add('extended', 'checkbox', array(
-				'label'		=> 'fields.extended',
-				'translation_domain' => 'pageweb',
-				"required"  => false,
-				))
 			// ->add('parents', 'entity', array(
 			// 	"label"     => 'name_s',
 			// 	'translation_domain' => 'categorie',
 			// 	'class'     => 'LaboAdminBundle:categorie',
-			// 	'property'  => 'nom',
+			// 	'choice_label'  => 'nom',
 			// 	'multiple'  => true,
 			// 	'required' => false,
 			// 	'group_by' => 'parent.nom',
@@ -123,9 +141,9 @@ class pagewebType extends baseType {
 	}
 
 	/**
-	 * @param OptionsResolverInterface $resolver
+	 * @param OptionsResolver $resolver
 	 */
-	public function setDefaultOptions(OptionsResolverInterface $resolver) {
+	public function configureOptions(OptionsResolver $resolver) {
 		$resolver->setDefaults(array(
 			'data_class' => 'site\adminsiteBundle\Entity\pageweb'
 		));

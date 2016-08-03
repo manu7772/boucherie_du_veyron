@@ -110,6 +110,10 @@ services:
         class: %ae_services%aeServiceMedia
         arguments: [@service_container]
 
+    # fonctionnalités outils manipulation images data
+    aetools.aeImagesTools:
+        class: %ae_services%aeImages
+
     # fonctionnalités de image
     aetools.aeImage:
         class: %ae_services%aeServiceImage

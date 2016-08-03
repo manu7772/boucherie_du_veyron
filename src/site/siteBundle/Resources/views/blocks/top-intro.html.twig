@@ -2,13 +2,15 @@
 	<div class="container">
 		<div class="row">
 			
-			{% block mainmenu %}
-			{{ include('sitesiteBundle:blocks:mainmenu.html.twig') }}
-			{% endblock mainmenu %}
+			{% block menuArticle %}
+			{{ render(controller('sitesiteBundle:Default:menuArticle')) }}
+			{% endblock menuArticle %}
 
+			{% if pageweb['#diaporama_id']|default(null) != null %}
 			{% block diaporama %}
-			{{ render(controller('sitesiteBundle:Default:diaporama', {slug: 'intro'})) }}
+			{{ render(controller('sitesiteBundle:Default:diaporama', {id: pageweb['#diaporama_id']})) }}
 			{% endblock diaporama %}
+			{% endif %}
 
 		</div>
 	</div>

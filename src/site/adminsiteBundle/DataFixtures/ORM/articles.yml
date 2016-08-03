@@ -146,15 +146,15 @@ article:
             descriptif: '<p></p>'
             prix: '36.90'
             group_nestedsParents:
-                field: slug
-                value: 'abats'
+                field: nom
+                value: 'Diaporamas accueil'
         -
             nom: 'Filet'
             descriptif: '<p></p>'
             prix: '42.90'
             group_nestedsParents:
-                field: slug
-                value: 'abats'
+                field: nom
+                value: 'Diaporamas accueil'
 
 
 

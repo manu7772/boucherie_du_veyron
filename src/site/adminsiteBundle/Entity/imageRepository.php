@@ -16,6 +16,10 @@ use Doctrine\ORM\Mapping\ClassMetadata;
  */
 class imageRepository extends mediaRepository {
 
+	public function defaultVal() {
+		return array();
+	}
+
 	/**
 	 * Retourne la liste des images groupées par owner
 	 * @return array

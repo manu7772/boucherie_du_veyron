@@ -4,7 +4,7 @@ namespace site\adminsiteBundle\Form;
 
 use Labo\Bundle\AdminBundle\Form\baseType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 // Transformer
 use Symfony\Component\Form\CallbackTransformer;
@@ -69,7 +69,7 @@ class siteType extends baseType {
                 "label"     => 'fields.menuNav',
                 'translation_domain' => 'site',
                 'class'     => 'siteadminsiteBundle:categorie',
-                'property'  => 'nom',
+                'choice_label'  => 'nom',
                 'multiple'  => false,
                 'required' => false,
                 'group_by' => 'parent.nom',
@@ -87,7 +87,7 @@ class siteType extends baseType {
                 "label"     => 'fields.menuArticle',
                 'translation_domain' => 'site',
                 'class'     => 'siteadminsiteBundle:categorie',
-                'property'  => 'nom',
+                'choice_label'  => 'nom',
                 'multiple'  => false,
                 'required' => false,
                 'group_by' => 'parent.nom',
@@ -101,29 +101,29 @@ class siteType extends baseType {
                     'class'         => 'select2',
                     ),
                 ))
-            ->add('diaporamaintro', 'entity', array(
-                "label"     => 'fields.diaporamaintro',
-                'translation_domain' => 'site',
-                'class'     => 'siteadminsiteBundle:categorie',
-                'property'  => 'nom',
-                'multiple'  => false,
-                'required' => false,
-                'group_by' => 'parent.nom',
-                "query_builder" => function($repo) {
-                    if(method_exists($repo, 'getElementsBySubTypeButRoot'))
-                        return $repo->getElementsBySubTypeButRoot(array('article', 'pageweb', 'fiche'));
-                        else return $repo->findAllClosure();
-                    },
-                'placeholder'   => 'form.select',
-                'attr'      => array(
-                    'class'         => 'select2',
-                    ),
-                ))
+            // ->add('diaporamaintro', 'entity', array(
+            //     "label"     => 'fields.diaporamaintro',
+            //     'translation_domain' => 'site',
+            //     'class'     => 'siteadminsiteBundle:categorie',
+            //     'choice_label'  => 'nom',
+            //     'multiple'  => false,
+            //     'required' => false,
+            //     'group_by' => 'parent.nom',
+            //     "query_builder" => function($repo) {
+            //         if(method_exists($repo, 'getElementsBySubTypeButRoot'))
+            //             return $repo->getElementsBySubTypeButRoot(array('article', 'pageweb', 'fiche'));
+            //             else return $repo->findAllClosure();
+            //         },
+            //     'placeholder'   => 'form.select',
+            //     'attr'      => array(
+            //         'class'         => 'select2',
+            //         ),
+            //     ))
             ->add('categorieArticles', 'entity', array(
                 "label"     => 'fields.categorieArticles',
                 'translation_domain' => 'site',
                 'class'     => 'siteadminsiteBundle:categorie',
-                'property'  => 'nom',
+                'choice_label'  => 'nom',
                 'multiple'  => true,
                 'required' => false,
                 'group_by' => 'parent.nom',
@@ -141,7 +141,7 @@ class siteType extends baseType {
                 "label"     => 'fields.categorieFooters',
                 'translation_domain' => 'site',
                 'class'     => 'siteadminsiteBundle:categorie',
-                'property'  => 'nom',
+                'choice_label'  => 'nom',
                 'multiple'  => true,
                 'required' => false,
                 'group_by' => 'parent.nom',
@@ -159,7 +159,7 @@ class siteType extends baseType {
                 "label"     => 'fields.boutiques',
                 'translation_domain' => 'site',
                 'class'     => 'siteadminsiteBundle:boutique',
-                'property'  => 'nom',
+                'choice_label'  => 'nom',
                 'multiple'  => true,
                 'required' => false,
                 'placeholder'   => 'form.select',
@@ -171,7 +171,7 @@ class siteType extends baseType {
                 "label"     => 'fields.collaborateurs',
                 'translation_domain' => 'site',
                 'class'     => 'siteUserBundle:User',
-                'property'  => 'username',
+                'choice_label'  => 'username',
                 'multiple'  => true,
                 'required' => false,
                 'group_by' => 'bestRole',
@@ -216,9 +216,9 @@ class siteType extends baseType {
     }
     
     /**
-     * @param OptionsResolverInterface $resolver
+     * @param OptionsResolver $resolver
      */
-    public function setDefaultOptions(OptionsResolverInterface $resolver) {
+    public function configureOptions(OptionsResolver $resolver) {
         $resolver->setDefaults(array(
             'data_class' => 'site\adminsiteBundle\Entity\site'
         ));

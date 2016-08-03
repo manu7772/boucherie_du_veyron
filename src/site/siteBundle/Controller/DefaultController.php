@@ -18,31 +18,27 @@ class DefaultController extends Controller {
 
 	const ACCEPT_ALIAS_ITEMS = false;
 	const ADD_ALIAS_ITEMS = true;
-
-
-	protected function addSiteData(&$data = null, $siteDataId = null) {
-		if($data === null) $data = array();
-		$data['sitedata'] = $this->get('aetools.aeSite')->getSiteData($siteDataId);
-		return $data;
-	}
+	const FIND_EXTENDED = true;
 
 	public function indexAction() {
-		$data = $this->addSiteData();
+		$data['sitedata'] = $this->get('aetools.aeSite')->getSiteData();
 		$data['pageweb'] = $this->get('aetools.aePageweb')->getDefaultPage();
-		if(is_object($data['pageweb'])) {
+		if(isset($data['pageweb']['id'])) {
+			// $this->get('aetools.debug')->startChrono();
 			$this->pagewebactions($data);
+			// $this->get('aetools.debug')->printChrono('Pagweb action', true);
 			// chargement de la pageweb
 			if(isset($data['redirect'])) {
 				return $this->redirect($data['redirect']);
-			} else if(is_object($data['pageweb'])) {
-				return $this->render($data['pageweb']->getTemplate(), $data);
+			} else if(isset($data['pageweb']['id'])) {
+				return $this->render($data['pageweb']["template"], $data);
 			}
 		} else {
 			// si aucune page web… chargement de la page par défaut…
 			$httpHost = $this->get('request')->getSchemeAndHttpHost();
 			$locale = $this->get('request')->getLocale();
-			echo('<p>No data in base : user creation…</p>');
-			echo('<p><strong>'.$httpHost.' / '.$locale.'</strong></p>');
+			// echo('<p>No data in base : user creation…</p>');
+			// echo('<p><strong>'.$httpHost.' / '.$locale.'</strong></p>');
 			$userService = $this->get('aetools.aeUser');
 			$userService->usersExist(true);
 			switch ($httpHost) {
@@ -60,39 +56,39 @@ class DefaultController extends Controller {
 
 	public function pagewebCategorieAction($categorieSlug, $params = null) {
 		$data = $this->get('tools_json')->JSonExtract($params);
-		$this->addSiteData($data);
+		$data['sitedata'] = $this->get('aetools.aeSite')->getSiteData();
 		$data['categorie'] = $categorieSlug;
 		$categorie = $this->get('aetools.aeCategorie')->getRepo()->findOneBySlug($categorieSlug);
 		return $this->pagewebPagewebAction($categorie->getGroup_pagewebsChilds()[0], $data);
 	}
 
-	public function pagewebPagewebAction($pagewebSlug, $params = null) {
-		$data = $this->get('tools_json')->JSonExtract($params);
-		$this->addSiteData($data);
-		// $data['pageweb'] = $this->get('aetools.aePageweb')->getDefaultPage();
-		if(is_object($pagewebSlug)) $data['pageweb'] = $pagewebSlug;
-			else $data['pageweb'] = $this->get('aetools.aePageweb')->getRepo()->findOneBySlug($pagewebSlug);
-		// $data['marques'] = $this->get('aetools.aeEntity')->getRepo('site\adminsiteBundle\Entity\marque')->findAll();
-		if(is_object($data['pageweb'])) {
-			$this->pagewebactions($data);
-			// chargement de la pageweb
-			if(isset($data['redirect'])) {
-				return $this->redirect($data['redirect']);
-			} else if(is_object($data['pageweb'])) {
-				return $this->render($data['pageweb']->getTemplate(), $data);
-			}
-		} else {
-			// si aucune page web… chargement de la page par défaut…
-			return $this->redirectToRoute('sitesite_homepage');
-			// $userService = $this->get('aetools.aeUser');
-			// $userService->usersExist(true);
-			// return $this->redirectToRoute('generate');
-		}
-	}
+	// public function pagewebPagewebAction($pagewebSlug, $params = null) {
+	// 	$data = $this->get('tools_json')->JSonExtract($params);
+	// 	$data['sitedata'] = $this->get('aetools.aeSite')->getSiteData();
+	// 	// $data['pageweb'] = $this->get('aetools.aePageweb')->getDefaultPage();
+	// 	if(is_object($pagewebSlug)) $data['pageweb'] = $pagewebSlug;
+	// 		else $data['pageweb'] = $this->get('aetools.aePageweb')->getRepo()->findOneBySlug($pagewebSlug);
+	// 	// $data['marques'] = $this->get('aetools.aeEntity')->getRepo('site\adminsiteBundle\Entity\marque')->findAll();
+	// 	if(is_object($data['pageweb'])) {
+	// 		$this->pagewebactions($data);
+	// 		// chargement de la pageweb
+	// 		if(isset($data['redirect'])) {
+	// 			return $this->redirect($data['redirect']);
+	// 		} else if(is_object($data['pageweb'])) {
+	// 			return $this->render($data['pageweb']->getTemplate(), $data);
+	// 		}
+	// 	} else {
+	// 		// si aucune page web… chargement de la page par défaut…
+	// 		return $this->redirectToRoute('sitesite_homepage');
+	// 		// $userService = $this->get('aetools.aeUser');
+	// 		// $userService->usersExist(true);
+	// 		// return $this->redirectToRoute('generate');
+	// 	}
+	// }
 
 
 	public function categorieAction($itemSlug, $parentSlug = null) {
-		$data = $this->addSiteData();
+		$data['sitedata'] = $this->get('aetools.aeSite')->getSiteData();
 		// categorie
 		$data['categorie'] = $this->get('aetools.aeCategorie')->getRepo()->findOneBySlug($itemSlug);
 		$data['parent'] = $this->get('aetools.aeCategorie')->getRepo()->findOneBySlug($parentSlug);
@@ -111,19 +107,20 @@ class DefaultController extends Controller {
 	}
 
 	public function pagewebAction($itemSlug, $parentSlug = null) {
-		$data['pageweb'] = $this->get('aetools.aePageweb')->getRepo()->findOneBySlug($itemSlug);
+		$data['sitedata'] = $this->get('aetools.aeSite')->getSiteData();
+		$data['pageweb'] = $this->get('aetools.aePageweb')->getPageBySlug($itemSlug);
 		if($parentSlug != null)
 			$data['categorie'] = $this->get('aetools.aeCategorie')->getRepo()->findOneBySlug($parentSlug);
-		$this->addSiteData($data);
+			// $data['categorie'] = $this->get('aetools.aeNested')->getRepo()->findArrayTree($parentSlug, 'all', null, false, 0, self::FIND_EXTENDED);
 		$this->pagewebactions($data);
-		return $this->render($data['pageweb']->getTemplate(), $data);
+		return $this->render($data['pageweb']['template'], $data);
 	}
 
 	public function articleAction($itemSlug, $parentSlug = null) {
 		$data['article'] = $this->get('aetools.aeArticle')->getRepo()->findOneBySlug($itemSlug);
 		if($parentSlug != null)
 			$data['categorie'] = $this->get('aetools.aeCategorie')->getRepo()->findOneBySlug($parentSlug);
-		$this->addSiteData($data);
+		$data['sitedata'] = $this->get('aetools.aeSite')->getSiteData();
 		return $this->render('sitesiteBundle:extended_pages_web:article.html.twig', $data);
 	}
 
@@ -135,7 +132,7 @@ class DefaultController extends Controller {
 		} else {
 			$data['pageweb'] = $this->get('aetools.aePageweb')->getRepo()->findOneByNom('articles');
 		}
-		$this->addSiteData($data);
+		$data['sitedata'] = $this->get('aetools.aeSite')->getSiteData();
 		$this->pagewebactions($data);
 		return $this->render($data['pageweb']->getTemplate(), $data);
 	}
@@ -144,7 +141,7 @@ class DefaultController extends Controller {
 
 	protected function pagewebactions(&$data) {
 		$trans = $this->get('translator');
-		switch ($data['pageweb']->getModelename()) {
+		switch ($data['pageweb']["modelename"]) {
 			case 'contact':
 				// page contact
 				$message = $this->getNewEntity('site\adminsiteBundle\Entity\message');
@@ -182,7 +179,7 @@ class DefaultController extends Controller {
 						$new_message->setEmail($message->getEmail());
 						// $new_message->setObjet($message->getObjet());
 						$form = $this->createForm(new contactmessageType($this, []), $new_message);
-						$data['redirect'] = $this->generateUrl('site_pageweb', array('pagewebSlug' => $data['pageweb']));
+						$data['redirect'] = $this->generateUrl('site_pageweb', array('pagewebSlug' => $data['pageweb']['slug']));
 					} else {
 						// $data['message_error'] = "message.error";
 						$this->get('flash_messages')->send(array(
@@ -221,52 +218,74 @@ class DefaultController extends Controller {
 
 	// SUB QUERIES
 
-	// public function headerMiddleAction($siteDataId = null) {
-	// 	// $data['menu'] = $this->get('aetools.aeMenus')->getMenu('site-menu');
-	// 	$data = array();
-	// 	$this->addSiteData($data, $siteDataId);
-	// 	// récupération route/params requête MASTER
-	// 	$stack = $this->get('request_stack');
-	// 	$masterRequest = $stack->getMasterRequest();
-	// 	$data['infoRoute']['_route'] = $masterRequest->get('_route');
-	// 	$data['infoRoute']['_route_params'] = $masterRequest->get('_route_params');
-	// 	return $this->render('sitesiteBundle:blocks:headerMiddle.html.twig', $data);
-	// }
+	public function menuNavAction() {
+		$this->get('aetools.debug')->startChrono();
+		$data['sitedata'] = $this->get('aetools.aeSite')->getSiteData();
+		// echo('<pre>');var_dump($data['sitedata']);die('</pre>');
+		if(count($data['sitedata']) > 0) {
+			$data['menuNav'] = $this->get('aetools.aeNested')->getRepo()->findArrayTree($data['sitedata']['menuNav_id'], 'all', null, false, 1, self::FIND_EXTENDED);
+			if(is_array($data['menuNav'])) $data['menuNav'] = reset($data['menuNav']);
+		} else {
+			$data['menuNav'] = array();
+		}
+		$this->get('aetools.debug')->printChrono('Nav menu action', true);
 
-	// public function sidemenuAction() {
-	// 	$user = $this->getUser();
-	// 	if(is_object($user)) {
-	// 		$data['menu'] = $this->get('aetools.aeMenus')->getMenu('admin-sidemenu');
-	// 		$data['bundles.User.name']['params']['name'] = $user->getUsername();
-	// 		return $this->render('sitesiteBundle:blocks:sidemenu.html.twig', $data);
-	// 	} else {
-	// 		return new Response(null);
-	// 	}
-	// }
+		// récupération route/params requête MASTER
+		$stack = $this->get('request_stack');
+		$masterRequest = $stack->getMasterRequest();
+		$data['infoRoute']['_route'] = $masterRequest->get('_route');
+		$data['infoRoute']['_route_params'] = $masterRequest->get('_route_params');
+		return $this->render('sitesiteBundle:blocks:menunav.html.twig', $data);
+	}
 
-	// public function mainmenuAction($siteDataId = null) {
-	// 	$data = array();
-	// 	$this->addSiteData($data, $siteDataId);
-	// 	return $this->render('sitesiteBundle:blocks:mainmenu.html.twig', $data);
-	// }
+	// Menu latéral gauche articles
+	public function menuArticleAction($menuNav = []) {
+		$this->get('aetools.debug')->startChrono();
+		$data['sitedata'] = $this->get('aetools.aeSite')->getSiteData();
+		$data['menuArticle'] = $this->get('aetools.aeNested')->getRepo()->findArrayTree($data['sitedata']['menuArticle_id'], 'all', null, false, 2, self::FIND_EXTENDED);
+		if(is_array($data['menuArticle'])) $data['menuArticle'] = reset($data['menuArticle']);
+		// echo('<pre>');var_dump($data['menu']);echo('</pre>');
+		$this->get('aetools.debug')->printChrono('Main menu action', true);
+		// die();
+		return $this->render('sitesiteBundle:blocks:menuarticle.html.twig', $data);
+	}
 
 	public function miniListeInfoAction($categorieArticles = []) {
-		$data = array();
-		if(count($categorieArticles) > 0)
-			$data['items'] = $this->get('aetools.aeCategorie')->getRepo()->findWithArrayOfIds(array_keys($categorieArticles));
-		else $data['items'] = array();
+		$this->get('aetools.debug')->startChrono();
+		$data['sitedata'] = $this->get('aetools.aeSite')->getSiteData();
+		if(count((array)$categorieArticles) < 1) {
+			// données de siteDate
+			$categorieArticles = $data['sitedata']['categorieArticles'];
+		}
+		$data['items'] = array();
+		if(count((array)$categorieArticles) > 0) {
+			foreach((array)$categorieArticles as $key => $value) {
+				$it = $this->get('aetools.aeNested')->getRepo()->findArrayTree($value['id'], 'all', null, false, 1, self::FIND_EXTENDED);
+				if(count($it) > 0) $data['items'][$value['id']] = $it[0];
+			}
+		}
+		$this->get('aetools.debug')->printChrono('Mini list action', true);
 		return $this->render('sitesiteBundle:blocks:mini-liste-info.html.twig', $data);
 	}
 
-	// public function footerTopAction($siteDataId = null) {
-	// 	$data = array();
-	// 	$this->addSiteData($data, $siteDataId);
-	// 	return $this->render('sitesiteBundle:blocks:footerTop.html.twig', $data);
-	// }
+	public function footerTopAction() {
+        $this->get('aetools.debug')->startChrono();
+		$data['sitedata'] = $this->get('aetools.aeSite')->getSiteData();
+		$data['categorieFooters'] = array();
+		if(count($data['sitedata']) > 0) {
+			foreach($data['sitedata']['categorieFooters'] as $dat) {
+				$it = $this->get('aetools.aeNested')->getRepo()->findArrayTree($dat['id'], 'all', null, false, 1, self::FIND_EXTENDED);
+				if(count($it) > 0) $data['categorieFooters'][] = $it[0];
+			}
+		}
+		$this->get('aetools.debug')->printChrono('Get site footer', true);
+		return $this->render('sitesiteBundle:blocks:footerTop.html.twig', $data);
+	}
 
-	public function diaporamaAction($siteDataId = null) {
-		$data = array();
-		$this->addSiteData($data, $siteDataId);
+	public function diaporamaAction($id) {
+		// $data['sitedata'] = $this->get('aetools.aeSite')->getSiteData();
+		$data['diaporama'] = $this->get('aetools.aeNested')->getRepo()->findArrayTree($id, 'all', null, false, 2, self::FIND_EXTENDED);
+		if(is_array($data['diaporama'])) $data['diaporama'] = reset($data['diaporama']);
 		return $this->render('sitesiteBundle:blocks:diaporama.html.twig', $data);
 	}
 

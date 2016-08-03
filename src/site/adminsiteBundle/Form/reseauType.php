@@ -4,7 +4,7 @@ namespace site\adminsiteBundle\Form;
 
 use Labo\Bundle\AdminBundle\Form\baseType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 // Transformer
 use Symfony\Component\Form\CallbackTransformer;
@@ -50,7 +50,7 @@ class reseauType extends baseType {
 				))
 			// ->add('statut', 'entity', array(
 			// 	'class'     => 'LaboAdminBundle:statut',
-			// 	'property'  => 'nom',
+			// 	'choice_label'  => 'nom',
 			// 	'multiple'  => false,
 			// 	"label"     => 'name',
 			// 	'translation_domain' => 'statut',
@@ -85,9 +85,9 @@ class reseauType extends baseType {
 	}
 
 	/**
-	 * @param OptionsResolverInterface $resolver
+	 * @param OptionsResolver $resolver
 	 */
-	public function setDefaultOptions(OptionsResolverInterface $resolver) {
+	public function configureOptions(OptionsResolver $resolver) {
 		$resolver->setDefaults(array(
 			'data_class' => 'site\adminsiteBundle\Entity\reseau'
 		));

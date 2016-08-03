@@ -1,25 +1,26 @@
-{% if sitedata.diaporamaintro.nestedChilds|default([])|length > 0 %}
+{# {{ dump(diaporama) }} #}
+{% if diaporama.nbOfNotCategorieChildren|default(0) > 0 %}
 {% import 'sitesiteBundle:blocks:blocks_actions.html.twig' as blocks_actions %}
 <div class="col-sm-9 col-md-9 padding-left-resp"><!--colonne right-->
 	<div id="slider-home"><!--slider-->
 		<div id="slider-carousel" class="carousel slide" data-ride="carousel">
 
 			<ol class="carousel-indicators">
-				{% for item in sitedata.diaporamaintro.nestedChilds|default([]) %}
+				{% for item in diaporama.children|default([]) %}
 				<li data-target="#slider-carousel" data-slide-to="{{ loop.index0 }}"{% if loop.first %} class="active"{% endif %}></li>
 				{% endfor %}
 			</ol>
 
 			<div class="carousel-inner">
 
-				{% for item in sitedata.diaporamaintro.nestedChilds|default([]) %}
+				{% for item in diaporama.children|default([]) %}
 				{% if item.className == "article" %}
 				<div class="item{% if loop.first %} active{% endif %}"><!--image 2-->
 					<div class="item-margin">
 					<div class="col-sm-5 col-md-4 col-lg-5 padding-right padding-left">
 						<h1>{{ UCfirst(item.nom) }}</h1>
-						{{ item.accroche|raw }}
-						<small>{{ item.descriptif|raw }}</small>
+						{{ item.accroche|default('')|raw }}
+						<small>{{ item.descriptif|default('')|raw }}</small>
 						<h2>{{ item.prix|number_format(2, ',', '') }}<small><sup>€</sup><span>/Kg</span></small></h2>
 						{% if marketplace.vente %}
 						<div class="btn-group order-group in-slide" role="group" aria-label="...">
@@ -34,14 +35,18 @@
 					</div>
 					</div>
 					<div class="col-sm-7 col-md-8 col-lg-7 padding-right padding-left">
-						{{ blocks_actions.imageprint(item, 500, 350, ["slid-img","img-responsive"]) }}
+						{% if item['image_id'] != null %}
+						<img src="{{ imageB64sized(item['image_id'], 500, 350, 'cut') }}" alt="{{ 'name'|trans({}, item.className) }} {{ item.slug }}" class="slid-img img-responsive" />
+						{% else %}
+						<img src="{{ asset('bundles/sitesite/images/defaults/no-picture.png') }}" style="height:322px;" alt="{{ 'name'|trans({}, item.className) }} {{ item.slug }}" class="slid-img img-responsive" />
+						{% endif %}
 					</div>
 				</div><!--/image 2-->
 				{% elseif item.className == "pageweb" %}
 				<div class="item active"><!--image 1-->
 					<div class="col-sm-5 col-md-4 col-lg-5 padding-right padding-left">
 						<h1>{{ UCfirst(item.nom) }}</h1>
-						{{ item.descriptif|raw }}
+						{{ item.descriptif|default('')|raw }}
 					</div>
 					<div class="col-sm-7 col-md-8 col-lg-7 padding-right padding-left">
 						{{ blocks_actions.imageprint(item, 500, 350, ["slid-img","img-responsive"]) }}
@@ -51,7 +56,7 @@
 				<div class="item active"><!--image 1-->
 					<div class="col-sm-5 col-md-4 col-lg-5 padding-right padding-left">
 						<h1>{{ UCfirst(item.nom) }}</h1>
-						{{ item.descriptif|raw }}
+						{{ item.descriptif|default('')|raw }}
 					</div>
 					<div class="col-sm-7 col-md-8 col-lg-7 padding-right padding-left">
 						{{ blocks_actions.imageprint(item, 500, 350, ["slid-img","img-responsive"]) }}

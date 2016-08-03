@@ -4,7 +4,7 @@
 	<div class="container">
 		<div class="row">
 			{% if sitedata is defined %}
-			{% for item1 in sitedata.categorieFooters|default([]) %}
+			{% for item1 in categorieFooters|default([]) %}
 			<div class="col-sm-2">
 				<div class="single-widget">
 					<h2 title="{{ phraseCut(item1.descriptif|default(item1.nom)|striptags, 160) }}">{{ item1.nom }}</h2>

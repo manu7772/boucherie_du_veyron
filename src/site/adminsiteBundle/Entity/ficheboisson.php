@@ -51,6 +51,7 @@ class ficheboisson extends fiche {
 	public function __construct() {
 		parent::__construct();
 		$this->setNote($this->getDefaultNote()); // Note par défaut
+		$this->setTypentite(1);
 	}
 
 	public function getNestedAttributesParameters() {

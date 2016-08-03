@@ -4,7 +4,7 @@ namespace site\adminsiteBundle\Form;
 
 use Labo\Bundle\AdminBundle\Form\baseType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 // Transformer
 use Symfony\Component\Form\CallbackTransformer;
@@ -84,7 +84,7 @@ class ficheType extends baseType {
 			// ->add('slug')
 			// ->add('statut', 'entity', array(
 			// 	'class'     => 'LaboAdminBundle:statut',
-			// 	'property'  => 'nom',
+			// 	'choice_label'  => 'nom',
 			// 	'multiple'  => false,
 			// 	"label"     => 'name',
 			// 	'translation_domain' => 'statut',
@@ -102,7 +102,7 @@ class ficheType extends baseType {
 			->add('tags', 'entity', array(
 				'label'		=> 'name_s',
 				'translation_domain' => 'tag',
-				'property'	=> 'nom',
+				'choice_label'	=> 'nom',
 				'class'		=> 'LaboAdminBundle:tag',
 				'multiple'	=> true,
 				'required'	=> false,
@@ -115,7 +115,7 @@ class ficheType extends baseType {
 				'by_reference' => false,
 				"label"		=> 'fields.group_article_recetteParents',
 				'translation_domain' => 'fiche',
-				'property'	=> 'nom',
+				'choice_label'	=> 'nom',
 				'class'		=> 'LaboAdminBundle:nested',
 				'multiple'	=> true,
 				'expanded'	=> false,
@@ -148,9 +148,9 @@ class ficheType extends baseType {
 	}
 
 	/**
-	 * @param OptionsResolverInterface $resolver
+	 * @param OptionsResolver $resolver
 	 */
-	public function setDefaultOptions(OptionsResolverInterface $resolver)
+	public function configureOptions(OptionsResolver $resolver)
 	{
 		$resolver->setDefaults(array(
 			'data_class' => 'site\adminsiteBundle\Entity\fiche'

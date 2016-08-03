@@ -1,25 +1,25 @@
-{% if sitedata.menuArticle|default(null) != null %}
+{% if menuArticle|default(null) != null %}
 <div class="col-sm-3 col-md-3 padding-right-resp"><!--colonne left-->
 	<div class="left-sidebar"><!--left-sidebar-->
      	
 		<div class="panel-group category-products" id="accordian"><!--category-products-->
 
-			{% for item1 in sitedata.menuArticle.children|default([]) if item1.className == 'categorie' %}
+			{% for item1 in menuArticle.children|default([])|default([]) if item1.className == 'categorie' %}
 			<div class="panel panel-default">
 				<!--product {{ item1.nom }}-->
 				<div class="panel-heading">
 					<h4 class="panel-title">
-						{% if item1.children|length > 0 %}
+						{% if item1.children|default([])|length > 0 %}
 						<a data-toggle="collapse" data-parent="#accordian" href="#mainmenu-{{ item1.slug }}">
 							<span class="badge pull-right"><i class="fa fa-plus"></i></span>
-							<a href="{{ path('site_pageweb_' ~ item1.className, {itemSlug: item1.slug, parentSlug: sitedata.menuArticle.slug }) }}">{{ UCfirst(item1.nom) }}</a>
+							<a href="{{ path('site_pageweb_' ~ item1.className, {itemSlug: item1.slug, parentSlug: menuArticle.slug }) }}">{{ UCfirst(item1.nom) }}</a>
 						</a>
 						{% else %}
-						<a href="{{ path('site_pageweb_' ~ item1.className, {itemSlug: item1.slug, parentSlug: sitedata.menuArticle.slug }) }}">{{ UCfirst(item1.nom) }}</a>
+						<a href="{{ path('site_pageweb_' ~ item1.className, {itemSlug: item1.slug, parentSlug: menuArticle.slug }) }}">{{ UCfirst(item1.nom) }}</a>
 						{% endif %}
 					</h4>
 				</div>
-				{% if item1.children|length > 0 %}
+				{% if item1.children|default([])|length > 0 %}
 				<div id="mainmenu-{{ item1.slug }}" class="panel-collapse collapse">
 					<div class="panel-body">
 						<ul>

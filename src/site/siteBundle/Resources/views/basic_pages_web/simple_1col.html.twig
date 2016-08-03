@@ -6,7 +6,9 @@
 	<div class="container">
 		<div class="row">
 
-			{{ include('sitesiteBundle:blocks:mainmenu.html.twig') }}
+			{% block menuArticle %}
+			{{ render(controller('sitesiteBundle:Default:menuArticle')) }}
+			{% endblock menuArticle %}
 
 			<div class="col-sm-9 col-md-9 padding-left-resp">
 				<div class="content-page-right">

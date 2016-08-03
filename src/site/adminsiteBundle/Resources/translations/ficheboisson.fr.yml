@@ -41,6 +41,7 @@ notes:
     tresbon: très bon
     excellent: excellent
 typentite:
+    boisson: boisson
     vin: vin
     alcool: alcool
     'sans alcool': 'sans alcool'

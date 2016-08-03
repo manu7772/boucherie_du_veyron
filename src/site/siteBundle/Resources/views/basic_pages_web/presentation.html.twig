@@ -5,6 +5,47 @@
 {% block title %}{{ parent() }}{% endblock title %}
 
 {% block mainContainer %}
+
+	{% if pageweb['#diaporama_id']|default(null) != null %}
     {{ include('sitesiteBundle:blocks:top-intro.html.twig') }}
-    {{ render(controller('sitesiteBundle:Default:miniListeInfo', {categorieArticles: sitedata.categorieArticles})) }}    
+	{% endif %}
+
+    <section>
+    	<div class="container">
+    		<div class="row">
+    			
+    			{% if pageweb['#diaporama_id']|default(null) == null %}
+    			{% block menuArticle %}
+    			{{ render(controller('sitesiteBundle:Default:menuArticle')) }}
+    			{% endblock menuArticle %}
+    			<div class="col-sm-9 col-md-9">
+    			{% else %}
+    			<div class="col-sm-12 col-md-12" style="margin-top:28px;">
+    			{% endif %}
+
+    			{% block content %}
+				    {% if pageweb['#image_id'] != null %}
+				    	<img src="{{ imageB64sized(pageweb['#image_id'], 200) }}" class="img-responsive pull-left" style="margin:0px 8px 2px 0px;padding-top:4px;">
+				    {% endif %}
+				    {% if pageweb.code != null %}
+				    <p style='margin:0px;padding:0px;'>{{ pageweb.code|raw }}</p>
+				    {% endif %}
+				    <div style="height:64px;"></div>
+				    {% endblock content %}
+				</div>
+
+			</div>
+		</div>
+	</section>
+
+{#     <section>
+    	<div class="container">
+    		<div class="row">
+			    {{ dump(pageweb) }}
+			</div>
+		</div>
+	</section> #}
+
+    {{ render(controller('sitesiteBundle:Default:miniListeInfo')) }}    
+
 {% endblock mainContainer %}

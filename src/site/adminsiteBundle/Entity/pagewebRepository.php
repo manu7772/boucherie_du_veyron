@@ -17,4 +17,28 @@ use Labo\Bundle\AdminBundle\services\aetools;
  */
 class pagewebRepository extends itemRepository {
 
+	public function defaultVal() {
+		return array();
+	}
+
+	public function findDefaultPage() {
+		$qb = $this->defaultValAsClosure();
+		$qb->select(self::ELEMENT.' pageweb');
+		$qb->leftJoin(self::ELEMENT.'.image', 'image')->addSelect('image.id image_id');
+		$qb->leftJoin(self::ELEMENT.'.diaporama', 'diaporama')->addSelect('diaporama.id diaporama_id');
+		return $qb->getQuery()->getArrayResult();
+	}
+
+	public function getPageBySlug($itemSlug) {
+		$qb = $this->createQueryBuilder(self::ELEMENT);
+		$this->contextStatut($qb);
+		$qb->where(self::ELEMENT.'.slug = :slug')
+			->setParameter('slug', $itemSlug)
+			;
+		$qb->select(self::ELEMENT.' pageweb');
+		$qb->leftJoin(self::ELEMENT.'.image', 'image')->addSelect('image.id image_id');
+		$qb->leftJoin(self::ELEMENT.'.diaporama', 'diaporama')->addSelect('diaporama.id diaporama_id');
+		return $qb->getQuery()->getArrayResult();
+	}
+
 }

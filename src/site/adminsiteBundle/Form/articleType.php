@@ -4,7 +4,7 @@ namespace site\adminsiteBundle\Form;
 
 use Labo\Bundle\AdminBundle\Form\baseType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 // Transformer
 use Symfony\Component\Form\CallbackTransformer;
@@ -91,7 +91,7 @@ class articleType extends baseType {
 				"label"     => 'name',
 				'translation_domain' => 'tauxTva',
 				'class'     => 'siteadminsiteBundle:tauxTva',
-				'property'  => 'nomlong',
+				'choice_label'  => 'nomlong',
 				'multiple'  => false,
 				'required'	=> true,
 				"query_builder" => function($repo) {
@@ -108,7 +108,7 @@ class articleType extends baseType {
 			// 	"label"     => 'name',
 			// 	'translation_domain' => 'statut',
 			// 	'class'     => 'LaboAdminBundle:statut',
-			// 	'property'  => 'nom',
+			// 	'choice_label'  => 'nom',
 			// 	'multiple'  => false,
 			// 	"query_builder" => function($repo) {
 			// 		if(method_exists($repo, 'defaultValsListClosure'))
@@ -120,7 +120,7 @@ class articleType extends baseType {
 				"label"     => 'name',
 				'translation_domain' => 'marque',
 				'class'     => 'siteadminsiteBundle:marque',
-				'property'  => 'nom',
+				'choice_label'  => 'nom',
 				'multiple'  => false,
 				'required' => false,
 				"query_builder" => function($repo) {
@@ -137,7 +137,7 @@ class articleType extends baseType {
 				'by_reference' => false,
 				"label"		=> 'fields.reseaus',
 				'translation_domain' => 'article',
-				'property'	=> 'nom',
+				'choice_label'	=> 'nom',
 				'class'		=> 'LaboAdminBundle:nested',
 				'multiple'	=> true,
 				'expanded'	=> false,
@@ -165,7 +165,7 @@ class articleType extends baseType {
 				'by_reference' => false,
 				"label"		=> 'fields.group_imagesChilds',
 				'translation_domain' => 'article',
-				'property'	=> 'nom',
+				'choice_label'	=> 'nom',
 				'class'		=> 'LaboAdminBundle:nested',
 				'multiple'	=> true,
 				'expanded'	=> false,
@@ -202,7 +202,7 @@ class articleType extends baseType {
 			// ->add('fiches', 'entity', array(
 			// 	"label"		=> 'name_s',
 			// 	'translation_domain' => 'fiche',
-			// 	'property'	=> 'nom',
+			// 	'choice_label'	=> 'nom',
 			// 	'class'		=> 'siteadminsiteBundle:fiche',
 			// 	'multiple'	=> true,
 			// 	'expanded'	=> false,
@@ -220,7 +220,7 @@ class articleType extends baseType {
 			->add('tags', 'entity', array(
 				'label'		=> 'name_s',
 				'translation_domain' => 'tag',
-				'property'	=> 'nom',
+				'choice_label'	=> 'nom',
 				'class'		=> 'LaboAdminBundle:tag',
 				'multiple'	=> true,
 				'required'	=> false,
@@ -239,7 +239,7 @@ class articleType extends baseType {
 				'by_reference' => false,
 				"label"		=> 'fields.group_article_ficherecetteChilds',
 				'translation_domain' => 'article',
-				'property'	=> 'nom',
+				'choice_label'	=> 'nom',
 				'class'		=> 'LaboAdminBundle:nested',
 				'multiple'	=> true,
 				'expanded'	=> false,
@@ -260,7 +260,7 @@ class articleType extends baseType {
 				'by_reference' => false,
 				"label"		=> 'fields.group_article_ficheboissonChilds',
 				'translation_domain' => 'article',
-				'property'	=> 'nom',
+				'choice_label'	=> 'nom',
 				'class'		=> 'LaboAdminBundle:nested',
 				'multiple'	=> true,
 				'expanded'	=> false,
@@ -281,7 +281,7 @@ class articleType extends baseType {
 				'by_reference' => false,
 				"label"		=> 'fields.group_articlesChilds',
 				'translation_domain' => 'article',
-				'property'	=> 'nom',
+				'choice_label'	=> 'nom',
 				'class'		=> 'LaboAdminBundle:nested',
 				'multiple'	=> true,
 				'expanded'	=> false,
@@ -315,9 +315,9 @@ class articleType extends baseType {
 	}
 
 	/**
-	 * @param OptionsResolverInterface $resolver
+	 * @param OptionsResolver $resolver
 	 */
-	public function setDefaultOptions(OptionsResolverInterface $resolver) {
+	public function configureOptions(OptionsResolver $resolver) {
 		$resolver->setDefaults(array(
 			'data_class' => 'site\adminsiteBundle\Entity\article'
 		));

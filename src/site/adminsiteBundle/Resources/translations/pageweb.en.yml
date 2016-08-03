@@ -34,4 +34,5 @@ fields:
     elements: elements
     icon: icon
     extended: extended
+    diaporama: slideshow
 pageweb_coll: web pages collections

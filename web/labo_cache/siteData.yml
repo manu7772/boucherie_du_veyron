@@ -1,0 +1,203 @@
+'2016-08-03 13:14:47':
+    id: 106
+    descriptif: null
+    deletable: true
+    couleur: 'rgba(163,64,18,1)'
+    typentite: null
+    nom: 'Boucherie du Veyron'
+    icon: null
+    created: DateTime
+    updated: DateTime
+    slug: boucherie-du-veyron
+    default: true
+    accroche: 'La Boucherie du Veyron'
+    class_name: site
+    boutiques:
+        -
+            id: 65
+            descriptif: null
+            deletable: true
+            couleur: 'rgba(255,255,255,1)'
+            typentite: null
+            nom: 'Boutique de Poncin'
+            icon: null
+            created: DateTime
+            updated: DateTime
+            slug: boutique-de-poncin
+            default: false
+            telfixe: '04 74 37 77 09'
+            mobile: null
+            email: laboucheriedeveyron@orange.fr
+            class_name: boutique
+            adresse:
+                id: 1
+                nom: 02-08-2016_11-10-08_377296_
+                url: null
+                type: null
+                adresse: 'dsq fsdfqsdfqsdf'
+                cp: '01450'
+                ville: Poncin
+                commentaire: 'dqsdfqsdfq sdfq'
+                icon: null
+                created: DateTime
+                updated: null
+                slug: 02-08-2016-11-10-08-377296
+                default: false
+            image:
+                id: 115
+                descriptif: null
+                deletable: true
+                couleur: 'rgba(255,255,255,1)'
+                typentite: null
+                nom: DSCN1618.JPG
+                icon: null
+                created: DateTime
+                updated: DateTime
+                slug: dscn1618-jpg-1
+                default: false
+                originalnom: DSCN1618.JPG
+                binaryFile: null
+                format: image/jpeg
+                extension: jpg
+                stockage: database
+                croppingInfo: '{"x":17,"y":37,"width":619,"height":464,"rotate":0,"scaleX":1,"scaleY":1}'
+                fileSize: 2818597
+                owner: 'boutique:image'
+                ratioIndex: 0
+                width: 800
+                height: 600
+                class_name: image
+            logo:
+                id: 122
+                descriptif: null
+                deletable: true
+                couleur: 'rgba(255,255,255,1)'
+                typentite: null
+                nom: maquette_03A.jpg
+                icon: null
+                created: DateTime
+                updated: DateTime
+                slug: maquette-03a-jpg-5
+                default: false
+                originalnom: maquette_03A.jpg
+                binaryFile: null
+                format: image/jpeg
+                extension: jpg
+                stockage: database
+                croppingInfo: '{"x":32,"y":35,"width":314,"height":314,"rotate":0,"scaleX":1,"scaleY":1}'
+                fileSize: 224989
+                owner: 'boutique:logo'
+                ratioIndex: 0
+                width: 400
+                height: 400
+                class_name: image
+    categorieArticles:
+        -
+            id: 20
+            descriptif: '<p>Une sélection de recettes pour les fêtes de Noël</p>'
+            deletable: true
+            couleur: 'rgba(255,255,255,1)'
+            typentite: null
+            nom: 'Fêtes de Noël'
+            icon: null
+            created: DateTime
+            updated: null
+            slug: fetes-de-noel
+            default: false
+            lvl: 2
+            open: false
+            accepts: '["ficherecette"]'
+            type: fiche_recettes
+            class_name: categorie
+        -
+            id: 23
+            descriptif: '<p>Les vins de France et de l''étranger</p>'
+            deletable: true
+            couleur: 'rgba(255,255,255,1)'
+            typentite: null
+            nom: vins
+            icon: null
+            created: DateTime
+            updated: null
+            slug: vins
+            default: false
+            lvl: 1
+            open: false
+            accepts: '["ficheboisson"]'
+            type: fiche_boissons
+            class_name: categorie
+        -
+            id: 34
+            descriptif: '<p>Promotions</p>'
+            deletable: true
+            couleur: 'rgba(35,170,179,1)'
+            typentite: null
+            nom: Promotions
+            icon: null
+            created: DateTime
+            updated: null
+            slug: promotions
+            default: false
+            lvl: 1
+            open: false
+            accepts: '["article","categorie"]'
+            type: article
+            class_name: categorie
+    categorieFooters:
+        -
+            id: 8
+            descriptif: '<p>Menu principal du site</p>'
+            deletable: true
+            couleur: 'rgba(255,255,255,1)'
+            typentite: null
+            nom: 'menu principal'
+            icon: null
+            created: DateTime
+            updated: null
+            slug: menu-principal
+            default: false
+            lvl: 1
+            open: false
+            accepts: '["pageweb","article","image","fiche","marque","reseau","boutique","pdf","categorie"]'
+            type: menu
+            class_name: categorie
+        -
+            id: 10
+            descriptif: '<p>Pages d''informations générales et légales</p>'
+            deletable: true
+            couleur: 'rgba(255,255,255,1)'
+            typentite: null
+            nom: informations
+            icon: null
+            created: DateTime
+            updated: null
+            slug: informations
+            default: false
+            lvl: 1
+            open: false
+            accepts: '["pageweb"]'
+            type: pageweb
+            class_name: categorie
+        -
+            id: 36
+            descriptif: '<p>La boutique du site avec articles classés</p>'
+            deletable: true
+            couleur: 'rgba(35,170,179,1)'
+            typentite: null
+            nom: 'La boutique'
+            icon: null
+            created: DateTime
+            updated: null
+            slug: la-boutique
+            default: false
+            lvl: 1
+            open: false
+            accepts: '["article","categorie"]'
+            type: article
+            class_name: categorie
+    menuNav_id: 8
+    menuArticle_id: 36
+    image_id: null
+    logo_id: null
+    favicon_id: 136
+    adminLogo_id: 127

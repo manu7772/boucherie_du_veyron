@@ -12,6 +12,9 @@ pageweb:
             # keywords: 'boucherie, boucher, traiteur, Ain, Cerdon, Poncin'
             metadescription: 'Boucherie du Veyron'
             modele: 'src/site/siteBundle/Resources/views/basic_pages_web/presentation.html.twig'
+            diaporama:
+                field: nom
+                value: 'Diaporamas accueil'
             group_nestedsParents:
                 field: nom
                 value: 'menu principal'

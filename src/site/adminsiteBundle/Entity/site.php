@@ -69,12 +69,6 @@ class site extends subentity {
 	protected $menuArticle;
 
 	/**
-	 * @ORM\ManyToOne(targetEntity="site\adminsiteBundle\Entity\categorie", cascade={"persist"})
-	 * @ORM\JoinColumn(nullable=true, unique=false, onDelete="SET NULL")
-	 */
-	protected $diaporamaintro;
-
-	/**
 	 * @ORM\ManyToMany(targetEntity="site\adminsiteBundle\Entity\categorie")
 	 * @ORM\JoinColumn(nullable=true, unique=false, onDelete="SET NULL")
 	 * @ORM\JoinTable(name="site_cat_article")
@@ -118,7 +112,6 @@ class site extends subentity {
 		$this->accroche = null;
 		$this->menuNav = null;
 		$this->menuArticle = null;
-		$this->diaporamaintro = null;
 		$this->categorieArticles = new ArrayCollection();
 		$this->categorieFooters = new ArrayCollection();
 		$this->boutiques = new ArrayCollection();
@@ -208,24 +201,6 @@ class site extends subentity {
 	 */
 	public function getMenuArticle() {
 		return $this->menuArticle;
-	}
-
-	/**
-	 * set diaporamaintro
-	 * @param categorie $diaporamaintro
-	 * @return site
-	 */
-	public function setDiaporamaintro(categorie $diaporamaintro = null) {
-		$this->diaporamaintro = $diaporamaintro;
-		return $this;
-	}
-
-	/**
-	 * get diaporamaintro
-	 * @return categorie
-	 */
-	public function getDiaporamaintro() {
-		return $this->diaporamaintro;
 	}
 
 	/**
