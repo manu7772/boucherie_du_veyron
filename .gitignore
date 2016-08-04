@@ -8,9 +8,4 @@
 /bin/
 /composer.phar
 /vendor/
-/web/bundles/
-/web/css/*
-/web/js/*
-/web/params/*
-/web/menus/*
-/web/debug/*
+/web/*/

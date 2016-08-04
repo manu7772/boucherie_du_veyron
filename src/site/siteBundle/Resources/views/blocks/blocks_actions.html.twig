@@ -50,7 +50,7 @@
 							{% if item.className matches '#recette$#' %}
 							<h4 class="full-width text-center"><i>{{ 'fields.niveau'|trans({}, item.className) }} {{ item.niveauText|trans({}, item.className) }}</i></h4>
 							{% elseif item.className matches '#boisson$#' %}
-							<h4 class="full-width text-center"><i>{{ 'fields.note'|trans({}, item.className) }} {{ item.note|trans({}, item.className) }}</i></h4>
+							<h4 class="full-width text-center"><i>{{ 'fields.note'|trans({}, item.className) }} {{ item.note|default('/')|trans({}, item.className) }}</i></h4>
 							{% endif %}
 						</div>
 					</div>
