@@ -7,7 +7,9 @@
 	<div class="container">
 		<div class="row">
 
-			{{ include('sitesiteBundle:blocks:mainmenu.html.twig') }}
+			{% block menuArticle %}
+			{{ render(controller('sitesiteBundle:Default:menuArticle')) }}
+			{% endblock menuArticle %}
 
 			<div class="col-sm-9 col-md-9 padding-left-resp">
 				<div class="content-page-right">
@@ -17,22 +19,22 @@
 						</span>{% endif %}
 						{{ categorie.nom }}
 					</h2>
-					{% if pageweb.mainMedia|default(null) != null %}
-					<img src="{{ pageweb.mainMedia.imgThumbnail(280,null,'in')|raw }}" alt="{{ pageweb.mainMedia.nom|default('image') }}">
-					{% endif %}
-					{% if pageweb.code|default('') != '' %}
-					<p>{{ pageweb.code|raw }}</p>
-					{% endif %}
-					{% for item in items %}
-						{{ categories_macros.boxCategorie(item, categorie) }}
-					{% endfor %}
-
-					{% if is_granted('ROLE_SUPER_ADMIN') %}
-					<hr style="clear:both;">
-					{% for item in items %}
-						<p>{{ item.nom }} <small><i>({{ item.className }})</i></small></p>
-					{% endfor %}
-					{% endif %}
+					{% block content %}
+						{% if pageweb['#image_id'] != null and pageweb.code != null %}
+							{% if pageweb['#image_id'] != null %}
+								<img src="{{ imageB64sized(pageweb['#image_id'], 200) }}" class="img-responsive pull-left" style="margin:0px 8px 2px 0px;padding-top:4px;">
+							{% endif %}
+							{% if pageweb.code != null %}
+							<p style='margin:0px;padding:0px;'>{{ pageweb.code|raw }}</p>
+							{% endif %}
+							<div style="height:30px;"></div>
+							<hr>
+						{% endif %}
+						{% for item in items %}
+							{{ categories_macros.boxCategorie(item, categorie) }}
+						{% endfor %}
+						<div style="height:64px;"></div>
+					{% endblock content %}
 
 				</div>
 			</div>
@@ -41,24 +43,4 @@
 	</div>
 </section>
 
-{% if sitedata.categorieArticles|length > 0 and items|length < 4 %}
-{{ render(controller('sitesiteBundle:Default:miniListeInfo', {categorieArticles: sitedata.categorieArticles})) }}    
-{% endif %}
-
 {% endblock mainContainer %}
-
-
-
-					{# -- items : ancienne méthode, via méthodes de l'entite categorie / ne plus utiliser !!!!! -- #}
-{# 					{% set noItem = true %}
-					{% if categorie|default(null) != null %}
-						{% for item in categorie.allNestedChildsByGroup(null, true) %}
-							{{ categories_macros.boxCategorie(item, categorie) }}
-							{% set noItem = false %}
-						{% endfor %}
-					{% endif %}
-					{% if noItem %}
-						<h4>{{ UCfirst('not_found'|trans({}, 'nested')) }}</h4>
-					{% endif %}
- #}					{# -- items -- #}
-					{# <hr style="clear:both;"> #}

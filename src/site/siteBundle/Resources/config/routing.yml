@@ -26,7 +26,7 @@ site_pageweb_article:
 
 site_pageweb_articles:
     path:       /articles/{categorieSlug}
-    defaults:   { _controller: sitesiteBundle:Default:articles }
+    defaults:   { _controller: sitesiteBundle:Default:articlesByCategorie }
 
 
 # Gestion du panier

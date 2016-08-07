@@ -54,13 +54,13 @@ class DefaultController extends Controller {
 		}
 	}
 
-	public function pagewebCategorieAction($categorieSlug, $params = null) {
-		$data = $this->get('tools_json')->JSonExtract($params);
-		$data['sitedata'] = $this->get('aetools.aeSite')->getSiteData();
-		$data['categorie'] = $categorieSlug;
-		$categorie = $this->get('aetools.aeCategorie')->getRepo()->findOneBySlug($categorieSlug);
-		return $this->pagewebPagewebAction($categorie->getGroup_pagewebsChilds()[0], $data);
-	}
+	// public function pagewebCategorieAction($categorieSlug, $params = null) {
+	// 	$data = $this->get('tools_json')->JSonExtract($params);
+	// 	$data['sitedata'] = $this->get('aetools.aeSite')->getSiteData();
+	// 	$data['categorie'] = $categorieSlug;
+	// 	$categorie = $this->get('aetools.aeCategorie')->getRepo()->findOneBySlug($categorieSlug);
+	// 	return $this->pagewebPagewebAction($categorie->getGroup_pagewebsChilds()[0], $data);
+	// }
 
 	// public function pagewebPagewebAction($pagewebSlug, $params = null) {
 	// 	$data = $this->get('tools_json')->JSonExtract($params);
@@ -75,7 +75,7 @@ class DefaultController extends Controller {
 	// 		if(isset($data['redirect'])) {
 	// 			return $this->redirect($data['redirect']);
 	// 		} else if(is_object($data['pageweb'])) {
-	// 			return $this->render($data['pageweb']->getTemplate(), $data);
+	// 			return $this->render($data['pageweb']["template"], $data);
 	// 		}
 	// 	} else {
 	// 		// si aucune page web… chargement de la page par défaut…
@@ -97,13 +97,9 @@ class DefaultController extends Controller {
 		// $data['items'] = $nestedRepo->findItemsByGroup($data['categorie']->getId(), 'nesteds', self::ACCEPT_ALIAS_ITEMS);
 		$data['items'] = $nestedRepo->findAllItemsByGroup($data['categorie']->getId(), 'nesteds', array('article'), self::ACCEPT_ALIAS_ITEMS, self::ADD_ALIAS_ITEMS);
 		// pageweb template
-		if(count($data['categorie']->getGroup_pagewebsChilds()) > 0) {
-			$data['pageweb'] = $data['categorie']->getGroup_pagewebsChilds()[0];
-		} else {
-			$data['pageweb'] = $this->get('aetools.aePageweb')->getRepo()->findOneByNom('categorie');
-		}
+		$data['pageweb'] = $this->get('aetools.aePageweb')->getPageBySlug('categorie');
 		$this->pagewebactions($data);
-		return $this->render($data['pageweb']->getTemplate(), $data);
+		return $this->render($data['pageweb']["template"], $data);
 	}
 
 	public function pagewebAction($itemSlug, $parentSlug = null) {
@@ -121,20 +117,17 @@ class DefaultController extends Controller {
 		if($parentSlug != null)
 			$data['categorie'] = $this->get('aetools.aeCategorie')->getRepo()->findOneBySlug($parentSlug);
 		$data['sitedata'] = $this->get('aetools.aeSite')->getSiteData();
+		$data['pageweb'] = $this->get('aetools.aePageweb')->getPageBySlug($itemSlug);
 		return $this->render('sitesiteBundle:extended_pages_web:article.html.twig', $data);
 	}
 
-	public function articlesAction($categorieSlug) {
+	public function articlesByCategorieAction($categorieSlug) {
 		$data['categorie'] = $this->get('aetools.aeCategorie')->getRepo()->findOneBySlug($categorieSlug);
 		// $data['entites'] = $data['categorie']->getAllNestedChildsByClass('article');
-		if(count($data['categorie']->getGroup_pagewebsChilds()) > 0) {
-			$data['pageweb'] = $data['categorie']->getGroup_pagewebsChilds()[0];
-		} else {
-			$data['pageweb'] = $this->get('aetools.aePageweb')->getRepo()->findOneByNom('articles');
-		}
+		$data['pageweb'] = $this->get('aetools.aePageweb')->getPageBySlug($itemSlug);
 		$data['sitedata'] = $this->get('aetools.aeSite')->getSiteData();
 		$this->pagewebactions($data);
-		return $this->render($data['pageweb']->getTemplate(), $data);
+		return $this->render($data['pageweb']["template"], $data);
 	}
 
 
@@ -260,7 +253,7 @@ class DefaultController extends Controller {
 		$data['items'] = array();
 		if(count((array)$categorieArticles) > 0) {
 			foreach((array)$categorieArticles as $key => $value) {
-				$it = $this->get('aetools.aeNested')->getRepo()->findArrayTree($value['id'], 'all', null, false, 1, self::FIND_EXTENDED);
+				$it = $this->get('aetools.aeNested')->getRepo()->findArrayTree($value['id'], 'all', null, false, null, self::FIND_EXTENDED);
 				if(count($it) > 0) $data['items'][$value['id']] = $it[0];
 			}
 		}

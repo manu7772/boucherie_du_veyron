@@ -312,9 +312,9 @@ ul.sub-menu {
   }
 }
 #section-color {
-	min-height: 360px;
+	min-height: 300px;
 	height: auto !important;
-	height: 360px;
+	height: 300px;
 }
 #section-color #category-nav-tab .container {
 	border-bottom: 0px none;
