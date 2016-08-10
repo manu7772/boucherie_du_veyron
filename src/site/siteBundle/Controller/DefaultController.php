@@ -114,14 +114,13 @@ class DefaultController extends Controller {
 	////////////////////
 
 	public function articleAction($itemSlug, $parentSlug = null) {
-		$indexparent = 0;
 		$data['article'] = $this->get('aetools.aeArticle')->getRepo()->findArticleBySlug($itemSlug, $parentSlug);
 		// echo('<pre>');var_dump($data['article']);die('</pre>');
 		if($data['article'] === false) {
 			// parentSlug n'est pas un parent direct… on le retrouve…
 			$data['article'] = $this->get('aetools.aeArticle')->getRepo()->findArticleBySlug($itemSlug);
 			foreach ($data['article']['nestedpositionParents'] as $index => $parents) {
-				$parents = $this->get('aetools.aeCategorie')->getRepo()->findParentsOfCategorie($data['article']['nestedpositionParents'][$indexparent]['parent']['id']);
+				$parents = $this->get('aetools.aeCategorie')->getRepo()->findParentsOfCategorie($data['article']['nestedpositionParents'][$index]['parent']['id']);
 				foreach ($parents as $key => $parent) {
 					if($parent['slug'] === $parentSlug) $data['categories'] = $parents;
 				}
@@ -129,7 +128,7 @@ class DefaultController extends Controller {
 		} else {
 			if($data['article'] !== false) {
 				if(count($data['article']['nestedpositionParents']) > 0)
-					$data['categories'] = $this->get('aetools.aeCategorie')->getRepo()->findParentsOfCategorie($data['article']['nestedpositionParents'][$indexparent]['parent']['id']);
+					$data['categories'] = $this->get('aetools.aeCategorie')->getRepo()->findParentsOfCategorie($data['article']['nestedpositionParents'][0]['parent']['id']);
 					// echo('<pre>');var_dump($data['categories']);die('</pre>');
 			}
 		}
