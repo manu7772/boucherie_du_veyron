@@ -59,9 +59,9 @@
 					
 					<!-- -->
 					{% set ficherecettes = 0 %}
-					{% for fiche in article.nestedpositionChilds if fiche.child['class_name'] == 'ficherecette' %}{% set ficherecettes = ficherecettes + 1 %}{% endfor %}
+					{% for fiche in article.nestedpositionChilds|default([]) if fiche.child['class_name'] == 'ficherecette' %}{% set ficherecettes = ficherecettes + 1 %}{% endfor %}
 					{% set ficheboissons = 0 %}
-					{% for fiche in article.nestedpositionChilds if fiche.child['class_name'] == 'ficherecette' %}{% set ficheboissons = ficheboissons + 1 %}{% endfor %}
+					{% for fiche in article.nestedpositionChilds|default([]) if fiche.child['class_name'] == 'ficherecette' %}{% set ficheboissons = ficheboissons + 1 %}{% endfor %}
 					<div class="category-tab shop-details-tab"><!--category-tab-->
 						<div class="col-sm-12">
 							<ul class="nav nav-tabs">
@@ -91,7 +91,7 @@
 								<div class="col-sm-12">
 									<div class="col-sm-6 padding-left-right-null">
 										<ul class="shop-details-ul">
-											{% for fiche in article.nestedpositionChilds if fiche.child['class_name'] == 'ficherecette' %}
+											{% for fiche in article.nestedpositionChilds|default([]) if fiche.child['class_name'] == 'ficherecette' %}
 											<li><a href="{{ path('site_pageweb_fiche', {itemSlug: fiche.child.slug}) }}"><i class="fa fa-caret-right"></i>{{ fiche.child.nom }}</a></li>
 											{% endfor %}
 										</ul>
@@ -110,7 +110,7 @@
 								<div class="col-sm-12">
 									<div class="col-sm-6 padding-left-right-null">
 										<ul class="shop-details-ul">
-											{% for fiche in article.nestedpositionChilds if fiche.child['class_name'] == 'ficheboisson' %}
+											{% for fiche in article.nestedpositionChilds|default([]) if fiche.child['class_name'] == 'ficheboisson' %}
 											<li><a href="{{ path('site_pageweb_fiche', {itemSlug: fiche.child.slug}) }}"><i class="fa fa-caret-right"></i>{{ fiche.child.nom }}</a></li>
 											{% endfor %}
 										</ul>
@@ -134,7 +134,7 @@
 
 		</div>
 	</div>
-	{{ dump(article) }}
+	{# {{ dump(article) }} #}
 </section>
 
 	{# {{ render(controller('sitesiteBundle:Default:miniListeInfo')) }}     #}
