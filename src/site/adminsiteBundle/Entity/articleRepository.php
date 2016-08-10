@@ -32,4 +32,47 @@ class articleRepository extends itemRepository {
 		return $qb;
 	}
 
+	public function findArticleBySlug($slug, $parentSlug = null, $shortCutContext = false) {
+		$qb = $this->createQueryBuilder(self::ELEMENT);
+		$qb->where(self::ELEMENT.'.slug = :slug')
+			->setParameter('slug', $slug)
+			;
+		$this->contextStatut($qb, self::ELEMENT, $shortCutContext);
+		// image
+		$qb->leftJoin(self::ELEMENT.'.image', 'image')
+			->addSelect('image.id imageId')
+			;
+		// $this->contextStatut($qb, 'image', $shortCutContext);
+		// parents
+		$qb->leftJoin(self::ELEMENT.'.nestedpositionParents', 'nestParents')
+			->addSelect('nestParents')
+			->leftJoin('nestParents.parent', 'parents')
+			->addSelect('parents')
+			;
+		// $this->contextStatut($qb, 'parents', $shortCutContext);
+		if($parentSlug !== null)
+			$qb->andWhere('parents.slug = :parentSlug')
+				->setParameter('parentSlug', $parentSlug)
+			;
+		// chilrend
+		$qb->leftJoin(self::ELEMENT.'.nestedpositionChilds', 'nestChilds')
+			->addSelect('nestChilds')
+			->orderBy('nestChilds.position', 'asc')
+			->leftJoin('nestChilds.child', 'children')
+			->addSelect('children')
+			;
+		// $this->contextStatut($qb, 'children', $shortCutContext);
+		$result = $qb->getQuery()->getArrayResult();
+		// if(!isset($result[0][0])) echo('<h2>Not found</h2>');
+		// echo('<pre>');var_dump($result);die('</pre>');
+		if(isset($result[0][0])) {
+			foreach ($result[0] as $key => $value) if($key !== 0) {
+				$result[0][0][$key] = $value;
+			}
+			// echo('<pre>');var_dump($result[0][0]);die('</pre>');
+			return $result[0][0];
+		}
+		return false;
+	}
+
 }

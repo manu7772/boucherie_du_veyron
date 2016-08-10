@@ -1,0 +1,36 @@
+{% extends 'sitesiteBundle::base_pages.html.twig' %}
+{% set cssjsloads = 'simple' %}
+{% import 'sitesiteBundle:blocks:fiches_actions.html.twig' as fiches_macros %}
+
+{% block mainContainer %}
+<section>
+	<div class="container">
+		<div class="row">
+
+			{% block menuArticle %}
+			{{ render(controller('sitesiteBundle:Default:menuArticle')) }}
+			{% endblock menuArticle %}
+
+			<div class="col-sm-9 col-md-9 padding-left-resp">
+				<div class="content-page-right">
+					<h2 class="title">
+						{% if categorie|default(null) != null and categorie.nestedParents|default([])|length > 0 %}<span style="font-weight:300;">
+						{% for parent in categorie.nestedParents %}{{ parent.nom }} / {% endfor %}
+						{{ categorie.nom }} / </span>{% endif %}
+						{{ fiche.nom }}
+					</h2>
+					<div class="single-section">
+						<div class="section-tabs">
+							{{ fiches_macros.boxFiche(fiche, categorie|default(null)) }}
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</div>
+	</div>
+</section>
+
+	{{ render(controller('sitesiteBundle:Default:miniListeInfo')) }}    
+
+{% endblock mainContainer %}

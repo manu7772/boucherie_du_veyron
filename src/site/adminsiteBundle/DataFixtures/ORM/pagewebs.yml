@@ -6,7 +6,7 @@ pageweb:
             nom: 'La boucherie'
             extended: 0
             default: 1
-            code: '<p>code</p>'
+            code: ''
             title: Boucherie du Veyron
             titreh1: Boucherie du Veyron
             # keywords: 'boucherie, boucher, traiteur, Ain, Cerdon, Poncin'
@@ -130,5 +130,23 @@ pageweb:
             # keywords: 'boucherie, boucher, traiteur, articles'
             metadescription: 'Boucherie du Veyron, articles'
             modele: 'src/site/siteBundle/Resources/views/extended_pages_web/articles.html.twig'
+        -
+            nom: 'fiche'
+            extended: 1
+            code: null
+            title: 'Boucherie du Veyron'
+            titreh1: 'Boucherie du Veyron'
+            # keywords: 'boucherie, boucher, traiteur, fiche'
+            metadescription: 'Boucherie du Veyron, fiche'
+            modele: 'src/site/siteBundle/Resources/views/extended_pages_web/fiche.html.twig'
+        -
+            nom: 'fiches'
+            extended: 1
+            code: null
+            title: 'Boucherie du Veyron'
+            titreh1: 'Boucherie du Veyron'
+            # keywords: 'boucherie, boucher, traiteur, fiches'
+            metadescription: 'Boucherie du Veyron, fiches'
+            modele: 'src/site/siteBundle/Resources/views/extended_pages_web/fiches.html.twig'
 
 

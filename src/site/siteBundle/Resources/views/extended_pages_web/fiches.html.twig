@@ -1,6 +1,6 @@
 {% extends 'sitesiteBundle::base_pages.html.twig' %}
 {% set cssjsloads = 'simple' %}
-{% import 'sitesiteBundle:blocks:articles_actions.html.twig' as articles_macros %}
+{% import 'sitesiteBundle:blocks:fiches_actions.html.twig' as fiches_macros %}
 
 {% block mainContainer %}
 <section>
@@ -26,20 +26,20 @@
 						{% if pageweb.code|default('') != '' %}
 						<p>{{ pageweb.code|raw }}</p>
 						{% endif %}
-						{# -- articles -- #}
-						{% set noArticle = true %}
+						{# -- fiches -- #}
+						{% set noFiche = true %}
 						{% if categorie|default(null) != null %}
 							<div class="row">
-							{% for article in categorie.allNestedChildsByGroup(null, true) %}
-								{{ articles_macros.boxArticleProducts(article, categorie) }}
-								{% set noArticle = false %}
+							{% for fiche in categorie.allNestedChildsByGroup(null, true) %}
+								{{ fiches_macros.boxFicheProducts(fiche, categorie) }}
+								{% set noFiche = false %}
 							{% endfor %}
 							</div>
 						{% endif %}
-						{% if noArticle %}
-							<h4>{{ UCfirst('not_found'|trans({}, 'article')) }}</h4>
+						{% if noFiche %}
+							<h4>{{ UCfirst('not_found'|trans({}, 'fiche')) }}</h4>
 						{% endif %}
-						{# -- articles -- #}
+						{# -- fiches -- #}
 					</div>
 				</div>
 			</div>

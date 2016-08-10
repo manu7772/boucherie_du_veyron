@@ -1,0 +1,33 @@
+{% macro boxFiche(item, categorie) %}
+
+{% if item.className matches '#^fiche#' %}
+	{% import 'sitesiteBundle:blocks:actions.html.twig' as actions %}
+	{% import 'sitesiteBundle:blocks:blocks_actions.html.twig' as blocks_actions %}
+	{% set EDITORMODE = (app.environment in ['DEV', 'TEST']) or (is_granted('ROLE_EDITOR')) %}
+	<div class="col-sm-6 col-md-3"><!--div image 1 tab 1-->
+		<div class="product-image-wrapper">
+			<div class="single-products">
+				<div class="productinfo">
+					<a {{ actions.elementHref(item, categorie|default(null))|raw }}>{{ blocks_actions.imageprint(item, 250, 175) }}</a>
+					<div class="product-bottom">
+						<div class="btn-group order-group for-fiche full-width" role="group">
+							{% if item.className matches '#recette$#' %}
+							<h4 class="full-width text-center"><i>{{ 'fields.niveau'|trans({}, item.className) }} {{ item.niveauText|trans({}, item.className) }}</i></h4>
+							{% elseif item.className matches '#boisson$#' %}
+							<h4 class="full-width text-center"><i>{{ 'fields.note'|trans({}, item.className) }} {{ item.note|default('/')|trans({}, item.className) }}</i></h4>
+							{% endif %}
+						</div>
+					</div>
+				</div>
+				<p class="tab-name-product">
+					<a {{ actions.elementHref(item, categorie|default(null))|raw }}>{{ item.nom }}</a>
+					{%- if EDITORMODE %} <a href="{{ path('siteadmin_entite', {entite: item.className, id: item.id, action: 'show'}) }}"><i class="fa fa-eye icon-wait-on-click"></i></a>{% endif %}
+					{%- if EDITORMODE %} <a href="{{ path('siteadmin_entite', {entite: item.className, id: item.id, action: 'edit'}) }}"><i class="fa fa-pencil icon-wait-on-click"></i></a>{% endif %}
+				</p>
+				<p class="tab-info-category">{{ categorie.nom|default('') }}</p>
+			</div>
+		</div>
+	</div>
+{% endif %}
+
+{% endmacro %}

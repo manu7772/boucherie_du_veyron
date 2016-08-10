@@ -39,17 +39,14 @@ class articleType extends baseType {
 		$builder
 			->add('nom', 'text', array(
 				'label' => 'fields.nom',
-				'translation_domain' => 'article',
 				'required' => true,
 				))
 			->add('accroche', 'text', array(
 				'label' => 'fields.accroche',
-				'translation_domain' => 'article',
 				'required' => false,
 				))
 			->add('descriptif', 'insRichtext', array(
 				'label' => 'fields.descriptif',
-				'translation_domain' => 'article',
 				'required' => false,
 				'attr' => array(
 					'data-height' => 140,
@@ -58,7 +55,6 @@ class articleType extends baseType {
 			// ->add('icon', 'choice', array(
 			// 	"required"  => false,
 			// 	"label"     => 'fields.icon',
-			// 	'translation_domain' => 'article',
 			// 	'multiple'  => false,
 			// 	"choices"   => $data->getListIcons(),
 			// 	'placeholder'   => 'form.select',
@@ -69,22 +65,18 @@ class articleType extends baseType {
 			// 	))
 			// ->add('refFabricant', 'text', array(
 			// 	'label' => 'fields.refFabricant',
-			// 	'translation_domain' => 'article',
 			// 	'required' => false,
 			// 	))
 			->add('vendable', 'checkbox', array(
 				'label'		=> 'fields.vendable',
-				'translation_domain' => 'article',
 				"required"  => false,
 				))
 			->add('prix', 'money', array(
 				'label'		=> 'fields.prixTTC',
-				'translation_domain' => 'article',
 				"required"  => false,
 				))
 			->add('prixHT', 'money', array(
 				'label'		=> 'fields.prixHT',
-				'translation_domain' => 'article',
 				"required"  => false,
 				))
 			->add('tauxTva', 'entity', array(
@@ -103,6 +95,36 @@ class articleType extends baseType {
 				'attr'		=> array(
 					'class'			=> 'select2',
 					),
+				))
+			->add('unitprix', 'choice', array(
+				"label"     => 'fields.unitprix',
+				// 'translation_domain' => 'units',
+				'multiple'  => false,
+				"required"  => false,
+				"choice_list"   => $data->getChoiceListOfUnits(),
+				'placeholder'   => 'form.select',
+				'attr'		=> array(
+					'class'			=> 'select2',
+					),
+				))
+			->add('unit', 'choice', array(
+				"label"     => 'fields.unit',
+				// 'translation_domain' => 'units',
+				'multiple'  => false,
+				"required"  => false,
+				"choice_list"   => $data->getChoiceListOfUnits(),
+				'placeholder'   => 'form.select',
+				'attr'		=> array(
+					'class'			=> 'select2',
+					),
+				))
+			->add('defaultquantity', 'number', array(
+				'label' => 'fields.defaultquantity',
+				'required' => true,
+				))
+			->add('increment', 'number', array(
+				'label' => 'fields.increment',
+				'required' => true,
 				))
 			// ->add('statut', 'entity', array(
 			// 	"label"     => 'name',
@@ -136,7 +158,6 @@ class articleType extends baseType {
 			->add('group_articles_reseausChilds', 'entity', array(
 				'by_reference' => false,
 				"label"		=> 'fields.reseaus',
-				'translation_domain' => 'article',
 				'choice_label'	=> 'nom',
 				'class'		=> 'LaboAdminBundle:nested',
 				'multiple'	=> true,
@@ -157,14 +178,12 @@ class articleType extends baseType {
 			// 1 image :
 			->add('image', new cropperType($this->controller, $this->imagesData), array(
 				'label' => 'fields.image',
-				'translation_domain' => 'article',
 				'required' => false,
 				))
 			// autres images :
 			->add('group_imagesChilds', 'entity', array(
 				'by_reference' => false,
 				"label"		=> 'fields.group_imagesChilds',
-				'translation_domain' => 'article',
 				'choice_label'	=> 'nom',
 				'class'		=> 'LaboAdminBundle:nested',
 				'multiple'	=> true,
@@ -185,7 +204,6 @@ class articleType extends baseType {
 			// Images collection :
 			// ->add('images', 'multiCollection', array(
 			// 	'label' => 'table.col.visuel',
-			// 	'translation_domain' => 'article',
 			// 	'required' => false,
 			// 	'type' => new imageType($this->controller),
 			// 	'allow_add' => true,
@@ -238,7 +256,6 @@ class articleType extends baseType {
 			->add('group_article_ficherecetteChilds', 'entity', array(
 				'by_reference' => false,
 				"label"		=> 'fields.group_article_ficherecetteChilds',
-				'translation_domain' => 'article',
 				'choice_label'	=> 'nom',
 				'class'		=> 'LaboAdminBundle:nested',
 				'multiple'	=> true,
@@ -259,7 +276,6 @@ class articleType extends baseType {
 			->add('group_article_ficheboissonChilds', 'entity', array(
 				'by_reference' => false,
 				"label"		=> 'fields.group_article_ficheboissonChilds',
-				'translation_domain' => 'article',
 				'choice_label'	=> 'nom',
 				'class'		=> 'LaboAdminBundle:nested',
 				'multiple'	=> true,
@@ -280,7 +296,6 @@ class articleType extends baseType {
 			->add('group_articlesChilds', 'entity', array(
 				'by_reference' => false,
 				"label"		=> 'fields.group_articlesChilds',
-				'translation_domain' => 'article',
 				'choice_label'	=> 'nom',
 				'class'		=> 'LaboAdminBundle:nested',
 				'multiple'	=> true,
@@ -319,7 +334,8 @@ class articleType extends baseType {
 	 */
 	public function configureOptions(OptionsResolver $resolver) {
 		$resolver->setDefaults(array(
-			'data_class' => 'site\adminsiteBundle\Entity\article'
+			'data_class' => 'site\adminsiteBundle\Entity\article',
+			'translation_domain' => 'article',
 		));
 	}
 

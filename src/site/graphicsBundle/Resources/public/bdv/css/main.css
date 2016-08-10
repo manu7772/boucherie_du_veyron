@@ -571,7 +571,7 @@ address {
 .item h1,
 .item h2,
 .item h2 small,
-item h2 sup {
+.item h2 sup {
   color: #a3401b;
 }
 .item h1 {
@@ -2341,7 +2341,7 @@ textarea {
   /*border-radius: 4px;*/
   box-shadow: inherit;
 }
-#contact-page .message {
+#contact-page textarea.message {
   height: 137px;
   resize: none;
 }

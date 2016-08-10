@@ -15,12 +15,12 @@
 			<div class="row">
 				
 				{% if pageweb['#diaporama_id']|default(null) == null %}
-				{% block menuArticle %}
-				{{ render(controller('sitesiteBundle:Default:menuArticle')) }}
-				{% endblock menuArticle %}
-				<div class="col-sm-9 col-md-9">
+					{% block menuArticle %}
+					{{ render(controller('sitesiteBundle:Default:menuArticle')) }}
+					{% endblock menuArticle %}
+					<div class="col-sm-9 col-md-9">
 				{% else %}
-				<div class="col-sm-12 col-md-12" style="margin-top:28px;">
+					<div class="col-sm-12 col-md-12" style="margin-top:28px;">
 				{% endif %}
 
 				{% block content %}
@@ -30,21 +30,13 @@
 					{% if pageweb.code != null %}
 					<p style='margin:0px;padding:0px;'>{{ pageweb.code|raw }}</p>
 					{% endif %}
-					<div style="height:64px;"></div>
+					<div class="m-t-lg clearfix"></div>
 				{% endblock content %}
 				</div>
 
 			</div>
 		</div>
 	</section>
-
-{#     <section>
-		<div class="container">
-			<div class="row">
-				{{ dump(pageweb) }}
-			</div>
-		</div>
-	</section> #}
 
 	{{ render(controller('sitesiteBundle:Default:miniListeInfo')) }}    
 

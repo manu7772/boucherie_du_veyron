@@ -1,0 +1,9 @@
+name_s: unités
+name: unité
+units:
+    kilogramme: kilogramme
+    gramme: gramme
+    litre: litre
+    décilitre: décilitre
+    centilitre: centilitre
+    millilitre: millilitre

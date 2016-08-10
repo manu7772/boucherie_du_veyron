@@ -50,7 +50,7 @@ class aeServiceSite extends aeServiceSubentity {
                 $image = $entity->$get();
                 if(is_object($image)) {
                     $infoForPersist = $image->getInfoForPersist();
-                    // $this->container->get('aetools.debug')->debugFile($infoForPersist);
+                    // $this->container->get('aetools.aeDebug')->debugFile($infoForPersist);
                     if($infoForPersist['removeImage'] === true || $infoForPersist['removeImage'] === 'true') {
                         // Supression de l'image
                         $entity->$set(null);
@@ -67,10 +67,10 @@ class aeServiceSite extends aeServiceSubentity {
     }
 
     public function getSiteData() {
-        $this->container->get('aetools.debug')->startChrono();
+        $this->container->get('aetools.aeDebug')->startChrono();
         if($this->siteData == null)
             $this->siteData = $this->getRepo()->findSiteData();
-        $this->container->get('aetools.debug')->printChrono('Get site data N°'.$this->cpt++, true);
+        $this->container->get('aetools.aeDebug')->printChrono('Get site data N°'.$this->cpt++, true);
         return $this->siteData;
     }
 

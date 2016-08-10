@@ -11,59 +11,11 @@
 	{% import _self as self %}
 	{% set EDITORMODE = (app.environment in ['DEV', 'TEST']) or (is_granted('ROLE_EDITOR')) %}
 	{% if item.className matches '#^article#' %}
-	<div class="col-sm-6 col-md-3"><!--div image 1 tab 1-->
-		<div class="product-image-wrapper">
-			<div class="single-products">
-				<div class="productinfo">
-					{{ self.imageprint(item, 250, 175) }}
-					<div class="product-bottom">
-						<div class="btn-group order-group for-product" role="group">
-							<h2>{{ item.prix|number_format(2, ',', '') }}<small><sup>€</sup><span>/Kg</span></small></h2>
-							{% if marketplace.vente and item.vendable %}
-							<button type="button" class="btn btn-default btn-commander"><i class="fa fa-shopping-cart fa-flip-horizontal"></i></button>
-							<input class="command_quantity" type="text" name="quantity" value="150g" autocomplete="off" size="10">
-							<span class="btn-quantity">
-								<a class="btn quantity-top" href="#"><i class="fa fa-angle-up"></i></a>
-								<a class="btn quantity-bottom" href="#"><i class="fa fa-angle-down"></i></a>
-							</span>
-							{% endif %}
-						</div>                                                    
-					</div>
-				</div>
-				<p class="tab-name-product">
-					{{ item.nom }}
-					{%- if EDITORMODE %} <a href="{{ path('siteadmin_entite', {entite: item.className, id: item['element_id'], action: 'show'}) }}"><i class="fa fa-eye icon-wait-on-click"></i></a>{% endif %}
-					{%- if EDITORMODE %} <a href="{{ path('siteadmin_entite', {entite: item.className, id: item['element_id'], action: 'edit'}) }}"><i class="fa fa-pencil icon-wait-on-click"></i></a>{% endif %}
-				</p>
-				{# <p class="tab-info-category">{{ item.nestedParents.0.nom|default('<i>' ~ item.nom ~ '</i>')|raw }}</p> #}
-			</div>
-		</div>
-	</div>
+		{% import 'sitesiteBundle:blocks:articles_actions.html.twig' as actions %}
+		{{ actions.boxArticle(item) }}
 	{% elseif item.className matches '#^fiche#' %}
-	<div class="col-sm-6 col-md-3"><!--div image 1 tab 1-->
-		<div class="product-image-wrapper">
-			<div class="single-products">
-				<div class="productinfo">
-					{{ self.imageprint(item, 250, 175) }}
-					<div class="product-bottom">
-						<div class="btn-group order-group for-fiche full-width" role="group">
-							{% if item.className matches '#recette$#' %}
-							<h4 class="full-width text-center"><i>{{ 'fields.niveau'|trans({}, item.className) }} {{ item.niveauText|trans({}, item.className) }}</i></h4>
-							{% elseif item.className matches '#boisson$#' %}
-							<h4 class="full-width text-center"><i>{{ 'fields.note'|trans({}, item.className) }} {{ item.note|default('/')|trans({}, item.className) }}</i></h4>
-							{% endif %}
-						</div>
-					</div>
-				</div>
-				<p class="tab-name-product">
-					{{ item.nom }}
-					{%- if EDITORMODE %} <a href="{{ path('siteadmin_entite', {entite: item.className, id: item['element_id'], action: 'show'}) }}"><i class="fa fa-eye icon-wait-on-click"></i></a>{% endif %}
-					{%- if EDITORMODE %} <a href="{{ path('siteadmin_entite', {entite: item.className, id: item['element_id'], action: 'edit'}) }}"><i class="fa fa-pencil icon-wait-on-click"></i></a>{% endif %}
-				</p>
-				{# <p class="tab-info-category">{{ item.nestedParents.0.nom|default('<i>' ~ item.nom ~ '</i>')|raw }}</p> #}
-			</div>
-		</div>
-	</div>
+		{% import 'sitesiteBundle:blocks:fiches_actions.html.twig' as actions %}
+		{{ actions.boxFiche(item) }}
 	{% endif %}
 {%- endmacro blockmini %}
 
@@ -79,3 +31,7 @@
 	{% endif %}
 	<img src="{{ imgpath|raw }}" alt="{{ 'name'|trans({}, item.className) }} {{ item.slug }}" class="{{ classes|default([])|join(' ') }}" />
 {%- endmacro imageprint %}
+
+{% macro breadcrumb(item, categories) %}
+	<small style="font-weight:300;">{% for parent in categories %}{% if not loop.first and parent != item %}<a href="{{ path('site_pageweb_categorie', {itemSlug: parent.slug}) }}">{{ parent.nom }}</a> / {% endif %}{% endfor %}</small>{{ item.nom }}
+{% endmacro %}

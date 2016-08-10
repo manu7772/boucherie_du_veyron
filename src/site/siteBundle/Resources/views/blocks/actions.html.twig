@@ -1,3 +1,13 @@
 {% macro elementHref(item, parent, target) -%}
-	href="{{ url('site_pageweb_' ~ item.className, {itemSlug: item.slug, parentSlug: parent.slug|default(null)}) }}"{%- if target|default(null) in ['_self', '_blank'] -%} target="{{ target|raw }}"{%- endif -%}
+	{%- set clss = null -%}
+	{%- for classtest in ['article','fiche','categorie','pageweb'] -%}
+		{%- if item.className matches '#^' ~ classtest ~ '#' -%}
+			{%- set clss = classtest -%}
+		{%- endif -%}
+	{%- endfor -%}
+	{%- if clss != null -%}
+		href="{{ url('site_pageweb_' ~ clss, {itemSlug: item.slug, parentSlug: parent.slug|default(null)}) }}"{%- if target|default(null) in ['_self', '_blank'] -%} target="{{ target|raw }}"{%- endif -%}
+	{%- else -%}
+		href="#"
+	{%- endif -%}
 {%- endmacro elementHref %}

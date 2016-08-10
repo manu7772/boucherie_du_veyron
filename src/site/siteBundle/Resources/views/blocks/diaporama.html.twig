@@ -21,11 +21,11 @@
 						<h1>{{ UCfirst(item.nom) }}</h1>
 						{{ item.accroche|default('')|raw }}
 						<small>{{ item.descriptif|default('')|raw }}</small>
-						<h2>{{ item.prix|number_format(2, ',', '') }}<small><sup>€</sup><span>/Kg</span></small></h2>
-						{% if marketplace.vente %}
+						<h2>{{ articlePrix(item)|raw }}</h2>
+						{% if marketplace.vente and item.vendable %}
 						<div class="btn-group order-group in-slide" role="group" aria-label="...">
 							<button type="button" class="btn btn-default btn-commander">Commander</button>
-							<input class="command_quantity" type="text" name="quantity" value="250." autocomplete="off" size="6">
+							<input class="command_quantity" type="text" name="quantity" value="{{ item.increment * item.defaultquantity }}{% if item.unit != null %} {{ shortUnit(item.unit) }}{% endif %}" autocomplete="off" size="6">
 							<span class="btn-quantity">
 							<a class="btn quantity-top" href="#"><i class="fa fa-angle-up"></i></a>
 							<a class="btn quantity-bottom" href="#"><i class="fa fa-angle-down"></i></a>

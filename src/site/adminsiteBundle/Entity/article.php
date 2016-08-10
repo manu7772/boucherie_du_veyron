@@ -12,6 +12,8 @@ use site\adminsiteBundle\Entity\marque;
 use site\adminsiteBundle\Entity\tauxTva;
 use site\adminsiteBundle\Entity\pdf;
 
+use Labo\Bundle\AdminBundle\services\aeUnits;
+
 /**
  * article
  *
@@ -61,6 +63,30 @@ class article extends item {
 
 	/**
 	 * @var string
+	 * @ORM\Column(name="unitprix", type="string", length=8, nullable=true, unique=false)
+	 */
+	protected $unitprix;
+
+	/**
+	 * @var string
+	 * @ORM\Column(name="unit", type="string", length=8, nullable=true, unique=false)
+	 */
+	protected $unit;
+
+	/**
+	 * @var integer
+	 * @ORM\Column(name="defaultquantity", type="integer", nullable=false, unique=false)
+	 */
+	protected $defaultquantity;
+
+	/**
+	 * @var integer
+	 * @ORM\Column(name="increment", type="integer", nullable=false, unique=false)
+	 */
+	protected $increment;
+
+	/**
+	 * @var string
 	 * @ORM\ManyToOne(targetEntity="site\adminsiteBundle\Entity\tauxTva", cascade={"persist"})
 	 * @ORM\JoinColumn(nullable=false)
 	 */
@@ -98,8 +124,11 @@ class article extends item {
 	protected $group_article_ficheboissonParents;
 	protected $group_article_ficheboissonChilds;
 
+	protected $aeUnits;
+
 	public function __construct() {
 		parent::__construct();
+		$this->load();
 		$this->vendable = true;
 		$this->refFabricant = null;
 		$this->accroche = null;
@@ -108,6 +137,25 @@ class article extends item {
 		$this->tauxTva = null;
 		$this->marque = null;
 		$this->pdf = null;
+		$this->increment = 1;
+		$this->defaultquantity = 1;
+		$this->unitprix = $this->aeUnits->getDefaultUnit();
+		$this->unit = $this->aeUnits->getDefaultUnit();
+	}
+
+	/**
+	 * @ORM\PostLoad
+	 */
+	public function load() {
+		$this->aeUnits = new aeUnits();
+	}
+
+	public function getListOfUnits() {
+		return $this->aeUnits->getListOfUnits();
+	}
+
+	public function getChoiceListOfUnits() {
+		return $this->aeUnits->getChoiceListOfUnits();
 	}
 
 	public function getNestedAttributesParameters() {
@@ -240,6 +288,14 @@ class article extends item {
 	}
 
 	/**
+	 * Get text of prix and unit (please, use raw filter in twig)
+	 * @return string (of html code)
+	 */
+	public function getPrixUnitText() {
+		return number_format($this->getPrix(), 2, ',', '').'<small><sup>€</sup><span>/'.$this->getUnitprix().'</span></small>';
+	}
+
+	/**
 	 * Set prixHT
 	 * @param float $prixHT
 	 * @return article
@@ -255,6 +311,96 @@ class article extends item {
 	 */
 	public function getPrixHT() {
 		return $this->prixHT;
+	}
+
+	/**
+	 * Set unitprix
+	 * @param string $unitprix
+	 * @return article
+	 */
+	public function setUnitprix($unitprix) {
+		$this->unitprix = $this->aeUnits->unitExists($unitprix) ? $unitprix : $this->unitprix;
+		return $this;
+	}
+
+	/**
+	 * Get unitprix
+	 * @return string 
+	 */
+	public function getUnitprix() {
+		return $this->unitprix;
+	}
+
+	/**
+	 * Get unitprix text
+	 * @return string 
+	 */
+	public function getUnitprixText() {
+		return $this->aeUnits->getUnitprixName($this->getUnitprix());
+	}
+
+	/**
+	 * Set unit
+	 * @param string $unit
+	 * @return article
+	 */
+	public function setUnit($unit) {
+		$this->unit = $this->aeUnits->unitExists($unit) ? $unit : $this->unit;
+		return $this;
+	}
+
+	/**
+	 * Get unit
+	 * @return string 
+	 */
+	public function getUnit() {
+		return $this->unit;
+	}
+
+	/**
+	 * Get unit text
+	 * @return string 
+	 */
+	public function getUnitText() {
+		return $this->aeUnits->getUnitName($this->getUnit());
+	}
+
+	/**
+	 * Set defaultquantity
+	 * @param integer $defaultquantity
+	 * @return article
+	 */
+	public function setDefaultquantity($defaultquantity) {
+		$this->defaultquantity = (integer)$defaultquantity;
+		if($this->defaultquantity < 1) $this->defaultquantity = 1;
+		return $this;
+	}
+
+	/**
+	 * Get defaultquantity
+	 * @return integer 
+	 */
+	public function getDefaultquantity() {
+		return $this->defaultquantity;
+	}
+
+	/**
+	 * Set increment
+	 * @param integer $increment
+	 * @return article
+	 */
+	public function setIncrement($increment) {
+		$this->increment = (integer)$increment;
+		if($this->increment < 1) $this->increment = 1;
+		return $this;
+	}
+
+	/**
+	 * Get increment
+	 * @return integer 
+	 */
+	public function getIncrement() {
+		return $this->increment;
 	}
 
 	/**

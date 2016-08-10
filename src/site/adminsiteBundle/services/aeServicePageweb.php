@@ -54,20 +54,20 @@ class aeServicePageweb extends aeServiceItem {
     }
 
     public function getDefaultPage() {
-        $this->container->get('aetools.debug')->startChrono();
+        $this->container->get('aetools.aeDebug')->startChrono();
         $page = $this->getRepo()->findDefaultPage();
         if(is_array($page)) $page = reset($page);
         $this->completePageweb($page);
-        $this->container->get('aetools.debug')->printChrono('Get default pagweb', true);
+        $this->container->get('aetools.aeDebug')->printChrono('Get default pagweb', true);
         return $page;
     }
 
     public function getPageBySlug($itemSlug) {
-        $this->container->get('aetools.debug')->startChrono();
+        $this->container->get('aetools.aeDebug')->startChrono();
         $page = $this->getRepo()->getPageBySlug($itemSlug);
         if(is_array($page)) $page = reset($page);
         $this->completePageweb($page);
-        $this->container->get('aetools.debug')->printChrono('Get "'.$itemSlug.'" pagweb', true);
+        $this->container->get('aetools.aeDebug')->printChrono('Get "'.$itemSlug.'" pagweb', true);
         return $page;
     }
 

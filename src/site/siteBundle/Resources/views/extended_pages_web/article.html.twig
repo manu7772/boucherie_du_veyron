@@ -1,34 +1,128 @@
 {% extends 'sitesiteBundle::base_pages.html.twig' %}
 {% set cssjsloads = 'simple' %}
 {% import 'sitesiteBundle:blocks:articles_actions.html.twig' as articles_macros %}
+{% import 'sitesiteBundle:blocks:blocks_actions.html.twig' as blocks_actions %}
 
 {% block mainContainer %}
 <section>
 	<div class="container">
 		<div class="row">
 
-			{{ include('sitesiteBundle:blocks:mainmenu.html.twig') }}
+			{% block menuArticle %}
+			{{ render(controller('sitesiteBundle:Default:menuArticle')) }}
+			{% endblock menuArticle %}
 
-			<div class="col-sm-9 col-md-9 padding-left-resp">
+			{% if article != false %}
+			<div class="col-sm-9 col-md-9 padding-left-resp"><!--colonne right-->
 				<div class="content-page-right">
 					<h2 class="title">
-						{% if categorie|default(null) != null and categorie.nestedParents|default([])|length > 0 %}<span style="font-weight:300;">
-						{% for parent in categorie.nestedParents %}{{ parent.nom }} / {% endfor %}
-						{{ categorie.nom }} / </span>{% endif %}
-						{{ article.nom }}
+						{{ blocks_actions.breadcrumb(article, categories|default([])|reverse) }}
 					</h2>
-					<div class="single-section">
-						<div class="section-tabs">
-							{{ articles_macros.boxArticle(article, categorie|default(null)) }}
+					<div class="product-details background-gray"><!--product-details-->
+						{% if article.imageId|default(null) != null %}
+						<div class="col-sm-6">
+							<div class="product-image-wrapper">
+								<div class="single-products">
+									{% if categories|default([]).0.imageId != null %}
+									<div class="productinfo">
+										<img src="{{ imageB64sized(categories.0.imageId, 64, 64) }}" alt="{{ categories.0.slug }}" />
+									</div>
+									{% endif %}
+									<img src="{{ imageB64sized(article.imageId, 398, 279) }}" alt="{{ article.slug }}" class="img-responsive">
+								</div>
+							</div>
+						</div><!--/col-sm-6-->
+						<div class="col-sm-6">
+						{% else %}
+						<div class="col-sm-12">
+						{% endif %}
+							<div class="product-information"><!--/product-information-->
+								<h2 class="m-t-xs m-b-none">{{ article.nom }}</h2>
+								{% if article.accroche|default(null) != null %}
+								<p><i>{{ article.accroche|raw }}</i></p>
+								{% endif %}
+								<h2 class="product-information-price">{{ articlePrix(article)|raw }}</h2>
+								<p>{{ article.descriptif|raw }}</p>
+								{% if marketplace.vente and article.vendable %}
+								<div class="btn-group order-group" role="group" aria-label="...">
+									<button type="button" class="btn btn-default btn-commander"><i class="fa fa-shopping-cart fa-flip-horizontal"></i> Commander</button>
+									<input class="command_quantity" type="text" name="quantity" value="{{ article.increment * article.defaultquantity }}{% if article.unit != null %} {{ shortUnit(article.unit) }}{% endif %}" autocomplete="off" size="10">
+									<span class="btn-quantity">
+										<a class="btn quantity-top"><i class="fa fa-angle-up"></i></a>
+										<a class="btn quantity-bottom"><i class="fa fa-angle-down"></i></a>
+									</span>
+								</div>
+								{% endif %}
+							</div><!--/product-information-->
+						</div><!--/col-sm-6-->
+					</div><!--/product-details-->
+					
+					<!-- -->
+					<div class="category-tab shop-details-tab"><!--category-tab-->
+						<div class="col-sm-12">
+							<ul class="nav nav-tabs">
+								<li class="active"><a href="#details" data-toggle="tab">Details du produit</a></li>
+								<li class=""><a href="#ficherecette" data-toggle="tab">Fiches recettes</a></li>
+								<li class=""><a href="#ficheboisson" data-toggle="tab">Conseil vin</a></li>
+							</ul>
+						</div>
+						<div class="tab-content">
+							<div class="tab-pane fade active in" id="details">
+								<div class="col-sm-12 p-b-md">
+									<h3 class="m-t-none">{{ article.nom }}</h3>
+									<b>Conseil :</b></br>
+									<div class="col-sm-6 padding-left-right-null">
+										<ul class="shop-details-ul">
+											<li><a href="fiche_recette.html"><i class="fa fa-caret-right"></i>Côtes de veau à l'échalote </a></li>
+										</ul>
+									</div>
+								</div>
+							</div>
+							<div class="tab-pane fade active" id="ficherecette">
+								<div class="col-sm-12">
+									<div class="col-sm-6 padding-left-right-null">
+										<ul class="shop-details-ul">
+											<li><a href="fiche_recette.html"><i class="fa fa-caret-right"></i>Côtes de veau à l'échalote </a></li>
+											<li><a href="fiche_recette.html"><i class="fa fa-caret-right"></i>Côtes de veau normandes</a></li>
+											<li><a href="fiche_recette.html"><i class="fa fa-caret-right"></i>Côte de veau aux truffes</a></li>
+										</ul>
+									</div>
+									<div class="col-sm-6 padding-left-right-null">
+										<ul class="shop-details-ul">
+											<li><a href="fiche_recette.html"><i class="fa fa-caret-right"></i>Côtes de veau bordelaise</a></li>
+											<li><a href="fiche_recette.html"><i class="fa fa-caret-right"></i>Côtes de veau panées</a></li>
+										</ul>
+									</div>
+								</div>
+							</div>
+							<div class="tab-pane fade" id="ficheboisson">
+								<div class="col-sm-12">
+									<div class="col-sm-6 padding-left-right-null">
+										<ul class="shop-details-ul">
+											<li><a href="fiche_recette.html"><i class="fa fa-caret-right"></i>Côtes de veau à l'échalote </a></li>
+										</ul>
+									</div>
+									<div class="col-sm-6 padding-left-right-null">
+										<ul class="shop-details-ul">
+											<li><a href="fiche_recette.html"><i class="fa fa-caret-right"></i>Côtes de veau bordelaise</a></li>
+										</ul>
+									</div>
+								</div>
+							</div>
+							
 						</div>
 					</div>
 				</div>
 			</div>
+			{% else %}
+			<h3 class="text-center m-t-lg">Ce produit n'existe pas.</h3>
+			{% endif %}
 
 		</div>
 	</div>
+	{# {{ dump(article) }} #}
 </section>
 
-{% include('sitesiteBundle:blocks:mini-liste-info.html.twig') %}
+	{# {{ render(controller('sitesiteBundle:Default:miniListeInfo')) }}     #}
 
 {% endblock mainContainer %}

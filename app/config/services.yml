@@ -132,11 +132,19 @@ services:
 
 
     #######################
+    ### UNITS           ###
+    #######################
+
+    # fonctionnalités d'unités
+    aetools.aeUnits:
+        class: %ae_services%aeUnits
+
+    #######################
     ### CACHE           ###
     #######################
 
     # fonctionnalités de fixtures
-    aetools.cache:
+    aetools.aeCache:
         class: %ae_services%aeCache
         arguments: [@service_container]
 
@@ -145,7 +153,7 @@ services:
     #######################
 
     # fonctionnalités de fixtures
-    aetools.debug:
+    aetools.aeDebug:
         class: %ae_services%aeDebug
         arguments: [@service_container]
 

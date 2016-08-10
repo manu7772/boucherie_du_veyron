@@ -9,7 +9,7 @@
 							
 			<div class="category-tab"><!--category-tab-->                           
 				<ul class="nav nav-tabs">
-					{% for item in items if flatCategorieChildren(item.children)|length > 0 %}
+					{% for item in items if flatCategorieChildren(item.children|default([]))|length > 0 %}
 					{% if item.className in ['categorie'] %}
 					<li class="{% if loop.first %}active{% endif %}" data-target="#recommended-item-carousel" data-slide-to="{{ loop.index0 }}">
 						<a>{{ UCfirst(item.nom) }}</a>
@@ -29,11 +29,11 @@
 				<div id="recommended-item-carousel" class="carousel slide" data-ride="carousel">
 					<div class="carousel-inner">
 						{% set nbitems = 0 %}
-						{% for item in items if flatCategorieChildren(item.children)|length > 0 %}
+						{% for item in items if flatCategorieChildren(item.children|default([]))|length > 0 %}
 						{% if item.className in ['categorie'] %}
-						<div class="item{% if loop.first %} active{% endif %}"><!--div images for tab 1-->
+						<div class="item{% if loop.first %} active{% endif %}">
 							{{ blocks_actions.list_blockmini(flatCategorieChildren(item.children), 4) }}
-						</div><!--/div images tab 1-->
+						</div>
 						{% set nbitems = nbitems + 1 %}
 						{% endif %}
 						{% endfor %}

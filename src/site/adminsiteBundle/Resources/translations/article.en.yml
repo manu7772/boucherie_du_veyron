@@ -33,6 +33,9 @@ fields:
     HT: HT
     prixHT: HT price
     TVA: VAT
+    unitprix: unit for price
+    unit: unit
+    increment: incrementation
     montantTVA: part TVA
     refFabricant: factory ref.
     created: created

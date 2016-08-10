@@ -1,11 +1,12 @@
 
 {% macro boxCategorie(item, categorie) %}
-{# Affichage d'une box pour articles #}
-{% if item.className matches "#^article#" %}
-{% import 'sitesiteBundle:blocks:articles_actions.html.twig' as articles_macros %}
-{{ articles_macros.boxArticle(item, categorie) }}
-{% elseif item.className matches "#^fiche#" %}
-<p>{{ item.nom }} <small><i>({{ item.className }}/{{ item.id }})</i></small></p>
-{% endif %}
+	{# Affichage d'une box pour articles #}
+	{% if item.className matches "#^article#" %}
+		{% import 'sitesiteBundle:blocks:articles_actions.html.twig' as articles_macros %}
+		{{ articles_macros.boxArticleProducts(item, categorie) }}
+	{% elseif item.className matches "#^fiche#" %}
+		{% import 'sitesiteBundle:blocks:fiches_actions.html.twig' as fiches_macros %}
+		{{ fiches_macros.boxFiche(item, categorie) }}
+	{% endif %}
 {% endmacro %}
 
