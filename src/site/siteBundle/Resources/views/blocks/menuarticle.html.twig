@@ -4,13 +4,13 @@
      	
 		<div class="panel-group category-products" id="accordian"><!--category-products-->
 
-			{% for item1 in menuArticle.children|default([])|default([]) if item1.className == 'categorie' %}
+			{% for item1 in menuArticle.children|default([])|default([]) if (item1.className == 'categorie' and is_granted(item1.niveau)) %}
 			<div class="panel panel-default">
 				<!--product {{ item1.nom }}-->
 				<div class="panel-heading">
 					<h4 class="panel-title">
 						{% if item1.children|default([])|length > 0 %}
-						<a data-toggle="collapse" data-parent="#accordian" href="#mainmenu-{{ item1.slug }}">
+						<a data-toggle="collapse" data-parent="#accordian" href="#mainmenu-{{ item1.slug }}" title="{{ item1.descriptif|striptags|raw }}">
 							<span class="badge pull-right"><i class="fa fa-plus"></i></span>
 							<a href="{{ path('site_pageweb_' ~ item1.className, {itemSlug: item1.slug, parentSlug: menuArticle.slug }) }}">{{ UCfirst(item1.nom) }}</a>
 						</a>
@@ -23,9 +23,9 @@
 				<div id="mainmenu-{{ item1.slug }}" class="panel-collapse collapse">
 					<div class="panel-body">
 						<ul>
-							{% for item2 in item1.children if item2.className == 'categorie' -%}
+							{% for item2 in item1.children if (item2.className == 'categorie' and is_granted(item2.niveau)) -%}
 							<li>
-								<a href="{{ path('site_pageweb_' ~ item2.className, {itemSlug: item2.slug, parentSlug: item1.slug }) }}">{{ UCfirst(item2.nom) }}</a>
+								<a href="{{ path('site_pageweb_' ~ item2.className, {itemSlug: item2.slug, parentSlug: item1.slug }) }}" title="{{ item2.descriptif|striptags|raw }}">{{ UCfirst(item2.nom) }}</a>
 							</li>
 							{%- endfor %}
 						</ul>
@@ -40,4 +40,5 @@
 	
 	</div><!--/left-sidebar-->
 </div><!--/colonne left-->
+{# {{ dump(menuArticle) }} #}
 {% endif %}

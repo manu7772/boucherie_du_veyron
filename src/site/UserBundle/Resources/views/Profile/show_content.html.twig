@@ -5,14 +5,14 @@
 		<div id="contact-page" class="container-fluid"><!--container-->
 			<div class="row">
 				{% if user.avatar|default(null) != null %}
-				<div class="col-sm-2 col-sm-offset-2 text-center">
+				<div class="col-sm-2 col-sm-offset-2 text-center m-t-lg">
 					<h4 class="title">{{ 'fields.avatar'|trans|capitalize }}</h4>
 					<img src="{{ user.avatar.imgThumbnail(256,256,'cut')|raw }}" class="img-responsive img-thumbnail">
 				</div>
 				{% else %}
 				{% set partTwo = ' col-sm-offset-3' %}
 				{% endif %}
-				<div class="col-sm-6{{ partTwo|default('')|raw }}">
+				<div class="col-sm-6{{ partTwo|default('')|raw }} m-t-lg">
 					<h4 class="title">{{ 'info.compte'|trans|capitalize }}</h4>
 					<div class="row">
 						<div class="col-sm-4 text-muted text-right hidden-xs">{{ 'profile.show.username'|trans }}</div>

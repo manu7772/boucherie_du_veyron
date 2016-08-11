@@ -20,12 +20,6 @@ use Symfony\Component\Security\Core\Exception\AuthenticationException;
 
 class SecurityController extends securityCtrl {
 
-    protected function getSiteData(&$data = null) {
-        if($data === null) $data = array();
-        $data['sitedata'] = $this->get('aetools.aeSite')->getSiteData();
-        return $data;
-    }
-
     public function loginAction(Request $request) {
         /** @var $session \Symfony\Component\HttpFoundation\Session\Session */
         $session = $request->getSession();
@@ -127,12 +121,12 @@ class SecurityController extends securityCtrl {
      * @return \Symfony\Component\HttpFoundation\Response
      */
     protected function renderLogin(array $data) {
-        $this->getSiteData($data);
+        $data['sitedata'] = $this->get('aetools.aeSite')->getSiteData();
         return $this->render('siteUserBundle:Security:login.html.twig', $data);
     }
 
     protected function renderLoginInPage(array $data) {
-        $this->getSiteData($data);
+        $data['sitedata'] = $this->get('aetools.aeSite')->getSiteData();
         return $this->render('siteUserBundle:Security:loginInPage.html.twig', $data);
     }
 

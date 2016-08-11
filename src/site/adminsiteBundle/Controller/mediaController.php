@@ -8,7 +8,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
 /**
  * mediaController
- * @Security("has_role('ROLE_EDITOR')")
+ * @Security("has_role('ROLE_USER')")
  */
 class mediaController extends extendController {
 

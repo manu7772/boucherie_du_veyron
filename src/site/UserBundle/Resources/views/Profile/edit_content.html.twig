@@ -4,7 +4,7 @@
 	
 		<div id="contact-page" class="container-fluid">
 			<div class="row">
-				<div class="col-sm-6 col-sm-offset-3">
+				<div class="col-sm-6 col-sm-offset-3 m-t-lg">
 					{% if form_errors(form) != null %}
 					<div class="status alert alert-danger">{{ form_errors(form) }}</div>
 					{% endif %}
@@ -34,6 +34,7 @@
 							{{ form_errors(form.avatar) }}
 						</div>
 
+						{% if is_granted('ROLE_EDITOR') %}
 						{% if form.adminhelp is defined %}
 						<div class="form-group col-md-12">
 							<label class="text-muted">{{ 'fields.help'|trans|capitalize }} </label>
@@ -48,11 +49,14 @@
 						</div>
 						{% endif %}
 
+						{% if form.langue is defined %}
 						<div class="form-group col-md-12">
 							{{ form_widget(form.langue) }}
 							{{ form_errors(form.langue) }}
 							<p>&nbsp;<small><i>({% for loc in default_locales|split("|") %}{{ loc }}{% if not loop.last %}, {% endif %}{% endfor %})</i></small></p>
 						</div>
+						{% endif %}
+						{% endif %}
 
 						<div class="form-group col-md-12">
 							<input type="submit" id="_submit" name="_submit" class="btn btn-primary btn-md btn-block" value="{{ 'profile.edit.submit'|trans|capitalize }}">

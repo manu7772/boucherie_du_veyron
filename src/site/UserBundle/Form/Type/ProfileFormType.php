@@ -86,15 +86,15 @@ class ProfileFormType extends BaseType {
 					'class' => 'input-sm form-control',
 					),
 				))
-			->add('langue', 'text', array(
-				'translation_domain' => 'siteUserBundle',
-				"required" => true,
-				"label" => "fields.lang",
-				'label_attr' => array('class' => 'text-muted'),
-				'attr' => array(
-					'class' => 'input-sm form-control',
-					),
-				))
+			// ->add('langue', 'text', array(
+			// 	'translation_domain' => 'siteUserBundle',
+			// 	"required" => true,
+			// 	"label" => "fields.lang",
+			// 	'label_attr' => array('class' => 'text-muted'),
+			// 	'attr' => array(
+			// 		'class' => 'input-sm form-control',
+			// 		),
+			// 	))
 			->add('avatar', new cropperType(null, array('image' => $this->imagesData['image'])), array(
 				'translation_domain' => 'siteUserBundle',
 				'label' => 'fields.avatar',

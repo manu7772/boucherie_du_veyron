@@ -28,30 +28,24 @@ use FOS\UserBundle\Controller\ProfileController as BaseController;
  *
  * @author Christophe Coevoet <stof@notk.org>
  */
-class ProfileController extends BaseController
-{
-    // /**
-    //  * Show the user
-    //  */
-    // public function showAction()
-    // {
-    //     $user = $this->getUser();
-    //     if (!is_object($user) || !$user instanceof UserInterface) {
-    //         throw new AccessDeniedException('This user does not have access to this section.');
-    //     }
+class ProfileController extends BaseController {
 
-    //     return $this->render('FOSUserBundle:Profile:show.html.twig', array(
-    //         'user' => $user
-    //     ));
-    // }
+    /**
+     * Show the user
+     */
+    public function showAction() {
+        $data['sitedata'] = $this->get('aetools.aeSite')->getSiteData();
+        $data['user'] = $this->getUser();
+        if (!is_object($data['user']) || !$data['user'] instanceof UserInterface) {
+            throw new AccessDeniedException('This user does not have access to this section.');
+        }
+        return $this->render('FOSUserBundle:Profile:show.html.twig', $data);
+    }
 
     /**
      * Edit the user
      */
-    public function editAction(Request $request)
-    {
-        // echo('<p>Enrgistrement user (edit)</p>');
-
+    public function editAction(Request $request) {
         $data['user'] = $this->getUser();
         if (!is_object($data['user']) || !$data['user'] instanceof UserInterface) {
             throw new AccessDeniedException('This user "'.$data['user']->getUsername().'" does not have access to this section.');
@@ -107,10 +101,9 @@ class ProfileController extends BaseController
 
                 return $response;
             }
-
-            return $this->render('FOSUserBundle:Profile:edit.html.twig', array(
-                'form' => $form->createView()
-            ));
+            $data['sitedata'] = $this->get('aetools.aeSite')->getSiteData();
+            $data['form'] = $form->createView();
+            return $this->render('FOSUserBundle:Profile:edit.html.twig', $data);
         }
     }
 }
