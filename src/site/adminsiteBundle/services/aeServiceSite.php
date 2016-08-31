@@ -67,10 +67,10 @@ class aeServiceSite extends aeServiceSubentity {
     }
 
     public function getSiteData() {
-        $this->container->get('aetools.aeDebug')->startChrono();
+        // $this->container->get('aetools.aeDebug')->startChrono();
         if($this->siteData == null)
             $this->siteData = $this->getRepo()->findSiteData();
-        $this->container->get('aetools.aeDebug')->printChrono('Get site data N°'.$this->cpt++, true);
+        // $this->container->get('aetools.aeDebug')->printChrono('Get site data N°'.$this->cpt++, true);
         return $this->siteData;
     }
 

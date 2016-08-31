@@ -119,7 +119,6 @@
 	{% if 'checkbox-inline' in parent_label_class %}
 		{{- form_label(form, null, { widget: parent() }) -}}
 	{% else -%}
-		{# <div class="checkbox"> #}
 		<div>
 			{{- form_label(form, null, { widget: parent() }) -}}
 		</div>

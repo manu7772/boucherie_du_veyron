@@ -11,7 +11,7 @@ article:
             defaultquantity: 1
             group_nestedsParents:
                 field: slug
-                value: 'pieces-du-boucher'
+                value: 'a-bouillir'
         -
             nom: 'Jarret'
             descriptif: '<p></p>'
@@ -22,7 +22,7 @@ article:
             defaultquantity: 3
             group_nestedsParents:
                 field: slug
-                value: 'pieces-du-boucher'
+                value: 'a-bouillir'
         -
             nom: 'Collier'
             descriptif: '<p></p>'
@@ -33,9 +33,9 @@ article:
             defaultquantity: 3
             group_nestedsParents:
                 field: slug
-                value: 'pieces-du-boucher'
+                value: 'a-bouillir'
         -
-            nom: 'Bourguignon cat.1'
+            nom: 'Bourguignon'
             descriptif: '<p>Non gélatineux</p>'
             prix: '11.90'
             unitprix: Kg
@@ -44,9 +44,9 @@ article:
             defaultquantity: 5
             group_nestedsParents:
                 field: slug
-                value: 'pieces-du-boucher'
+                value: 'a-braiser'
         -
-            nom: 'Bourguignon cat.2'
+            nom: 'Bourguignon gélatineux'
             descriptif: '<p>Gélatineux</p>'
             prix: '9.90'
             unitprix: Kg
@@ -55,7 +55,18 @@ article:
             defaultquantity: 5
             group_nestedsParents:
                 field: slug
-                value: 'pieces-du-boucher'
+                value: 'a-braiser'
+        -
+            nom: 'Haut de gite'
+            descriptif: ''
+            prix: '15.90'
+            unitprix: Kg
+            unit: g
+            increment: 100
+            defaultquantity: 8
+            group_nestedsParents:
+                field: slug
+                value: 'a-braiser'
         -
             nom: 'Haché'
             descriptif: '<p>(assaisonné)</p>'
@@ -215,10 +226,7 @@ article:
             increment: 50
             defaultquantity: 3
             group_nestedsParents:
-                field: nom
-                value: 'Diaporamas accueil'
-            group_nestedsParents:
-                field: nom
+                field: slug
                 value: 'pieces-du-boucher'
         -
             nom: 'Filet'
@@ -229,13 +237,278 @@ article:
             increment: 50
             defaultquantity: 3
             group_nestedsParents:
-                field: nom
+                field: slug
                 value: 'pieces-du-boucher'
+
+        # ABATS bœuf
+        -
+            nom: 'Gras double'
+            descriptif: '<p></p>'
+            prix: '13.00'
+            unitprix: Kg
+            unit: g
+            increment: 50
+            defaultquantity: 4
+            vendable: 1
             group_nestedsParents:
                 field: nom
-                value: 'Diaporamas accueil'
+                value: 'Abats de bœuf'
+        -
+            nom: 'Rognon'
+            descriptif: '<p>Rognon de génisse</p>'
+            prix: '13.00'
+            unitprix: Kg
+            unit: g
+            increment: 50
+            defaultquantity: 4
+            vendable: 1
+            group_nestedsParents:
+                field: nom
+                value: 'Abats de bœuf'
+        -
+            nom: 'Cœur'
+            descriptif: '<p>Cœur de génisse</p>'
+            prix: '13.00'
+            unitprix: Kg
+            unit: g
+            increment: 50
+            defaultquantity: 4
+            vendable: 1
+            group_nestedsParents:
+                field: nom
+                value: 'Abats de bœuf'
+        -
+            nom: 'Foie'
+            descriptif: '<p>Foie de génisse</p>'
+            prix: '13.00'
+            unitprix: Kg
+            unit: g
+            increment: 50
+            defaultquantity: 4
+            vendable: 1
+            group_nestedsParents:
+                field: nom
+                value: 'Abats de bœuf'
+        -
+            nom: 'joue de bœuf'
+            descriptif: '<p></p>'
+            prix: '16.00'
+            unitprix: Kg
+            unit: g
+            increment: 50
+            defaultquantity: 4
+            vendable: 1
+            group_nestedsParents:
+                field: nom
+                value: 'Abats de bœuf'
 
+        # ABATS veau
+        -
+            nom: 'Mou de veau'
+            descriptif: '<p></p>'
+            prix: '11.00'
+            unitprix: Kg
+            unit: g
+            increment: 50
+            defaultquantity: 4
+            vendable: 1
+            group_nestedsParents:
+                field: nom
+                value: 'Abats de veau'
+        -
+            nom: 'Pied de veau'
+            descriptif: '<p></p>'
+            prix: '3.00'
+            unitprix: pièce
+            unit: pièce
+            increment: 1
+            defaultquantity: 1
+            vendable: 1
+            group_nestedsParents:
+                field: nom
+                value: 'Abats de veau'
+        -
+            nom: 'Tête de veau'
+            descriptif: '<p></p>'
+            prix: '16.00'
+            unitprix: Kg
+            unit: pièce
+            increment: 1
+            defaultquantity: 1
+            vendable: 1
+            surdevis: 1
+            group_nestedsParents:
+                field: nom
+                value: 'Abats de veau'
+        -
+            nom: 'Rognon de veau'
+            descriptif: '<p></p>'
+            prix: '29.00'
+            unitprix: Kg
+            unit: g
+            increment: 50
+            defaultquantity: 4
+            vendable: 1
+            group_nestedsParents:
+                field: nom
+                value: 'Abats de veau'
+        -
+            nom: 'Foie de veau'
+            descriptif: '<p></p>'
+            prix: '35.00'
+            unitprix: Kg
+            unit: g
+            increment: 50
+            defaultquantity: 4
+            vendable: 1
+            group_nestedsParents:
+                field: nom
+                value: 'Abats de veau'
+        -
+            nom: 'Ris de veau'
+            descriptif: '<p></p>'
+            prix: '35.00'
+            unitprix: Kg
+            unit: g
+            increment: 50
+            defaultquantity: 2
+            vendable: 1
+            group_nestedsParents:
+                field: nom
+                value: 'Abats de veau'
+        -
+            nom: 'Cervelle de veau'
+            descriptif: '<p></p>'
+            prix: '7.00'
+            unitprix: pièce
+            unit: pièce
+            increment: 50
+            defaultquantity: 2
+            vendable: 1
+            group_nestedsParents:
+                field: nom
+                value: 'Abats de veau'
 
+        # ABATS port
+        -
+            nom: 'Tête de porc'
+            descriptif: '<p></p>'
+            prix: '0.00'
+            unitprix: Kg
+            unit: pièce
+            increment: 1
+            defaultquantity: 1
+            vendable: 1
+            surdevis: 1
+            group_nestedsParents:
+                field: nom
+                value: 'Abats de porc'
+        -
+            nom: 'Pied de porc'
+            descriptif: '<p></p>'
+            prix: '0.00'
+            unitprix: Kg
+            unit: pièce
+            increment: 1
+            defaultquantity: 1
+            vendable: 1
+            surdevis: 1
+            group_nestedsParents:
+                field: nom
+                value: 'Abats de porc'
+        -
+            nom: 'Langue de porc'
+            descriptif: '<p></p>'
+            prix: '0.00'
+            unitprix: Kg
+            unit: pièce
+            increment: 1
+            defaultquantity: 1
+            vendable: 1
+            surdevis: 1
+            group_nestedsParents:
+                field: nom
+                value: 'Abats de porc'
+        -
+            nom: 'Cœur de porc'
+            descriptif: '<p></p>'
+            prix: '0.00'
+            unitprix: Kg
+            unit: pièce
+            increment: 1
+            defaultquantity: 1
+            vendable: 1
+            surdevis: 1
+            group_nestedsParents:
+                field: nom
+                value: 'Abats de porc'
+        -
+            nom: 'Foie de porc'
+            descriptif: '<p></p>'
+            prix: '0.00'
+            unitprix: Kg
+            unit: pièce
+            increment: 1
+            defaultquantity: 1
+            vendable: 1
+            surdevis: 1
+            group_nestedsParents:
+                field: nom
+                value: 'Abats de porc'
+
+        # ABATS agneau
+        -
+            nom: Foie d''agneau
+            descriptif: '<p></p>'
+            prix: '0.00'
+            unitprix: Kg
+            unit: pièce
+            increment: 1
+            defaultquantity: 1
+            vendable: 1
+            surdevis: 1
+            group_nestedsParents:
+                field: nom
+                value: Abats d''agneau
+        -
+            nom: Cœur d''agneau
+            descriptif: '<p></p>'
+            prix: '0.00'
+            unitprix: Kg
+            unit: pièce
+            increment: 1
+            defaultquantity: 1
+            vendable: 1
+            surdevis: 1
+            group_nestedsParents:
+                field: nom
+                value: Abats d''agneau
+        -
+            nom: Cervelle d''agneau
+            descriptif: '<p></p>'
+            prix: '0.00'
+            unitprix: Kg
+            unit: pièce
+            increment: 1
+            defaultquantity: 1
+            vendable: 1
+            surdevis: 1
+            group_nestedsParents:
+                field: nom
+                value: Abats d''agneau
+        -
+            nom: Langue d''agneau
+            descriptif: '<p></p>'
+            prix: '0.00'
+            unitprix: Kg
+            unit: pièce
+            increment: 1
+            defaultquantity: 1
+            vendable: 1
+            surdevis: 1
+            group_nestedsParents:
+                field: nom
+                value: Abats d''agneau
 
 
 

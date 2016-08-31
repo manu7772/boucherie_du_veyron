@@ -50,6 +50,12 @@ class article extends item {
 	protected $vendable;
 
 	/**
+	 * @var boolean
+	 * @ORM\Column(name="surdevis", type="boolean", nullable=false, unique=false)
+	 */
+	protected $surdevis;
+
+	/**
 	 * @var float
 	 * @ORM\Column(name="prix", type="decimal", scale=2, nullable=true, unique=false)
 	 */
@@ -130,6 +136,7 @@ class article extends item {
 		parent::__construct();
 		$this->load();
 		$this->vendable = true;
+		$this->surdevis = false;
 		$this->refFabricant = null;
 		$this->accroche = null;
 		$this->prix = 0;
@@ -231,6 +238,24 @@ class article extends item {
 	 */
 	public function getVendable() {
 		return $this->vendable;
+	}
+
+	/**
+	 * Set surdevis
+	 * @param string $surdevis
+	 * @return article
+	 */
+	public function setSurdevis($surdevis) {
+		$this->surdevis = $surdevis;
+		return $this;
+	}
+
+	/**
+	 * Get surdevis
+	 * @return boolean 
+	 */
+	public function getSurdevis() {
+		return $this->surdevis;
 	}
 
 	/**

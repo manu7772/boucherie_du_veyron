@@ -1,37 +1,46 @@
 
+{% macro baseBoxArticle(item, categorie) %}
+	{% import 'sitesiteBundle:blocks:actions.html.twig' as actions %}
+	{% import 'sitesiteBundle:blocks:blocks_actions.html.twig' as blocks_actions %}
+	{% set EDITORMODE = (app.environment in ['DEV', 'TEST']) or (is_granted('ROLE_EDITOR')) %}
+	<div class="product-image-wrapper">
+		<div class="single-products">
+			<div class="productinfo">
+				<a {{ actions.elementHref(item, categorie|default(null))|raw }}>{{ blocks_actions.imageprint(item, 275, null) }}</a>
+				<div class="product-bottom">
+					<div class="btn-group order-group for-product" role="group">
+						{% if not item.surdevis %}
+						<h2>{{ articlePrix(item)|raw }}</h2>
+						{% else %}
+						<h2 class="small">Sur devis</h2>
+						{% endif %}
+						{% if marketplace.vente and item.vendable and not item.surdevis %}
+						<button type="button" class="btn btn-default btn-commander"><i class="fa fa-shopping-cart fa-flip-horizontal"></i></button>
+						<input class="command_quantity" type="text" name="quantity" value="{{ item.increment * item.defaultquantity }}{% if item.unit != null %} {{ shortUnit(item.unit) }}{% endif %}" autocomplete="off" size="10">
+						<span class="btn-quantity">
+							<a class="btn quantity-top"><i class="fa fa-angle-up"></i></a>
+							<a class="btn quantity-bottom"><i class="fa fa-angle-down"></i></a>
+						</span>
+						{% endif %}
+					</div>
+				</div>
+			</div>
+			<p class="tab-name-product">
+				<a {{ actions.elementHref(item, categorie|default(null))|raw }}>{{ item.nom }}</a>
+				{%- if EDITORMODE %} <a href="{{ path('siteadmin_entite', {entite: item.className, id: item.id, action: 'show'}) }}"><i class="fa fa-eye icon-wait-on-click text-danger"></i></a>{% endif %}
+				{%- if EDITORMODE %} <a href="{{ path('siteadmin_entite', {entite: item.className, id: item.id, action: 'edit'}) }}"><i class="fa fa-pencil icon-wait-on-click text-danger"></i></a>{% endif %}
+			</p>
+			<p class="tab-info-category">{{ categorie.nom|default('') }}</p>
+		</div>
+	</div>
+{% endmacro %}
+
 {% macro boxArticle(item, categorie) %}
 {# Affichage d'une box pour articles #}
 {% if item.className matches '#^article#' %}
-{% import 'sitesiteBundle:blocks:actions.html.twig' as actions %}
-{% import 'sitesiteBundle:blocks:blocks_actions.html.twig' as blocks_actions %}
-{% set EDITORMODE = (app.environment in ['DEV', 'TEST']) or (is_granted('ROLE_EDITOR')) %}
+{% import _self as self %}
 	<div class="col-sm-6 col-md-3">
-		<div class="product-image-wrapper">
-			<div class="single-products">
-				<div class="productinfo">
-					<a {{ actions.elementHref(item, categorie|default(null))|raw }}>{{ blocks_actions.imageprint(item, 275, null) }}</a>
-					<div class="product-bottom">
-						<div class="btn-group order-group for-product" role="group">
-							<h2>{{ articlePrix(item)|raw }}</h2>
-							{% if marketplace.vente and item.vendable %}
-							<button type="button" class="btn btn-default btn-commander"><i class="fa fa-shopping-cart fa-flip-horizontal"></i></button>
-							<input class="command_quantity" type="text" name="quantity" value="{{ item.increment * item.defaultquantity }}{% if item.unit != null %} {{ shortUnit(item.unit) }}{% endif %}" autocomplete="off" size="10">
-							<span class="btn-quantity">
-								<a class="btn quantity-top"><i class="fa fa-angle-up"></i></a>
-								<a class="btn quantity-bottom"><i class="fa fa-angle-down"></i></a>
-							</span>
-							{% endif %}
-						</div>
-					</div>
-				</div>
-				<p class="tab-name-product">
-					<a {{ actions.elementHref(item, categorie|default(null))|raw }}>{{ item.nom }}</a>
-					{%- if EDITORMODE %} <a href="{{ path('siteadmin_entite', {entite: item.className, id: item.id, action: 'show'}) }}"><i class="fa fa-eye icon-wait-on-click text-danger"></i></a>{% endif %}
-					{%- if EDITORMODE %} <a href="{{ path('siteadmin_entite', {entite: item.className, id: item.id, action: 'edit'}) }}"><i class="fa fa-pencil icon-wait-on-click text-danger"></i></a>{% endif %}
-				</p>
-				<p class="tab-info-category">{{ categorie.nom|default('') }}</p>
-			</div>
-		</div>
+		{{ self.baseBoxArticle(item, categorie|default(null)) }}
 	</div>
 {% endif %}
 {% endmacro %}
@@ -39,50 +48,10 @@
 {% macro boxArticleProducts(item, categorie) %}
 {# Affichage d'une box pour articles #}
 {% if item.className matches '#^article#' %}
-{% import 'sitesiteBundle:blocks:actions.html.twig' as actions %}
-{% import 'sitesiteBundle:blocks:blocks_actions.html.twig' as blocks_actions %}
-{% set EDITORMODE = (app.environment in ['DEV', 'TEST']) or (is_granted('ROLE_EDITOR')) %}
-
+{% import _self as self %}
 	<div class="col-sm-6 col-md-4 col-lg-4">
-		<div class="product-image-wrapper">
-			<div class="single-products">
-				<div class="productinfo">
-					<a {{ actions.elementHref(item, categorie|default(null))|raw }}>{{ blocks_actions.imageprint(item, 275, null) }}</a>
-					<div class="product-bottom">
-						<div class="btn-group order-group for-product" role="group">
-							<h2>{{ articlePrix(item)|raw }}</h2>
-							{% if marketplace.vente and item.vendable %}
-							<button type="button" class="btn btn-default btn-commander"><i class="fa fa-shopping-cart fa-flip-horizontal"></i></button>
-							<input class="command_quantity" type="text" name="quantity" value="{{ item.increment * item.defaultquantity }}{% if item.unit != null %} {{ shortUnit(item.unit) }}{% endif %}" autocomplete="off" size="10">
-							<span class="btn-quantity">
-								<a class="btn quantity-top"><i class="fa fa-angle-up"></i></a>
-								<a class="btn quantity-bottom"><i class="fa fa-angle-down"></i></a>
-							</span>
-							{% endif %}
-						</div>
-					</div>
-				</div>
-				<p class="tab-name-product">
-					<a {{ actions.elementHref(item, categorie|default(null))|raw }}>{{ item.nom }}</a>
-					{%- if EDITORMODE %} <a href="{{ path('siteadmin_entite', {entite: item.className, id: item.id, action: 'show'}) }}"><i class="fa fa-eye icon-wait-on-click text-danger"></i></a>{% endif %}
-					{%- if EDITORMODE %} <a href="{{ path('siteadmin_entite', {entite: item.className, id: item.id, action: 'edit'}) }}"><i class="fa fa-pencil icon-wait-on-click text-danger"></i></a>{% endif %}
-				</p>
-				<p class="tab-info-category">{{ categorie.nom|default('') }}</p>
-{# 				{% if categorie.image != null %}
-				{% if categorie.image.isScreenableImage %}
-				<img src="{{ categorie.image.imgThumbnail(66, null, 'in') }}" class="info-triangle" style="border:none;" alt="{{ categorie }}">
-				{% endif %}
-				{% else %}
-				{% set stop = false %}
-				{% for child in categorie.nestedParents if (child.image != null) and (child in item.nestedParents) and (stop == false) %}
-				<img src="{{ child.image.imgThumbnail(66, null, 'in') }}" class="info-triangle" style="border:none;" alt="{{ child }}">
-				{% set stop = true %}
-				{% endfor %}
-				{% endif %} #}
-			</div>
-		</div>
+		{{ self.baseBoxArticle(item, categorie|default(null)) }}
 	</div>
-
 {% endif %}
 {% endmacro %}
 

@@ -269,8 +269,8 @@ categorie:
                 field: nom
                 value: 'Bœuf'
         -
-            nom: 'Abats'
-            descriptif: '<p>Abats</p>'
+            nom: 'À bouillir'
+            descriptif: '<p>À bouillir</p>'
             group_categorie_parentParents:
                 field: nom
                 value: 'Bœuf'
@@ -305,12 +305,6 @@ categorie:
             group_categorie_parentParents:
                 field: nom
                 value: 'Veau de lait'
-        -
-            nom: 'Abats'
-            descriptif: '<p>Abats</p>'
-            group_categorie_parentParents:
-                field: nom
-                value: 'Veau de lait'
         # articles : L'AGNEAU
         -
             nom: 'Agneau'
@@ -339,12 +333,6 @@ categorie:
         -
             nom: 'À braiser'
             descriptif: '<p>À braiser</p>'
-            group_categorie_parentParents:
-                field: nom
-                value: 'Agneau'
-        -
-            nom: 'Abats'
-            descriptif: '<p>Abats</p>'
             group_categorie_parentParents:
                 field: nom
                 value: 'Agneau'
@@ -380,12 +368,57 @@ categorie:
             group_categorie_parentParents:
                 field: nom
                 value: 'Porc'
+
+        # articles : VOLAILLE
+        -
+            nom: 'Volaille'
+            descriptif: '<p>Volaille</p>'
+            group_categorie_parentParents:
+                field: nom
+                value: 'La boutique'
+
+        # articles : CHARCUTERIE
+        -
+            nom: 'Charcuterie'
+            descriptif: '<p>Charcuterie</p>'
+            group_categorie_parentParents:
+                field: nom
+                value: 'La boutique'
+
+
+        # articles : ABATS
         -
             nom: 'Abats'
             descriptif: '<p>Abats</p>'
             group_categorie_parentParents:
                 field: nom
-                value: 'Porc'
+                value: 'La boutique'
+        -
+            nom: 'Abats de bœuf'
+            descriptif: '<p>Abats de bœuf</p>'
+            group_categorie_parentParents:
+                field: nom
+                value: 'Abats'
+        -
+            nom: 'Abats de veau'
+            descriptif: '<p>Abats de veau</p>'
+            group_categorie_parentParents:
+                field: nom
+                value: 'Abats'
+        -
+            nom: 'Abats de porc'
+            descriptif: '<p>Abats de porc</p>'
+            group_categorie_parentParents:
+                field: nom
+                value: 'Abats'
+        -
+            nom: Abats d''agneau
+            descriptif: <p>Abats d''agneau</p>
+            group_categorie_parentParents:
+                field: nom
+                value: 'Abats'
+
+
         # articles : ÉPICERIE
         -
             nom: 'Épicerie'

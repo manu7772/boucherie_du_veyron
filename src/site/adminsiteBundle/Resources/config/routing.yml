@@ -53,6 +53,10 @@ siteadmin_form_action:
     path:     /form-action/{classname}
     defaults: { _controller: siteadminsiteBundle:entite:entitePostFormPage }
 
+siteadmin_form_checknesteds:
+    path:     /check-nesteds
+    defaults: { _controller: siteadminsiteBundle:entite:checkAllNestedPositions }
+
 # entite sets
 siteadmin_set_default:
     path:     /entite-set/as-default/{id}/{entite}/{redir}

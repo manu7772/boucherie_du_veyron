@@ -121,6 +121,7 @@ class categorie extends nested {
 	 * @return categorie
 	 */
 	public function PostLoad() {
+		$this->initNestedAttributes();
 		$this->initTypes();
 		return $this;
 	}
@@ -175,16 +176,6 @@ class categorie extends nested {
 		return true;
 	}
 
-	public function __get($property) {
-		// echo('<p>Call to __GET::'.$property.' !</p>');
-		return $this->$property;
-	}
-
-	public function __set($property, $values) {
-		// echo('<p>Call to __SET::'.$property.' !</p>');
-		parent::__set($property, $values);
-		// echo("<p>SET $property</p>");
-	}
 
 	public function __call($method, $arguments) {
 		// echo('<p>Call to __CALL::'.$method.' !</p>');

@@ -41,9 +41,14 @@
 								{% if article.accroche|default(null) != null %}
 								<p><i>{{ article.accroche|raw }}</i></p>
 								{% endif %}
+								{% if not article.surdevis %}
 								<h2 class="product-information-price">{{ articlePrix(article)|raw }}</h2>
+								{% else %}
+								<h2 class="product-information-price"><small>Prix sur devis</small></h2>
+								{# <p><a href="#">Demander un devis</a></p> #}
+								{% endif %}
 								<p>{{ article.descriptif|raw }}</p>
-								{% if marketplace.vente and article.vendable %}
+								{% if marketplace.vente and article.vendable and not article.surdevis %}
 								<div class="btn-group order-group" role="group" aria-label="...">
 									<button type="button" class="btn btn-default btn-commander"><i class="fa fa-shopping-cart fa-flip-horizontal"></i> Commander</button>
 									<input class="command_quantity" type="text" name="quantity" value="{{ article.increment * article.defaultquantity }}{% if article.unit != null %} {{ shortUnit(article.unit) }}{% endif %}" autocomplete="off" size="10">

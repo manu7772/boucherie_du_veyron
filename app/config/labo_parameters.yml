@@ -77,7 +77,7 @@ parameters:
             icon: fa-desktop
     marketplace:
         active: true #gérer des articles, boutiques, etc.
-        vente: false #afficher les prix et remplir le panier
+        vente: true #afficher les prix et remplir le panier
         paiement: false #paiement en ligne
         statistiques: false
         devise:

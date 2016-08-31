@@ -3,7 +3,7 @@
 <div class="footer-widget">
 	<div class="container">
 		<div class="row">
-			{% if sitedata is defined %}
+			{% if app.session.get('sitedata') != null %}
 			{% for item1 in categorieFooters|default([]) %}
 			<div class="col-sm-2">
 				<div class="single-widget">

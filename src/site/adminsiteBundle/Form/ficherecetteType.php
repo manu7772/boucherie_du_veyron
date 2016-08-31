@@ -62,10 +62,10 @@ class ficherecetteType extends baseType {
 				->add('typentite', 'choice', array(
 					"required"  => true,
 					"label"     => 'fields.typentite',
-					'translation_domain' => 'ficheboisson',
+					'translation_domain' => 'ficherecette',
 					'multiple'  => false,
 					// 'expanded'  => true,
-					"choices"   => $ficheboisson->getListeTypentites(),
+					"choices"   => $ficherecette->getListeTypentites(),
 					))
 				;
 			}

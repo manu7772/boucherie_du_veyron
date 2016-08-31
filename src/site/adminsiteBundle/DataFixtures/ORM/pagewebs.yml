@@ -6,7 +6,7 @@ pageweb:
             nom: 'La boucherie'
             extended: 0
             default: 1
-            code: ''
+            code: '<h4 class="text-center">Pour vos commandes passées avant 9h, votre commande peut être disponible avant midi.</h3>'
             title: Boucherie du Veyron
             titreh1: Boucherie du Veyron
             # keywords: 'boucherie, boucher, traiteur, Ain, Cerdon, Poncin'

@@ -6,9 +6,9 @@
 			<div class="bg">
 				<div class="row">
 					<div class="col-xs-12">
-						<h2 class="title">Contact {{ sitedata.nom }}</h2>
+						<h2 class="title">Contact {{ app.session.get('sitedata').nom|default('') }}</h2>
 					</div>
-					{% for boutique in sitedata.boutiques %}
+					{% for boutique in app.session.get('sitedata').boutiques|default([]) %}
 					<div class="col-sm-4">
 						<div class="contact-info">
 							<address>

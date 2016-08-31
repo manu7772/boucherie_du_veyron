@@ -1,19 +1,19 @@
-{% if sitedata is defined %}
-<div class="header_top" style="background-color:{{ sitedata.couleur|default('darkred') }};"><!--header_top-->
+{% if app.session.get('sitedata') != null %}
+<div class="header_top" style="background-color:{{ app.session.get('sitedata').couleur|default('darkred') }};"><!--header_top-->
 	<div class="container">
 		<div class="row">
 			<div class="col-sm-8">
 				<div class="contactinfo">
 					<ul class="nav nav-pills">
-						{% if sitedata.boutiques|default([])|length > 0 %}
-						{% if sitedata.boutiques.0.telfixe is not null %}
-						<li><a><i class="fa fa-phone m-r-xs"></i> {{ sitedata.boutiques.0.telfixe }}</a></li>
+						{% if app.session.get('sitedata').boutiques|default([])|length > 0 %}
+						{% if app.session.get('sitedata').boutiques.0.telfixe is not null %}
+						<li><a><i class="fa fa-phone m-r-xs"></i> {{ app.session.get('sitedata').boutiques.0.telfixe }}</a></li>
 						{% endif %}
-						{% if sitedata.boutiques.0.mobile is not null %}
-						<li><a><i class="fa fa-mobile m-r-xs"></i> {{ sitedata.boutiques.0.mobile }}</a></li>
+						{% if app.session.get('sitedata').boutiques.0.mobile is not null %}
+						<li><a><i class="fa fa-mobile m-r-xs"></i> {{ app.session.get('sitedata').boutiques.0.mobile }}</a></li>
 						{% endif %}
-						{% if sitedata.boutiques.0.email is not null %}
-						<li><a href="mailto:{{ sitedata.boutiques.0.email }}"><i class="fa fa-envelope m-r-xs"></i> {{ sitedata.boutiques.0.email }}</a></li>
+						{% if app.session.get('sitedata').boutiques.0.email is not null %}
+						<li><a href="mailto:{{ app.session.get('sitedata').boutiques.0.email }}"><i class="fa fa-envelope m-r-xs"></i> {{ app.session.get('sitedata').boutiques.0.email }}</a></li>
 						{% endif %}
 						{% endif %}
 					</ul>

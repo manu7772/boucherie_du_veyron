@@ -3,8 +3,8 @@
 		<div class="row">
 			<div class="col-xs-4 col-sm-3 col-md-3 content-logo">
 				<div class="logo pull-left">
-					{% if sitedata.image_id|default(null) != null %}
-					<a href="{{ path('sitesite_homepage') }}"><img src="{{ imageB64sized(sitedata.image_id) }}" alt="logo" /></a> {# sitedata.image.imgThumbnail(260, 118, in) #}
+					{% if app.session.get('sitedata').image_id|default(null) != null %}
+					<a href="{{ path('sitesite_homepage') }}"><img src="{{ imageB64sized(app.session.get('sitedata').image_id) }}" alt="logo" /></a> {# app.session.get('sitedata').image.imgThumbnail(260, 118, in) #}
 					{% else %}
 					<a href="{{ path('sitesite_homepage') }}"><img src="{{ asset('bundles/sitesite/images/home/logo.jpg') }}" alt="logo" /></a>
 					{% endif %}
@@ -16,7 +16,7 @@
 					<div class="row">
 						<div class="col-xs-7 col-sm-7 col-md-8">
 							<div class="pull-left">
-								<h1>{{ UCfirst(sitedata.accroche|default('')|raw) }}</h1>
+								<h1>{{ UCfirst(app.session.get('sitedata').accroche|default('')|raw) }}</h1>
 							</div>
 						</div>
 						<div class="col-xs-5 col-sm-5 col-md-4">
@@ -34,21 +34,19 @@
 										<ul class="dropdown-menu dropdown-menu-right animated fadeInLeft" aria-labelledby="dropdownMenu1">
 											<li><a href="{{ path('fos_user_profile_show') }}">{{ 'profile.name'|trans({}, 'siteUserBundle')|capitalize }}</a></li>
 											<li><a href="{{ path('fos_user_security_logout') }}">{{ 'layout.logout'|trans({}, 'siteUserBundle')|capitalize }}</a></li>
+											{% if is_granted("ROLE_TRANSLATOR") %}
+											<li>
+												{%- if app.request.getSchemeAndHttpHost() == 'http://localhost' or site_domains.admin is not defined -%}
+												<a href="{{ path('siteadmin_homepage') }}">
+												{%- else -%}
+												<a href="{{ site_domains.admin.reseau|default('http://') }}{{ site_domains.admin.prefix }}.{{ site_domains.admin.domain }}.{{ site_domains.admin.extensions[0] }}/{{ app.request.locale|default(app.request.defaultLocale) }}{{ site_domains.admin.path }}">
+												{%- endif -%}Administration site</a>
+											</li>
+											{% endif %}
 										</ul>
 									</li>
 									{% else %}
 									<li><a href="{{ path('fos_user_security_login') }}"><i class="fa fa-user"></i> Mon compte</a></li>
-									{% endif %}
-									{% if is_granted("ROLE_TRANSLATOR") %}
-									<li>
-										{% if app.request.getSchemeAndHttpHost() == 'http://localhost' or site_domains.admin is not defined -%}
-										<a href="{{ path('siteadmin_homepage') }}">
-										{%- else -%}
-										<a href="{{ site_domains.admin.reseau|default('http://') }}{{ site_domains.admin.prefix }}.{{ site_domains.admin.domain }}.{{ site_domains.admin.extensions[0] }}/{{ app.request.locale|default(app.request.defaultLocale) }}{{ site_domains.admin.path }}">
-										{%- endif %}
-											<i class="fa fa-cog"></i>
-										</a>
-									</li>
 									{% endif %}
 								</ul>
 							</div>

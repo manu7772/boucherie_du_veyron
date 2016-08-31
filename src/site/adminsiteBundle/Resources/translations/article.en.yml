@@ -27,6 +27,8 @@ fields:
     artlink: adviced products
     image: picture
     vendable: is salable
+    surdevis: by price request
+    defaultquantity: default quantity
     prix: price
     TTC: TTC
     prixTTC: TTC price
@@ -49,5 +51,5 @@ fields:
     icon: icon
     group_imagesChilds: other images
     group_articlesChilds: adviced products
-    group_articles_recettesChilds: receipes carts
-    group_articles_boissonsChilds: wine cards
+    group_article_ficherecetteChilds: receipes carts
+    group_article_ficheboissonChilds: wine cards

@@ -27,6 +27,8 @@ fields:
     artlink: articles conseillés
     image: image
     vendable: en vente
+    surdevis: sur devis
+    defaultquantity: quantité par défaut
     prix: prix
     TTC: TTC
     prixTTC: prix TTC
@@ -49,5 +51,5 @@ fields:
     icon: icône
     group_imagesChilds: autres images
     group_articlesChilds: articles conseillés
-    group_articles_recettesChilds: fiches recettes
-    group_articles_boissonsChilds: conseil œnologique
+    group_article_ficherecetteChilds: fiches recettes
+    group_article_ficheboissonChilds: conseil œnologique

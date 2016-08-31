@@ -78,7 +78,7 @@
 		{% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
 		<li class="dropdown">
 			<a aria-expanded="false" role="button" class="dropdown-toggle count-info" data-toggle="dropdown" href="#">
-				{% if app.user.avatar|default(null) != null %}<img src="{{ app.user.avatar.imgThumbnail(20, 20, 'cut') }}" class="inline img-circle img-responsive" alt="Avatar {{ app.user.username }}">{% else %}<i class="fa fa-user"></i>{% endif %} {{ app.user.username }} <span class="caret"></span>
+				{% if app.user.avatar|default(null) != null %}<img src="{{ imageB64sized(app.user.avatar.id, 20, 20, 'cut') }}" class="inline img-circle img-responsive" alt="Avatar {{ app.user.username }}">{% else %}<i class="fa fa-user"></i>{% endif %} {{ app.user.username }} <span class="caret"></span>
 			</a>
 			<ul class="dropdown-menu dropdown-alerts">
 				<li>
