@@ -63,14 +63,14 @@
 						</a>
 					</li>
 				{% endfor %}
-				{% if is_granted('ROLE_TRANSLATOR') %}
-<!-- 				<li class="divider"></li>
+{# 				{% if is_granted('ROLE_TRANSLATOR') %}
+ 				<li class="divider"></li>
 				<li>
 					<a href="{{ path('sitetranslate_homepage') }}">
 						<div><i class="fa fa-flag"></i> {{ 'traduction.name'|trans|capitalize }}</div>
 					</a>
-				</li> -->
-				{% endif %}
+				</li>
+				{% endif %} #}
 			</ul>
 		</li>
 		{% endif %}
