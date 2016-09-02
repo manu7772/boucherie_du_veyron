@@ -250,15 +250,15 @@ class DefaultController extends Controller {
 	// SUB QUERIES
 
 	public function menuNavAction() {
-		$this->get('aetools.aeDebug')->startChrono();
+		// $this->get('aetools.aeDebug')->startChrono();
 		// echo('<pre>');var_dump($this->getSitedata();die('</pre>');
-		if(count($this->getSitedata()) > 0) {
+		if(isset($this->getSitedata()['menuNav_id'])) {
 			$data['menuNav'] = $this->get('aetools.aeNested')->getRepo()->findArrayTree($this->getSitedata()['menuNav_id'], 'all', null, false, 1, self::FIND_EXTENDED);
 			if(is_array($data['menuNav'])) $data['menuNav'] = reset($data['menuNav']);
 		} else {
 			$data['menuNav'] = array();
 		}
-		$this->get('aetools.aeDebug')->printChrono('Nav menu action', true);
+		// $this->get('aetools.aeDebug')->printChrono('Nav menu action', true);
 
 		// récupération route/params requête MASTER
 		$stack = $this->get('request_stack');
@@ -270,20 +270,21 @@ class DefaultController extends Controller {
 
 	// Menu latéral gauche articles
 	public function menuArticleAction($menuNav = []) {
-		$this->get('aetools.aeDebug')->startChrono();
+		// $this->get('aetools.aeDebug')->startChrono();
 		$data['menuArticle'] = $this->get('aetools.aeNested')->getRepo()->findArrayTree($this->getSitedata()['menuArticle_id'], 'all', null, false, 2, self::FIND_EXTENDED);
 		if(is_array($data['menuArticle'])) $data['menuArticle'] = reset($data['menuArticle']);
 		// echo('<pre>');var_dump($data['menu']);echo('</pre>');
-		$this->get('aetools.aeDebug')->printChrono('Main menu action', true);
+		// $this->get('aetools.aeDebug')->printChrono('Main menu action', true);
 		// die();
 		return $this->render('sitesiteBundle:blocks:menuarticle.html.twig', $data);
 	}
 
 	public function miniListeInfoAction($categorieArticles = []) {
-		$this->get('aetools.aeDebug')->startChrono();
+		// $this->get('aetools.aeDebug')->startChrono();
 		if(count((array)$categorieArticles) < 1) {
 			// données de siteDate
-			$categorieArticles = $this->getSitedata()['categorieArticles'];
+			$categorieArticles = [];
+			if(isset($this->getSitedata()['categorieArticles'])) $categorieArticles = $this->getSitedata()['categorieArticles'];
 		}
 		$data['items'] = array();
 		if(count((array)$categorieArticles) > 0) {
@@ -292,20 +293,20 @@ class DefaultController extends Controller {
 				if(count($it) > 0) $data['items'][$value['id']] = $it[0];
 			}
 		}
-		$this->get('aetools.aeDebug')->printChrono('Mini list action', true);
+		// $this->get('aetools.aeDebug')->printChrono('Mini list action', true);
 		return $this->render('sitesiteBundle:blocks:mini-liste-info.html.twig', $data);
 	}
 
 	public function footerTopAction() {
-        $this->get('aetools.aeDebug')->startChrono();
+        // $this->get('aetools.aeDebug')->startChrono();
 		$data['categorieFooters'] = array();
-		if(count($this->getSitedata()) > 0) {
+		if(isset($this->getSitedata()['categorieFooters'])) {
 			foreach($this->getSitedata()['categorieFooters'] as $dat) {
 				$it = $this->get('aetools.aeNested')->getRepo()->findArrayTree($dat['id'], 'all', null, false, 1, self::FIND_EXTENDED);
 				if(count($it) > 0) $data['categorieFooters'][] = $it[0];
 			}
 		}
-		$this->get('aetools.aeDebug')->printChrono('Get site footer', true);
+		// $this->get('aetools.aeDebug')->printChrono('Get site footer', true);
 		return $this->render('sitesiteBundle:blocks:footerTop.html.twig', $data);
 	}
 

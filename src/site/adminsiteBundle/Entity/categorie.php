@@ -96,7 +96,6 @@ class categorie extends nested {
 		$this->type_description = null;
 		$this->type_list = null;
 		$this->initTypes();
-		$this->setType(array_keys($this->type_list)[0]);
 	}
 
 	public function initTypes() {
@@ -112,6 +111,7 @@ class categorie extends nested {
 				$this->type_list[$key] = $value['nom'];
 				$this->accept_list = array_unique(array_merge($this->accept_list, $value['accepts']));
 			}
+			$this->setType(array_keys($this->type_list)[0]);
 		}
 		return $this;
 	}
@@ -120,8 +120,8 @@ class categorie extends nested {
 	 * @ORM\PostLoad
 	 * @return categorie
 	 */
-	public function PostLoad() {
-		$this->initNestedAttributes();
+	public function initNestedAttributes() {
+		parent::initNestedAttributes();
 		$this->initTypes();
 		return $this;
 	}
@@ -150,8 +150,6 @@ class categorie extends nested {
 		$result = true;
 		// if($this->getType() == null) $result = false;
 		// control
-		if($this->getLvl() == 0 && $this->hasParents()) throw new Exception("Level control error : lvl is ".json_encode($this->getLvl())." and ".json_encode($this->getNom())." has parent(s) : ".json_encode(implode(', ', $this->getParents()))." !", 1);
-		if($this->getLvl() > 0 && !$this->hasParents()) throw new Exception("Level control error : lvl is ".json_encode($this->getLvl())." and ".json_encode($this->getNom())." has no parent !", 1);
 		return $result;
 	}
 
@@ -165,6 +163,9 @@ class categorie extends nested {
 	public function check() {
 		$this->setLvl();
 		if($this->getLvl() > 0) $this->setType($this->getRootParent()->getType());
+		// Exceptions
+		if($this->getLvl() == 0 && $this->hasParents()) throw new Exception("Level control error : lvl is ".json_encode($this->getLvl())." and ".json_encode($this->getNom())." has parent(s) : ".json_encode(implode(', ', $this->getParents()))." !", 1);
+		if($this->getLvl() > 0 && !$this->hasParents()) throw new Exception("Level control error : lvl is ".json_encode($this->getLvl())." and ".json_encode($this->getNom())." has no parent !", 1);
 		parent::check();
 	}
 
@@ -178,13 +179,11 @@ class categorie extends nested {
 
 
 	public function __call($method, $arguments) {
-		// echo('<p>Call to __CALL::'.$method.' !</p>');
 		parent::__call($method, $arguments);
-		// echo("<p>CALL $method</p>");
 		if($method == 'setGroup_categorie_parentParents') {
 			$this->setType();
 			$this->setLvl();
-			$this->setCouleur($this->getRootParent()->getCouleur());
+			if($this->getLvl() > 0) $this->setCouleur($this->getRootParent()->getCouleur());
 		}
 	}
 
@@ -425,7 +424,7 @@ class categorie extends nested {
 	}
 
 	public function getAcceptsList() {
-		if(!is_array($this->accept_list)) $this->init();
+		if(!is_array($this->accept_list)) $this->initTypes();
 		return $this->accept_list;
 	}
 
@@ -480,7 +479,7 @@ class categorie extends nested {
 	 * @return array
 	 */
 	public function getTypeList() {
-		if(!is_array($this->type_list)) $this->init();
+		if(!is_array($this->type_list)) $this->initTypes();
 		return $this->type_list;
 	}
 
@@ -526,7 +525,7 @@ class categorie extends nested {
 	 * @return categorie 
 	 */
 	public function setOpen($open = true) {
-		$this->open = (bool) $open;
+		$this->open = $open;
 		return $this;
 	}
 
@@ -543,7 +542,7 @@ class categorie extends nested {
 	 * @return string
 	 */
 	public function getOpenText() {
-		return $this->open ? 'open' : 'closed';
+		return $this->open ? 'open.open' : 'open.closed';
 	}
 
 	/**
@@ -555,22 +554,5 @@ class categorie extends nested {
 		return $this->open;
 	}
 
-	/**
-	 * Set open to TRUE
-	 * @return categorie 
-	 */
-	public function open() {
-		$this->open = true;
-		return $this;
-	}
-
-	/**
-	 * Set open to FALSE
-	 * @return categorie 
-	 */
-	public function close() {
-		$this->open = false;
-		return $this;
-	}
 
 }

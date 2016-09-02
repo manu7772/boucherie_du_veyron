@@ -170,6 +170,9 @@ administration: manager
 superadmin:
     name: webmaster
     entites: Doctrine entities
+open:
+    open: open
+    closed: closed
 savoirplus: 'view more'
 copyright: copyright
 titre: title

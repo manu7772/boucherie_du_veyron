@@ -170,6 +170,9 @@ administration: administration
 superadmin:
     name: webmaster
     entites: entités Doctrine
+open:
+    open: ouvert
+    closed: fermé
 savoirplus: 'en savoir plus'
 copyright: copyright
 titre: titre
