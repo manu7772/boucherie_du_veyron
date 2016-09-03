@@ -80,9 +80,18 @@ parameters:
         vente: true #afficher les prix et remplir le panier
         paiement: false #paiement en ligne
         statistiques: false
-        devise:
-            name: euro
-            symb: €
+        # devise:
+        #     name: euro
+        #     symb: €
+        devises:
+            fr:
+                name: euro
+                symb: €
+                ratio: 1.0
+            en:
+                name: livre
+                symb: £
+                ratio: 0.72
     categorie:
         descrition:
             defaults:

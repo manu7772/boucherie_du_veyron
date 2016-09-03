@@ -313,14 +313,6 @@ class article extends item {
 	}
 
 	/**
-	 * Get text of prix and unit (please, use raw filter in twig)
-	 * @return string (of html code)
-	 */
-	public function getPrixUnitText() {
-		return number_format($this->getPrix(), 2, ',', '').'<small><sup>€</sup><span>/'.$this->getUnitprix().'</span></small>';
-	}
-
-	/**
 	 * Set prixHT
 	 * @param float $prixHT
 	 * @return article
@@ -354,6 +346,14 @@ class article extends item {
 	 */
 	public function getUnitprix() {
 		return $this->unitprix;
+	}
+
+	/**
+	 * Get text of prix and unit (please, use raw filter in twig)
+	 * @return string (of html code)
+	 */
+	public function getPrixUnitText() {
+		return number_format($this->getPrix(), 2, ',', '').'<small><sup>€</sup><span>/'.$this->getUnitprix().'</span></small>';
 	}
 
 	/**
