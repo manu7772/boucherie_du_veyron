@@ -46,13 +46,13 @@ fields:
     type: type of collection
     accepts: type of elements
     parents: parents
-    parent: parent
     elements: elements
     lvl: level
     technique: details
     icon: icon
     group_pagewebsChilds: Web pages
-    group_categorie_parentParents: Parent categories
+    group_categorie_parentParents: Parent collection
+    parent: Parent collection
     group_nestedsChilds: Contains items
 types:
     all: types

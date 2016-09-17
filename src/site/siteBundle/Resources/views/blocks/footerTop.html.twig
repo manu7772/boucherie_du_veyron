@@ -10,7 +10,7 @@
 					<h2 title="{{ phraseCut(item1.descriptif|default(item1.nom)|striptags, 160) }}">{{ item1.nom }}</h2>
 					<ul class="nav nav-pills nav-stacked">
 						{%- for item2 in item1.children|default([]) -%}
-						<li title="{{ phraseCut(item2.descriptif|default(item2.nom)|striptags, 160) }}"><a {{ actions.elementHref(item2, item1, '_self') }}>{{ UCfirst(item2.nom) }}</a></li>
+						<li title="{{ phraseCut(item2.descriptif|default(item2.nom)|striptags, 160) }}"><a {{ actions.elementHref(item2, '_self') }}>{{ UCfirst(item2.nom) }}</a></li>
 						{%- endfor -%}
 					</ul>
 				</div>

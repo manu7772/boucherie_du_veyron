@@ -81,11 +81,15 @@ class categorie extends nested {
 	// les noms doivent commencer par "$group_" et finir par "Parents" (pour les parents) ou "Childs" (pour les enfants)
 	// et la partie variable doit comporter au moins 3 lettres
 	// reconnaissance auto par : "#^(add|remove|get)(Group_).{3,}(Parent|Child)(s)?$#" (self::VIRTUALGROUPS_PARENTS_PATTERN et self::VIRTUALGROUPS_CHILDS_PATTERN)
+	protected $categorieParent;
+	protected $passBySetParent;
+	// nesteds
 	protected $group_nestedsParents;
 	protected $group_nestedsChilds;
 	// pages web
 	protected $group_pagewebsParents;
 	protected $group_pagewebsChilds;
+
 
 	public function __construct() {
 		parent::__construct();
@@ -95,6 +99,8 @@ class categorie extends nested {
 		$this->accept_list = null;
 		$this->type_description = null;
 		$this->type_list = null;
+		$this->categorieParent = null;
+		$this->passBySetParent = false;
 		$this->initTypes();
 	}
 
@@ -111,7 +117,6 @@ class categorie extends nested {
 				$this->type_list[$key] = $value['nom'];
 				$this->accept_list = array_unique(array_merge($this->accept_list, $value['accepts']));
 			}
-			$this->setType(array_keys($this->type_list)[0]);
 		}
 		return $this;
 	}
@@ -123,6 +128,9 @@ class categorie extends nested {
 	public function initNestedAttributes() {
 		parent::initNestedAttributes();
 		$this->initTypes();
+		$parents = $this->getParentsByGroup('categorie_parent');
+		$this->categorieParent = count($parents > 0) ? reset($parents) : null;
+		$this->passBySetParent = false;
 		return $this;
 	}
 
@@ -148,8 +156,7 @@ class categorie extends nested {
 	 */
 	public function isCategorieValid() {
 		$result = true;
-		// if($this->getType() == null) $result = false;
-		// control
+		$result = $result && is_string($this->getType());
 		return $result;
 	}
 
@@ -161,11 +168,6 @@ class categorie extends nested {
 	 * @return array
 	 */
 	public function check() {
-		$this->setLvl();
-		if($this->getLvl() > 0) $this->setType($this->getRootParent()->getType());
-		// Exceptions
-		if($this->getLvl() == 0 && $this->hasParents()) throw new Exception("Level control error : lvl is ".json_encode($this->getLvl())." and ".json_encode($this->getNom())." has parent(s) : ".json_encode(implode(', ', $this->getParents()))." !", 1);
-		if($this->getLvl() > 0 && !$this->hasParents()) throw new Exception("Level control error : lvl is ".json_encode($this->getLvl())." and ".json_encode($this->getNom())." has no parent !", 1);
 		parent::check();
 	}
 
@@ -177,52 +179,100 @@ class categorie extends nested {
 		return true;
 	}
 
-
+	/**
+	 * Set arguments for a property
+	 * @param string $method
+	 * @param array $arguments
+	 * @return categorie
+	 */
 	public function __call($method, $arguments) {
-		parent::__call($method, $arguments);
-		if($method == 'setGroup_categorie_parentParents') {
-			$this->setType();
-			$this->setLvl();
-			if($this->getLvl() > 0) $this->setCouleur($this->getRootParent()->getCouleur());
+		if($method !== 'setGroup_categorie_parentParents') return parent::__call($method, $arguments);
+		$categorie = null;
+		$noArgs = true;
+		echo('<h3>method '.json_encode($method).'</h3>');
+		if(isset($arguments[0])) {
+			if($arguments[0]->count() > 0) {
+				$categorie = $arguments[0]->first();
+				if($categorie instanceOf categorie) {
+					parent::__call($method, $arguments);
+					if(!$this->passBySetParent) $this->setCategorieParent($categorie);
+					// if($this->getLvl() > 0) $this->setCouleur($this->getRootParent()->getCouleur());
+					$noArgs = false;
+				}
+			}
 		}
+		if(!$this->passBySetParent && $noArgs) $this->setCategorieParent(null);
+
+		$this->setType();
+		$this->setLvl();
+		echo('<h3>Type '.json_encode($this->getType()).'</h3>');
+		echo('<h3>Level '.json_encode($this->getLvl()).'</h3>');
+
+		return $this;
+	}
+
+	/////////////////////////
+	// CATEGORIE PARENT(S)
+	/////////////////////////
+
+	/**
+	 * Get parent
+	 * @return categorie
+	 */
+	public function getCategorieParent() {
+		return $this->categorieParent;
 	}
 
 	/**
-	 * Get nestedChilds ($group_nestedsChilds)
-	 * @param boolean $excludeNotAccepts = false
-	 * @return ArrayCollection 
+	 * Set parent
+	 * @param categorie $categorie
+	 * @return nested
 	 */
-	public function getNestedChilds() {
-		return $this->group_nestedsChilds;
-	}
-
-	public function getParent() {
-		$parent = $this->group_categorie_parentParents->toArray();
-		$parent = reset($parent);
-		return is_object($parent) ? $parent : null;
+	public function setCategorieParent(categorie $categorie = null) {
+		// categorie_parent
+		$this->passBySetParent = true;
+		$this->__call('setGroup_categorie_parentParents', new ArrayCollection((array)$categorie));
+		$this->categorieParent = $categorie;
+		$this->passBySetParent = false;
+		return $this;
 	}
 
 	/**
 	 * Get array list of parents
 	 * @return array
 	 */
-	public function getParents() {
-		$parents = array();
-		if(count($this->group_categorie_parentParents) > 0) {
-			$arrayOfCP = $this->group_categorie_parentParents->toArray();
-			$parent = reset($arrayOfCP);
-			$parentsparents = $parent->getParents();
-			if(count($parentsparents) > 0) $parents = $parentsparents;
-			$parents[] = $parent;
-		}
-		return $parents;
+	public function getCategorieParents() {
+		$parent = $this->getCategorieParent();
+		return is_object($parent) ? array_merge(array($parent), $parent->getCategorieParents()) : array();
 	}
+
 	/**
 	 * Get inversed array list of parents
 	 * @return array
 	 */
-	public function getParents_inverse($andHimself = false) {
-		return array_reverse($this->getParents());
+	public function getCategorieParents_inverse() {
+		return array_reverse($this->getCategorieParents());
+	}
+
+	/**
+	 * has parents
+	 * @return boolean
+	 */
+	public function hasCategorieParents() {
+		return count($this->getCategorieParents()) > 0;
+	}
+
+	/**
+	 * has parent $parent (or if has at least on parent, if $parent is null)
+	 * @param nested $parent = null
+	 * @return boolean
+	 */
+	public function hasCategorieParent(categorie $parent = null) {
+		if($parent === null) {
+			return $this->hasCategorieParents();
+		}
+		$parents = new ArrayCollection($this->getCategorieParents());
+		return $parents->contains($parent);
 	}
 
 	/**
@@ -230,26 +280,35 @@ class categorie extends nested {
 	 * @return categorie
 	 */
 	public function getRootParent() {
-		$rootParent = $this->getParents();
+		$rootParent = $this->getCategorieParents();
 		return count($rootParent) > 0 ? reset($rootParent) : null;
 	}
 
+
+
+	/////////////////////////
+	// NESTEDS
+	/////////////////////////
+
 	/**
-	 * has parents
-	 * @return boolean
+	 * Get nestedChilds ($group_nestedsChilds)
+	 * @return ArrayCollection 
 	 */
-	public function hasParents() {
-		return count($this->getParents()) > 0;
+	public function getNestedChilds() {
+		return $this->getChildsByGroup('nesteds');
 	}
 
 	/**
-	 * has parent $parent (or has at least on parent, if $parent is null)
-	 * @param nested $parent = null
-	 * @return boolean
+	 * Get ALL nestedChilds ($group_nestedsChilds)
+	 * @param boolean $excludeNotAccepts = false
+	 * @return ArrayCollection 
 	 */
-	public function hasCategorieParent(categorie $parent = null) {
-		$parents = new ArrayCollection($this->getParents());
-		return $parent == null ? $this->hasParents() : $parents->contains($parent);
+	public function getAllNestedChilds() {
+		$nesteds = $this->getChildsByGroup('nesteds');
+		foreach ($nesteds as $nested) {
+			$nesteds = array_merge($nesteds, $nested->getAllNestedChilds());
+		}
+		return array_unique($nesteds, SORT_STRING);
 	}
 
 	/**
@@ -258,8 +317,8 @@ class categorie extends nested {
 	 * @param mixed $types = []
 	 * @return array
 	 */
-	public function getChildsByTypes($types = []) {
-		if(is_string($types)) $types = array($types);
+	public function getNestedChildsByTypes($types = []) {
+		$types = (array)$types;
 		if(count($types) < 1) $types = $this->getAccepts();
 		// if(in_array(self::CLASS_CATEGORIE, $types)) unset($types[self::CLASS_CATEGORIE]);
 		$nesteds = array();
@@ -267,7 +326,7 @@ class categorie extends nested {
 			if(in_array($nested->getType(), $types)) $nesteds[] = $nested;
 		}
 		// return array_unique($nesteds);
-		return array_unique($nesteds);
+		return array_unique($nesteds, SORT_STRING);
 	}
 
 	/**
@@ -277,45 +336,17 @@ class categorie extends nested {
 	 * @param integer $limit = 25
 	 * @return array
 	 */
-	public function getAllChildsByTypes($types = [], $limit = 25) {
+	public function getAllNestedChildsByTypes($types = [], $limit = 25) {
 		if(is_string($types)) $types = array($types);
 		if(count($types) < 1) $types = $this->getAccepts();
 		// if(in_array(self::CLASS_CATEGORIE, $types)) unset($types[self::CLASS_CATEGORIE]);
-		$nesteds = $this->getChildsByTypes($types);
+		$nesteds = $this->getNestedChildsByTypes($types);
 		if($limit > 0) {
 			foreach($this->getAllCategorieChilds() as $child) {
-				$nesteds = array_merge($nesteds, $child->getAllChildsByTypes($types, $limit - 1));
+				$nesteds = array_merge($nesteds, $child->getAllNestedChildsByTypes($types, $limit - 1));
 			}
 		}
-		return array_unique($nesteds);
-	}
-
-	/**
-	 * Get child categories
-	 * @return array
-	 */
-	public function getCategorieChilds($addAlias = false) {
-		if(!$addAlias) {
-			$result = $this->group_categorie_parentChilds->toArray();
-		} else {
-			$result = array_merge($this->getAlias(), $this->group_categorie_parentChilds->toArray());
-		}
-		return array_unique($result);
-	}
-
-	/**
-	 * Get all child categories
-	 * @param integer $limit = 25;
-	 * @return array
-	 */
-	public function getAllCategorieChilds($addAlias = false, $limit = 25) {
-		$allCategorieChilds = $this->getCategorieChilds($addAlias);
-		if($limit > 0) {
-			foreach($allCategorieChilds as $categorieChild) {
-				$allCategorieChilds = array_merge($allCategorieChilds, $categorieChild->getAllCategorieChilds($addAlias, $limit - 1));
-			}
-		}
-		return array_unique($allCategorieChilds);
+		return array_unique($nesteds, SORT_STRING);
 	}
 
 	/**
@@ -331,7 +362,7 @@ class categorie extends nested {
 			foreach($this->getNestedChilds() as $child) {
 				if(in_array($child->getClassName(), $classes)) $result[] = $child;
 			}
-			return $unique ? array_unique($result) : $result;
+			return $unique ? array_unique($result, SORT_STRING) : $result;
 		}
 	}
 
@@ -348,7 +379,7 @@ class categorie extends nested {
 			foreach($this->getNestedChildsByClass($classes, $unique) as $child)
 				$result = array_merge($result, $this->getAllNestedChildsByClass($classes, $unique));
 		}
-		return $unique ? array_unique($result) : $result;
+		return $unique ? array_unique($result, SORT_STRING) : $result;
 	}
 
 	/**
@@ -358,7 +389,7 @@ class categorie extends nested {
 	 * @return array 
 	 */
 	public function getAllNestedChildsByGroup($group = null, $addAlias = false, $limit = 25) {
-		$nestedChilds = $this->getNestedChildsByGroup($group, $addAlias);
+		$nestedChilds = $this->getChildsByGroup($group);
 		if((integer)$limit > 0) {
 			if($addAlias == false) {
 				foreach($this->getCategorieChilds() as $categorieChild) {
@@ -374,8 +405,50 @@ class categorie extends nested {
 				}
 			}
 		}
-		return array_unique($nestedChilds);
+		return array_unique($nestedChilds, SORT_STRING);
 	}
+
+	// public function getAllNestedChildsByGroup($group, $classes = null) {
+	// 	$childs = array();
+	// 	foreach($this->getNestedChilds() as $child) {
+	// 		$childs = array_merge($childs, $this->getChildsByGroup($group, $classes));
+	// 	}
+	// 	return $childs;
+	// }
+
+	/////////////////////////
+	// CATEGORIES
+	/////////////////////////
+
+	/**
+	 * Get child categories
+	 * @return array
+	 */
+	public function getCategorieChilds($addAlias = false) {
+		$alias = array();
+		if($addAlias === true) $alias = $this->getAlias();
+		$result = array_merge($alias, $this->getChildsByGroup('categorie_parent'));
+		return array_unique($result, SORT_STRING);
+	}
+
+	/**
+	 * Get all child categories
+	 * @param integer $limit = 25;
+	 * @return array
+	 */
+	public function getAllCategorieChilds($addAlias = false, $limit = 25) {
+		$allCategorieChilds = $this->getCategorieChilds($addAlias);
+		if($limit > 0) {
+			foreach($allCategorieChilds as $categorieChild) {
+				$allCategorieChilds = array_merge($allCategorieChilds, $categorieChild->getAllCategorieChilds($addAlias, $limit - 1));
+			}
+		}
+		return array_unique($allCategorieChilds, SORT_STRING);
+	}
+
+	/////////////////////////
+	// ALIAS
+	/////////////////////////
 
 	/**
 	 * get alias
@@ -397,12 +470,28 @@ class categorie extends nested {
 		return $alias;
 	}
 
+
+
 	/**
 	 * Set Level
+	 * @param integer $lvl
 	 * @return categorie
 	 */
 	public function setLvl($lvl = null) {
-		$this->lvl = $lvl == null ? count($this->getParents()) : (integer) $lvl;
+		// $this->lvl = $lvl == null ? count($this->getCategorieParents()) : (integer) $lvl;
+		if(is_integer($lvl)) {
+			$this->lvl = $lvl;
+		} else {
+			$parent = $this->getCategorieParent();
+			if(is_object($parent)) {
+				$this->lvl = $parent->getLvl() + 1;
+			} else {
+				$this->lvl = 0;
+			}
+		}
+		foreach ($this->getCategorieChilds() as $child) {
+			$child->setLvl($this->lvl + 1);
+		}
 		return $this;
 	}
 
@@ -419,8 +508,8 @@ class categorie extends nested {
 	 * @return boolean
 	 */
 	public function isRoot() {
-		// return $this->lvl == 0;
-		return !$this->hasParents();
+		return $this->lvl === 0;
+		// return !$this->hasCategorieParents();
 	}
 
 	public function getAcceptsList() {
@@ -446,15 +535,15 @@ class categorie extends nested {
 	 * @param boolean $hasOne = false
 	 * @return boolean
 	 */
-	public function hasAccepts($accepts, $hasOne = false) {
-		if(is_string($accepts)) $accepts = array($accepts);
+	public function hasAccepts($accepts, $hasAtLeastOne = false) {
+		$accepts = (array)$accepts;
 		$typeAccepts = $this->getAccepts();
-		if($hasOne) foreach($accepts as $accept) {
+		if($hasAtLeastOne) foreach($accepts as $accept) {
 			if(in_array($accept, $typeAccepts)) return true;
 		} else foreach($accepts as $accept) {
 			if(!in_array($accept, $typeAccepts)) return false;
 		}
-		return !$hasOne;
+		return !$hasAtLeastOne;
 	}
 
 	/**
@@ -496,26 +585,35 @@ class categorie extends nested {
 	 * @param string $type
 	 * @return categorie
 	 */
-	public function setType($type = null) {
+	public function setType($type = null, $level = null) {
+		if($level === null) $level = 0;
 		// ajoute le type du parent en priorité
-		if($type == null && $this->getParent() instanceOf categorie) {
+		if($type == null) {
 			// get parent type
-			$this->type = $this->getParent()->getType();
-		} else $this->type = $type;
-
-		if(array_key_exists($type, $this->getTypeList())) {
-			// ajoute le type à ses categories enfants
-			foreach($this->getCategorieChilds() as $child) {
-				$child->setType($this->type);
+			if($this->getCategorieParent() instanceOf categorie) {
+				$this->type = $this->getCategorieParent()->getType();
+			} else {
+				throw new Exception('This categorie has no parent, so type can not be null. Please choose a type in '.json_encode(array_keys($this->getTypeList())).'!', 1);
 			}
-			// refresh accepts
-			$this->setAccepts();
-			// suppression des nesteds hors type et/ou hors accept
-			foreach($this->getChildsByTypes($this->getNotAccepts()) as $child) {
-				$nestedposition = $this->getNestedposition($this, $child, "nesteds");
-				$this->removeNestedpositionChild($nestedposition);
-			}
+		} else {
+			if(!array_key_exists($type, $this->getTypeList())) throw new Exception('Error set Type for categorie: type '.json_encode($type).' does not exist! Please, choose in '.json_encode(array_keys($this->getTypeList())).'.', 1);
+			$this->type = $type;
 		}
+		// refresh accepts
+		$this->setAccepts();
+		// the same type for children
+		// WARNING ! Not aliases --> recursivity hazard !!
+		foreach($this->getCategorieChilds(false) as $child) {
+			$child->setType($this->type, $level + 1);
+		}
+		// deleting children wich a not accepted
+		foreach($this->getNestedChildsByTypes($this->getNotAccepts()) as $child) {
+			$nestedposition = $this->getNestedposition($this, $child, "categorie_parent");
+			$this->removeNestedpositionChild($nestedposition);
+		}
+		echo('<p>Type : '.$this->getType().'</p>');
+		echo('<p>Accepts : '.implode(', ', $this->getAccepts()).'</p>');
+		echo('<p>------------------------------------------</p>');
 		return $this;
 	}
 

@@ -10,6 +10,7 @@ use Labo\Bundle\AdminBundle\services\flashMessage;
 use site\adminsiteBundle\Entity\message;
 use site\adminsiteBundle\Entity\pageweb;
 use site\adminsiteBundle\Form\contactmessageType;
+use Labo\Bundle\AdminBundle\Entity\LaboUser;
 
 use \DateTime;
 use \Exception;
@@ -91,7 +92,8 @@ class DefaultController extends Controller {
 
 	public function categorieAction($itemSlug, $parentSlug = null) {
 		// categorie
-		$data['categorie'] = $this->get('aetools.aeCategorie')->getRepo()->findParentsOfCategorieBySlug($itemSlug);
+		$data['categorie'] = $this->get('aetools.aeCategorie')->getRepo()->findParentsOfCategorieBySlug($itemSlug, $parentSlug);
+		// echo('<pre>');var_dump($data['categorie']);die('</pre>');
 		$data['items'] = $this->get('aetools.aeNested')->getRepo()->findAllItemsByGroup($data['categorie'][0]['id'], 'nesteds', array('article'), self::ACCEPT_ALIAS_ITEMS, self::ADD_ALIAS_ITEMS);
 		// pageweb template
 		$data['pageweb'] = $this->get('aetools.aePageweb')->getPageBySlug('categorie');
@@ -175,6 +177,15 @@ class DefaultController extends Controller {
 		switch ($data['pageweb']["modelename"]) {
 			case 'contact':
 				// page contact
+				if($this->getUser() instanceOf LaboUser) {
+					// user connected : delete user info in session
+					$olddata = $this->getRequest()->getSession()->get('user');
+					unset($olddata['nom']);
+					unset($olddata['prenom']);
+					unset($olddata['email']);
+					unset($olddata['telephone']);
+					$this->getRequest()->getSession()->set('user', $olddata);
+				}
 				$message = $this->getNewEntity('site\adminsiteBundle\Entity\message');
 				$form = $this->createForm(new contactmessageType($this, []), $message);
 				// $this->repo = $this->em->getRepository('site\adminsiteBundle\Entity\message');
@@ -186,11 +197,7 @@ class DefaultController extends Controller {
 						// get IP & DateTime
 						$message->setIp($request->getClientIp());
 						$message->setCreation(new DateTime());
-						if(is_object($this->getUser())) {
-							$message->setNom($this->getUser()->getNom());
-							$message->setPrenom($this->getUser()->getPrenom());
-							$message->setTelephone($this->getUser()->getTelephone());
-							$message->setEmail($this->getUser()->getEmail());
+						if($this->getUser() instanceOf LaboUser) {
 							$message->setUser($this->getUser());
 						}
 						// enregistrement
@@ -203,13 +210,15 @@ class DefaultController extends Controller {
 							'text'		=> ucfirst($trans->trans('message.success')),
 						));
 						// nouveau formulaire
-						$new_message = $this->getNewEntity('site\adminsiteBundle\Entity\message');
-						$new_message->setNom($message->getNom());
-						$new_message->setPrenom($message->getPrenom());
-						$new_message->setTelephone($message->getTelephone());
-						$new_message->setEmail($message->getEmail());
-						// $new_message->setObjet($message->getObjet());
-						$form = $this->createForm(new contactmessageType($this, []), $new_message);
+						// info in session…
+						$olddata = $this->getRequest()->getSession()->get('user');
+						$olddata['nom'] = $message->getNom();
+						$olddata['prenom'] = $message->getPrenom();
+						$olddata['email'] = $message->getEmail();
+						$olddata['telephone'] = $message->getTelephone();
+						$this->getRequest()->getSession()->set('user', $olddata);
+
+						$form = $this->createForm(new contactmessageType($this, []), $this->getNewEntity('site\adminsiteBundle\Entity\message'));
 						$data['redirect'] = $this->generateUrl('site_pageweb', array('pagewebSlug' => $data['pageweb']['slug']));
 					} else {
 						// $data['message_error'] = "message.error";
@@ -242,6 +251,18 @@ class DefaultController extends Controller {
 			$statut = $this->em->getRepository('Labo\Bundle\AdminBundle\Entity\statut')->defaultVal();
 			if(is_array($statut)) $statut = reset($statut);
 			$newEntity->setStatut($statut);
+		}
+		if($classname == 'site\adminsiteBundle\Entity\message') {
+			if($this->getUser() instanceOf LaboUser) {
+				$newEntity->setUser($this->getUser());
+			} else {
+				$userSessionData = $this->getRequest()->getSession()->get('user');
+				// echo('<pre>');var_dump($userSessionData);echo('</pre>');
+				if(isset($userSessionData['nom'])) $newEntity->setNom($userSessionData['nom']);
+				if(isset($userSessionData['prenom'])) $newEntity->setPrenom($userSessionData['prenom']);
+				if(isset($userSessionData['email'])) $newEntity->setEmail($userSessionData['email']);
+				if(isset($userSessionData['telephone'])) $newEntity->setTelephone($userSessionData['telephone']);
+			}
 		}
 		return $newEntity;
 	}

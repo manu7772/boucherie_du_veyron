@@ -23,7 +23,7 @@ categorie:
         # articles
         -
             nom: 'articles'
-            descriptif: '<p>Collections d''articles</p>'
+            descriptif: "<p>Collections d'articles</p>"
             type: article
             open: true
             couleur: 'rgba(35,170,179,1)'
@@ -64,14 +64,14 @@ categorie:
         # pages web d'informations
         -
             nom: 'informations'
-            descriptif: '<p>Pages d''informations générales et légales</p>'
+            descriptif: "<p>Pages d'informations générales et légales</p>"
             group_categorie_parentParents:
                 field: nom
                 value: 'pages web'
         # diaporamas
         -
             nom: 'Diaporamas accueil'
-            descriptif: '<p>Diaporama de la page d''accueil</p>'
+            descriptif: "<p>Diaporama de la page d'accueil</p>"
             group_categorie_parentParents:
                 field: nom
                 value: 'diaporamas'
@@ -83,7 +83,7 @@ categorie:
                 value: 'images'
         -
             nom: 'Diaporama accueil'
-            descriptif: '<p>Diaporama de la page d''accueil du site</p>'
+            descriptif: "<p>Diaporama de la page d'accueil du site</p>"
             group_categorie_parentParents:
                 field: nom
                 value: 'images'
@@ -102,7 +102,7 @@ categorie:
                 value: 'Recettes classées'
         -
             nom: 'Entrées'
-            descriptif: '<p>Une sélection d''entrées</p>'
+            descriptif: "<p>Une sélection d'entrées</p>"
             group_categorie_parentParents:
                 field: nom
                 value: 'Recettes classées'
@@ -145,7 +145,7 @@ categorie:
         # boissons, oenoligie et spiritueux
         -
             nom: 'vins'
-            descriptif: '<p>Les vins de France et de l''étranger</p>'
+            descriptif: "<p>Les vins de France et de l'étranger</p>"
             group_categorie_parentParents:
                 field: nom
                 value: 'boissons, oenoligie et spiritueux'
@@ -169,7 +169,7 @@ categorie:
                 value: 'vins de France'
         -
             nom: 'Alsace'
-            descriptif: '<p>Les vins d''Alsace</p>'
+            descriptif: "<p>Les vins d'Alsace</p>"
             group_categorie_parentParents:
                 field: nom
                 value: 'vins de France'
@@ -186,8 +186,8 @@ categorie:
                 field: nom
                 value: 'vins de France'
         -
-            nom: 'vins de l''étranger'
-            descriptif: '<p>Les vins de l''étranger</p>'
+            nom: "vins de l'étranger"
+            descriptif: "<p>Les vins de l'étranger</p>"
             group_categorie_parentParents:
                 field: nom
                 value: 'vins'
@@ -196,19 +196,19 @@ categorie:
             descriptif: '<p>Les vins du chili</p>'
             group_categorie_parentParents:
                 field: nom
-                value: 'vins de l''étranger'
+                value: "vins de l'étranger"
         -
-            nom: 'vins d''Espagne'
-            descriptif: '<p>Les vins d''Espagne</p>'
+            nom: "vins d'Espagne"
+            descriptif: "<p>Les vins d'Espagne</p>"
             group_categorie_parentParents:
                 field: nom
-                value: 'vins de l''étranger'
+                value: "vins de l'étranger"
         -
-            nom: 'Vins d''italie'
-            descriptif: '<p>Les vins d''italie</p>'
+            nom: "Vins d'italie"
+            descriptif: "<p>Les vins d'italie</p>"
             group_categorie_parentParents:
                 field: nom
-                value: 'vins de l''étranger'
+                value: "vins de l'étranger"
         # boutiques
         # -
         #     nom: 'Boutiques Ain'
@@ -308,7 +308,7 @@ categorie:
         # articles : L'AGNEAU
         -
             nom: 'Agneau'
-            descriptif: '<p>L''agneau</p>'
+            descriptif: "<p>L'agneau</p>"
             group_categorie_parentParents:
                 field: nom
                 value: 'La boutique'
@@ -412,8 +412,8 @@ categorie:
                 field: nom
                 value: 'Abats'
         -
-            nom: Abats d''agneau
-            descriptif: <p>Abats d''agneau</p>
+            nom: Abats d'agneau
+            descriptif: <p>Abats d'agneau</p>
             group_categorie_parentParents:
                 field: nom
                 value: 'Abats'
@@ -422,7 +422,7 @@ categorie:
         # articles : ÉPICERIE
         -
             nom: 'Épicerie'
-            descriptif: '<p>L''épicerie</p>'
+            descriptif: "<p>L'épicerie</p>"
             group_categorie_parentParents:
                 field: nom
                 value: 'La boutique'

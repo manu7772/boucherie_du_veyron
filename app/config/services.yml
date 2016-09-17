@@ -69,6 +69,16 @@ services:
         arguments: [@service_container]
 
     #######################
+    ### FORM            ###
+    #######################
+
+    # fonctionnalités de formulaires
+    aetools.aeForms:
+        class: %ae_services%aeForms
+        arguments: [@service_container]
+
+
+    #######################
     ### ITEM            ###
     #######################
 

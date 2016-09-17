@@ -1,3 +1,5 @@
+{% import 'sitesiteBundle:blocks:actions.html.twig' as actions %}
+
 {% if menuArticle|default(null) != null %}
 <div class="col-sm-3 col-md-3 padding-right-resp"><!--colonne left-->
 	<div class="left-sidebar"><!--left-sidebar-->
@@ -25,7 +27,7 @@
 						<ul>
 							{% for item2 in item1.children if (item2.className == 'categorie' and is_granted(item2.niveau)) -%}
 							<li>
-								<a href="{{ path('site_pageweb_' ~ item2.className, {itemSlug: item2.slug, parentSlug: item1.slug }) }}" title="{{ item2.descriptif|striptags|raw }}">{{ UCfirst(item2.nom) }}</a>
+								<a {{ actions.elementHref(item2, '_self') }} title="{{ item2.descriptif|striptags|raw }}">{{ UCfirst(item2.nom) }}</a>
 							</li>
 							{%- endfor %}
 						</ul>
@@ -40,5 +42,8 @@
 	
 	</div><!--/left-sidebar-->
 </div><!--/colonne left-->
+
+{# <div style="clear:both;"></div> #}
 {# {{ dump(menuArticle) }} #}
+
 {% endif %}

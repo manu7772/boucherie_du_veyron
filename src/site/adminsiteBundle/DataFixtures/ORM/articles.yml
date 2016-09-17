@@ -58,7 +58,7 @@ article:
                 value: 'a-braiser'
         -
             nom: 'Haut de gite'
-            descriptif: ''
+            descriptif: ~
             prix: '15.90'
             unitprix: Kg
             unit: g
@@ -216,7 +216,7 @@ article:
             defaultquantity: 3
             group_nestedsParents:
                 field: slug
-                value: 'abats'
+                value: 'pieces-du-boucher'
         -
             nom: 'Filet de rumsteck'
             descriptif: '<p></p>'
@@ -458,7 +458,7 @@ article:
 
         # ABATS agneau
         -
-            nom: Foie d''agneau
+            nom: Foie d'agneau
             descriptif: '<p></p>'
             prix: '0.00'
             unitprix: Kg
@@ -469,9 +469,9 @@ article:
             surdevis: 1
             group_nestedsParents:
                 field: nom
-                value: Abats d''agneau
+                value: "Abats d'agneau"
         -
-            nom: Cœur d''agneau
+            nom: Cœur d'agneau
             descriptif: '<p></p>'
             prix: '0.00'
             unitprix: Kg
@@ -482,9 +482,9 @@ article:
             surdevis: 1
             group_nestedsParents:
                 field: nom
-                value: Abats d''agneau
+                value: "Abats d'agneau"
         -
-            nom: Cervelle d''agneau
+            nom: Cervelle d'agneau
             descriptif: '<p></p>'
             prix: '0.00'
             unitprix: Kg
@@ -495,9 +495,9 @@ article:
             surdevis: 1
             group_nestedsParents:
                 field: nom
-                value: Abats d''agneau
+                value: "Abats d'agneau"
         -
-            nom: Langue d''agneau
+            nom: Langue d'agneau
             descriptif: '<p></p>'
             prix: '0.00'
             unitprix: Kg
@@ -508,7 +508,7 @@ article:
             surdevis: 1
             group_nestedsParents:
                 field: nom
-                value: Abats d''agneau
+                value: "Abats d'agneau"
 
 
 

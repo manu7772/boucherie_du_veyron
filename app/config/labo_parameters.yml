@@ -112,7 +112,7 @@ parameters:
                     accepts: ['pageweb']
                 article:
                     nom: 'types.article'
-                    accepts: ['article', 'categorie']
+                    accepts: ['article']
                 image:
                     nom: 'types.image'
                     accepts: ['image']

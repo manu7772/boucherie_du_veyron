@@ -30,10 +30,6 @@ class categorieType extends baseType {
 			);
 		$categorie = $builder->getData();
 		$nestedAttributesParameters = $categorie->getNestedAttributesParameters();
-		$changeNom = false;
-		// if($categorie != null) if($categorie->getId() != null) {
-		//     if($categorie->getParent() == null) $changeNom = true;
-		// }
 		$aeEntities = $this->aeEntities;
 		// Builder…
 		$builder
@@ -41,7 +37,6 @@ class categorieType extends baseType {
 				'label' => 'fields.nom',
 				'translation_domain' => 'categorie',
 				'required' => true,
-				'disabled' => $changeNom,
 				))
 			->add('descriptif', 'insRichtext', array(
 				'label' => 'fields.descriptif',
@@ -62,123 +57,134 @@ class categorieType extends baseType {
 			// 	'translation_domain' => 'categorie',
 			// 	'required' => false,
 			// 	))
+            ->add('group_pagewebsChilds', 'entity', array(
+                'by_reference' => false,
+                "label"     => 'fields.group_pagewebsChilds',
+                'translation_domain' => 'categorie',
+                'choice_label'  => 'nom',
+                'class'     => 'LaboAdminBundle:nested',
+                'multiple'  => function() use ($nestedAttributesParameters) { return $nestedAttributesParameters['pagewebs']['data-limit'] > 1; },
+                'expanded'  => false,
+                "required"  => $nestedAttributesParameters['pagewebs']['required'],
+                'placeholder'   => 'form.select',
+                'attr'      => array(
+                    'class'         => 'select2',
+                    'data-limit'    => $nestedAttributesParameters['pagewebs']['data-limit'],
+                    ),
+                'group_by' => 'class_name',
+                "query_builder" => function($repo) use ($categorie, $nestedAttributesParameters, $aeEntities) {
+                    if(method_exists($repo, 'defaultValsListClosure'))
+                        return $repo->defaultValsListClosure($aeEntities, $nestedAttributesParameters['pagewebs']['class'], $categorie);
+                        else return $repo->findAllClosure($aeEntities);
+                    },
+                ))
+                // ->add('icon', 'choice', array(
+                //  "required"  => false,
+                //  "label"     => 'fields.icon',
+                //  'translation_domain' => 'categorie',
+                //  'multiple'  => false,
+                //  "choices"   => $categorie->getListIcons(),
+                //  'placeholder'   => 'form.select',
+                //  'attr'      => array(
+                //      'class'         => 'select2',
+                //      'data-format'   => 'formatState',
+                //      ),
+                //  ))
+                // ->add('type', 'choice', array(
+                //  'disabled'  => true,
+                //  "required"  => true,
+                //  "label"     => 'fields.type',
+                //  'translation_domain' => 'categorie',
+                //  'multiple'  => false,
+                //  "choices"   => $categorie->getTypeList(),
+                //  'placeholder'   => 'form.select',
+                //  'attr'      => array(
+                //      'class'     => 'select2',
+                //      ),
+                //  ))
+                // ->add('lvl', null, array(
+                //  'disabled'  => true,
+                //  ))
+                ->add('group_nestedsChilds', 'entity', array(
+                    'by_reference' => false,
+                    "label"     => 'fields.group_nestedsChilds',
+                    'translation_domain' => 'categorie',
+                    'choice_label'  => 'nom',
+                    'class'     => 'LaboAdminBundle:nested',
+                    'multiple'  => function() use ($nestedAttributesParameters) { return $nestedAttributesParameters['nesteds']['data-limit'] > 1; },
+                    'expanded'  => false,
+                    "required"  => $nestedAttributesParameters['nesteds']['required'],
+                    'placeholder'   => 'form.select',
+                    'attr'      => array(
+                        'class'         => 'select2',
+                        'data-limit'    => $nestedAttributesParameters['nesteds']['data-limit'],
+                        ),
+                    'group_by' => 'class_name',
+                    "query_builder" => function($repo) use ($categorie, $nestedAttributesParameters, $aeEntities) {
+                        if(method_exists($repo, 'defaultValsListClosure'))
+                            return $repo->defaultValsListClosure($aeEntities, $nestedAttributesParameters['nesteds']['class'], $categorie);
+                            else return $repo->findAllClosure($aeEntities);
+                        },
+                    ))
 		;
-		if($categorie != null) {
-			// type / ROOTS
-			if($categorie->getLvl() == 0) {
-			// if(count($categorie->getGroup_categorie_parentParents()) == 0) {
-				$builder
-					->add('type', 'choice', array(
-						"required"  => true,
-						"label"     => 'fields.type',
-						'translation_domain' => 'categorie',
-						'multiple'  => false,
-						"choices"   => $categorie->getTypeList(),
-						'placeholder'   => 'form.select',
-						'attr'      => array(
-							'class'		=> 'select2',
-							),
-						))
-				;
+
+		$user = $this->user;
+		$builder->addEventListener(
+			FormEvents::PRE_SET_DATA, function(FormEvent $event) use ($user, $nestedAttributesParameters, $aeEntities) {
+				$categorie = $event->getData();
+				$form = $event->getForm();
+
+                if(is_object($categorie) && method_exists($categorie, "getId")) {
+                    if($categorie->getId() === null) {
+                        // L'entité n'existe pas
+                        $form->add('categorieParent', 'entity', array(
+                            'disabled'  => true,
+                            "label"     => 'fields.parent',
+                            'translation_domain' => 'categorie',
+                            'choice_label'  => 'nom',
+                            'class'     => 'LaboAdminBundle:nested',
+                            'multiple'  => false,
+                            'expanded'  => false,
+                            "required"  => true,
+                            'placeholder'   => 'form.select',
+                            'attr'      => array(
+                                'class'         => 'select2',
+                                ),
+                            "query_builder" => function($repo) use ($categorie, $nestedAttributesParameters, $aeEntities) {
+                                if(method_exists($repo, 'defaultValsListClosure'))
+                                    return $repo->defaultValsListClosure($aeEntities, $nestedAttributesParameters['categorie_parent']['class'], $categorie);
+                                    else return $repo->findAllClosure($aeEntities);
+                                },
+                            ))
+                        ;
+                    } else {
+                        // L'entité existe
+                        $form->add('categorieParent', 'entity', array(
+                            'disabled'  => false,
+                            "label"     => 'fields.parent',
+                            'translation_domain' => 'categorie',
+                            'choice_label'  => 'nom',
+                            'class'     => 'LaboAdminBundle:nested',
+                            'multiple'  => false,
+                            'expanded'  => false,
+                            "required"  => true,
+                            'placeholder'   => 'form.select',
+                            'attr'      => array(
+                                'class'         => 'select2',
+                                ),
+                            "query_builder" => function($repo) use ($categorie, $nestedAttributesParameters, $aeEntities) {
+                                if(method_exists($repo, 'defaultValsListClosure'))
+                                    return $repo->defaultValsListClosure($aeEntities, $nestedAttributesParameters['categorie_parent']['class'], $categorie);
+                                    else return $repo->findAllClosure($aeEntities);
+                                },
+                            ))
+                        ;
+                    }
+                }
 			}
-			// catégories
-			else {
-				$isNew = $categorie->getId() == null ;
-				$builder
-				->add('group_pagewebsChilds', 'entity', array(
-					'by_reference' => false,
-					"label"		=> 'fields.group_pagewebsChilds',
-					'translation_domain' => 'categorie',
-					'choice_label'	=> 'nom',
-					'class'		=> 'LaboAdminBundle:nested',
-					'multiple'	=> function() use ($nestedAttributesParameters) { return $nestedAttributesParameters['pagewebs']['data-limit'] > 1; },
-					'expanded'	=> false,
-					"required"	=> $nestedAttributesParameters['pagewebs']['required'],
-					'placeholder'   => 'form.select',
-					'attr'		=> array(
-						'class'			=> 'select2',
-						'data-limit'	=> $nestedAttributesParameters['pagewebs']['data-limit'],
-						),
-					'group_by' => 'class_name',
-					"query_builder" => function($repo) use ($categorie, $nestedAttributesParameters, $aeEntities) {
-						if(method_exists($repo, 'defaultValsListClosure'))
-							return $repo->defaultValsListClosure($aeEntities, $nestedAttributesParameters['pagewebs']['class'], $categorie);
-							else return $repo->findAllClosure($aeEntities);
-						},
-					))
-					// ->add('icon', 'choice', array(
-					// 	"required"  => false,
-					// 	"label"     => 'fields.icon',
-					// 	'translation_domain' => 'categorie',
-					// 	'multiple'  => false,
-					// 	"choices"   => $categorie->getListIcons(),
-					// 	'placeholder'   => 'form.select',
-					// 	'attr'      => array(
-					// 		'class'         => 'select2',
-					// 		'data-format'	=> 'formatState',
-					// 		),
-					// 	))
-					->add('group_categorie_parentParents', 'entity', array(
-						// 'disabled'	=> $isNew,
-						'by_reference' => false,
-						"label"		=> 'fields.group_categorie_parentParents',
-						'translation_domain' => 'categorie',
-						'choice_label'	=> 'nom',
-						'class'		=> 'LaboAdminBundle:nested',
-						'multiple'	=> function() use ($nestedAttributesParameters) { return $nestedAttributesParameters['categorie_parent']['data-limit'] > 1; },
-						'expanded'	=> false,
-						"required"	=> $nestedAttributesParameters['categorie_parent']['required'],
-						'placeholder'   => 'form.select',
-						'attr'		=> array(
-							'class'			=> 'select2',
-							'data-limit'	=> $nestedAttributesParameters['categorie_parent']['data-limit'],
-							),
-						'group_by' => 'class_name',
-						"query_builder" => function($repo) use ($categorie, $nestedAttributesParameters, $aeEntities) {
-							if(method_exists($repo, 'defaultValsListClosure'))
-								return $repo->defaultValsListClosure($aeEntities, $nestedAttributesParameters['categorie_parent']['class'], $categorie);
-								else return $repo->findAllClosure($aeEntities);
-							},
-						))
-					// ->add('type', 'choice', array(
-					// 	'disabled'	=> true,
-					// 	"required"  => true,
-					// 	"label"     => 'fields.type',
-					// 	'translation_domain' => 'categorie',
-					// 	'multiple'  => false,
-					// 	"choices"   => $categorie->getTypeList(),
-					// 	'placeholder'   => 'form.select',
-					// 	'attr'      => array(
-					// 		'class'		=> 'select2',
-					// 		),
-					// 	))
-					// ->add('lvl', null, array(
-					// 	'disabled'	=> true,
-					// 	))
-					->add('group_nestedsChilds', 'entity', array(
-						'by_reference' => false,
-						"label"		=> 'fields.group_nestedsChilds',
-						'translation_domain' => 'categorie',
-						'choice_label'	=> 'nom',
-						'class'		=> 'LaboAdminBundle:nested',
-						'multiple'	=> function() use ($nestedAttributesParameters) { return $nestedAttributesParameters['nesteds']['data-limit'] > 1; },
-						'expanded'	=> false,
-						"required"	=> $nestedAttributesParameters['nesteds']['required'],
-						'placeholder'   => 'form.select',
-						'attr'		=> array(
-							'class'			=> 'select2',
-							'data-limit'	=> $nestedAttributesParameters['nesteds']['data-limit'],
-							),
-						'group_by' => 'class_name',
-						"query_builder" => function($repo) use ($categorie, $nestedAttributesParameters, $aeEntities) {
-							if(method_exists($repo, 'defaultValsListClosure'))
-								return $repo->defaultValsListClosure($aeEntities, $nestedAttributesParameters['nesteds']['class'], $categorie);
-								else return $repo->findAllClosure($aeEntities);
-							},
-						))
-				;
-			}
-		}
+		);
+
+
 		// ajoute les valeurs hidden, passés en paramètre
 		$this->addHiddenValues($builder, true);
 	}

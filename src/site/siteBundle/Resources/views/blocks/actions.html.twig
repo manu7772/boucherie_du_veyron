@@ -6,7 +6,11 @@
 		{%- endif -%}
 	{%- endfor -%}
 	{%- if clss != null -%}
-		href="{{ url('site_pageweb_' ~ clss, {itemSlug: item.slug, parentSlug: parent.slug|default(null)}) }}"{%- if target|default(null) in ['_self', '_blank'] -%} target="{{ target|raw }}"{%- endif -%}
+		{%- if item.className == 'categorie' -%}
+		href="{{ url('site_pageweb_' ~ clss, {itemSlug: item.slug, parentSlug: parent.slug|default(item.categorieParent.slug|default(null))}) }}"{%- if target|default('_self') in ['_self', '_blank'] -%} target="{{ target|raw }}"{%- endif -%}
+		{%- else -%}
+		href="{{ url('site_pageweb_' ~ clss, {itemSlug: item.slug, parentSlug: parent.slug|default(null)}) }}"{%- if target|default('_self') in ['_self', '_blank'] -%} target="{{ target|raw }}"{%- endif -%}
+		{%- endif -%}
 	{%- else -%}
 		href="#"
 	{%- endif -%}

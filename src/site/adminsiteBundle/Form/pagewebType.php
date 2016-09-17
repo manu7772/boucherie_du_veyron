@@ -90,7 +90,7 @@ class pagewebType extends baseType {
                 'choice_label'  => 'nom',
                 'multiple'  => false,
                 'required' => false,
-                'group_by' => 'parent.nom',
+                'group_by' => 'categorieParent.nom',
                 "query_builder" => function($repo) {
                     if(method_exists($repo, 'getElementsBySubTypeButRoot'))
                         return $repo->getElementsBySubTypeButRoot(array('article', 'pageweb', 'fiche'));
@@ -126,7 +126,7 @@ class pagewebType extends baseType {
 			// 	'choice_label'  => 'nom',
 			// 	'multiple'  => true,
 			// 	'required' => false,
-			// 	'group_by' => 'parent.nom',
+			// 	'group_by' => 'categorieParent.nom',
 			// 	"query_builder" => function($repo) {
 			// 		return $repo->getElementsBySubTypeButRoot(array('pageweb'));
 			//     	},

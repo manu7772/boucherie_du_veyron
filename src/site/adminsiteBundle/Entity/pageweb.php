@@ -26,7 +26,7 @@ class pageweb extends item {
 	 * @Assert\NotBlank(message = "entity.notblank.nom")
 	 * @Assert\Length(
 	 *      min = "3",
-	 *      max = "25",
+	 *      max = "256",
 	 *      minMessage = "Le nom doit comporter au moins {{ limit }} lettres.",
 	 *      maxMessage = "Le nom doit comporter au maximum {{ limit }} lettres."
 	 * )

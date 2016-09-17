@@ -111,26 +111,31 @@ doctrine:
         # naming_strategy: doctrine.orm.naming_strategy.underscore
         auto_mapping: true
         mappings:
-            gedmo_translatable:
-                type: annotation
-                prefix: Gedmo\Translatable\Entity
-                dir: "%kernel.root_dir%/../vendor/gedmo/doctrine-extensions/lib/Gedmo/Translatable/Entity"
-                alias: GedmoTranslatable # this one is optional and will default to the name set for the mapping
-            gedmo_translator:
-                type: annotation
-                prefix: Gedmo\Translator\Entity
-                dir: "%kernel.root_dir%/../vendor/gedmo/doctrine-extensions/lib/Gedmo/Translator/Entity"
-                alias: GedmoTranslator # this one is optional and will default to the name set for the mapping
-            gedmo_loggable:
-                type: annotation
-                prefix: Gedmo\Loggable\Entity
-                dir: "%kernel.root_dir%/../vendor/gedmo/doctrine-extensions/lib/Gedmo/Loggable/Entity"
-                alias: GedmoLoggable # this one is optional and will default to the name set for the mapping
-            gedmo_tree:
-                type: annotation
-                prefix: Gedmo\Tree\Entity
-                dir: "%kernel.root_dir%/../vendor/gedmo/doctrine-extensions/lib/Gedmo/Tree/Entity"
-                alias: GedmoTree # this one is optional and will default to the name set for the mapping 
+            # gedmo_translatable:
+            #     type: annotation
+            #     prefix: Gedmo\Translatable\Entity
+            #     dir: "%kernel.root_dir%/../vendor/gedmo/doctrine-extensions/lib/Gedmo/Translatable/Entity"
+            #     alias: GedmoTranslatable # this one is optional and will default to the name set for the mapping
+            # gedmo_translator:
+            #     type: annotation
+            #     prefix: Gedmo\Translator\Entity
+            #     dir: "%kernel.root_dir%/../vendor/gedmo/doctrine-extensions/lib/Gedmo/Translator/Entity"
+            #     alias: GedmoTranslator # this one is optional and will default to the name set for the mapping
+            # gedmo_loggable:
+            #     type: annotation
+            #     prefix: Gedmo\Loggable\Entity
+            #     dir: "%kernel.root_dir%/../vendor/gedmo/doctrine-extensions/lib/Gedmo/Loggable/Entity"
+            #     alias: GedmoLoggable # this one is optional and will default to the name set for the mapping
+            # gedmo_tree:
+            #     type: annotation
+            #     prefix: Gedmo\Tree\Entity
+            #     dir: "%kernel.root_dir%/../vendor/gedmo/doctrine-extensions/lib/Gedmo/Tree/Entity"
+            #     alias: GedmoTree # this one is optional and will default to the name set for the mapping 
+            # gedmo_sortable:
+            #     type: annotation
+            #     prefix: Gedmo\Sortable\Entity
+            #     dir: "%kernel.root_dir%/../vendor/gedmo/doctrine-extensions/lib/Gedmo/Sortable/Entity"
+            #     alias: GedmoSortable # this one is optional and will default to the name set for the mapping 
 
 # Swiftmailer Configuration
 swiftmailer:
@@ -164,7 +169,7 @@ fos_user:
 stof_doctrine_extensions:
     orm:
         default:
-            tree: true
+            tree: false
             sortable: true
             sluggable: true
             loggable: false

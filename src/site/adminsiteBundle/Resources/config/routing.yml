@@ -106,6 +106,10 @@ categorie_ajax_data:
     path:     /categorie/ajax-data/{id}/{types}/{groups}
     defaults: { _controller: siteadminsiteBundle:categorie:ajaxData, id: null, types: 'all', groups: null }
 
+ajax_data_sort_construct:
+    path:     /sorting-UI/ajax/construct
+    defaults: { _controller: siteadminsiteBundle:ajaxqueries:ajaxconstruct }
+
 ajax_data_sort:
     path:     /sorting-UI/ajax
     defaults: { _controller: siteadminsiteBundle:ajaxqueries:ajaxsort }

@@ -72,7 +72,7 @@ class siteType extends baseType {
                 'choice_label'  => 'nom',
                 'multiple'  => false,
                 'required' => false,
-                'group_by' => 'parent.nom',
+                'group_by' => 'categorieParent.nom',
                 "query_builder" => function($repo) {
                     if(method_exists($repo, 'getElementsByTypeButRoot'))
                         return $repo->getElementsByTypeButRoot(array("menu"));
@@ -90,7 +90,7 @@ class siteType extends baseType {
                 'choice_label'  => 'nom',
                 'multiple'  => false,
                 'required' => false,
-                'group_by' => 'parent.nom',
+                'group_by' => 'categorieParent.nom',
                 "query_builder" => function($repo) {
                     if(method_exists($repo, 'getElementsBySubTypeButRoot'))
                         return $repo->getElementsBySubTypeButRoot(array('article'));
@@ -108,7 +108,7 @@ class siteType extends baseType {
             //     'choice_label'  => 'nom',
             //     'multiple'  => false,
             //     'required' => false,
-            //     'group_by' => 'parent.nom',
+            //     'group_by' => 'categorieParent.nom',
             //     "query_builder" => function($repo) {
             //         if(method_exists($repo, 'getElementsBySubTypeButRoot'))
             //             return $repo->getElementsBySubTypeButRoot(array('article', 'pageweb', 'fiche'));
@@ -126,7 +126,7 @@ class siteType extends baseType {
                 'choice_label'  => 'nom',
                 'multiple'  => true,
                 'required' => false,
-                'group_by' => 'parent.nom',
+                'group_by' => 'categorieParent.nom',
                 "query_builder" => function($repo) {
                     if(method_exists($repo, 'getElementsBySubTypeButRoot'))
                         return $repo->getElementsBySubTypeButRoot(array('article', 'fiche'));
@@ -144,7 +144,7 @@ class siteType extends baseType {
                 'choice_label'  => 'nom',
                 'multiple'  => true,
                 'required' => false,
-                'group_by' => 'parent.nom',
+                'group_by' => 'categorieParent.nom',
                 "query_builder" => function($repo) {
                     if(method_exists($repo, 'getElementsBySubTypeButRoot'))
                         return $repo->getElementsBySubTypeButRoot(array('article', 'pageweb', 'fiche'));
