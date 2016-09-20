@@ -240,6 +240,117 @@ article:
                 field: slug
                 value: 'pieces-du-boucher'
 
+        -
+            nom: 'Jarret avec os osso/bucco'
+            descriptif: ~
+            prix: '18.90'
+            unitprix: Kg
+            unit: g
+            increment: 100
+            defaultquantity: 2
+            group_nestedsParents:
+                field: slug
+                value: 'pieces-du-boucher-1'
+        -
+            nom: 'Sauté avec os'
+            descriptif: ~
+            prix: '18.90'
+            unitprix: Kg
+            unit: g
+            increment: 100
+            defaultquantity: 2
+            group_nestedsParents:
+                field: slug
+                value: 'pieces-du-boucher-1'
+        -
+            nom: 'Sauté sans os'
+            descriptif: ~
+            prix: '21.50'
+            unitprix: Kg
+            unit: g
+            increment: 100
+            defaultquantity: 2
+            group_nestedsParents:
+                field: slug
+                value: 'pieces-du-boucher-1'
+        -
+            nom: 'Paupiettes et rôtis farcis'
+            descriptif: ~
+            prix: '24.50'
+            unitprix: Kg
+            unit: g
+            increment: 100
+            defaultquantity: 2
+            group_nestedsParents:
+                field: slug
+                value: 'pieces-du-boucher-1'
+        -
+            nom: 'Rôti de veau'
+            descriptif: '<p>(épaule, bas de carré)</p>'
+            prix: '24.50'
+            unitprix: Kg
+            unit: g
+            increment: 100
+            defaultquantity: 2
+            group_nestedsParents:
+                field: slug
+                value: 'pieces-du-boucher-1'
+        -
+            nom: 'Côtes premières ou filets'
+            descriptif: ~
+            prix: '24.50'
+            unitprix: Kg
+            unit: g
+            increment: 50
+            defaultquantity: 3
+            group_nestedsParents:
+                field: slug
+                value: 'pieces-du-boucher-1'
+        -
+            nom: 'Rôti de veau'
+            descriptif: '<p>(quasi, noix pâtissière)</p>'
+            prix: '27.50'
+            unitprix: Kg
+            unit: g
+            increment: 100
+            defaultquantity: 2
+            group_nestedsParents:
+                field: slug
+                value: 'pieces-du-boucher-1'
+        -
+            nom: 'Escalopes ou grenadins'
+            descriptif: '<p></p>'
+            prix: '29.50'
+            unitprix: Kg
+            unit: g
+            increment: 100
+            defaultquantity: 2
+            group_nestedsParents:
+                field: slug
+                value: 'pieces-du-boucher-1'
+        -
+            nom: 'Longe désossée'
+            descriptif: '<p></p>'
+            prix: '34.90'
+            unitprix: Kg
+            unit: g
+            increment: 100
+            defaultquantity: 3
+            group_nestedsParents:
+                field: slug
+                value: 'pieces-du-boucher-1'
+        -
+            nom: 'Filet'
+            descriptif: '<p></p>'
+            prix: '38.50'
+            unitprix: Kg
+            unit: g
+            increment: 100
+            defaultquantity: 3
+            group_nestedsParents:
+                field: slug
+                value: 'pieces-du-boucher-1'
+
         # ABATS bœuf
         -
             nom: 'Gras double'

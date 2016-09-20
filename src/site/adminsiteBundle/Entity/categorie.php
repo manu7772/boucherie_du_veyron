@@ -72,6 +72,12 @@ class categorie extends nested {
 	 */
 	protected $type;
 
+	/**
+	 * @ORM\ManyToOne(targetEntity="site\adminsiteBundle\Entity\categorie")
+	 * @ORM\JoinColumn(nullable=true, unique=false)
+	 */
+	protected $categorieParent;
+
 	// Liste des termes valides pour accept
 	protected $accept_list;
 	protected $type_description;
@@ -81,7 +87,6 @@ class categorie extends nested {
 	// les noms doivent commencer par "$group_" et finir par "Parents" (pour les parents) ou "Childs" (pour les enfants)
 	// et la partie variable doit comporter au moins 3 lettres
 	// reconnaissance auto par : "#^(add|remove|get)(Group_).{3,}(Parent|Child)(s)?$#" (self::VIRTUALGROUPS_PARENTS_PATTERN et self::VIRTUALGROUPS_CHILDS_PATTERN)
-	protected $categorieParent;
 	protected $passBySetParent;
 	// nesteds
 	protected $group_nestedsParents;
@@ -129,7 +134,7 @@ class categorie extends nested {
 		parent::initNestedAttributes();
 		$this->initTypes();
 		$parents = $this->getParentsByGroup('categorie_parent');
-		$this->categorieParent = count($parents > 0) ? reset($parents) : null;
+		// $this->categorieParent = count($parents > 0) ? reset($parents) : null;
 		$this->passBySetParent = false;
 		return $this;
 	}
@@ -189,7 +194,7 @@ class categorie extends nested {
 		if($method !== 'setGroup_categorie_parentParents') return parent::__call($method, $arguments);
 		$categorie = null;
 		$noArgs = true;
-		echo('<h3>method '.json_encode($method).'</h3>');
+		// echo('<h3>method '.json_encode($method).'</h3>');
 		if(isset($arguments[0])) {
 			if($arguments[0]->count() > 0) {
 				$categorie = $arguments[0]->first();
@@ -205,8 +210,8 @@ class categorie extends nested {
 
 		$this->setType();
 		$this->setLvl();
-		echo('<h3>Type '.json_encode($this->getType()).'</h3>');
-		echo('<h3>Level '.json_encode($this->getLvl()).'</h3>');
+		// echo('<h3>Type '.json_encode($this->getType()).'</h3>');
+		// echo('<h3>Level '.json_encode($this->getLvl()).'</h3>');
 
 		return $this;
 	}
@@ -231,9 +236,13 @@ class categorie extends nested {
 	public function setCategorieParent(categorie $categorie = null) {
 		// categorie_parent
 		$this->passBySetParent = true;
-		$this->__call('setGroup_categorie_parentParents', new ArrayCollection((array)$categorie));
 		$this->categorieParent = $categorie;
+		$this->__call('setGroup_categorie_parentParents', new ArrayCollection((array)$categorie));
 		$this->passBySetParent = false;
+		if($categorie instanceOf categorie) {
+			// as parent, so in first position !
+			$categorie->setNestedPosition_first($this, 'categorie_parent');
+		}
 		return $this;
 	}
 
@@ -602,18 +611,18 @@ class categorie extends nested {
 		// refresh accepts
 		$this->setAccepts();
 		// the same type for children
-		// WARNING ! Not aliases --> recursivity hazard !!
+		// WARNING ! Not aliases --> recursivity hazard !! …and it should not be true !
 		foreach($this->getCategorieChilds(false) as $child) {
 			$child->setType($this->type, $level + 1);
 		}
-		// deleting children wich a not accepted
+		// deleting children wich is not accepted
 		foreach($this->getNestedChildsByTypes($this->getNotAccepts()) as $child) {
 			$nestedposition = $this->getNestedposition($this, $child, "categorie_parent");
 			$this->removeNestedpositionChild($nestedposition);
 		}
-		echo('<p>Type : '.$this->getType().'</p>');
-		echo('<p>Accepts : '.implode(', ', $this->getAccepts()).'</p>');
-		echo('<p>------------------------------------------</p>');
+		// echo('<p>Type : '.$this->getType().'</p>');
+		// echo('<p>Accepts : '.implode(', ', $this->getAccepts()).'</p>');
+		// echo('<p>------------------------------------------</p>');
 		return $this;
 	}
 

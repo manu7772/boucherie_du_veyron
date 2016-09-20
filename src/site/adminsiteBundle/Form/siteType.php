@@ -83,24 +83,30 @@ class siteType extends baseType {
                     'class'         => 'select2',
                     ),
                 ))
-            ->add('menuArticle', 'entity', array(
-                "label"     => 'fields.menuArticle',
-                'translation_domain' => 'site',
-                'class'     => 'siteadminsiteBundle:categorie',
-                'choice_label'  => 'nom',
-                'multiple'  => false,
-                'required' => false,
-                'group_by' => 'categorieParent.nom',
-                "query_builder" => function($repo) {
-                    if(method_exists($repo, 'getElementsBySubTypeButRoot'))
-                        return $repo->getElementsBySubTypeButRoot(array('article'));
-                        else return $repo->findAllClosure();
-                    },
-                'placeholder'   => 'form.select',
-                'attr'      => array(
-                    'class'         => 'select2',
-                    ),
-                ))
+        ;
+        if($this->controller->getParameter('marketplace')['active'] === true) {
+            $builder
+                ->add('menuArticle', 'entity', array(
+                    "label"     => 'fields.menuArticle',
+                    'translation_domain' => 'site',
+                    'class'     => 'siteadminsiteBundle:categorie',
+                    'choice_label'  => 'nom',
+                    'multiple'  => false,
+                    'required' => false,
+                    'group_by' => 'categorieParent.nom',
+                    "query_builder" => function($repo) {
+                        if(method_exists($repo, 'getElementsBySubTypeButRoot'))
+                            return $repo->getElementsBySubTypeButRoot(array('article'));
+                            else return $repo->findAllClosure();
+                        },
+                    'placeholder'   => 'form.select',
+                    'attr'      => array(
+                        'class'         => 'select2',
+                        ),
+                    ))
+            ;
+        }
+        // $builder
             // ->add('diaporamaintro', 'entity', array(
             //     "label"     => 'fields.diaporamaintro',
             //     'translation_domain' => 'site',
@@ -119,24 +125,30 @@ class siteType extends baseType {
             //         'class'         => 'select2',
             //         ),
             //     ))
-            ->add('categorieArticles', 'entity', array(
-                "label"     => 'fields.categorieArticles',
-                'translation_domain' => 'site',
-                'class'     => 'siteadminsiteBundle:categorie',
-                'choice_label'  => 'nom',
-                'multiple'  => true,
-                'required' => false,
-                'group_by' => 'categorieParent.nom',
-                "query_builder" => function($repo) {
-                    if(method_exists($repo, 'getElementsBySubTypeButRoot'))
-                        return $repo->getElementsBySubTypeButRoot(array('article', 'fiche'));
-                        else return $repo->findAllClosure();
-                    },
-                'placeholder'   => 'form.select',
-                'attr'      => array(
-                    'class'         => 'select2',
-                    ),
-                ))
+        // ;
+        if($this->controller->getParameter('marketplace')['active'] === true) {
+            $builder
+                ->add('categorieArticles', 'entity', array(
+                    "label"     => 'fields.categorieArticles',
+                    'translation_domain' => 'site',
+                    'class'     => 'siteadminsiteBundle:categorie',
+                    'choice_label'  => 'nom',
+                    'multiple'  => true,
+                    'required' => false,
+                    'group_by' => 'categorieParent.nom',
+                    "query_builder" => function($repo) {
+                        if(method_exists($repo, 'getElementsBySubTypeButRoot'))
+                            return $repo->getElementsBySubTypeButRoot(array('article', 'fiche'));
+                            else return $repo->findAllClosure();
+                        },
+                    'placeholder'   => 'form.select',
+                    'attr'      => array(
+                        'class'         => 'select2',
+                        ),
+                    ))
+            ;
+        }
+        $builder
             ->add('categorieFooters', 'entity', array(
                 "label"     => 'fields.categorieFooters',
                 'translation_domain' => 'site',

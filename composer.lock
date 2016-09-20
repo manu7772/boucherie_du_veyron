@@ -1584,12 +1584,12 @@
             "source": {
                 "type": "git",
                 "url": "https://bitbucket.org/manu7772/laboadminbundle.git",
-                "reference": "a0046a5a5d5da137b4aeb71ec1eac58d99408818"
+                "reference": "1059dcc44488fd2a7011dbad8d100df0b376c7b7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://bitbucket.org/manu7772/laboadminbundle/get/a0046a5a5d5da137b4aeb71ec1eac58d99408818.zip",
-                "reference": "a0046a5a5d5da137b4aeb71ec1eac58d99408818",
+                "url": "https://bitbucket.org/manu7772/laboadminbundle/get/1059dcc44488fd2a7011dbad8d100df0b376c7b7.zip",
+                "reference": "1059dcc44488fd2a7011dbad8d100df0b376c7b7",
                 "shasum": ""
             },
             "require": {
@@ -1621,7 +1621,7 @@
                 "admin",
                 "labo"
             ],
-            "time": "2016-09-15 13:55:55"
+            "time": "2016-09-19 13:35:22"
         },
         {
             "name": "leafo/lessphp",
