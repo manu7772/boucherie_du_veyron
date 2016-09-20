@@ -15,7 +15,7 @@
 
 				{% for item in diaporama.children|default([]) %}
 				{% if item.className == "article" %}
-				<div class="item{% if loop.first %} active{% endif %}"><!--image 2-->
+				<div class="item{% if loop.first %} active{% endif %}">
 					<div class="item-margin">
 					<div class="col-sm-5 col-md-4 col-lg-5 padding-right padding-left">
 						<h1>{{ UCfirst(item.nom) }}</h1>
@@ -41,27 +41,35 @@
 						<img src="{{ asset('bundles/sitesite/images/defaults/no-picture.png') }}" style="height:322px;" alt="{{ 'name'|trans({}, item.className) }} {{ item.slug }}" class="slid-img img-responsive" />
 						{% endif %}
 					</div>
-				</div><!--/image 2-->
+				</div>
 				{% elseif item.className == "pageweb" %}
-				<div class="item active"><!--image 1-->
+				<div class="item{% if loop.first %} active{% endif %}">
 					<div class="col-sm-5 col-md-4 col-lg-5 padding-right padding-left">
 						<h1>{{ UCfirst(item.nom) }}</h1>
 						{{ item.descriptif|default('')|raw }}
 					</div>
 					<div class="col-sm-7 col-md-8 col-lg-7 padding-right padding-left">
-						{{ blocks_actions.imageprint(item, 500, 350, ["slid-img","img-responsive"]) }}
+						{# {{ blocks_actions.imageprint(item, 500, 350, ["slid-img","img-responsive"]) }} #}
+						<img src="{{ imageB64sized(item['image_id'], 500, 350, 'cut') }}" alt="{{ 'name'|trans({}, item.className) }} {{ item.slug }}" class="slid-img img-responsive" />
 					</div>
-				</div><!--/image 1-->
+				</div>
 				{% elseif item.className matches "#^fiche#" %}
-				<div class="item active"><!--image 1-->
+				<div class="item{% if loop.first %} active{% endif %}">
 					<div class="col-sm-5 col-md-4 col-lg-5 padding-right padding-left">
 						<h1>{{ UCfirst(item.nom) }}</h1>
 						{{ item.descriptif|default('')|raw }}
 					</div>
 					<div class="col-sm-7 col-md-8 col-lg-7 padding-right padding-left">
-						{{ blocks_actions.imageprint(item, 500, 350, ["slid-img","img-responsive"]) }}
+						{# {{ blocks_actions.imageprint(item, 500, 350, ["slid-img","img-responsive"]) }} #}
+						<img src="{{ imageB64sized(item['image_id'], 500, 350, 'cut') }}" alt="{{ 'name'|trans({}, item.className) }} {{ item.slug }}" class="slid-img img-responsive" />
 					</div>
-				</div><!--/image 1-->
+				</div>
+				{% elseif item.className matches "#^image#" %}
+				<div class="item{% if loop.first %} active{% endif %}">
+					<div class="col-sm-12 padding-right padding-left">
+						<img src="{{ imageB64sized(item['element_id'], 848, 347, 'cut') }}" alt="{{ 'name'|trans({}, item.className) }} {{ item.slug }}" class="slid-img img-responsive" />
+					</div>
+				</div>
 				{% endif %}
 				{% endfor %}
 
