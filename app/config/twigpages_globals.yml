@@ -160,15 +160,15 @@ twig:
                             path: 'siteadmin_entite'
                             params:
                                 entite: article
-                    marques:
-                        role: 'ROLE_ADMIN'
-                        nom: 'name_s'
-                        trans_domain: marque
-                        icon: 'entite.marque'
-                        path: 
-                            path: 'siteadmin_entite'
-                            params:
-                                entite: marque
+                    # marques:
+                    #     role: 'ROLE_ADMIN'
+                    #     nom: 'name_s'
+                    #     trans_domain: marque
+                    #     icon: 'entite.marque'
+                    #     path: 
+                    #         path: 'siteadmin_entite'
+                    #         params:
+                    #             entite: marque
                     boutiques:
                         role: 'ROLE_ADMIN'
                         nom: 'name_s'
@@ -178,15 +178,15 @@ twig:
                             path: 'siteadmin_entite'
                             params:
                                 entite: boutique
-                    reseaux:
-                        role: 'ROLE_ADMIN'
-                        nom: 'name_s'
-                        trans_domain: reseau
-                        icon: 'entite.reseau'
-                        path: 
-                            path: 'siteadmin_entite'
-                            params:
-                                entite: reseau
+                    # reseaux:
+                    #     role: 'ROLE_ADMIN'
+                    #     nom: 'name_s'
+                    #     trans_domain: reseau
+                    #     icon: 'entite.reseau'
+                    #     path: 
+                    #         path: 'siteadmin_entite'
+                    #         params:
+                    #             entite: reseau
                     tauxTva:
                         role: 'ROLE_ADMIN'
                         nom: 'name_s'

@@ -87,6 +87,18 @@ class article extends item {
 
 	/**
 	 * @var integer
+	 * @ORM\Column(name="maxquantity", type="integer", nullable=true, unique=false)
+	 */
+	protected $maxquantity;
+
+	/**
+	 * @var integer
+	 * @ORM\Column(name="minquantity", type="integer", nullable=true, unique=false)
+	 */
+	protected $minquantity;
+
+	/**
+	 * @var integer
 	 * @ORM\Column(name="increment", type="integer", nullable=false, unique=false)
 	 */
 	protected $increment;
@@ -146,6 +158,8 @@ class article extends item {
 		$this->pdf = null;
 		$this->increment = 1;
 		$this->defaultquantity = 1;
+		$this->maxquantity = null;
+		$this->minquantity = 1;
 		$this->unitprix = $this->aeUnits->getDefaultUnit();
 		$this->unit = $this->aeUnits->getDefaultUnit();
 	}
@@ -407,6 +421,45 @@ class article extends item {
 	 */
 	public function getDefaultquantity() {
 		return $this->defaultquantity;
+	}
+
+	/**
+	 * Set maxquantity
+	 * @param integer $maxquantity
+	 * @return article
+	 */
+	public function setMaxquantity($maxquantity) {
+		$this->maxquantity = (integer)$maxquantity;
+		if($this->maxquantity <= $this->minquantity) $this->maxquantity = $this->minquantity;
+		return $this;
+	}
+
+	/**
+	 * Get maxquantity
+	 * @return integer 
+	 */
+	public function getMaxquantity() {
+		return $this->maxquantity;
+	}
+
+	/**
+	 * Set minquantity
+	 * @param integer $minquantity
+	 * @return article
+	 */
+	public function setMinquantity($minquantity) {
+		$this->minquantity = (integer)$minquantity;
+		if($this->minquantity < 1) $this->minquantity = 1;
+		if($this->maxquantity <= $this->minquantity) $this->maxquantity = $this->minquantity;
+		return $this;
+	}
+
+	/**
+	 * Get minquantity
+	 * @return integer 
+	 */
+	public function getMinquantity() {
+		return $this->minquantity;
 	}
 
 	/**

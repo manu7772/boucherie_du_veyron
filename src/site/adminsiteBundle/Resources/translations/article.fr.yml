@@ -29,6 +29,8 @@ fields:
     vendable: en vente
     surdevis: sur devis
     defaultquantity: quantité par défaut
+    maxquantity: quantité maximale
+    minquantity: quantité minimale
     prix: prix
     TTC: TTC
     prixTTC: prix TTC

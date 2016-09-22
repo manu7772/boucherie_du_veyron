@@ -10,10 +10,10 @@
 {% macro blockmini(item) -%}
 	{% import _self as self %}
 	{% set EDITORMODE = (app.environment in ['DEV', 'TEST']) or (is_granted('ROLE_EDITOR')) %}
-	{% if item.className matches '#^article#' %}
+	{% if item.className|default(item.class_name|default(null)) matches '#^article#' %}
 		{% import 'sitesiteBundle:blocks:articles_actions.html.twig' as actions %}
 		{{ actions.boxArticle(item) }}
-	{% elseif item.className matches '#^fiche#' %}
+	{% elseif item.className|default(item.class_name|default(null)) matches '#^fiche#' %}
 		{% import 'sitesiteBundle:blocks:fiches_actions.html.twig' as actions %}
 		{{ actions.boxFiche(item) }}
 	{% endif %}
@@ -29,7 +29,7 @@
 			{% set imgpath = item.mainMedia.imgThumbnail(x,y,'cut') %}
 		{% endif %}
 	{% endif %}
-	<img src="{{ imgpath|raw }}" alt="{{ 'name'|trans({}, item.className) }} {{ item.slug }}" class="{{ classes|default([])|join(' ') }}" />
+	<img src="{{ imgpath|raw }}" alt="{{ 'name'|trans({}, item.className|default(item.class_name|default(null))) }} {{ item.slug }}" class="{{ classes|default([])|join(' ') }}" />
 {%- endmacro imageprint %}
 
 {% macro breadcrumb(item, categories) %}

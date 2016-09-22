@@ -126,6 +126,14 @@ class articleType extends baseType {
 				'label' => 'fields.defaultquantity',
 				'required' => true,
 				))
+			->add('maxquantity', 'number', array(
+				'label' => 'fields.maxquantity',
+				'required' => false,
+				))
+			->add('minquantity', 'number', array(
+				'label' => 'fields.minquantity',
+				'required' => true,
+				))
 			->add('increment', 'number', array(
 				'label' => 'fields.increment',
 				'required' => true,
@@ -142,43 +150,43 @@ class articleType extends baseType {
 			// 			else return $repo->findAllClosure();
 			// 		},
 			// 	))
-			->add('marque', 'entity', array(
-				"label"     => 'name',
-				'translation_domain' => 'marque',
-				'class'     => 'siteadminsiteBundle:marque',
-				'choice_label'  => 'nom',
-				'multiple'  => false,
-				'required' => false,
-				"query_builder" => function($repo) {
-					if(method_exists($repo, 'defaultValsListClosure'))
-						return $repo->defaultValsListClosure($this->aeEntities);
-						else return $repo->findAllClosure();
-					},
-				'placeholder'   => 'form.select',
-				'attr'		=> array(
-					'class'			=> 'select2',
-					),
-				))
-			->add('group_articles_reseausChilds', 'entity', array(
-				'by_reference' => false,
-				"label"		=> 'fields.reseaus',
-				'choice_label'	=> 'nom',
-				'class'		=> 'LaboAdminBundle:nested',
-				'multiple'	=> true,
-				'expanded'	=> false,
-				"required"	=> $nestedAttributesParameters['articles_reseaus']['required'],
-				'placeholder'   => 'form.select',
-				'attr'		=> array(
-					'class'			=> 'select2',
-					'data-limit'	=> $nestedAttributesParameters['articles_reseaus']['data-limit'],
-					),
-				// 'group_by' => 'class_name',
-				"query_builder" => function($repo) use ($data, $nestedAttributesParameters) {
-					if(method_exists($repo, 'defaultValsListClosure'))
-						return $repo->defaultValsListClosure($this->aeEntities, $nestedAttributesParameters['articles_reseaus']['class']);
-						else return $repo->findAllClosure();
-					},
-				))
+			// ->add('marque', 'entity', array(
+			// 	"label"     => 'name',
+			// 	'translation_domain' => 'marque',
+			// 	'class'     => 'siteadminsiteBundle:marque',
+			// 	'choice_label'  => 'nom',
+			// 	'multiple'  => false,
+			// 	'required' => false,
+			// 	"query_builder" => function($repo) {
+			// 		if(method_exists($repo, 'defaultValsListClosure'))
+			// 			return $repo->defaultValsListClosure($this->aeEntities);
+			// 			else return $repo->findAllClosure();
+			// 		},
+			// 	'placeholder'   => 'form.select',
+			// 	'attr'		=> array(
+			// 		'class'			=> 'select2',
+			// 		),
+			// 	))
+			// ->add('group_articles_reseausChilds', 'entity', array(
+			// 	'by_reference' => false,
+			// 	"label"		=> 'fields.reseaus',
+			// 	'choice_label'	=> 'nom',
+			// 	'class'		=> 'LaboAdminBundle:nested',
+			// 	'multiple'	=> true,
+			// 	'expanded'	=> false,
+			// 	"required"	=> $nestedAttributesParameters['articles_reseaus']['required'],
+			// 	'placeholder'   => 'form.select',
+			// 	'attr'		=> array(
+			// 		'class'			=> 'select2',
+			// 		'data-limit'	=> $nestedAttributesParameters['articles_reseaus']['data-limit'],
+			// 		),
+			// 	// 'group_by' => 'class_name',
+			// 	"query_builder" => function($repo) use ($data, $nestedAttributesParameters) {
+			// 		if(method_exists($repo, 'defaultValsListClosure'))
+			// 			return $repo->defaultValsListClosure($this->aeEntities, $nestedAttributesParameters['articles_reseaus']['class']);
+			// 			else return $repo->findAllClosure();
+			// 		},
+			// 	))
 			// 1 image :
 			->add('image', new cropperType($this->controller, $this->imagesData), array(
 				'label' => 'fields.image',

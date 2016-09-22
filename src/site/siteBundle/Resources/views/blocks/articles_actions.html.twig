@@ -1,5 +1,12 @@
 
-{% macro baseBoxArticle(item, categorie) %}
+{# 
+	params: {
+		buy: 'on'/'off', (affiche ou non le bouton de panier)
+		col: 'on'/'off', (insère la boîte dans une div col-xx-xx)
+	}
+#}
+
+{% macro baseBoxArticle(item, categorie, params) %}
 	{% import 'sitesiteBundle:blocks:actions.html.twig' as actions %}
 	{% import 'sitesiteBundle:blocks:blocks_actions.html.twig' as blocks_actions %}
 	{% set EDITORMODE = (app.environment in ['DEV', 'TEST']) or (is_granted('ROLE_EDITOR')) %}
@@ -8,15 +15,15 @@
 			<div class="productinfo">
 				<a {{ actions.elementHref(item, categorie|default(null))|raw }}>{{ blocks_actions.imageprint(item, 275, null) }}</a>
 				<div class="product-bottom">
-					<div class="btn-group order-group for-product" role="group">
+					<div class="btn-group order-group for-product commande-cmd" role="group" data-article="{{ dataForPanier(item) }}">
 						{% if not item.surdevis %}
 						<h2>{{ articlePrix(item)|raw }}</h2>
 						{% else %}
 						<h2 class="small">Sur devis</h2>
 						{% endif %}
-						{% if marketplace.vente and item.vendable and not item.surdevis %}
+						{% if marketplace.vente and item.vendable and (not item.surdevis) and params.buy|default('on') == 'on' %}
 						<button type="button" class="btn btn-default btn-commander"><i class="fa fa-shopping-cart fa-flip-horizontal"></i></button>
-						<input class="command_quantity" type="text" name="quantity" value="{{ item.increment * item.defaultquantity }}{% if item.unit != null %} {{ shortUnit(item.unit) }}{% endif %}" autocomplete="off" size="10">
+						<input class="command_quantity" type="text" name="quantity" value="{{ item.defaultquantity }}{% if item.unit != null %} {{ shortUnit(item.unit) }}{% endif %}" autocomplete="off" size="10">
 						<span class="btn-quantity">
 							<a class="btn quantity-top"><i class="fa fa-angle-up"></i></a>
 							<a class="btn quantity-bottom"><i class="fa fa-angle-down"></i></a>
@@ -25,33 +32,41 @@
 					</div>
 				</div>
 			</div>
-			<p class="tab-name-product">
+			<p class="tab-name-product elipsis">
 				<a {{ actions.elementHref(item, categorie|default(null))|raw }}>{{ item.nom }}</a>
-				{%- if EDITORMODE %} <a href="{{ path('siteadmin_entite', {entite: item.className, id: item.id, action: 'show'}) }}"><i class="fa fa-eye icon-wait-on-click text-danger"></i></a>{% endif %}
-				{%- if EDITORMODE %} <a href="{{ path('siteadmin_entite', {entite: item.className, id: item.id, action: 'edit'}) }}"><i class="fa fa-pencil icon-wait-on-click text-danger"></i></a>{% endif %}
+				{%- if EDITORMODE %} <a {{ actions.adminHref(path('siteadmin_entite', {entite: item.className|default(item.class_name|default(null)), id: item.id, action: 'show'})) }}><i class="fa fa-eye icon-wait-on-click text-danger"></i></a>{% endif %}
+				{%- if EDITORMODE %} <a {{ actions.adminHref(path('siteadmin_entite', {entite: item.className|default(item.class_name|default(null)), id: item.id, action: 'edit'})) }}><i class="fa fa-pencil icon-wait-on-click text-danger"></i></a>{% endif %}
 			</p>
 			<p class="tab-info-category">{{ categorie.nom|default('') }}</p>
 		</div>
 	</div>
 {% endmacro %}
 
-{% macro boxArticle(item, categorie) %}
+{% macro boxArticle(item, categorie, params, classes) %}
 {# Affichage d'une box pour articles #}
-{% if item.className matches '#^article#' %}
+{% if item.className|default(item.class_name|default(null)) matches '#^article#' %}
 {% import _self as self %}
-	<div class="col-sm-6 col-md-3">
-		{{ self.baseBoxArticle(item, categorie|default(null)) }}
+	{% if params.col|default('on') != 'off' %}
+	<div class="col-sm-6 col-md-3 {{ classes|default([])|join(' ') }}">
+		{{ self.baseBoxArticle(item, categorie|default(null), params) }}
 	</div>
+	{% else %}
+	{{ self.baseBoxArticle(item, categorie|default(null), params) }}
+	{% endif %}
 {% endif %}
 {% endmacro %}
 
-{% macro boxArticleProducts(item, categorie) %}
+{% macro boxArticleProducts(item, categorie, params, classes) %}
 {# Affichage d'une box pour articles #}
-{% if item.className matches '#^article#' %}
+{% if item.className|default(item.class_name|default(null)) matches '#^article#' %}
 {% import _self as self %}
-	<div class="col-sm-6 col-md-4 col-lg-4">
-		{{ self.baseBoxArticle(item, categorie|default(null)) }}
+	{% if params.col|default('on') != 'off' %}
+	<div class="col-sm-6 col-md-4 col-lg-4 {{ classes|default([])|join(' ') }}">
+		{{ self.baseBoxArticle(item, categorie|default(null), params) }}
 	</div>
+	{% else %}
+	{{ self.baseBoxArticle(item, categorie|default(null), params) }}
+	{% endif %}
 {% endif %}
 {% endmacro %}
 

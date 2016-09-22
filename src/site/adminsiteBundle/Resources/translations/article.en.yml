@@ -29,6 +29,8 @@ fields:
     vendable: is salable
     surdevis: by price request
     defaultquantity: default quantity
+    maxquantity: max quantity
+    minquantity: min quantity
     prix: price
     TTC: TTC
     prixTTC: TTC price
