@@ -29,9 +29,16 @@
 							<hr>
 						{% endif %}
 						<div class="row">
+							{% set hasArticles = false %}
 							{% for item in items %}
+								{% if item.image|default(null) != null or is_granted('ROLE_ADMIN') %}
 								{{ categories_actions.boxCategorie(item, categorie.0) }}
+								{% set hasArticles = true %}
+								{% endif %}
 							{% endfor %}
+							{% if not hasArticles %}
+							<h6 class="text-center m-t-lg">Aucun produit trouvé.</h6>
+							{% endif %}
 						</div>
 						<div class="m-t-lg clearfix"></div>
 					{% endblock content %}
@@ -42,7 +49,7 @@
 		</div>
 	</div>
 </section>
-
+	{# {{ dump(items) }} #}
 	{# {{ render(controller('sitesiteBundle:Default:miniListeInfo')) }}     #}
 
 {% endblock mainContainer %}

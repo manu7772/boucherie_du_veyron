@@ -55,3 +55,4 @@ fields:
     group_articlesChilds: articles conseillés
     group_article_ficherecetteChilds: fiches recettes
     group_article_ficheboissonChilds: conseil œnologique
+    group_nestedsParents: Catégories

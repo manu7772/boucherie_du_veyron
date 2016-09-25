@@ -212,7 +212,6 @@ class categorie extends nested {
 		$this->setLvl();
 		// echo('<h3>Type '.json_encode($this->getType()).'</h3>');
 		// echo('<h3>Level '.json_encode($this->getLvl()).'</h3>');
-
 		return $this;
 	}
 
@@ -488,6 +487,7 @@ class categorie extends nested {
 	 */
 	public function setLvl($lvl = null) {
 		// $this->lvl = $lvl == null ? count($this->getCategorieParents()) : (integer) $lvl;
+		$mem = $this->lvl;
 		if(is_integer($lvl)) {
 			$this->lvl = $lvl;
 		} else {
@@ -498,8 +498,10 @@ class categorie extends nested {
 				$this->lvl = 0;
 			}
 		}
-		foreach ($this->getCategorieChilds() as $child) {
-			$child->setLvl($this->lvl + 1);
+		if($mem != $this->lvl) {
+			foreach ($this->getCategorieChilds() as $child) {
+				$child->setLvl($this->lvl + 1);
+			}
 		}
 		return $this;
 	}
@@ -595,6 +597,7 @@ class categorie extends nested {
 	 * @return categorie
 	 */
 	public function setType($type = null, $level = null) {
+		$mem = $this->type;
 		if($level === null) $level = 0;
 		// ajoute le type du parent en priorité
 		if($type == null) {
@@ -608,17 +611,19 @@ class categorie extends nested {
 			if(!array_key_exists($type, $this->getTypeList())) throw new Exception('Error set Type for categorie: type '.json_encode($type).' does not exist! Please, choose in '.json_encode(array_keys($this->getTypeList())).'.', 1);
 			$this->type = $type;
 		}
-		// refresh accepts
-		$this->setAccepts();
-		// the same type for children
-		// WARNING ! Not aliases --> recursivity hazard !! …and it should not be true !
-		foreach($this->getCategorieChilds(false) as $child) {
-			$child->setType($this->type, $level + 1);
-		}
-		// deleting children wich is not accepted
-		foreach($this->getNestedChildsByTypes($this->getNotAccepts()) as $child) {
-			$nestedposition = $this->getNestedposition($this, $child, "categorie_parent");
-			$this->removeNestedpositionChild($nestedposition);
+		if($mem != $this->type) {
+			// refresh accepts
+			$this->setAccepts();
+			// the same type for children
+			// WARNING ! Not aliases --> recursivity hazard !! …and it should not be true !
+			foreach($this->getCategorieChilds(false) as $child) {
+				$child->setType($this->type, $level + 1);
+			}
+			// deleting children wich is not accepted
+			foreach($this->getNestedChildsByTypes($this->getNotAccepts()) as $child) {
+				$nestedposition = $this->getNestedposition($this, $child, "categorie_parent");
+				$this->removeNestedpositionChild($nestedposition);
+			}
 		}
 		// echo('<p>Type : '.$this->getType().'</p>');
 		// echo('<p>Accepts : '.implode(', ', $this->getAccepts()).'</p>');

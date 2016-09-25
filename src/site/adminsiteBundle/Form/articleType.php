@@ -325,6 +325,27 @@ class articleType extends baseType {
 						else return $repo->findAllClosure();
 					},
 				))
+            ->add('group_nestedsParents', 'entity', array(
+                'by_reference' => false,
+                "label"     => 'fields.group_nestedsParents',
+                'translation_domain' => 'article',
+                'choice_label'  => 'nom',
+                'class'     => 'LaboAdminBundle:nested',
+                'multiple'  => function() use ($nestedAttributesParameters) { return $nestedAttributesParameters['nesteds']['data-limit'] > 1; },
+                'expanded'  => false,
+                "required"  => $nestedAttributesParameters['nesteds']['required'],
+                'placeholder'   => 'form.select',
+                'attr'      => array(
+                    'class'         => 'select2',
+                    'data-limit'    => $nestedAttributesParameters['nesteds']['data-limit'],
+                    ),
+                'group_by' => 'class_name',
+                "query_builder" => function($repo) use ($nestedAttributesParameters) {
+                    if(method_exists($repo, 'defaultValsListClosure'))
+                        return $repo->defaultValsListClosure($this->aeEntities, $nestedAttributesParameters['nesteds']['class']);
+                        else return $repo->findAllClosure($aeEntities);
+                    },
+                ))
 		;
 
 		// $builder->addEventListener(

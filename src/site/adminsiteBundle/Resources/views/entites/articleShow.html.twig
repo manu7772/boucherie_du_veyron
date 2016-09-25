@@ -50,7 +50,7 @@
 						</tr>
 						<tr>
 							<td><strong>{{ UCfirst('fields.parents'|trans({}, entite.className)) }}</strong></td>
-							<td>{{ actions.labelLinkList(entite.allParentsByGroup('categorie_parents'), entite.parentsByGroup('categorie_parents'), null, type, type_value_joiner, 'show') }}</td>
+							<td>{{ actions.labelLinkList(entite.parentsByGroup('nesteds'), [], null, type, type_value_joiner, 'show') }}</td>
 						</tr>
 						<tr>
 							<td><strong>{{ UCfirst('fields.created'|trans({}, entite.className)) }}</strong></td>

@@ -123,16 +123,21 @@ class DefaultController extends Controller {
 			$data['article'] = $this->get('aetools.aeArticle')->getRepo()->findArticleBySlug($itemSlug);
 			foreach ($data['article']['nestedpositionParents'] as $index => $parents) {
 				$parents = $this->get('aetools.aeCategorie')->getRepo()->findParentsOfCategorie($data['article']['nestedpositionParents'][$index]['parent']['id']);
-				foreach ($parents as $key => $parent) {
-					if($parent['slug'] === $parentSlug) $data['categories'] = $parents;
+				if(is_array($parents)) {
+					foreach ($parents as $key => $parent) {
+						if($parent['slug'] === $parentSlug) {
+							$data['categories'] = $parents;
+							break 2;
+						}
+					}
 				}
 			}
 		} else {
-			if($data['article'] !== false) {
+			// if($data['article'] !== false) {
 				if(count($data['article']['nestedpositionParents']) > 0)
 					$data['categories'] = $this->get('aetools.aeCategorie')->getRepo()->findParentsOfCategorie($data['article']['nestedpositionParents'][0]['parent']['id']);
 					// echo('<pre>');var_dump($data['categories']);die('</pre>');
-			}
+			// }
 		}
 		$data['pageweb'] = $this->get('aetools.aePageweb')->getPageBySlug('article');
 		$this->pagewebactions($data);

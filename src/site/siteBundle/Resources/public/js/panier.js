@@ -50,7 +50,7 @@ jQuery(document).ready(function($) {
 
 	var controlePanier = function (data) {
 		var values = controleValues(data);
-		console.log(values);
+		// console.log(values);
 		newvalue = values[0];
 		if(data.maxquantity != null)
 			if(values[0] > data.maxquantity) newvalue = data.maxquantity;
@@ -63,7 +63,7 @@ jQuery(document).ready(function($) {
 	$('body').on('click', '.commande-cmd span.btn-quantity a.quantity-top', function (item) {
 		data = getPanierData(this);
 		if(data != false) {
-			console.log('Panier data + : ', data);
+			// console.log('Panier data + : ', data);
 			panierChange(data, data.increment);
 		} else {
 			console.log('Error panier !');
@@ -73,7 +73,7 @@ jQuery(document).ready(function($) {
 	$('body').on('click', '.commande-cmd span.btn-quantity a.quantity-bottom', function (item) {
 		data = getPanierData(this);
 		if(data != false) {
-			console.log('Panier data - : ', data);
+			// console.log('Panier data - : ', data);
 			newval = 0 - data.increment;
 			panierChange(data, newval);
 		} else {
@@ -96,7 +96,7 @@ jQuery(document).ready(function($) {
 
 	$('.commande-cmd').each(function (item) {
 		var data = getPanierData(this);
-		console.log('Prepare panier for '+data.id, data);
+		// console.log('Prepare panier for '+data.id, data);
 	});
 
 });
