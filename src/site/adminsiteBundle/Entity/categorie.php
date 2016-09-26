@@ -133,7 +133,7 @@ class categorie extends nested {
 	public function initNestedAttributes() {
 		parent::initNestedAttributes();
 		$this->initTypes();
-		$parents = $this->getParentsByGroup('categorie_parent');
+		// $parents = $this->getParentsByGroup('categorie_parent');
 		// $this->categorieParent = count($parents > 0) ? reset($parents) : null;
 		$this->passBySetParent = false;
 		return $this;

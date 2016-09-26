@@ -6,8 +6,11 @@ use Labo\Bundle\AdminBundle\Form\baseType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+// ChoiceList
+use Symfony\Component\Form\Extension\Core\ChoiceList\ChoiceList;
+// use Symfony\Component\Form\ChoiceList\ArrayChoiceList;
 // Transformer
-use Symfony\Component\Form\CallbackTransformer;
+// use Symfony\Component\Form\CallbackTransformer;
 // User
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage as SecurityContext;
 // Paramétrage de formulaire
@@ -198,7 +201,7 @@ class articleType extends baseType {
 				"label"		=> 'fields.group_imagesChilds',
 				'choice_label'	=> 'nom',
 				'class'		=> 'LaboAdminBundle:nested',
-				'multiple'	=> true,
+				'multiple'	=> function() use ($nestedAttributesParameters) { return $nestedAttributesParameters['nesteds']['data-limit'] > 1; },
 				'expanded'	=> false,
 				"required"	=> $nestedAttributesParameters['images']['required'],
 				'placeholder'   => 'form.select',
@@ -270,7 +273,7 @@ class articleType extends baseType {
 				"label"		=> 'fields.group_article_ficherecetteChilds',
 				'choice_label'	=> 'nom',
 				'class'		=> 'LaboAdminBundle:nested',
-				'multiple'	=> true,
+				'multiple'	=> function() use ($nestedAttributesParameters) { return $nestedAttributesParameters['nesteds']['data-limit'] > 1; },
 				'expanded'	=> false,
 				"required"	=> $nestedAttributesParameters['article_ficherecette']['required'],
 				'placeholder'   => 'form.select',
@@ -290,7 +293,7 @@ class articleType extends baseType {
 				"label"		=> 'fields.group_article_ficheboissonChilds',
 				'choice_label'	=> 'nom',
 				'class'		=> 'LaboAdminBundle:nested',
-				'multiple'	=> true,
+				'multiple'	=> function() use ($nestedAttributesParameters) { return $nestedAttributesParameters['nesteds']['data-limit'] > 1; },
 				'expanded'	=> false,
 				"required"	=> $nestedAttributesParameters['article_ficheboisson']['required'],
 				'placeholder'   => 'form.select',
@@ -310,7 +313,7 @@ class articleType extends baseType {
 				"label"		=> 'fields.group_articlesChilds',
 				'choice_label'	=> 'nom',
 				'class'		=> 'LaboAdminBundle:nested',
-				'multiple'	=> true,
+				'multiple'	=> function() use ($nestedAttributesParameters) { return $nestedAttributesParameters['nesteds']['data-limit'] > 1; },
 				'expanded'	=> false,
 				"required"	=> $nestedAttributesParameters['articles']['required'],
 				'placeholder'   => 'form.select',
@@ -325,12 +328,27 @@ class articleType extends baseType {
 						else return $repo->findAllClosure();
 					},
 				))
-            ->add('group_nestedsParents', 'entity', array(
+		;
+
+		// $choices = $this->_em->getRepository('site\adminsiteBundle\Entity\categorie')->defaultValsListClosure($this->aeEntities, $nestedAttributesParameters['nesteds']['class']);
+		// $choices = $choices->select('element.id')->addSelect('element.nom')->addSelect('element.type')->getQuery()->getArrayResult();
+		// // echo('<pre><h3>Nested choices :</h3>');var_dump($choices);die('</pre>');
+		// $index = array();
+		// $label = array();
+		// foreach ($choices as $item) {
+		// 	if(!isset($index[$item['type']])) $index[$item['type']] = array();
+		// 	if(!isset($label[$item['type']])) $label[$item['type']] = array();
+		// 	$index[$item['type']][] = $item['id'];
+		// 	$label[$item['type']][] = $item['nom'];
+		// }
+
+		$builder->add('group_nestedsParents', 'entity', array(
                 'by_reference' => false,
                 "label"     => 'fields.group_nestedsParents',
                 'translation_domain' => 'article',
                 'choice_label'  => 'nom',
                 'class'     => 'LaboAdminBundle:nested',
+                // 'class'     => 'siteadminsiteBundle:categorie',
                 'multiple'  => function() use ($nestedAttributesParameters) { return $nestedAttributesParameters['nesteds']['data-limit'] > 1; },
                 'expanded'  => false,
                 "required"  => $nestedAttributesParameters['nesteds']['required'],
@@ -345,6 +363,7 @@ class articleType extends baseType {
                         return $repo->defaultValsListClosure($this->aeEntities, $nestedAttributesParameters['nesteds']['class']);
                         else return $repo->findAllClosure($aeEntities);
                     },
+                // "choice_list"   => new ChoiceList($label, $index),
                 ))
 		;
 

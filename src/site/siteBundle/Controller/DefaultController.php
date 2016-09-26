@@ -278,11 +278,17 @@ class DefaultController extends Controller {
 	public function menuNavAction() {
 		// $this->get('aetools.aeDebug')->startChrono();
 		// echo('<pre>');var_dump($this->getSitedata();die('</pre>');
-		if(isset($this->getSitedata()['menuNav_id'])) {
-			$data['menuNav'] = $this->get('aetools.aeNested')->getRepo()->findArrayTree($this->getSitedata()['menuNav_id'], 'all', null, false, 1, self::FIND_EXTENDED);
-			if(is_array($data['menuNav'])) $data['menuNav'] = reset($data['menuNav']);
-		} else {
-			$data['menuNav'] = array();
+		$data['menuNav'] = $this->get('aetools.aeCache')->getCacheNamedFile('menuNavigation', true);
+		if($data['menuNav'] === null) {
+			if(isset($this->getSitedata()['menuNav_id'])) {
+				$data['menuNav'] = $this->get('aetools.aeNested')->getRepo()->findArrayTree($this->getSitedata()['menuNav_id'], 'all', null, false, 2, self::FIND_EXTENDED);
+				if(is_array($data['menuNav'])) {
+					$data['menuNav'] = reset($data['menuNav']);
+					$this->get('aetools.aeCache')->cacheNamedFile('menuNavigation', $data['menuNav'], false, false);
+				}
+			} else {
+				$data['menuNav'] = array();
+			}
 		}
 		// $this->get('aetools.aeDebug')->printChrono('Nav menu action', true);
 
@@ -295,10 +301,18 @@ class DefaultController extends Controller {
 	}
 
 	// Menu latéral gauche articles
-	public function menuArticleAction($menuNav = []) {
+	public function menuArticleAction() {
 		// $this->get('aetools.aeDebug')->startChrono();
-		$data['menuArticle'] = $this->get('aetools.aeNested')->getRepo()->findArrayTree($this->getSitedata()['menuArticle_id'], 'all', null, false, 2, self::FIND_EXTENDED);
-		if(is_array($data['menuArticle'])) $data['menuArticle'] = reset($data['menuArticle']);
+		$data['menuArticle'] = $this->get('aetools.aeCache')->getCacheNamedFile('menuArticle', true);
+		if($data['menuArticle'] === null) {
+			$data['menuArticle'] = $this->get('aetools.aeNested')->getRepo()->findArrayTree($this->getSitedata()['menuArticle_id'], 'all', null, false, 2, self::FIND_EXTENDED);
+			if(is_array($data['menuArticle'])) {
+				$data['menuArticle'] = reset($data['menuArticle']);
+				$this->get('aetools.aeCache')->cacheNamedFile('menuArticle', $data['menuArticle'], false, false);
+			} else {
+				$data['menuArticle'] = array();
+			}
+		}
 		// echo('<pre>');var_dump($data['menu']);echo('</pre>');
 		// $this->get('aetools.aeDebug')->printChrono('Main menu action', true);
 		// die();
@@ -325,11 +339,18 @@ class DefaultController extends Controller {
 
 	public function footerTopAction() {
         // $this->get('aetools.aeDebug')->startChrono();
-		$data['categorieFooters'] = array();
-		if(isset($this->getSitedata()['categorieFooters'])) {
-			foreach($this->getSitedata()['categorieFooters'] as $dat) {
-				$it = $this->get('aetools.aeNested')->getRepo()->findArrayTree($dat['id'], 'all', null, false, 1, self::FIND_EXTENDED);
-				if(count($it) > 0) $data['categorieFooters'][] = $it[0];
+		$data['categorieFooters'] = $this->get('aetools.aeCache')->getCacheNamedFile('categorieFooters', true);
+		if($data['categorieFooters'] === null) {
+			if(isset($this->getSitedata()['categorieFooters'])) {
+				foreach($this->getSitedata()['categorieFooters'] as $dat) {
+					$it = $this->get('aetools.aeNested')->getRepo()->findArrayTree($dat['id'], 'all', null, false, 1, self::FIND_EXTENDED);
+					if(count($it) > 0) {
+						$data['categorieFooters'][] = $it[0];
+					}
+				}
+				$this->get('aetools.aeCache')->cacheNamedFile('categorieFooters', $data['categorieFooters'], false, false);
+			} else {
+				$data['categorieFooters'] = array();
 			}
 		}
 		// $this->get('aetools.aeDebug')->printChrono('Get site footer', true);

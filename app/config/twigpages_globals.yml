@@ -212,15 +212,15 @@ twig:
                             path: 'siteadmin_entite'
                             params:
                                 entite: pageweb
-                    cat_pageweb:
-                        nom: 'types.pageweb'
-                        trans_domain: categorie
-                        icon: 'entite.categorie'
-                        path:
-                            path: 'siteadmin_repo_categorie'
-                            params:
-                                method: findCollectionsByType
-                                repoParams: pageweb
+                    # cat_pageweb:
+                    #     nom: 'types.pageweb'
+                    #     trans_domain: categorie
+                    #     icon: 'entite.categorie'
+                    #     path:
+                    #         path: 'siteadmin_repo_categorie'
+                    #         params:
+                    #             method: findCollectionsByType
+                    #             repoParams: pageweb
                     images_pagewebs:
                         nom: 'owner.pageweb:image'
                         trans_domain: image
@@ -294,38 +294,38 @@ twig:
                                         type_related: _self
                                         type_field: owner
                                         type_values: boutique
-                            images_reseaux:
-                                nom: 'owner.reseau:image'
-                                trans_domain: image
-                                path: 
-                                    path: 'siteadmin_entite_type'
-                                    params:
-                                        entite: image
-                                        type_related: _self
-                                        type_field: owner
-                                        type_values: reseau
-                            images_marques:
-                                nom: 'owner.marque:image'
-                                trans_domain: image
-                                path: 
-                                    path: 'siteadmin_entite_type'
-                                    params:
-                                        entite: image
-                                        type_related: _self
-                                        type_field: owner
-                                        type_values: marque
-                    pdf:
-                        nom: 'name_s'
-                        trans_domain: pdf
-                        icon: 'entite.pdf'
-                        path: 
-                            path: 'siteadmin_entite'
-                            # path: 'siteadmin_entite_type'
-                            params:
-                                entite: pdf
-                                # type_related: _self
-                                # type_field: mediaType
-                                # type_values: pdf
+                            # images_reseaux:
+                            #     nom: 'owner.reseau:image'
+                            #     trans_domain: image
+                            #     path: 
+                            #         path: 'siteadmin_entite_type'
+                            #         params:
+                            #             entite: image
+                            #             type_related: _self
+                            #             type_field: owner
+                            #             type_values: reseau
+                            # images_marques:
+                            #     nom: 'owner.marque:image'
+                            #     trans_domain: image
+                            #     path: 
+                            #         path: 'siteadmin_entite_type'
+                            #         params:
+                            #             entite: image
+                            #             type_related: _self
+                            #             type_field: owner
+                            #             type_values: marque
+                    # pdf:
+                    #     nom: 'name_s'
+                    #     trans_domain: pdf
+                    #     icon: 'entite.pdf'
+                    #     path: 
+                    #         path: 'siteadmin_entite'
+                    #         # path: 'siteadmin_entite_type'
+                    #         params:
+                    #             entite: pdf
+                    #             # type_related: _self
+                    #             # type_field: mediaType
+                    #             # type_values: pdf
                     fiches:
                         nom: 'name_s'
                         trans_domain: fiche
@@ -494,18 +494,18 @@ twig:
                                 repoParams: menu
                     statut:
                         nom: 'name_s'
-                        role: %restrict_admin%
+                        role: 'ROLE_SUPER_ADMIN'
                         icon: 'entite.statut'
                         trans_domain: statut
                         path: 
                             path: 'siteadmin_entite'
                             params:
                                 entite: statut
-            traduction:
-                role: 'ROLE_TRANSLATOR'
-                nom: 'traduction.name'
-                path: 'sitetranslate_homepage'
-                icon: 'entite.translate'
+            # traduction:
+            #     role: 'ROLE_TRANSLATOR'
+            #     nom: 'traduction.name'
+            #     path: 'sitetranslate_homepage'
+            #     icon: 'entite.translate'
             help:
                 nom: 'name'
                 trans_domain: help
