@@ -154,8 +154,8 @@ fos_user:
         form:
             type:       site_user_registration
         confirmation:
-            enabled:    true # change to true for required email confirmation
-            template:   siteUserBundle:Registration:email.txt.twig
+            enabled:    false # change to true for required email confirmation
+            # template:   siteUserBundle:Registration:email.txt.twig
     profile:
         form:
             type: site_user_profile
