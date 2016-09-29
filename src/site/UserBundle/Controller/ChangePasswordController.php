@@ -77,7 +77,6 @@ class ChangePasswordController extends BaseController {
             return $response;
         }
         $data['form'] = $form->createView();
-        // $data['sitedata'] = $this->get('aetools.aeSite')->getSiteData();
         return $this->render('siteUserBundle:ChangePassword:changePassword.html.twig', $data);
     }
 }

@@ -8,6 +8,8 @@ use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\ClassMetadata;
 
+use Labo\Bundle\AdminBundle\services\siteListener;
+
 /**
  * siteRepository
  *
@@ -16,34 +18,34 @@ use Doctrine\ORM\Mapping\ClassMetadata;
  */
 class siteRepository extends EntityBaseRepository {
 
-	public function findSiteData($siteDataId = null) {
+	public function findSiteData($siteDataId = null, $delay = '-15 MINUTES') {
 		// if(is_object($this->aeDebug)) $this->aeDebug->startChrono();
 		$result = null;
 		if(is_object($this->aeCache) && $siteDataId == null) {
 			// CACHE
-			$result = $this->aeCache->getCacheNamedFile('siteData', true);
+			$result = $this->aeCache->getCacheNamedFile(siteListener::SITE_DATA, $delay);
 		}
 		if($result == null) {
 			$qb = $this->createQueryBuilder(self::ELEMENT);
 			$qb->select(self::ELEMENT.' site')
 				->where(self::ELEMENT.'.default = :def')
 				->setParameter('def', 1)
-				->join(self::ELEMENT.'.menuNav', 'menuNav')->addSelect('menuNav.id menuNav_id')
-				->join(self::ELEMENT.'.menuArticle', 'menuArticle')->addSelect('menuArticle.id menuArticle_id')
-				->join(self::ELEMENT.'.boutiques', 'boutiques')->addSelect('boutiques')
-					->join('boutiques.adresse', 'adresse')->addSelect('adresse')
-					->join('boutiques.image', 'boutiqueimage')->addSelect('boutiqueimage')
-					->join('boutiques.logo', 'boutiquelogo')->addSelect('boutiquelogo')
-				->join(self::ELEMENT.'.image', 'image')->addSelect('image.id image_id')
-				->join(self::ELEMENT.'.logo', 'logo')->addSelect('logo.id logo_id')
-				->join(self::ELEMENT.'.favicon', 'favicon')->addSelect('favicon.id favicon_id')
-					->join('favicon.rawfile', 'favraw')
+				->leftJoin(self::ELEMENT.'.menuNav', 'menuNav')->addSelect('menuNav.id menuNav_id')
+				->leftJoin(self::ELEMENT.'.menuArticle', 'menuArticle')->addSelect('menuArticle.id menuArticle_id')
+				->leftJoin(self::ELEMENT.'.boutiques', 'boutiques')->addSelect('boutiques')
+					->leftJoin('boutiques.adresse', 'adresse')->addSelect('adresse')
+					->leftJoin('boutiques.image', 'boutiqueimage')->addSelect('boutiqueimage')
+					->leftJoin('boutiques.logo', 'boutiquelogo')->addSelect('boutiquelogo')
+				->leftJoin(self::ELEMENT.'.image', 'image')->addSelect('image.id image_id')
+				->leftJoin(self::ELEMENT.'.logo', 'logo')->addSelect('logo.id logo_id')
+				->leftJoin(self::ELEMENT.'.favicon', 'favicon')->addSelect('favicon.id favicon_id')
+					->leftJoin('favicon.rawfile', 'favraw')
 					->addSelect('favraw.binaryFile faviconBinaryFile')
-				->join(self::ELEMENT.'.adminLogo', 'adminLogo')->addSelect('adminLogo.id adminLogo_id')
+				->leftJoin(self::ELEMENT.'.adminLogo', 'adminLogo')->addSelect('adminLogo.id adminLogo_id')
 				;
-			$qb->join(self::ELEMENT.'.categorieArticles', 'categorieArticles')->addSelect('categorieArticles')
+			$qb->leftJoin(self::ELEMENT.'.categorieArticles', 'categorieArticles')->addSelect('categorieArticles')
 				;
-			$qb->join(self::ELEMENT.'.categorieFooters', 'categorieFooters')->addSelect('categorieFooters')
+			$qb->leftJoin(self::ELEMENT.'.categorieFooters', 'categorieFooters')->addSelect('categorieFooters')
 				;
 			$this->contextStatut($qb);
 			$result = $qb->getQuery()->getArrayResult();
@@ -55,7 +57,7 @@ class siteRepository extends EntityBaseRepository {
 				$result = $result['site'];
 				if(is_object($this->aeCache) && $siteDataId == null) {
 					// cache
-					$this->aeCache->cacheNamedFile('siteData', $result, true, true);
+					$this->aeCache->cacheNamedFile(siteListener::SITE_DATA, $result, false, true);
 				}
 			}
 		}

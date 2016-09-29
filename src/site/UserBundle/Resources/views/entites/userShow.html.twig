@@ -71,7 +71,7 @@
 						<p></p>
 					</td>
 					<td>
-						<strong>Messages</strong> {{ user.messages|length }}
+						<strong>Messages</strong> {{ user.messages(true)|length }}
 					</td>
 				</tr>
 				{% if marketplace.active|default(false) %}
@@ -245,20 +245,20 @@
 	<div class="col-md-12 col-lg-6">
 		<div class="ibox float-e-margins">
 			<div class="ibox-content">
-				<h2>Messages <small>{{ user.username }}</small> <div class="label label-info">{{ user.messages|length }}</div></h2>
+				<h2>Messages <small>{{ user.username }}</small> <div class="label label-info">{{ user.messages(true)|length }}</div></h2>
 				<p class="adminhelp"><small>Liste des messages de <strong>{{ user.username }}</strong> | <a href="{{ path('siteadmin_entite', {entite: 'message'}) }}">Consulter messagerie</a></small></p>
 				<hr>
-				{% if user.messages|length|default(0) > 0 %}
+				{% if user.messages(true)|length > 0 %}
 				<table class="table table-striped table-bordered table-hover">
 					<tbody>
-						{% for message in user.messages|default({}) %}
+						{% for message in user.messages(true)|default({}) %}
 						<tr>
-							<td><strong>{{ message.objet|default('<i class="fa fa-ban text-muted"></i>')|raw }}</strong></td>
+							<td>{{ message.position }} | <strong>{{ message.objet|default('<i class="fa fa-ban text-muted"></i>')|raw }}</strong></td>
 						</tr>
 						<tr>
 							<td>
 								<blockquote>
-									<p>{{ message.message|raw }}</p>
+									<p>{{ message.message|nl2br|raw }}</p>
 									<small>
 										<strong><a href="mailto:{{ user.email }}">Répondre</a></strong> - <cite>{{ message.creation|date(formatDateHeure) }}</cite>
 									</small>

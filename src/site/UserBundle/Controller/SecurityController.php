@@ -121,12 +121,10 @@ class SecurityController extends securityCtrl {
      * @return \Symfony\Component\HttpFoundation\Response
      */
     protected function renderLogin(array $data) {
-        // $data['sitedata'] = $this->get('aetools.aeSite')->getSiteData();
         return $this->render('siteUserBundle:Security:login.html.twig', $data);
     }
 
     protected function renderLoginInPage(array $data) {
-        // $data['sitedata'] = $this->get('aetools.aeSite')->getSiteData();
         return $this->render('siteUserBundle:Security:loginInPage.html.twig', $data);
     }
 

@@ -74,7 +74,6 @@ class RegistrationController extends BaseController {
                 return $response;
             }
         }
-        // $data['sitedata'] = $this->get('aetools.aeSite')->getSiteData();
         $data['form'] = $form->createView();
         return $this->container->get('templating')->renderResponse('FOSUserBundle:Registration:register.html.twig', $data);
     }
@@ -91,7 +90,6 @@ class RegistrationController extends BaseController {
         if (null === $data['user']) {
             throw new NotFoundHttpException(sprintf('The user with email "%s" does not exist', $email));
         }
-        // $data['sitedata'] = $this->get('aetools.aeSite')->getSiteData();
         return $this->container->get('templating')->renderResponse('FOSUserBundle:Registration:checkEmail.html.twig',$data);
     }
 
@@ -137,7 +135,6 @@ class RegistrationController extends BaseController {
         if (!is_object($data['user']) || !$data['user'] instanceof UserInterface) {
             throw new AccessDeniedException('This user does not have access to this section.');
         }
-        // $data['sitedata'] = $this->get('aetools.aeSite')->getSiteData();
         return $this->container->get('templating')->renderResponse('FOSUserBundle:Registration:confirmed.html.twig', $data);
     }
 
