@@ -79,6 +79,16 @@ services:
 
 
     #######################
+    ### DATES & TIME    ###
+    #######################
+
+    # fonctionnalités de dates & times
+    aetools.aeDates:
+        class: %ae_services%aeDates
+        # arguments: [@service_container]
+
+
+    #######################
     ### ITEM            ###
     #######################
 
@@ -148,6 +158,15 @@ services:
     # fonctionnalités d'unités
     aetools.aeUnits:
         class: %ae_services%aeUnits
+
+    #######################
+    ### EMAIL           ###
+    #######################
+
+    # fonctionnalités de mail
+    aetools.aeEmail:
+        class: %ae_services%aeEmail
+        arguments: [@service_container]
 
     #######################
     ### CACHE           ###

@@ -35,13 +35,16 @@
 						</div>
 
 						{% if is_granted('ROLE_EDITOR') %}
-						{% if form.adminhelp is defined %}
 						<div class="form-group col-md-12">
 							<label class="text-muted">{{ 'fields.help'|trans|capitalize }} </label>
 							{{ form_widget(form.adminhelp) }}
 							{{ form_errors(form.adminhelp) }}
 						</div>
-						{% endif %}
+						<div class="form-group col-md-12">
+							<label class="text-muted">{{ 'fields.mail_sitemessages'|trans|capitalize }} </label>
+							{{ form_widget(form.mail_sitemessages) }}
+							{{ form_errors(form.mail_sitemessages) }}
+						</div>
 						{% if form.admintheme is defined %}
 						<div class="form-group col-md-12">
 							{{ form_widget(form.admintheme) }}

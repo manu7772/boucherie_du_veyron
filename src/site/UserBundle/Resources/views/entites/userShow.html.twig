@@ -84,8 +84,8 @@
 					<td>
 						<strong>Achats</strong> {{ factures|default([])|length }}
 					</td>
-					<td title="{{ cumulHT|default(0)|number_format(2, ',', '') }} {{ marketplace.devise.symb }}HT">
-						<strong>Total</strong> {{ cumulTTC|default(0)|number_format(2, ',', '') }}&nbsp;{{ marketplace.devise.symb }}{{ UCfirst('fields.TTC'|trans({}, 'tauxTva')) }}
+					<td title="{{ cumulHT|default(0)|number_format(2, ',', '') }} {{ marketplace.devises[app.request.locale].symb }}HT">
+						<strong>Total</strong> {{ cumulTTC|default(0)|number_format(2, ',', '') }}&nbsp;{{ marketplace.devises[app.request.locale].symb }}{{ UCfirst('fields.TTC'|trans({}, 'tauxTva')) }}
 					</td>
 				</tr>
 				{% endif %}
@@ -162,17 +162,17 @@
 										<tr>
 											<td><a href="{{ path('siteadmin_entite', {entite: 'article', id: panier.article.id, action: 'show'}) }}" title="{{ dateFR(panier.updated|default(panier.created)) }} {{ panier.updated|default(panier.created)|date('H:i:s') }}">{{ panier.article.nom }}</a></td>
 											<td>x&nbsp;{{ panier.quantite }}</td>
-											<td>{{ panier.article.prix|number_format(2, ',', '') }}&nbsp;{{ marketplace.devise.symb }}</td>
-											<td>{{ (panier.quantite * panier.article.prix)|number_format(2, ',', '') }}&nbsp;{{ marketplace.devise.symb }}</td>
+											<td>{{ panier.article.prix|number_format(2, ',', '') }}&nbsp;{{ marketplace.devises[app.request.locale].symb }}</td>
+											<td>{{ (panier.quantite * panier.article.prix)|number_format(2, ',', '') }}&nbsp;{{ marketplace.devises[app.request.locale].symb }}</td>
 										</tr>
 										{% endfor %}
 										<tr style="border-top: 2px solid #bbb;">
 											<td colspan="3"><strong>Total {{ UCfirst('fields.TTC'|trans({}, 'tauxTva')) }}</strong></td>
-											<td><strong>{{ totalpanierTTC|number_format(2, ',', '') }}&nbsp;{{ marketplace.devise.symb }}</strong></td>
+											<td><strong>{{ totalpanierTTC|number_format(2, ',', '') }}&nbsp;{{ marketplace.devises[app.request.locale].symb }}</strong></td>
 										</tr>
 										<tr>
 											<td colspan="3"><em>Total HT</em></td>
-											<td><em>{{ totalpanierHT|number_format(2, ',', '') }}&nbsp;{{ marketplace.devise.symb }}</em></td>
+											<td><em>{{ totalpanierHT|number_format(2, ',', '') }}&nbsp;{{ marketplace.devises[app.request.locale].symb }}</em></td>
 										</tr>
 									</tbody>
 								</table>
@@ -215,7 +215,7 @@
 										</tr>
 										<tr>
 											<td class="text-center">{{ facture.nbArticles }}</td>
-											<td>{{ facture.prixtotal|number_format(2, ',', '') }}&nbsp;{{ marketplace.devise.symb }}</td>
+											<td>{{ facture.prixtotal|number_format(2, ',', '') }}&nbsp;{{ marketplace.devises[app.request.locale].symb }}</td>
 											<td>
 												{% if facture.stade == 100 %}{% set color = 'danger' %}
 												{% elseif facture.stade == 3 %}{% set color = 'warning' %}

@@ -34,7 +34,7 @@ class ProfileController extends BaseController {
      * Show the user
      */
     public function showAction() {
-        $data['sitedata'] = $this->get('aetools.aeSite')->getSiteData();
+        // $data['sitedata'] = $this->get('aetools.aeSite')->getSiteData();
         $data['user'] = $this->getUser();
         if (!is_object($data['user']) || !$data['user'] instanceof UserInterface) {
             throw new AccessDeniedException('This user does not have access to this section.');
@@ -101,7 +101,7 @@ class ProfileController extends BaseController {
 
                 return $response;
             }
-            $data['sitedata'] = $this->get('aetools.aeSite')->getSiteData();
+            // $data['sitedata'] = $this->get('aetools.aeSite')->getSiteData();
             $data['form'] = $form->createView();
             return $this->render('FOSUserBundle:Profile:edit.html.twig', $data);
         }

@@ -29,7 +29,7 @@ class DefaultController extends Controller {
 	 */
 	public function indexAction($type = "all", $action = 'list', $params = null) {
 		$data = array();
-		$data['sitedata'] = $this->get('aetools.aeSite')->getSiteData();
+		// $data['sitedata'] = $this->get('aetools.aeSite')->getSiteData();
 		$data['users'] = array();
 		$data["entite"] = self::ENTITE_NAME;
 		$userRoles = $this->get('labo_user_roles');
@@ -67,7 +67,7 @@ class DefaultController extends Controller {
 	 * @return Response
 	 */
 	public function showAction($username) {
-		$data['sitedata'] = $this->get('aetools.aeSite')->getSiteData();
+		// $data['sitedata'] = $this->get('aetools.aeSite')->getSiteData();
 		$userManager = $this->get('fos_user.user_manager');
 		$data['user'] = $userManager->findUserByUsername($username);
 
@@ -92,7 +92,7 @@ class DefaultController extends Controller {
 		set_time_limit(300);
 		$memory = $this->get('aetools.aetools')->getConfigParameters('cropper.yml', 'memory_limit');
 		ini_set("memory_limit", $memory);
-		$data['sitedata'] = $this->get('aetools.aeSite')->getSiteData();
+		// $data['sitedata'] = $this->get('aetools.aeSite')->getSiteData();
 		$request = $this->getRequest();
 		$userManager = $this->get('fos_user.user_manager');
 		$data['user'] = $userManager->findUserByUsername($username);
@@ -284,7 +284,7 @@ class DefaultController extends Controller {
 	}
 
 	public function checkUsersAction($params = null) {
-		$data['sitedata'] = $this->get('aetools.aeSite')->getSiteData();
+		// $data['sitedata'] = $this->get('aetools.aeSite')->getSiteData();
 		set_time_limit(600);
 		// $userManager = $this->getDoctrine()->getManager()->getRepository(self::ENTITE_CLASSNAME);
 		$userManager = $this->get('fos_user.user_manager');

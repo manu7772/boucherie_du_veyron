@@ -121,6 +121,15 @@ class ProfileFormType extends BaseType {
 									'class' => 'input-sm form-control',
 									),
 								))
+							->add('mail_sitemessages', 'insCheck', array(
+								'translation_domain' => 'siteUserBundle',
+								"required" => false,
+								"label" => "fields.mail_sitemessages",
+								'label_attr' => array('class' => 'text-muted'),
+								'attr' => array(
+									'class' => 'input-sm form-control',
+									),
+								))
 							->add('admintheme', 'choice', array(
 								'translation_domain' => 'siteUserBundle',
 								"required" => true,

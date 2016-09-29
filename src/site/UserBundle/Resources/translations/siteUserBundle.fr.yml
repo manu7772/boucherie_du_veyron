@@ -49,6 +49,7 @@ fields:
     nom: nom
     prenom: prénom
     help: aide admin
+    mail_sitemessages: copie mail des messages du site
     theme: thème admin
     lang: langue
     avatar: avatar

@@ -1,5 +1,8 @@
 parameters:
+    cache:
+        delay: '-10 MINUTES'
     site_domains:
+        main_domain: 'boucherie-du-veyron.fr'
         public:
             reseau: 'http://'
             prefix: 'www'
@@ -16,7 +19,7 @@ parameters:
             path: '/admin'
     default_color: 'rgba(128,128,128,1)'
     mail:
-        address: no-reply@boucherie-du-veyron.fr
+        address: noreply@boucherie-du-veyron.fr
         sender_name: boucherie du veyron
     menus:
         site-menu:

@@ -214,6 +214,9 @@ class DefaultController extends Controller {
 							'type'		=> flashMessage::MESSAGES_SUCCESS,
 							'text'		=> ucfirst($trans->trans('message.success')),
 						));
+						// envoi mail aux admin (si option User::mailSitemessages == true)
+						$users = $this->getDoctrine()->getManager()->getRepository('Labo\Bundle\AdminBundle\Entity\LaboUser')->findCollaborators($this->getRequest()->getSession()->get('sitedata')['id']);
+						$this->get('aetools.aeEmail')->emailMessage($users, $message);
 						// nouveau formulaire
 						// info in session…
 						$olddata = $this->getRequest()->getSession()->get('user');
@@ -278,13 +281,13 @@ class DefaultController extends Controller {
 	public function menuNavAction() {
 		// $this->get('aetools.aeDebug')->startChrono();
 		// echo('<pre>');var_dump($this->getSitedata();die('</pre>');
-		$data['menuNav'] = $this->get('aetools.aeCache')->getCacheNamedFile('menuNavigation', true);
+		$data['menuNav'] = $this->get('aetools.aeCache')->getCacheNamedFile('menuNavigation', $this->getParameter('cache')['delay']);
 		if($data['menuNav'] === null) {
 			if(isset($this->getSitedata()['menuNav_id'])) {
 				$data['menuNav'] = $this->get('aetools.aeNested')->getRepo()->findArrayTree($this->getSitedata()['menuNav_id'], 'all', null, false, 2, self::FIND_EXTENDED);
 				if(is_array($data['menuNav'])) {
 					$data['menuNav'] = reset($data['menuNav']);
-					$this->get('aetools.aeCache')->cacheNamedFile('menuNavigation', $data['menuNav'], false, false);
+					$this->get('aetools.aeCache')->cacheNamedFile('menuNavigation', $data['menuNav'], false, true);
 				}
 			} else {
 				$data['menuNav'] = array();
@@ -303,12 +306,12 @@ class DefaultController extends Controller {
 	// Menu latéral gauche articles
 	public function menuArticleAction() {
 		// $this->get('aetools.aeDebug')->startChrono();
-		$data['menuArticle'] = $this->get('aetools.aeCache')->getCacheNamedFile('menuArticle', true);
+		$data['menuArticle'] = $this->get('aetools.aeCache')->getCacheNamedFile('menuArticle', $this->getParameter('cache')['delay']);
 		if($data['menuArticle'] === null) {
 			$data['menuArticle'] = $this->get('aetools.aeNested')->getRepo()->findArrayTree($this->getSitedata()['menuArticle_id'], 'all', null, false, 2, self::FIND_EXTENDED);
 			if(is_array($data['menuArticle'])) {
 				$data['menuArticle'] = reset($data['menuArticle']);
-				$this->get('aetools.aeCache')->cacheNamedFile('menuArticle', $data['menuArticle'], false, false);
+				$this->get('aetools.aeCache')->cacheNamedFile('menuArticle', $data['menuArticle'], false, true);
 			} else {
 				$data['menuArticle'] = array();
 			}
@@ -339,7 +342,7 @@ class DefaultController extends Controller {
 
 	public function footerTopAction() {
         // $this->get('aetools.aeDebug')->startChrono();
-		$data['categorieFooters'] = $this->get('aetools.aeCache')->getCacheNamedFile('categorieFooters', true);
+		$data['categorieFooters'] = $this->get('aetools.aeCache')->getCacheNamedFile('categorieFooters', $this->getParameter('cache')['delay']);
 		if($data['categorieFooters'] === null) {
 			if(isset($this->getSitedata()['categorieFooters'])) {
 				foreach($this->getSitedata()['categorieFooters'] as $dat) {
@@ -348,7 +351,7 @@ class DefaultController extends Controller {
 						$data['categorieFooters'][] = $it[0];
 					}
 				}
-				$this->get('aetools.aeCache')->cacheNamedFile('categorieFooters', $data['categorieFooters'], false, false);
+				$this->get('aetools.aeCache')->cacheNamedFile('categorieFooters', $data['categorieFooters'], false, true);
 			} else {
 				$data['categorieFooters'] = array();
 			}
