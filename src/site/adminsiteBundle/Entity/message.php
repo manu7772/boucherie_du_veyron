@@ -7,7 +7,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Doctrine\Common\Collections\ArrayCollection;
 
-use Labo\Bundle\AdminBundle\Entity\message as aemessage;
+use Labo\Bundle\AdminBundle\Entity\message as aeServiceMessage;
 
 /**
  * message
@@ -16,7 +16,7 @@ use Labo\Bundle\AdminBundle\Entity\message as aemessage;
  * @ORM\Table(name="message", options={"comment":"messages du site"})
  * @ORM\HasLifecycleCallbacks
  */
-class message extends aemessage {
+class message extends aeServiceMessage {
 
 	/**
 	 * @var integer

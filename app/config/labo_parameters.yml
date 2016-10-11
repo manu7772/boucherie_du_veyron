@@ -18,16 +18,28 @@ parameters:
                 - 'fr'
             path: '/admin'
     default_color: 'rgba(128,128,128,1)'
+    webfolders:
+        tree: # nestable #
+            - params
+            - labo_cache
+            - debug
+            - images
+            # - test:
+            #     - test1
+            #     - test2:
+            #         - test2_1
+            #         - test2_2
+            #         - test2_3
     mail:
         address: noreply@boucherie-du-veyron.fr
         sender_name: boucherie du veyron
-    menus:
-        site-menu:
-            bundle: sitesite
-            name: publicmenu
-        admin-sidemenu:
-            bundle: siteadmin
-            name: sidemenu
+    # menus:
+    #     site-menu:
+    #         bundle: sitesite
+    #         name: publicmenu
+    #     admin-sidemenu:
+    #         bundle: siteadmin
+    #         name: sidemenu
     homepage:               sitesite_homepage
     restrict_admin:         ROLE_ADMIN
     formatDate:             "dd-MM-yyyy" # formulaires
@@ -78,6 +90,8 @@ parameters:
             icon: fa-shopping-cart
         pageweb:
             icon: fa-desktop
+        media:
+            preferedStockage: database
     marketplace:
         active: true #gérer des articles, boutiques, etc.
         vente: true #afficher les prix et remplir le panier

@@ -7,7 +7,8 @@ use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\ClassMetadata;
-use Labo\Bundle\AdminBundle\services\aetools;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Labo\Bundle\AdminBundle\services\aeData;
 
 /**
  * articleRepository
@@ -17,8 +18,8 @@ use Labo\Bundle\AdminBundle\services\aetools;
  */
 class articleRepository extends itemRepository {
 
-	public function defaultValsListClosure(aetools $aeEntities = null, $data = null, $entity = NULL) {
-		$qb = parent::defaultValsListClosure($aeEntities, $data, $entity);
+	public function defaultValsListClosure(ContainerInterface $container = null, $data = null, $entity = null) {
+		$qb = parent::defaultValsListClosure($container, $data, $entity);
 		if(is_object($data)) {
 			$id = $data->getId();
 			if($id != null) {

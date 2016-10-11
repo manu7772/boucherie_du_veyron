@@ -25,7 +25,7 @@ class pagewebType extends baseType {
 	public function buildForm(FormBuilderInterface $builder, array $options) {
 		// ajout de action si défini
 		$this->initBuilder($builder);
-		$this->pageweb = $this->controller->get('aetools.aePageweb');
+		$this->pageweb = $this->controller->get('aetools.aeServicePageweb');
 		$this->imagesData = array(
 			'image' => array(
 				'owner' => 'pageweb:image'

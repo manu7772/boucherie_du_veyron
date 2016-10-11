@@ -45,7 +45,7 @@ class DefaultController extends Controller {
             $insert = $aeTrans->insertSchemaType($bundle, $domain, $lang);
         }
         // message
-        $msg = $this->get('aetools.aeMessages');
+        $msg = $this->get('aetools.aeServiceMessages');
         if($insert !== false)
             $msg->addFlashMessage('traduction.merge.done', array('traduction.merge.with', "%language%" => $language), 'info');
         else
@@ -116,7 +116,7 @@ class DefaultController extends Controller {
         // $newvalue = $request->request->get('newvalue');
         // $result = $aeTrans->changeValue($bundle, $domain, $language, $field, $newvalue);
         if($result == false) {
-            $msg = $this->get('aetools.aeMessages');
+            $msg = $this->get('aetools.aeServiceMessages');
             $msg->addFlashMessage('Modification', 'Erreur lors de l\'enregistrement.', 'error');
         }
         // echo('<pre>ALL<br>');

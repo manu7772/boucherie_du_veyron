@@ -205,6 +205,9 @@ dossiers_enfants: 'children folders'
 dossier_enfant: 'child folder'
 accueil: home
 racine: root
+Routes: Routes
+Bundles: Bundles
+Testpanier: Basket tests
 validator:
     jstree:
         nonConforme: 'One JStree object is not valid'

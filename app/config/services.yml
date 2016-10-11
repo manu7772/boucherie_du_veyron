@@ -9,64 +9,103 @@ services:
     #    class: AppBundle\Directory\ClassName
     #    arguments: ["@another_service_name", "plain_value", "%parameter_name%"]
 
-    # fonctionnalités de réponse pour Ajax notamment
+
+    #######################
+    ### BASES           ###
+    #######################
+
+    # Gestion des données globales fixes du site
+    aetools.aeData:
+        class: %ae_services%aeData
+
+    # Gestion des classes
+    aetools.aeClasses:
+        class: %ae_services%aeClasses
+
+    # Gestion des fichers/dossiers
+    aetools.aeSystemfiles:
+        class: %ae_services%aeSystemfiles
+
+    # service de manipulation d'images
+    aetools.aeImagesTools:
+        class: %ae_services%aeImages
+
+
+
+    #######################
+    ### DIVERS          ###
+    #######################
+
+    # fonctionnalités de réponse / pour Ajax notamment
     aetools.aeReponse:
         class: %ae_services%aeReponse
+
+    # fonctionnalités de lecture/écriture en fichiers YAML
+    aetools.aeYaml:
+        class: %ae_services%aeYaml
+
+    # fonctionnalités d'unités
+    aetools.aeUnits:
+        class: %ae_services%aeUnits
+
+    # fonctionnalités de dates & times
+    aetools.aeDates:
+        class: %ae_services%aeDates
+
+    # fonctionnalités de arrays & collections
+    aetools.aeArrays:
+        class: %ae_services%aeArrays
+
+    # fonctionnalités de mail
+    aetools.aeEmail:
+        class: %ae_services%aeEmail
         arguments: [@service_container]
 
-    # fonctionnalités de base / boîte à outils
-    aetools.aetools:
-        class: %ae_services%aetools
+    # fonctionnalités de cache
+    aetools.aeCache:
+        class: %ae_services%aeCache
         arguments: [@service_container]
 
-    # fonctionnalités de jstree
-    aetools.aeJstree:
-        class: %ae_services%aeJstree
+    # fonctionnalités de debug
+    aetools.aeDebug:
+        class: %ae_services%aeDebug
         arguments: [@service_container]
 
-    # fonctionnalités d'entités BIS
-    aetools.aeEntity:
-        class: %ae_services%aeServiceEntity
+    # fonctionnalités de Twig descriptions
+    aetools.aeTwigdescriptions:
+        class: %ae_services%aeTwigdescriptions
         arguments: [@service_container]
 
-    aetools.aeSubentity:
-        class: %ae_services%aeServiceSubentity
+    # fonctionnalités de messages flash
+    aetools.flashMessages:
+        class: %ae_services%flashMessages
         arguments: [@service_container]
 
-    # fonctionnalités nested
-    aetools.aeNested:
-        class: %ae_services%aeServiceNested
+
+    #######################
+    ### SYMFONY 2       ###
+    #######################
+
+    # fonctionnalités de base avec controller / boîte à outils
+    # aetools.aetools:
+    #     class: %ae_services%aetools
+        # arguments: [@service_container]
+
+    # fonctionnalités de routes et URL
+    aetools.aeUrlroutes:
+        class: %ae_services%aeUrlroutes
         arguments: [@service_container]
 
-    # fonctionnalités de site
-    aetools.aeSite:
-        class: %site_services%aeServiceSite
-        arguments: [@service_container]
 
-    # fonctionnalités de categorie
-    aetools.aeCategorie:
-        class: %site_services%aeServiceCategorie
-        arguments: [@service_container]
+    #######################
+    ### ROLES           ###
+    #######################
 
-    # fonctionnalités de tag
-    aetools.aeTag:
-        class: %ae_services%aeServiceTag
-        arguments: [@service_container]
+    # fonctionnalités de ROLES
+    # aetools.RolesService:
+    #     class: %ae_services%RolesService
+    #     arguments: [@service_container]
 
-    # fonctionnalités de statut
-    aetools.aeStatut:
-        class: %ae_services%aeServiceStatut
-        arguments: [@service_container]
-
-    # fonctionnalités de message
-    aetools.aeMessage:
-        class: %site_services%aeServiceMessage
-        arguments: [@service_container]
-
-    # fonctionnalités de panier
-    aetools.aePanier:
-        class: %ae_services%aeServicePanier
-        arguments: [@service_container]
 
     #######################
     ### FORM            ###
@@ -78,37 +117,93 @@ services:
         arguments: [@service_container]
 
 
-    #######################
-    ### DATES & TIME    ###
-    #######################
 
-    # fonctionnalités de dates & times
-    aetools.aeDates:
-        class: %ae_services%aeDates
-        # arguments: [@service_container]
+
+
+
+
+    # fonctionnalités de jstree
+    aetools.aeJstree:
+        class: %ae_services%aeJstree
+        arguments: [@service_container]
+
+
+
+
+
+    #########################
+    ### DOCTRINE ENTITIES ###
+    #########################
+
+    # service baseEntity
+    aetools.aeServiceBaseEntity:
+        class: %ae_services%aeServiceBaseEntity
+        arguments: [@service_container]
+
+    # service subentity
+    aetools.aeServiceSubentity:
+        class: %ae_services%aeServiceSubentity
+        arguments: [@service_container]
+
+
+
+    # service nested
+    aetools.aeServiceNested:
+        class: %ae_services%aeServiceNested
+        arguments: [@service_container]
+
+    # service site
+    aetools.aeServiceSite:
+        class: %site_services%aeServiceSite
+        arguments: [@service_container]
+
+    # service categorie
+    aetools.aeServiceCategorie:
+        class: %site_services%aeServiceCategorie
+        arguments: [@service_container]
+
+    # service tag
+    aetools.aeServiceTag:
+        class: %ae_services%aeServiceTag
+        arguments: [@service_container]
+
+    # service statut
+    aetools.aeServiceStatut:
+        class: %ae_services%aeServiceStatut
+        arguments: [@service_container]
+
+    # service message
+    aetools.aeServiceMessage:
+        class: %site_services%aeServiceMessage
+        arguments: [@service_container]
+
+    # service panier
+    aetools.aeServicePanier:
+        class: %ae_services%aeServicePanier
+        arguments: [@service_container]
 
 
     #######################
     ### ITEM            ###
     #######################
 
-    # fonctionnalités de item
-    aetools.aeItem:
+    # service item
+    aetools.aeServiceItem:
         class: %ae_services%aeServiceItem
         arguments: [@service_container]
 
-    # fonctionnalités de article
-    aetools.aeArticle:
+    # service article
+    aetools.aeServiceArticle:
         class: %site_services%aeServiceArticle
         arguments: [@service_container]
 
-    # fonctionnalités de pageweb
-    aetools.aePageweb:
+    # service pageweb
+    aetools.aeServicePageweb:
         class: %site_services%aeServicePageweb
         arguments: [@service_container]
 
-    # fonctionnalités de fiche
-    aetools.aeFiche:
+    # service fiche
+    aetools.aeServiceFiche:
         class: %site_services%aeServiceFiche
         arguments: [@service_container]
 
@@ -116,8 +211,8 @@ services:
     ### TIER            ###
     #######################
 
-    # fonctionnalités de tier
-    aetools.aeTier:
+    # service tier
+    aetools.aeServiceFiche:
         class: %ae_services%aeServiceTier
         arguments: [@service_container]
 
@@ -125,73 +220,35 @@ services:
     ### MEDIA           ###
     #######################
 
-    # fonctionnalités de media
-    aetools.aeMedia:
+    # service media
+    aetools.aeServiceMedia:
         class: %ae_services%aeServiceMedia
         arguments: [@service_container]
 
-    # fonctionnalités outils manipulation images data
-    aetools.aeImagesTools:
-        class: %ae_services%aeImages
-
-    # fonctionnalités de image
-    aetools.aeImage:
+    # service image
+    aetools.aeServiceImage:
         class: %ae_services%aeServiceImage
         arguments: [@service_container]
 
-    # fonctionnalités de pdf
-    aetools.aePdf:
+    # service pdf
+    aetools.aeServicePdf:
         class: %ae_services%aeServicePdf
         arguments: [@service_container]
 
-    # fonctionnalités de rawfile
-    aetools.aeRawfile:
+    # service rawfile
+    aetools.aeServiceRawfile:
         class: %ae_services%aeServiceRawfile
         arguments: [@service_container]
 
 
 
-    #######################
-    ### UNITS           ###
-    #######################
-
-    # fonctionnalités d'unités
-    aetools.aeUnits:
-        class: %ae_services%aeUnits
-
-    #######################
-    ### EMAIL           ###
-    #######################
-
-    # fonctionnalités de mail
-    aetools.aeEmail:
-        class: %ae_services%aeEmail
-        arguments: [@service_container]
-
-    #######################
-    ### CACHE           ###
-    #######################
-
-    # fonctionnalités de fixtures
-    aetools.aeCache:
-        class: %ae_services%aeCache
-        arguments: [@service_container]
-
-    #######################
-    ### DEBUG           ###
-    #######################
-
-    # fonctionnalités de fixtures
-    aetools.aeDebug:
-        class: %ae_services%aeDebug
-        arguments: [@service_container]
 
 
     #######################
     ### FIXTURES        ###
     #######################
 
-    # fonctionnalités de fixtures
+    # service de fixtures
     aetools.aefixtures:
         class: %ae_services%aeFixtures
         arguments: [@service_container]
@@ -201,9 +258,16 @@ services:
     ### TWIG EXTENSIONS ###
     #######################
 
-    # Fonctions textes utiles et pratiques pour utilisation dans TWIG
-    aetools.textutilities:
-        class: %ae_services%twigTools
+    # TWIG functions and filters for texts
+    aetools.twigToolsTextutilities:
+        class: %ae_services%twigToolsTextutilities
+        arguments: [@service_container]
+        tags:
+            - { name: twig.extension }
+
+    # TWIG functions and filters for article and panier
+    aetools.twigToolsArticlePanier:
+        class: %ae_services%twigToolsArticlePanier
         arguments: [@service_container]
         tags:
             - { name: twig.extension }
@@ -229,17 +293,17 @@ services:
     ###################################
 
     # Utilitaire de gestion sur les entités
-    aetools.entityUtils:
-        class: %ae_services%entityListener
-        arguments: [@service_container]
-        tags:
-            - { name: doctrine.event_listener, event: postLoad }
-            - { name: doctrine.event_listener, event: prePersist }
-            - { name: doctrine.event_listener, event: postPersist }
-            - { name: doctrine.event_listener, event: preUpdate }
-            - { name: doctrine.event_listener, event: postUpdate }
-            - { name: doctrine.event_listener, event: preRemove }
-            - { name: doctrine.event_listener, event: postRemove }
+    # aetools.entityUtils:
+    #     class: %ae_services%entityListener
+    #     arguments: [@service_container]
+    #     tags:
+    #         - { name: doctrine.event_listener, event: postLoad }
+    #         - { name: doctrine.event_listener, event: prePersist }
+    #         - { name: doctrine.event_listener, event: postPersist }
+    #         - { name: doctrine.event_listener, event: preUpdate }
+    #         - { name: doctrine.event_listener, event: postUpdate }
+    #         - { name: doctrine.event_listener, event: preRemove }
+    #         - { name: doctrine.event_listener, event: postRemove }
 
     ######################
     ### EVENT LISTENER ###
@@ -248,7 +312,18 @@ services:
     # EventListerner sur paramètres généraux du site
     aetools.site_listener:
         class: %ae_services%siteListener
-        arguments: [@service_container]
+        # arguments: [@service_container]
         tags:
             - { name: kernel.event_listener, event: kernel.controller, method: load }
 
+
+    ###################################
+    ### EVENT LISTENER SUR DOCTRINE ENTITIES
+    ###################################
+
+    # Entity listener sur File
+    entityListener:
+        class: %ae_services%entityListener
+        arguments: [@service_container]
+        tags:
+            - { name: doctrine.orm.entity_listener }

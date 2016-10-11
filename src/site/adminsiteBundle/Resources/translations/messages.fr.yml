@@ -205,6 +205,9 @@ dossiers_enfants: 'dossiers enfants'
 dossier_enfant: 'dossier enfant'
 accueil: accueil
 racine: racine
+Routes: Routes
+Bundles: Bundles
+Testpanier: Tests panier
 validator:
     jstree:
         nonConforme: 'Un objet JStree est non conforme'

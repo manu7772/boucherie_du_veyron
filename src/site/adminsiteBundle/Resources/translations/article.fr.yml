@@ -16,6 +16,8 @@ grants:
     no_access: Vous n'avez pas les droits pour accéder à l'article<br>"%name%"
 form:
     select: Sélectionnez…
+price:
+    noprice: 'n.c.'
 fields:
     id: id
     nom: nom

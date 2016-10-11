@@ -117,7 +117,7 @@ class DefaultController extends Controller {
 				        $data['user']->setAvatar(null);
 				    } else {
 				        // Gestion de l'image
-				        $service = $this->container->get('aetools.aeEntity')->getEntityService($image);
+				        $service = $this->container->get('aetools.aeServiceBaseEntity')->getEntityService($image);
 				        $service->checkAfterChange($image);
 				    }
 				}

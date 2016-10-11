@@ -23,7 +23,7 @@ class DefaultController extends Controller {
 	const SITE_DATA = 'sitedata';
 
 	public function indexAction() {
-		$data['pageweb'] = $this->get('aetools.aePageweb')->getDefaultPage();
+		$data['pageweb'] = $this->get('aetools.aeServicePageweb')->getDefaultPage();
 		if(isset($data['pageweb']['id'])) {
 			// $this->get('aetools.aeDebug')->startChrono();
 			$this->pagewebactions($data);
@@ -62,16 +62,16 @@ class DefaultController extends Controller {
 	// public function pagewebCategorieAction($categorieSlug, $params = null) {
 	// 	$data = $this->get('tools_json')->JSonExtract($params);
 	// 	$data['categorie'] = $categorieSlug;
-	// 	$categorie = $this->get('aetools.aeCategorie')->getRepo()->findOneBySlug($categorieSlug);
+	// 	$categorie = $this->get('aetools.aeServiceCategorie')->getRepo()->findOneBySlug($categorieSlug);
 	// 	return $this->pagewebPagewebAction($categorie->getGroup_pagewebsChilds()[0], $data);
 	// }
 
 	// public function pagewebPagewebAction($pagewebSlug, $params = null) {
 	// 	$data = $this->get('tools_json')->JSonExtract($params);
-	// 	// $data['pageweb'] = $this->get('aetools.aePageweb')->getDefaultPage();
+	// 	// $data['pageweb'] = $this->get('aetools.aeServicePageweb')->getDefaultPage();
 	// 	if(is_object($pagewebSlug)) $data['pageweb'] = $pagewebSlug;
-	// 		else $data['pageweb'] = $this->get('aetools.aePageweb')->getRepo()->findOneBySlug($pagewebSlug);
-	// 	// $data['marques'] = $this->get('aetools.aeEntity')->getRepo('site\adminsiteBundle\Entity\marque')->findAll();
+	// 		else $data['pageweb'] = $this->get('aetools.aeServicePageweb')->getRepo()->findOneBySlug($pagewebSlug);
+	// 	// $data['marques'] = $this->get('aetools.aeServiceBaseEntity')->getRepo('site\adminsiteBundle\Entity\marque')->findAll();
 	// 	if(is_object($data['pageweb'])) {
 	// 		$this->pagewebactions($data);
 	// 		// chargement de la pageweb
@@ -92,20 +92,20 @@ class DefaultController extends Controller {
 
 	public function categorieAction($itemSlug, $parentSlug = null) {
 		// categorie
-		$data['categorie'] = $this->get('aetools.aeCategorie')->getRepo()->findParentsOfCategorieBySlug($itemSlug, $parentSlug);
+		$data['categorie'] = $this->get('aetools.aeServiceCategorie')->getRepo()->findParentsOfCategorieBySlug($itemSlug, $parentSlug);
 		// echo('<pre>');var_dump($data['categorie']);die('</pre>');
-		$data['items'] = $this->get('aetools.aeNested')->getRepo()->findAllItemsByGroup($data['categorie'][0]['id'], 'nesteds', array('article'), self::ACCEPT_ALIAS_ITEMS, self::ADD_ALIAS_ITEMS);
+		$data['items'] = $this->get('aetools.aeServiceNested')->getRepo()->findAllItemsByGroup($data['categorie'][0]['id'], 'nesteds', array('article'), self::ACCEPT_ALIAS_ITEMS, self::ADD_ALIAS_ITEMS);
 		// pageweb template
-		$data['pageweb'] = $this->get('aetools.aePageweb')->getPageBySlug('categorie');
+		$data['pageweb'] = $this->get('aetools.aeServicePageweb')->getPageBySlug('categorie');
 		$this->pagewebactions($data);
 		return $this->render($data['pageweb']["template"], $data);
 	}
 
 	public function pagewebAction($itemSlug, $parentSlug = null) {
-		$data['pageweb'] = $this->get('aetools.aePageweb')->getPageBySlug($itemSlug);
+		$data['pageweb'] = $this->get('aetools.aeServicePageweb')->getPageBySlug($itemSlug);
 		if($parentSlug != null) {
-			$data['categorie'] = $this->get('aetools.aeCategorie')->getRepo()->findOneBySlug($parentSlug);
-			// $data['categorie'] = $this->get('aetools.aeNested')->getRepo()->findArrayTree($parentSlug, 'all', null, false, 0, self::FIND_EXTENDED);
+			$data['categorie'] = $this->get('aetools.aeServiceCategorie')->getRepo()->findOneBySlug($parentSlug);
+			// $data['categorie'] = $this->get('aetools.aeServiceNested')->getRepo()->findArrayTree($parentSlug, 'all', null, false, 0, self::FIND_EXTENDED);
 		}
 		$this->pagewebactions($data);
 		return $this->render($data['pageweb']['template'], $data);
@@ -116,13 +116,13 @@ class DefaultController extends Controller {
 	////////////////////
 
 	public function articleAction($itemSlug, $parentSlug = null) {
-		$data['article'] = $this->get('aetools.aeArticle')->getRepo()->findArticleBySlug($itemSlug, $parentSlug);
+		$data['article'] = $this->get('aetools.aeServiceArticle')->getRepo()->findArticleBySlug($itemSlug, $parentSlug);
 		// echo('<pre>');var_dump($data['article']);die('</pre>');
 		if($data['article'] === false) {
 			// parentSlug n'est pas un parent direct… on le retrouve…
-			$data['article'] = $this->get('aetools.aeArticle')->getRepo()->findArticleBySlug($itemSlug);
+			$data['article'] = $this->get('aetools.aeServiceArticle')->getRepo()->findArticleBySlug($itemSlug);
 			foreach ($data['article']['nestedpositionParents'] as $index => $parents) {
-				$parents = $this->get('aetools.aeCategorie')->getRepo()->findParentsOfCategorie($data['article']['nestedpositionParents'][$index]['parent']['id']);
+				$parents = $this->get('aetools.aeServiceCategorie')->getRepo()->findParentsOfCategorie($data['article']['nestedpositionParents'][$index]['parent']['id']);
 				if(is_array($parents)) {
 					foreach ($parents as $key => $parent) {
 						if($parent['slug'] === $parentSlug) {
@@ -135,19 +135,19 @@ class DefaultController extends Controller {
 		} else {
 			// if($data['article'] !== false) {
 				if(count($data['article']['nestedpositionParents']) > 0)
-					$data['categories'] = $this->get('aetools.aeCategorie')->getRepo()->findParentsOfCategorie($data['article']['nestedpositionParents'][0]['parent']['id']);
+					$data['categories'] = $this->get('aetools.aeServiceCategorie')->getRepo()->findParentsOfCategorie($data['article']['nestedpositionParents'][0]['parent']['id']);
 					// echo('<pre>');var_dump($data['categories']);die('</pre>');
 			// }
 		}
-		$data['pageweb'] = $this->get('aetools.aePageweb')->getPageBySlug('article');
+		$data['pageweb'] = $this->get('aetools.aeServicePageweb')->getPageBySlug('article');
 		$this->pagewebactions($data);
 		return $this->render($data['pageweb']["template"], $data);
 	}
 
 	public function articlesByCategorieAction($categorieSlug) {
-		$data['categorie'] = $this->get('aetools.aeCategorie')->getRepo()->findOneBySlug($categorieSlug);
+		$data['categorie'] = $this->get('aetools.aeServiceCategorie')->getRepo()->findOneBySlug($categorieSlug);
 		// $data['entites'] = $data['categorie']->getAllNestedChildsByClass('article');
-		$data['pageweb'] = $this->get('aetools.aePageweb')->getPageBySlug($itemSlug);
+		$data['pageweb'] = $this->get('aetools.aeServicePageweb')->getPageBySlug($itemSlug);
 		$this->pagewebactions($data);
 		return $this->render($data['pageweb']["template"], $data);
 	}
@@ -157,17 +157,17 @@ class DefaultController extends Controller {
 	////////////////////
 
 	public function ficheAction($itemSlug, $parentSlug = null) {
-		$data['fiche'] = $this->get('aetools.aefiche')->getRepo()->findOneBySlug($itemSlug);
+		$data['fiche'] = $this->get('aetools.aeServiceFiche')->getRepo()->findOneBySlug($itemSlug);
 		if($parentSlug != null)
-			$data['categorie'] = $this->get('aetools.aeCategorie')->getRepo()->findOneBySlug($parentSlug);
-		$data['pageweb'] = $this->get('aetools.aePageweb')->getPageBySlug($itemSlug);
+			$data['categorie'] = $this->get('aetools.aeServiceCategorie')->getRepo()->findOneBySlug($parentSlug);
+		$data['pageweb'] = $this->get('aetools.aeServicePageweb')->getPageBySlug($itemSlug);
 		return $this->render('sitesiteBundle:extended_pages_web:fiche.html.twig', $data);
 	}
 
 	public function fichesByCategorieAction($categorieSlug) {
-		$data['categorie'] = $this->get('aetools.aeCategorie')->getRepo()->findOneBySlug($categorieSlug);
+		$data['categorie'] = $this->get('aetools.aeServiceCategorie')->getRepo()->findOneBySlug($categorieSlug);
 		// $data['entites'] = $data['categorie']->getAllNestedChildsByClass('fiche');
-		$data['pageweb'] = $this->get('aetools.aePageweb')->getPageBySlug($itemSlug);
+		$data['pageweb'] = $this->get('aetools.aeServicePageweb')->getPageBySlug($itemSlug);
 		$this->pagewebactions($data);
 		return $this->render($data['pageweb']["template"], $data);
 	}
@@ -241,7 +241,7 @@ class DefaultController extends Controller {
 				break;
 			case 'articles':
 				if(is_string($data['categorie'])) {
-					$data['categorie'] = $this->get('aetools.aeCategorie')->getRepo()->findOneBySlug($data['categorie']);
+					$data['categorie'] = $this->get('aetools.aeServiceCategorie')->getRepo()->findOneBySlug($data['categorie']);
 				}
 				break;
 			default:
@@ -284,7 +284,7 @@ class DefaultController extends Controller {
 		$data['menuNav'] = $this->get('aetools.aeCache')->getCacheNamedFile('menuNavigation', $this->getParameter('cache')['delay']);
 		if($data['menuNav'] === null) {
 			if(isset($this->getSitedata()['menuNav_id'])) {
-				$data['menuNav'] = $this->get('aetools.aeNested')->getRepo()->findArrayTree($this->getSitedata()['menuNav_id'], 'all', null, false, 2, self::FIND_EXTENDED);
+				$data['menuNav'] = $this->get('aetools.aeServiceNested')->getRepo()->findArrayTree($this->getSitedata()['menuNav_id'], 'all', null, false, 2, self::FIND_EXTENDED);
 				if(is_array($data['menuNav'])) {
 					$data['menuNav'] = reset($data['menuNav']);
 					$this->get('aetools.aeCache')->cacheNamedFile('menuNavigation', $data['menuNav'], false, true);
@@ -308,7 +308,7 @@ class DefaultController extends Controller {
 		// $this->get('aetools.aeDebug')->startChrono();
 		$data['menuArticle'] = $this->get('aetools.aeCache')->getCacheNamedFile('menuArticle', $this->getParameter('cache')['delay']);
 		if($data['menuArticle'] === null) {
-			$data['menuArticle'] = $this->get('aetools.aeNested')->getRepo()->findArrayTree($this->getSitedata()['menuArticle_id'], 'all', null, false, 2, self::FIND_EXTENDED);
+			$data['menuArticle'] = $this->get('aetools.aeServiceNested')->getRepo()->findArrayTree($this->getSitedata()['menuArticle_id'], 'all', null, false, 2, self::FIND_EXTENDED);
 			if(is_array($data['menuArticle'])) {
 				$data['menuArticle'] = reset($data['menuArticle']);
 				$this->get('aetools.aeCache')->cacheNamedFile('menuArticle', $data['menuArticle'], false, true);
@@ -332,7 +332,7 @@ class DefaultController extends Controller {
 		$data['items'] = array();
 		if(count((array)$categorieArticles) > 0) {
 			foreach((array)$categorieArticles as $key => $value) {
-				$it = $this->get('aetools.aeNested')->getRepo()->findArrayTree($value['id'], 'all', null, false, null, self::FIND_EXTENDED);
+				$it = $this->get('aetools.aeServiceNested')->getRepo()->findArrayTree($value['id'], 'all', null, false, null, self::FIND_EXTENDED);
 				if(count($it) > 0) $data['items'][$value['id']] = $it[0];
 			}
 		}
@@ -346,7 +346,7 @@ class DefaultController extends Controller {
 		if($data['categorieFooters'] === null) {
 			if(isset($this->getSitedata()['categorieFooters'])) {
 				foreach($this->getSitedata()['categorieFooters'] as $dat) {
-					$it = $this->get('aetools.aeNested')->getRepo()->findArrayTree($dat['id'], 'all', null, false, 1, self::FIND_EXTENDED);
+					$it = $this->get('aetools.aeServiceNested')->getRepo()->findArrayTree($dat['id'], 'all', null, false, 1, self::FIND_EXTENDED);
 					if(count($it) > 0) {
 						$data['categorieFooters'][] = $it[0];
 					}
@@ -361,7 +361,7 @@ class DefaultController extends Controller {
 	}
 
 	public function diaporamaAction($id) {
-		$data['diaporama'] = $this->get('aetools.aeNested')->getRepo()->findArrayTree($id, 'all', null, false, 2, self::FIND_EXTENDED);
+		$data['diaporama'] = $this->get('aetools.aeServiceNested')->getRepo()->findArrayTree($id, 'all', null, false, 2, self::FIND_EXTENDED);
 		if(is_array($data['diaporama'])) $data['diaporama'] = reset($data['diaporama']);
 		return $this->render('sitesiteBundle:blocks:diaporama.html.twig', $data);
 	}

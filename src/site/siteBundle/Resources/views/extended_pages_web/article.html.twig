@@ -14,7 +14,7 @@
 			{{ render(controller('sitesiteBundle:Default:menuArticle')) }}
 			{% endblock menuArticle %}
 
-			{% if article != false and (article.imageId|default(null) != null or is_granted('ROLE_ADMIN')) %}
+			{% if siteFilter(article) %}
 			<div class="col-sm-9 col-md-9 padding-left-resp"><!--colonne right-->
 				<div class="content-page-right">
 					<h2 class="title">
@@ -29,10 +29,10 @@
 								<div class="single-products">
 									{% if categories|default([]).0.imageId != null %}
 									<div class="productinfo">
-										<img src="{{ imageB64sized(categories.0.imageId, 64, 64) }}" alt="{{ categories.0.slug }}" />
+										<img src="{{ imageB64sized(categories.0.imageId, 64, 64, 'cut') }}" alt="{{ categories.0.slug }}" />
 									</div>
 									{% endif %}
-									<img src="{{ imageB64sized(article.imageId, 398, 279) }}" alt="{{ article.slug }}" class="img-responsive">
+									<img src="{{ imageB64sized(article.imageId, 398, 279, 'cut') }}" alt="{{ article.slug }}" data-image-id="{{ article.imageId }}" class="img-responsive">
 								</div>
 							</div>
 						</div><!--/col-sm-6-->
@@ -111,7 +111,7 @@
 									<h4>À voir également…</h4>
 								</div>
 									{# <div class="col-sm-6 padding-left-right-null"> #}
-									{% for artChild in article.nestedpositionChilds|default([]) if artChild.child['class_name'] == 'article' %}
+									{% for artChild in article.nestedpositionChilds|default([]) if (artChild.child['class_name'] == 'article' and siteFilter(artChild.child)) %}
 										{{ articles_macros.boxArticle(artChild.child, null, {'buy': 'off', 'col': 'on'}) }}
 									{% endfor %}
 									{# </div> #}
@@ -164,7 +164,7 @@
 
 		</div>
 	</div>
-	{# {{ dump() }} #}
+	{# {{ dump(article) }} #}
 </section>
 
 	{# {{ render(controller('sitesiteBundle:Default:miniListeInfo')) }}     #}

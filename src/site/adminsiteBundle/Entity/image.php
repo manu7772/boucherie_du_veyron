@@ -7,7 +7,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Doctrine\Common\Collections\ArrayCollection;
 
-use Labo\Bundle\AdminBundle\services\aetools;
 use Labo\Bundle\AdminBundle\services\aeImages;
 
 use Labo\Bundle\AdminBundle\Entity\media;
@@ -83,16 +82,17 @@ class image extends media {
 		$this->width = 0;
 		$this->height = 0;
 		$this->aeReponse = null;
-		$this->getCropperInfo();
 	}
 
     // public function getClassName(){
     //     return parent::CLASS_IMAGE;
     // }
 
+	public function setCropperInfo($cropperInfo) {
+		$this->cropperInfo = $cropperInfo;
+	}
+
 	public function getCropperInfo() {
-		$aetools = new aetools();
-		$this->cropperInfo = $aetools->getConfigParameters('cropper.yml');
 		return $this->cropperInfo;
 	}
 
@@ -138,11 +138,10 @@ class image extends media {
 									// echo('<p>Owner entity : '.$this->getOwnerEntity().'</p>');
 									// echo('<p>Owner field : '.$this->getOwnerField().'</p>');
 									// echo('<p>RatioIndex : '.$this->getRatioIndex().'</p>');
-									$this->getCropperInfo();
-									if(isset($this->cropperInfo['formats'][$this->getOwnerEntity()][$this->getOwnerField()][$this->getRatioIndex()])) {
-										$format = $this->cropperInfo['formats'][$this->getOwnerEntity()][$this->getOwnerField()][$this->getRatioIndex()];
+									if(isset($this->getCropperInfo()['formats'][$this->getOwnerEntity()][$this->getOwnerField()][$this->getRatioIndex()])) {
+										$format = $this->getCropperInfo()['formats'][$this->getOwnerEntity()][$this->getOwnerField()][$this->getRatioIndex()];
 									} else {
-										$format = $this->cropperInfo['formats']['default'][$this->getRatioIndex()];
+										$format = $this->getCropperInfo()['formats']['default'][$this->getRatioIndex()];
 									}
 									$this->aeReponse = $this->getRawfile()->getCropped($format[0], $format[1], $info);
 									// echo($this->aeReponse->getMessage());

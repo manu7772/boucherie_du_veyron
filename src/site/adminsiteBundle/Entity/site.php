@@ -106,6 +106,21 @@ class site extends subentity {
      */
     protected $adminLogo;
 
+    // OPTIONS
+
+   	/**
+	 * @var boolean
+	 * @ORM\Column(name="optionArticlePhotosOnly", type="boolean", nullable=false, unique=false)
+	 */
+	private $optionArticlePhotosOnly;
+
+   	/**
+	 * @var boolean
+	 * @ORM\Column(name="optionArticlePriceOnly", type="boolean", nullable=false, unique=false)
+	 */
+	private $optionArticlePriceOnly;
+
+
 
 	public function __construct() {
 		parent::__construct();
@@ -118,6 +133,8 @@ class site extends subentity {
 		$this->logo = null;
 		$this->favicon = null;
 		$this->adminLogo = null;
+		$this->optionArticlePhotosOnly = true;
+		$this->optionArticlePriceOnly = true;
 	}
 
 
@@ -393,4 +410,48 @@ class site extends subentity {
 		return $this->adminLogo;
 	}
 
+	// OPTIONS
+	// optionArticlePhotosOnly
+	// optionArticlePriceOnly
+
+	/**
+	 * Set optionArticlePhotosOnly
+	 * @return site
+	 */
+	public function setOptionArticlePhotosOnly($optionArticlePhotosOnly) {
+		$this->optionArticlePhotosOnly = $optionArticlePhotosOnly;
+		return $this;
+	}
+
+	/**
+	 * Get optionArticlePhotosOnly
+	 * @return boolean
+	 */
+	public function getOptionArticlePhotosOnly() {
+		return $this->optionArticlePhotosOnly;
+	}
+
+	/**
+	 * Set optionArticlePriceOnly
+	 * @return site
+	 */
+	public function setOptionArticlePriceOnly($optionArticlePriceOnly) {
+		$this->optionArticlePriceOnly = $optionArticlePriceOnly;
+		return $this;
+	}
+
+	/**
+	 * Get optionArticlePriceOnly
+	 * @return boolean
+	 */
+	public function getOptionArticlePriceOnly() {
+		return $this->optionArticlePriceOnly;
+	}
+
 }
+
+
+
+
+
+

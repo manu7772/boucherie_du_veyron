@@ -7,7 +7,6 @@ use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\ClassMetadata;
-use Labo\Bundle\AdminBundle\services\aetools;
 
 /**
  * pagewebRepository

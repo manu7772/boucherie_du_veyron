@@ -30,7 +30,7 @@
 						{% set noArticle = true %}
 						{% if categorie|default(null) != null %}
 							<div class="row">
-							{% for article in categorie.allNestedChildsByGroup(null, true) %}
+							{% for article in categorie.allNestedChildsByGroup(null, true) if siteFilter(article) %}
 								{{ articles_macros.boxArticleProducts(article, article.parent) }}
 								{% set noArticle = false %}
 							{% endfor %}

@@ -16,6 +16,8 @@ grants:
     no_access: You are not granted to access to the product<br>"%name%"
 form:
     select: Select…
+price:
+    noprice: 'n.c.'
 fields:
     id: id
     nom: name

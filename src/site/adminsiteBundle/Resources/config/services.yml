@@ -30,7 +30,7 @@ services:
 
     # fonctionnalités de messages (flashbag) & Exceptions
     aetools.aeExceptions:
-        class: %LaboAdminBundleservices%\aeMessages
+        class: %LaboAdminBundleservices%\aeServiceMessages
         arguments: [@service_container]
 
     flash_messages:

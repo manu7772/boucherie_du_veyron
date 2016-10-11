@@ -30,11 +30,10 @@
 						{% endif %}
 						<div class="row">
 							{% set hasArticles = false %}
-							{% for item in items %}
-								{% if item.image|default(null) != null or is_granted('ROLE_ADMIN') %}
+							{% for item in items if siteFilter(item) == true %}
 								{{ categories_actions.boxCategorie(item, categorie.0) }}
+								{# {{ dump(item) }} #}
 								{% set hasArticles = true %}
-								{% endif %}
 							{% endfor %}
 							{% if not hasArticles %}
 							<h6 class="text-center m-t-lg">Aucun produit trouvé.</h6>

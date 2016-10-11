@@ -1,13 +1,15 @@
 <?php
 namespace site\translateBundle\services;
 
-use Symfony\Component\DependencyInjection\ContainerInterface;
+// use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\Request;
+use Labo\Bundle\AdminBundle\services\aeSystemfiles;
 // yaml parser
 use Symfony\Component\Yaml\Parser;
 use Symfony\Component\Yaml\Dumper;
 use Symfony\Component\Yaml\Exception\ParseException;
 // aetools
-use Labo\Bundle\AdminBundle\services\aetools;
+use Labo\Bundle\AdminBundle\services\aeData;
 
 /**
  * Service aeTranslate
@@ -16,15 +18,9 @@ use Labo\Bundle\AdminBundle\services\aetools;
 class aeTranslate {
 
 	const ARRAY_GLUE = '.';
-	const SOURCE_FILES = 'src/';
-	const FOLD_RESOURCES = 'Resources';
 	const FOLD_TRANSLATIONS = 'translations';
-	const BUNDLE_EXTENSION = 'Bundle';
 	const GO_TO_ROOT = '/../../../../';
-	const MAX_YAML_LEVEL = 10;
 
-	protected $container; 			// container
-	protected $aetools; 			// aetools
 	protected $languages; 			// array des langues disponibles --> config.yml --> default_locales: "fr|en|en_US|es|it|de"
 	protected $bundlesLanguages;	// array des langues disponibles par bundles --> config.yml --> list_locales: "fr|en", etc.
 	protected $default_locale; 		// string locale par défaut --> config.yml --> locale: "en"
@@ -33,12 +29,22 @@ class aeTranslate {
 	protected $files_list;			// array des fichiers, classés par bundles
 	protected $domains;				// array des domaines, classés par bundles
 	protected $rootPath;			// Dossier root du site
+	// params
+	protected $default_locales;
+	protected $list_locales;
+	protected $locale;
+	// services
+	protected $Request;				// service Request
+	protected $aeSystemfiles;		// service systemfiles
 
-	public function __construct(ContainerInterface $container) {
-		$this->container = $container;
-		$this->aetools = new aetools();
+	public function __construct(Request $Request, aeSystemfiles $aeSystemfiles, $default_locales, $list_locales, $locale) {
+		$this->Request = $Request;
+		$this->aeSystemfiles = $aeSystemfiles;
+		$this->default_locales = $default_locales;
+		$this->list_locales = $list_locales;
+		$this->locale = $locale;
 		$this->rootPath = __DIR__.self::GO_TO_ROOT;
-		$this->aetools->setRootPath("/");
+		$this->aeSystemfiles->setRootPath(aeData::SLASH);
 		// langues
 		$this->getLanguages();
 		$this->getDefaultLocale();
@@ -52,10 +58,10 @@ class aeTranslate {
 		$this->bundles_list = array();
 		$this->files_list = array();
 		// récupération des dossiers "translations", enfants DIRECTS des dossiers "Resources", uniquement dans "src"
-		$fold_resources = $this->aetools->exploreDir(self::SOURCE_FILES, self::FOLD_RESOURCES, "dossiers");
+		$fold_resources = $this->aeSystemfiles->exploreDir(aeData::SOURCE_FILES, aeData::FOLD_RESOURCES, "dossiers");
 		$this->fold_translations = array();
 		foreach ($fold_resources as $fR) {
-			$res = $this->aetools->exploreDir($fR['sitepath'].$fR['nom'], self::FOLD_TRANSLATIONS, "dossiers", false); // false --> enfants directs
+			$res = $this->aeSystemfiles->exploreDir($fR['sitepath'].$fR['nom'], self::FOLD_TRANSLATIONS, "dossiers", false); // false --> enfants directs
 			if(count($res) > 0) foreach ($res as $folder) {
 				$this->fold_translations[] = $folder;
 			}
@@ -118,7 +124,7 @@ class aeTranslate {
 	 * @return string
 	 */
 	protected function fileGetDomain($filename) {
-		return preg_replace("#\.(".$this->container->getParameter('default_locales').")\.yml$#", "", $filename);
+		return preg_replace("#\.(".$this->default_locales.")\.yml$#", "", $filename);
 	}
 
 	/**
@@ -137,7 +143,7 @@ class aeTranslate {
 	 * @return array
 	 */
 	protected function getTranslateFiles($path) {
-		return $this->aetools->exploreDir($path, "\.(".$this->container->getParameter('default_locales').")\.yml$", "fichiers", false, true);
+		return $this->aeSystemfiles->exploreDir($path, "\.(".$this->default_locales.")\.yml$", "fichiers", false, true);
 	}
 
 	/**
@@ -146,7 +152,7 @@ class aeTranslate {
 	 */	
 	public function getLanguages() {
 		if(!is_array($this->languages)) {
-			$this->languages = explode("|", $this->container->getParameter('default_locales'));
+			$this->languages = explode("|", $this->default_locales);
 		}
 		return $this->languages;
 	}
@@ -157,7 +163,7 @@ class aeTranslate {
 	 */	
 	public function getLanguagesByBundles() {
 		if(!is_array($this->bundlesLanguages)) {
-			$bundles = $this->container->getParameter('list_locales');
+			$bundles = $this->list_locales;
 			foreach ($bundles as $bundle => $languages) {
 				$this->bundlesLanguages[$bundle] = explode("|", $languages);
 			}
@@ -170,7 +176,7 @@ class aeTranslate {
 	 * @return string
 	 */
 	public function getDefaultLocale() {
-		$this->default_locale = $this->container->getParameter('locale');
+		$this->default_locale = $this->locale;
 		return $this->default_locale;
 	}
 
@@ -179,8 +185,7 @@ class aeTranslate {
 	 * @return string
 	 */
 	public function getCurrentLocale() {
-		$request = $this->container->get('request');
-		return $request->getLocale();
+		return $this->Request->getLocale();
 	}
 
 	/**
@@ -324,7 +329,7 @@ class aeTranslate {
 	 * @return array
 	 */
 	public function getBundle($path) {
-		return strtolower(str_replace(array(self::FOLD_RESOURCES, self::FOLD_TRANSLATIONS, self::SOURCE_FILES, self::BUNDLE_EXTENSION, '/'), '', $path));
+		return strtolower(str_replace(array(aeData::FOLD_RESOURCES, self::FOLD_TRANSLATIONS, aeData::SOURCE_FILES, aeData::BUNDLE_EXTENSION, '/'), '', $path));
 	}
 
 	/**
@@ -453,7 +458,7 @@ class aeTranslate {
 		$dumper = new Dumper();
 		$r = file_put_contents(
 			$path,
-			$dumper->dump($array, self::MAX_YAML_LEVEL)
+			$dumper->dump($array, aeData::MAX_YAML_LEVEL)
 			);
 		$this->initFiles();
 		return $r;

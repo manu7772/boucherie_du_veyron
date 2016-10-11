@@ -2,22 +2,23 @@
 namespace site\adminsiteBundle\services;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Doctrine\ORM\EntityManager;
 
 use Labo\Bundle\AdminBundle\services\aeServiceItem;
 
 use site\adminsiteBundle\Entity\article;
 use Labo\Bundle\AdminBundle\Entity\baseEntity;
 
-// call in controller with $this->get('aetools.aeArticle');
+// call in controller with $this->get('aetools.aeServiceArticle');
 class aeServiceArticle extends aeServiceItem {
 
 	const NAME                  = 'aeServiceArticle';		// nom du service
-	const CALL_NAME             = 'aetools.aeArticle';		// comment appeler le service depuis le controller/container
+	const CALL_NAME             = 'aetools.aeServiceArticle';		// comment appeler le service depuis le controller/container
 	const CLASS_ENTITY          = 'site\adminsiteBundle\Entity\article';
 	const CLASS_SHORT_ENTITY    = 'article';
 
-	public function __construct(ContainerInterface $container = null, $em = null) {
-		parent::__construct($container, $em);
+	public function __construct(ContainerInterface $container, EntityManager $EntityManager = null) {
+	    parent::__construct($container, $EntityManager);
 		$this->defineEntity(self::CLASS_ENTITY);
 		return $this;
 	}

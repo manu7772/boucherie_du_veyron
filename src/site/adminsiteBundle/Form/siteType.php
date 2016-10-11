@@ -212,6 +212,24 @@ class siteType extends baseType {
                 'translation_domain' => 'site',
                 'required' => false,
                 ))
+            ->add('OptionArticlePhotosOnly', 'insCheck', array(
+                'translation_domain' => 'siteUserBundle',
+                "required" => false,
+                "label" => "fields.OptionArticlePhotosOnly",
+                'label_attr' => array('class' => 'text-muted'),
+                'attr' => array(
+                    'class' => 'input-sm form-control',
+                    ),
+                ))
+            ->add('OptionArticlePriceOnly', 'insCheck', array(
+                'translation_domain' => 'siteUserBundle',
+                "required" => false,
+                "label" => "fields.OptionArticlePriceOnly",
+                'label_attr' => array('class' => 'text-muted'),
+                'attr' => array(
+                    'class' => 'input-sm form-control',
+                    ),
+                ))
         ;
         // $builder->addEventListener(
         //  FormEvents::PRE_SET_DATA, function (FormEvent $event) {

@@ -6,4 +6,5 @@ services:
     # fonctionnalités de traduction
     aetools.translate:
         class: site\translateBundle\services\aeTranslate
-        arguments: [@service_container]
+        arguments: [@request, @aetools.aeSystemfiles, %default_locales%, %list_locales%, %locale%]
+        scope: request

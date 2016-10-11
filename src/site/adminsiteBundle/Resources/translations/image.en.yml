@@ -44,3 +44,6 @@ fields:
     creation: creation
     visuel: view
     group_imagesParents: used by
+actions:
+    toutes: 'all images'
+    check: 'check images'

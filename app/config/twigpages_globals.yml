@@ -44,7 +44,7 @@ twig:
                         nom: 'superadmin.entites'
                         path: 'siteadmin_sadmin_entities'
                     panier:
-                        nom: 'Tests panier'
+                        nom: 'Testpanier'
                         path: 'siteadmin_sadmin_panier'
             categories:
                 role: 'ROLE_EDITOR'
@@ -234,7 +234,8 @@ twig:
                                 type_values: pageweb
                     menus2:
                         role: 'ROLE_SUPER_ADMIN'
-                        nom: 'menu.name_s'
+                        nom: 'name_s'
+                        trans_domain: menu
                         path: 
                             path: 'siteadmin_menus'
                             params:
@@ -257,11 +258,20 @@ twig:
                         level3:
                             toutes_images:
                                 role: 'ROLE_SUPER_ADMIN'
-                                nom: 'toutes images'
+                                nom: 'actions.toutes'
                                 trans_domain: image
                                 icon: 'entite.image'
                                 path: 
                                     path: 'siteadmin_entite'
+                                    params:
+                                        entite: image
+                            check_images:
+                                role: 'ROLE_SUPER_ADMIN'
+                                nom: 'actions.check'
+                                trans_domain: image
+                                icon: 'entite.image'
+                                path: 
+                                    path: 'siteadmin_check'
                                     params:
                                         entite: image
                             images_orphelines:
@@ -484,7 +494,8 @@ twig:
                                 entite: site
                     menus:
                         role: %restrict_admin%
-                        nom: 'menu.name_s'
+                        nom: 'name_s'
+                        trans_domain: menu
                         icon: 'entite.menu'
                         trans_domain: menus
                         path:

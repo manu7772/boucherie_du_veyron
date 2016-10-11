@@ -3,6 +3,8 @@ namespace site\adminsiteBundle\services;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\Extension\Core\ChoiceList\ChoiceList;
+use Doctrine\ORM\EntityManager;
+use Labo\Bundle\AdminBundle\services\aeData;
 
 use Labo\Bundle\AdminBundle\services\aeServiceItem;
 
@@ -16,19 +18,20 @@ class aeServicePageweb extends aeServiceItem {
     protected $bundles_list;
     protected $files_bas_list;
     protected $files_ext_list;
+    // services
+    protected $aeSystemfiles;
 
     const NAME                  = 'aeServicePageweb';        // nom du service
-    const CALL_NAME             = 'aetools.aePageweb'; // comment appeler le service depuis le controller/container
+    const CALL_NAME             = 'aetools.aeServicePageweb'; // comment appeler le service depuis le controller/container
     const CLASS_ENTITY          = 'site\adminsiteBundle\Entity\pageweb';
-    const CLASS_SHORT_ENTITY    = 'pageweb';
     const FOLD_BAS_PAGEWEB      = 'basic_pages_web';
     const FOLD_EXT_PAGEWEB      = 'extended_pages_web';
 
-    public function __construct(ContainerInterface $container = null, $em = null) {
-        parent::__construct($container, $em);
+    public function __construct(ContainerInterface $container, EntityManager $EntityManager = null) {
+        parent::__construct($container, $EntityManager);
         $this->defineEntity(self::CLASS_ENTITY);
-        $this->rootPath = __DIR__.self::GO_TO_ROOT;
-        $this->setRootPath("/");
+        $this->aeSystemfiles = $this->container->get(aeData::PREFIX_CALL_SERVICE.'aeSystemfiles');
+        $this->aeSystemfiles->setRootPath(aeData::SLASH);
         $this->bundles_list = null;
         // récupération de fichiers et check
         $this->initFiles();
@@ -54,20 +57,20 @@ class aeServicePageweb extends aeServiceItem {
     }
 
     public function getDefaultPage() {
-        $this->container->get('aetools.aeDebug')->startChrono();
+        $this->container->get(aeData::PREFIX_CALL_SERVICE.'aeDebug')->startChrono();
         $page = $this->getRepo()->findDefaultPage();
         if(is_array($page)) $page = reset($page);
         $this->completePageweb($page);
-        $this->container->get('aetools.aeDebug')->printChrono('Get default pagweb', true);
+        $this->container->get(aeData::PREFIX_CALL_SERVICE.'aeDebug')->printChrono('Get default pagweb', true);
         return $page;
     }
 
     public function getPageBySlug($itemSlug) {
-        $this->container->get('aetools.aeDebug')->startChrono();
+        $this->container->get(aeData::PREFIX_CALL_SERVICE.'aeDebug')->startChrono();
         $page = $this->getRepo()->getPageBySlug($itemSlug);
         if(is_array($page)) $page = reset($page);
         $this->completePageweb($page);
-        $this->container->get('aetools.aeDebug')->printChrono('Get "'.$itemSlug.'" pagweb', true);
+        $this->container->get(aeData::PREFIX_CALL_SERVICE.'aeDebug')->printChrono('Get "'.$itemSlug.'" pagweb', true);
         return $page;
     }
 
@@ -78,22 +81,22 @@ class aeServicePageweb extends aeServiceItem {
         // récupération des bundles
         foreach($this->getBundles() as $bundle) {
             // basic
-            $folders = $this->exploreDir($bundle['sitepath'].$bundle['nom'], self::FOLD_BAS_PAGEWEB, "dossiers", true);
+            $folders = $this->aeSystemfiles->exploreDir($bundle['sitepath'].$bundle['nom'], self::FOLD_BAS_PAGEWEB, "dossiers", true);
             if(count($folders) > 0) {
                 foreach($folders as $pw_folder) {
                     $path = $pw_folder['sitepath'].$pw_folder['nom'];
-                    $files = $this->exploreDir($path, '\.html\.twig$', true);
+                    $files = $this->aeSystemfiles->exploreDir($path, '\.html\.twig$', true);
                     if(count($files) > 0) foreach ($files as $file) {
                         $this->files_bas_list[$file['sitepath'].$file['nom']] = preg_replace('#\.html\.twig$#i', '', $file['nom']);
                     }
                 }
             }
             // extended
-            $folders = $this->exploreDir($bundle['sitepath'].$bundle['nom'], self::FOLD_EXT_PAGEWEB, "dossiers", true);
+            $folders = $this->aeSystemfiles->exploreDir($bundle['sitepath'].$bundle['nom'], self::FOLD_EXT_PAGEWEB, "dossiers", true);
             if(count($folders) > 0) {
                 foreach($folders as $pw_folder) {
                     $path = $pw_folder['sitepath'].$pw_folder['nom'];
-                    $files = $this->exploreDir($path, '\.html\.twig$', true);
+                    $files = $this->aeSystemfiles->exploreDir($path, '\.html\.twig$', true);
                     if(count($files) > 0) foreach ($files as $file) {
                         $this->files_ext_list[$file['sitepath'].$file['nom']] = preg_replace('#\.html\.twig$#i', '', $file['nom']);
                     }
@@ -105,9 +108,9 @@ class aeServicePageweb extends aeServiceItem {
 
     protected function getBundles() {
         if($this->bundles_list == null) {
-            $this->bundles_list = $this->exploreDir(self::SOURCE_FILES, self::BUNDLE_EXTENSION.'$', "dossiers");
+            $this->bundles_list = $this->aeSystemfiles->exploreDir(aeData::SOURCE_FILES, aeData::BUNDLE_EXTENSION.'$', "dossiers");
             foreach($this->bundles_list as $key => $bundle) {
-                $this->bundles_list[$key]['bundlename'] = str_replace('/', '', (preg_replace('#^'.self::SOURCE_FILES.'#', '', $bundle['sitepath']))).$bundle['nom'];
+                $this->bundles_list[$key]['bundlename'] = str_replace('/', '', (preg_replace('#^'.aeData::SOURCE_FILES.'#', '', $bundle['sitepath']))).$bundle['nom'];
             }
         }
         return $this->bundles_list;

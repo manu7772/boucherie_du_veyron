@@ -44,3 +44,7 @@ fields:
     creation: creation
     visuel: visuel
     group_imagesParents: utilisations
+actions:
+    toutes: 'toutes les images'
+    check: 'vérifier images'
+

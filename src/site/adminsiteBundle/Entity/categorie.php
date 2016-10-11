@@ -7,7 +7,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Doctrine\Common\Collections\ArrayCollection;
 
-use Labo\Bundle\AdminBundle\services\aetools;
 use Labo\Bundle\AdminBundle\services\aeDebug;
 
 use Labo\Bundle\AdminBundle\Entity\nested;
@@ -106,17 +105,15 @@ class categorie extends nested {
 		$this->type_list = null;
 		$this->categorieParent = null;
 		$this->passBySetParent = false;
-		$this->initTypes();
+		// $this->initTypes();
 	}
 
-	public function initTypes() {
+	public function initTypes($description) {
 		// Description selon parameters (labo_parameters.yml)
 		if(!is_array($this->accept_list) || !is_array($this->type_description) || !is_array($this->type_list)) {
-			$aetools = new aetools();
-			$description = $aetools->getLaboParam(self::CLASS_CATEGORIE);
 			// variables…
-			$this->accept_list = $description['descrition']['defaults']['accepts'];
-			$this->type_description = $description['descrition']['types'];
+			$this->accept_list = $description['defaults']['accepts'];
+			$this->type_description = $description['types'];
 			$this->type_list = array();
 			foreach($this->type_description as $key => $value) {
 				$this->type_list[$key] = $value['nom'];
@@ -130,9 +127,9 @@ class categorie extends nested {
 	 * @ORM\PostLoad
 	 * @return categorie
 	 */
-	public function initNestedAttributes() {
+	public function initNestedAttributes($description) {
 		parent::initNestedAttributes();
-		$this->initTypes();
+		$this->initTypes($description);
 		// $parents = $this->getParentsByGroup('categorie_parent');
 		// $this->categorieParent = count($parents > 0) ? reset($parents) : null;
 		$this->passBySetParent = false;
@@ -524,7 +521,7 @@ class categorie extends nested {
 	}
 
 	public function getAcceptsList() {
-		if(!is_array($this->accept_list)) $this->initTypes();
+		// if(!is_array($this->accept_list)) $this->initTypes();
 		return $this->accept_list;
 	}
 
@@ -534,7 +531,7 @@ class categorie extends nested {
 	 * @return categorie
 	 */
 	public function setAccepts() {
-		if(!is_array($this->type_description)) $this->initTypes();
+		// if(!is_array($this->type_description)) $this->initTypes();
 		if(array_key_exists($this->getType(), $this->type_description)) $this->accepts = json_encode($this->type_description[$this->getType()]['accepts']);
 			else $this->accepts = json_encode(array());
 		return $this;
@@ -579,7 +576,7 @@ class categorie extends nested {
 	 * @return array
 	 */
 	public function getTypeList() {
-		if(!is_array($this->type_list)) $this->initTypes();
+		// if(!is_array($this->type_list)) $this->initTypes();
 		return $this->type_list;
 	}
 

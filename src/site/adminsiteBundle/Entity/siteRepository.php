@@ -8,7 +8,7 @@ use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\ClassMetadata;
 
-use Labo\Bundle\AdminBundle\services\siteListener;
+use Labo\Bundle\AdminBundle\services\aeData;
 
 /**
  * siteRepository
@@ -23,7 +23,7 @@ class siteRepository extends EntityBaseRepository {
 		$result = null;
 		if(is_object($this->aeCache) && $siteDataId == null) {
 			// CACHE
-			$result = $this->aeCache->getCacheNamedFile(siteListener::SITE_DATA, $delay);
+			$result = $this->aeCache->getCacheNamedFile(aeData::SITE_DATA, $delay);
 		}
 		if($result == null) {
 			$qb = $this->createQueryBuilder(self::ELEMENT);
@@ -57,7 +57,7 @@ class siteRepository extends EntityBaseRepository {
 				$result = $result['site'];
 				if(is_object($this->aeCache) && $siteDataId == null) {
 					// cache
-					$this->aeCache->cacheNamedFile(siteListener::SITE_DATA, $result, false, true);
+					$this->aeCache->cacheNamedFile(aeData::SITE_DATA, $result, false, true);
 				}
 			}
 		}

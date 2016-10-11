@@ -53,6 +53,8 @@ fields:
     theme: thème admin
     lang: langue
     avatar: avatar
+    OptionArticlePhotosOnly: masquer articles sans photo
+    OptionArticlePriceOnly: masquer articles sans prix (ou 0€)
 
 # Profile
 profile:

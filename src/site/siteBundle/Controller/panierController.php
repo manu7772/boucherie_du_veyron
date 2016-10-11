@@ -16,7 +16,7 @@ use site\adminsiteBundle\Entity\article;
 class panierController extends Controller {
 
 	public function panierAction($action = 'add', $id = null, $param = null) {
-		$servicePanier = $this->get('aetools.aePanier');
+		$servicePanier = $this->get('aetools.aeServicePanier');
 		if($id != null) $id = $this->getDoctrine()->GetManager()->getRepository('site\adminsiteBundle\Entity\article')->find($id);
 		if($param == null) $param = 1;
 		switch ($action) {
