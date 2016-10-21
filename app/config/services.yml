@@ -102,9 +102,9 @@ services:
     #######################
 
     # fonctionnalités de ROLES
-    # aetools.RolesService:
-    #     class: %ae_services%RolesService
-    #     arguments: [@service_container]
+    aetools.RolesService:
+        class: %ae_services%RolesService
+        arguments: [%security.role_hierarchy.roles%]
 
 
     #######################
@@ -160,6 +160,11 @@ services:
     # service categorie
     aetools.aeServiceCategorie:
         class: %site_services%aeServiceCategorie
+        arguments: [@service_container]
+
+    # service tauxTva
+    aetools.aeServiceTauxTva:
+        class: %site_services%aeServiceTauxTva
         arguments: [@service_container]
 
     # service tag
@@ -227,12 +232,12 @@ services:
 
     # service image
     aetools.aeServiceImage:
-        class: %ae_services%aeServiceImage
+        class: %site_services%aeServiceImage
         arguments: [@service_container]
 
     # service pdf
     aetools.aeServicePdf:
-        class: %ae_services%aeServicePdf
+        class: %site_services%aeServicePdf
         arguments: [@service_container]
 
     # service rawfile
@@ -321,9 +326,21 @@ services:
     ### EVENT LISTENER SUR DOCTRINE ENTITIES
     ###################################
 
-    # Entity listener sur File
-    entityListener:
-        class: %ae_services%entityListener
+    # Entity listener
+    baseEntityListener:
+        class: %ae_services%baseEntityListener
         arguments: [@service_container]
         tags:
             - { name: doctrine.orm.entity_listener }
+
+    onFlushSubscriber:
+        class: %ae_services%onFlushSubscriber
+        arguments: [@service_container]
+        tags:
+            - { name: doctrine.event_subscriber }
+
+
+
+
+
+

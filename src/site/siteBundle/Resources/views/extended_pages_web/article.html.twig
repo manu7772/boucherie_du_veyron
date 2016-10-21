@@ -19,8 +19,8 @@
 				<div class="content-page-right">
 					<h2 class="title">
 						{{ blocks_actions.breadcrumb(article, categories|default([])|reverse) }}
-						{%- if EDITORMODE %} <a {{ actions.adminHref(path('siteadmin_entite', {entite: article.className|default(article.class_name|default(null)), id: article.id, action: 'show'})) }}><i class="fa fa-eye icon-wait-on-click text-danger"></i></a>{% endif %}
-						{%- if EDITORMODE %} <a {{ actions.adminHref(path('siteadmin_entite', {entite: article.className|default(article.class_name|default(null)), id: article.id, action: 'edit'})) }}><i class="fa fa-pencil icon-wait-on-click text-danger"></i></a>{% endif %}
+						{%- if EDITORMODE %} <a {{ actions.adminHref(path('siteadmin_entite', {entite: article.className|default(article.shortName|default(null)), id: article.id, action: 'show'})) }}><i class="fa fa-eye icon-wait-on-click text-danger"></i></a>{% endif %}
+						{%- if EDITORMODE %} <a {{ actions.adminHref(path('siteadmin_entite', {entite: article.className|default(article.shortName|default(null)), id: article.id, action: 'edit'})) }}><i class="fa fa-pencil icon-wait-on-click text-danger"></i></a>{% endif %}
 					</h2>
 					<div class="product-details background-gray"><!--product-details-->
 						{% if article.imageId|default(null) != null %}
@@ -48,7 +48,7 @@
 
 								{% set parents = [] %}
 								{% if article.nestedpositionParents|length > 0 %}
-									{% for parent in article.nestedpositionParents if (parent.parent.type == 'article' and parent.parent.class_name == 'categorie') %}
+									{% for parent in article.nestedpositionParents if (parent.parent.type == 'article' and parent.parent.shortName == 'categorie') %}
 										{% set parents = parents|merge([parent.parent.nom]) %}
 									{% endfor %}
 								{% endif %}

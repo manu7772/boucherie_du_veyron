@@ -15,8 +15,21 @@ statut:
                 - 'siteeditionBundle'
                 - 'siteadminsiteBundle'
         -
+            nom: 'Connect'
+            descriptif: '<p>Statut connecté. Visible uniquement pour les utilisateurs ayant un compte et connectés.</p>'
+            niveau: 'ROLE_USER'
+            default: 0
+            couleur: 'rgba(255, 255, 255, 0)'
+            bundles:
+                - 'sitesiteBundle'
+                - 'sitegraphicsBundle'
+                - 'siteUserBundle'
+                - 'sitetranslateBundle'
+                - 'siteeditionBundle'
+                - 'siteadminsiteBundle'
+        -
             nom: 'Inactif'
-            descriptif: '<p>Statut inactif</p>'
+            descriptif: '<p>Statut inactif. Non visible sur le site public.</p>'
             niveau: 'ROLE_EDITOR'
             default: 0
             couleur: 'rgba(255, 68, 68, 0.33)'
@@ -40,7 +53,7 @@ statut:
                 - 'siteadminsiteBundle'
         -
             nom: 'Webmaster'
-            descriptif: '<p>Élément pour la gestion du site, visibles uniquement par le webmaster (ROLE_SUPER_ADMIN)</p>'
+            descriptif: '<p>Élément pour la gestion du site, visibles uniquement par le webmaster (ROLE_SUPER_ADMIN).</p>'
             niveau: 'ROLE_SUPER_ADMIN'
             default: 0
             couleur: 'rgba(161,63,207,0.75)'
@@ -52,7 +65,7 @@ statut:
                 - 'siteadminsiteBundle'
         -
             nom: 'Deleted'
-            descriptif: '<p>Effacé pour tous, sauf ROLE_SUPER_ADMIN</p>'
+            descriptif: '<p>Effacé pour tous, sauf ROLE_SUPER_ADMIN.</p>'
             niveau: 'ROLE_SUPER_ADMIN'
             default: 0
             couleur: 'rgba(255, 68, 68, 0.5)'
@@ -64,7 +77,7 @@ statut:
                 - 'siteadminsiteBundle'
         -
             nom: 'Temp'
-            descriptif: '<p>Éléments temporaires <small>Doivent pouvoir être supprimés à tout moment</small></p>'
+            descriptif: '<p>Éléments temporaires <small>Doivent pouvoir être supprimés à tout moment</small>.</p>'
             niveau: 'ROLE_SUPER_ADMIN'
             default: 0
             couleur: 'rgba(174,201,242,0.5)'
@@ -76,7 +89,7 @@ statut:
                 - 'siteadminsiteBundle'
         -
             nom: 'Dev'
-            descriptif: '<p>Statut pour dev uniquement</p>'
+            descriptif: '<p>Statut pour dev uniquement.</p>'
             niveau: 'ROLE_SUPER_ADMIN'
             default: 0
             couleur: 'rgba(255, 68, 68, 0.75)'
@@ -88,7 +101,7 @@ statut:
                 - 'siteadminsiteBundle'
         -
             nom: 'Test'
-            descriptif: '<p>Statut pour tests uniquement</p>'
+            descriptif: '<p>Statut pour tests uniquement.</p>'
             niveau: 'ROLE_SUPER_ADMIN'
             default: 0
             couleur: 'rgba(255, 68, 68, 0.75)'

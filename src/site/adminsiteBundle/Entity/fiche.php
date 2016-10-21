@@ -54,16 +54,6 @@ abstract class fiche extends item {
 	 */
 	protected $accroche;
 
-	// NESTED VIRTUAL GROUPS
-	// les noms doivent commencer par "$group_" et finir par "Parents" (pour les parents) ou "Childs" (pour les enfants)
-	// et la partie variable doit comporter au moins 3 lettres
-	// reconnaissance auto par : "#^(add|remove|get)(Group_).{3,}(Parent|Child)(s)?$#" (self::VIRTUALGROUPS_PARENTS_PATTERN et self::VIRTUALGROUPS_CHILDS_PATTERN)
-	// categories
-	protected $group_nestedsParents;
-	protected $group_nestedsChilds;
-	// article
-	protected $group_fichesParents;
-	protected $group_fichesChilds;
 
 	public function __construct() {
 		parent::__construct();
@@ -73,26 +63,29 @@ abstract class fiche extends item {
 	}
 
 	/**
+	 * Un élément par défaut dans la table est-il optionnel ?
+	 * @return boolean
+	 */
+	public function isDefaultNullable() {
+		return true;
+	}
+
+	/**
+	 * Peut'on attribuer plusieurs éléments par défaut ?
+	 * true 		= illimité
+	 * integer 		= nombre max. d'éléments par défaut
+	 * false, 0, 1 	= un seul élément
+	 * @return boolean
+	 */
+	public function isDefaultMultiple() {
+		return true;
+	}
+
+	/**
 	 * @ORM\PostLoad
 	 */
 	public function postLoad() {
 		$this->listeTypentites = array(1 => 'boisson', 2 => 'recette');
-	}
-
-	public function getNestedAttributesParameters() {
-		$new = array(
-			'fiches' => array(				// groupe fiches => group_fichesParents / group_imagesChilds
-				'data-limit' => 10,				// nombre max. d'enfants / 0 = infini
-				'class' => array('fiche'),	// classes acceptées (array) / null = toutes les classes de nested
-				'required' => false,
-				),
-			'nesteds' => array(
-				'data-limit' => 0,
-				'class' => array('categorie'),
-				'required' => false,
-				),
-			);
-		return array_merge(parent::getNestedAttributesParameters(), $new);
 	}
 
 

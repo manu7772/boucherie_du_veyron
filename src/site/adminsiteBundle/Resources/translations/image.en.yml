@@ -24,6 +24,8 @@ owner:
     'reseau:logo': 'outlets logos'
     'reseau:image': 'outlets images'
     'User:avatar': 'user photo'
+    'site:image': 'website image'
+    'site:favicon': 'website favicon'
 form:
     select: Select…
 fields:

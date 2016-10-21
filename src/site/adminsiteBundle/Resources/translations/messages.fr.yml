@@ -38,8 +38,11 @@ marketplace:
 icons:
     default_icon: icône par défaut
 default:
-    bydefault: Elément par défaut
-    nomore: Vous ne pouvez plus attribuer d''élément supplémentaire. Désactivez un autre pour pouvoir attribuer celui-ci.
+    bydefault: 'Elément par défaut.'
+    notDefaultEntity: 'cet élément n''a pas d''attribut défaut.'
+    nomore: 'Vous ne pouvez plus attribuer d''élément supplémentaire (max. %max%). Désactivez un autre pour pouvoir attribuer celui-ci.'
+    deleted: '{0}Aucun élément n''a été désactivé.|{1}Un élément a été désactivé.|]1,Inf[%number% éléments ont été désactivés.'
+    notsettotrue: 'L''élément "%item%" n''a pas été activé.'
 vendable:
     set: vendre cet article
     unset: ne plus vendre cet article

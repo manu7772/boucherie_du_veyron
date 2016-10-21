@@ -156,7 +156,7 @@ siteUser_delete:
 
 # MEDIA / IMAGES / PDF
 siteMedia_saveRawFile:
-    path:     /media/save-raw-file
+    path:     /media/save-raw-file/{entityShortName}
     defaults: { _controller: siteadminsiteBundle:media:persistRawImage }
     # requirements:
     #     entityShortName: image|pdf

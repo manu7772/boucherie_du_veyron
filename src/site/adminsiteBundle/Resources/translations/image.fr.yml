@@ -24,6 +24,8 @@ owner:
     'reseau:logo': 'logos réseaux'
     'reseau:image': 'images réseaux'
     'User:avatar': 'photo utilisateur'
+    'site:image': 'image site'
+    'site:favicon': 'favicon site'
 form:
     select: Sélectionnez…
 fields:

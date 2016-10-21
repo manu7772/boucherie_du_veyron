@@ -75,12 +75,6 @@ class pageweb extends item {
 	 */
 	protected $modele;
 
-	// NESTED VIRTUAL GROUPS
-	// les noms doivent commencer par "$group_" et finir par "Parents" (pour les parents) ou "Childs" (pour les enfants)
-	// et la partie variable doit comporter au moins 3 lettres
-	// reconnaissance auto par : "#^(add|remove|get)(Group_).{3,}(Parent|Child)(s)?$#" (self::VIRTUALGROUPS_PARENTS_PATTERN et self::VIRTUALGROUPS_CHILDS_PATTERN)
-	protected $group_nestedsParents;
-	protected $group_nestedsChilds;
 
 	public function __construct() {
 		parent::__construct();
@@ -93,16 +87,16 @@ class pageweb extends item {
 		$this->diaporama = null;
 	}
 
-	public function getNestedAttributesParameters() {
-		$new = array(
-			'nesteds' => array(
-				'data-limit' => 0,
-				'class' => array('categorie'),
-				'required' => false,
-				),
-			);
-		return array_merge(parent::getNestedAttributesParameters(), $new);
-	}
+	// public function getNestedAttributesParameters() {
+	// 	$new = array(
+	// 		'nesteds' => array(
+	// 			'data-limit' => 0,
+	// 			'class' => array('categorie'),
+	// 			'required' => false,
+	// 			),
+	// 		);
+	// 	return array_merge(parent::getNestedAttributesParameters(), $new);
+	// }
 
 	// /**
 	//  * Renvoie l'image principale
@@ -111,6 +105,25 @@ class pageweb extends item {
 	// public function getMainMedia() {
 	// 	return $this->getImage();
 	// }
+
+	/**
+	 * Un élément par défaut dans la table est-il optionnel ?
+	 * @return boolean
+	 */
+	public function isDefaultNullable() {
+		return false;
+	}
+
+	/**
+	 * Peut'on attribuer plusieurs éléments par défaut ?
+	 * true 		= illimité
+	 * integer 		= nombre max. d'éléments par défaut
+	 * false, 0, 1 	= un seul élément
+	 * @return boolean
+	 */
+	public function isDefaultMultiple() {
+		return false;
+	}
 
 	/**
 	 * Set code

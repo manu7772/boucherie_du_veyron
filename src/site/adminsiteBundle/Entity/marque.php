@@ -47,10 +47,21 @@ class marque extends tier {
 	}
 
 	/**
-	 * Un élément par défaut dans la table est-il obligatoire ?
+	 * Un élément par défaut dans la table est-il optionnel ?
 	 * @return boolean
 	 */
 	public function isDefaultNullable() {
+		return true;
+	}
+
+	/**
+	 * Peut'on attribuer plusieurs éléments par défaut ?
+	 * true 		= illimité
+	 * integer 		= nombre max. d'éléments par défaut
+	 * false, 0, 1 	= un seul élément
+	 * @return boolean
+	 */
+	public function isDefaultMultiple() {
 		return true;
 	}
 

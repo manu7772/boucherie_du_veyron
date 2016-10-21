@@ -63,15 +63,11 @@ class image extends media {
 	protected $height;
 
 	protected $cropperInfo;
-	protected $aeReponse;
-	protected $checked = false;
 
 	// NESTED VIRTUAL GROUPS
 	// les noms doivent commencer par "$group_" et finir par "Parents" (pour les parents) ou "Childs" (pour les enfants)
 	// et la partie variable doit comporter au moins 3 lettres
 	// reconnaissance auto par : "#^(add|remove|get)(Group_).{3,}(Parent|Child)(s)?$#" (self::VIRTUALGROUPS_PARENTS_PATTERN et self::VIRTUALGROUPS_CHILDS_PATTERN)
-	protected $group_imagesParents;
-	protected $group_imagesChilds;
 
 	public function __construct() {
 		parent::__construct();
@@ -81,12 +77,31 @@ class image extends media {
 		$this->ratioIndex = 0;
 		$this->width = 0;
 		$this->height = 0;
-		$this->aeReponse = null;
+		// $this->cropperInfo = null;
 	}
 
     // public function getClassName(){
     //     return parent::CLASS_IMAGE;
     // }
+
+	/**
+	 * Un élément par défaut dans la table est-il optionnel ?
+	 * @return boolean
+	 */
+	public function isDefaultNullable() {
+		return true;
+	}
+
+	/**
+	 * Peut'on attribuer plusieurs éléments par défaut ?
+	 * true 		= illimité
+	 * integer 		= nombre max. d'éléments par défaut
+	 * false, 0, 1 	= un seul élément
+	 * @return boolean
+	 */
+	public function isDefaultMultiple() {
+		return true;
+	}
 
 	public function setCropperInfo($cropperInfo) {
 		$this->cropperInfo = $cropperInfo;
@@ -94,93 +109,6 @@ class image extends media {
 
 	public function getCropperInfo() {
 		return $this->cropperInfo;
-	}
-
-	public function check() {
-		if($this->checked == false) {
-			$this->checked = true;
-			// echo('<p style="color:red;">UPLOAD image '.$this->getNom().'</p>');
-			if(null == $this->upload_file) {
-				$info = $this->getInfoForPersist();
-				if(isset($info['dataType'])) {
-					if($info['dataType'] == "cropper") {
-						// cropper
-						if($this->getRawfile() == null) {
-							// ne possède pas de rawfile
-							// echo('<p style="color:orange;">'.$this->getNom().' : pas de RAWFILE ????</p>');
-						} else {
-							// possède un raw file
-							if(isset($info['getData'])) {
-								if(isset($info['ratioIndex'])) $this->setRatioIndex($info['ratioIndex']);
-									else $this->setRatioIndex(0);
-								if($info['file']['size'] != null) $this->setFileSize($info['file']['size']);
-								if($info['file']['type'] != null) {
-									$this->setFormat($info['file']['type']);
-									$this->setMediaType($this->getTypeOf($info['file']['type']));
-								}
-								$filehaschanged = false;
-								if($info['file']['name'] != null) {
-									// echo('<p>Nouvelle image : '.$this->getNom().'</p>');
-									$filehaschanged = true;
-									$this->setOriginalnom($info['file']['name']);
-									$ext = explode('.', $info['file']['name']);
-									$ext = end($ext);
-									if(!in_array($ext, $this->authorizedFormatsByType)) $this->setExtension($this->getExtByMime($info['file']['type']));
-									$this->setExtension($ext);
-								}
-								$notChanged = $this->setCroppingInfo($info['getData']);
-								$notChanged = false;
-								if((!$notChanged) || $filehaschanged) {
-									// if(!$notChanged)
-										// echo('- '.$this->getNom().' : Changement de cadrage…');
-										// else
-										// echo('- '.$this->getNom().' : Changement d\'image…');
-									// echo('<p>Owner entity : '.$this->getOwnerEntity().'</p>');
-									// echo('<p>Owner field : '.$this->getOwnerField().'</p>');
-									// echo('<p>RatioIndex : '.$this->getRatioIndex().'</p>');
-									if(isset($this->getCropperInfo()['formats'][$this->getOwnerEntity()][$this->getOwnerField()][$this->getRatioIndex()])) {
-										$format = $this->getCropperInfo()['formats'][$this->getOwnerEntity()][$this->getOwnerField()][$this->getRatioIndex()];
-									} else {
-										$format = $this->getCropperInfo()['formats']['default'][$this->getRatioIndex()];
-									}
-									$this->aeReponse = $this->getRawfile()->getCropped($format[0], $format[1], $info);
-									// echo($this->aeReponse->getMessage());
-									if($this->aeReponse->getResult() == true) {
-										// SUCCESS
-										$image = $this->aeReponse->getData();
-										// echo('<h1>OK !!</h1>');
-										// echo('<img src="'.$this->getShemaBase().base64_encode($image).'">');
-										$img = imagecreatefromstring($image);
-										$this->setWidth(imagesx($img));
-										$this->setHeight(imagesy($img));
-										imagedestroy($img);
-										unset($img);
-										$this->setBinaryFile($image);
-									} else {
-										// ERROR
-									}
-								}
-								// else echo('<p>Aucun changement ????</p>');
-								$this->setStockage($this->stockageList[0]);
-								if($this->getNom() == null) $this->setNom($this->getOriginalnom());
-								$this->defineNom();
-							}
-							// else echo('<p>Pas de getData ????</p>');
-						}
-					}
-				}
-			}
-		} else {
-			// echo('<p style="color:red;">Don\'t check again ! Thanks ! '.$this->getNom().'</p>');
-		}
-		// die();
-		// parent
-		parent::check();
-		return;
-	}
-
-	public function getAeReponse() {
-		return $this->aeReponse;
 	}
 
 	public function getShemaBase($format = null) {
@@ -215,26 +143,9 @@ class image extends media {
 	 */
 	public function getThumbnail($x = 128, $y = 128, $mode = 'cut', $format = null) {
 		if(!in_array($format, $this->authorizedFormatsByType[self::CLASS_IMAGE])) $format = $this->getExtension();
-		$thumbnail = null;
-		// if($this->getFormat()->getType() == self::CLASS_IMAGE) {
-			$aeImages = new aeImages();
-			$image = @imagecreatefromstring($this->getBinaryFile());
-			if($image != false) {
-				$image = $aeImages->thumb_image($image, $x, $y, $mode);
-				ob_start();
-				switch ($format) {
-					case 'jpeg':
-					case 'jpg': imagejpeg($image); break;
-					case 'gif': imagegif($image); break;
-					case 'png': imagepng($image); break;
-					default: imagepng($image); break;
-				}
-				$thumbnail = ob_get_contents();
-				ob_end_clean();
-				imagedestroy($image);
-			} else return "Error while creating image object";
-		// }
-		return $thumbnail;
+		$aeImages = new aeImages();
+		$aeImages->computeXandY($this->getWidth(), $this->getHeight(), $x, $y);
+		return $aeImages->thumb_image($this->getBinaryFile(), $x, $y, $mode, true, $format);
 	}
 
 
@@ -343,7 +254,7 @@ class image extends media {
 	public function setElement(subentity $element = null, $name = 'image') {
 		$this->element = $element;
 		if($element != null) {
-			$this->setOwner($element->getClassName().':'.$name);
+			$this->setOwner($element->getShortName().':'.$name);
 			// $this->setStatut($element->getStatut());
 		} else {
 			$this->setOwner(null);
@@ -367,7 +278,7 @@ class image extends media {
 	public function setUserAvatar(User $userAvatar = null) {
 		$this->userAvatar = $userAvatar;
 		if($userAvatar != null) {
-			$this->setOwner($userAvatar->getClassName().':avatar');
+			$this->setOwner($userAvatar->getShortName().':avatar');
 			// $this->setStatut($userAvatar->getStatut());
 		} else {
 			$this->setOwner(null);

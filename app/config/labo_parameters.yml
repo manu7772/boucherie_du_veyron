@@ -82,16 +82,99 @@ parameters:
             progressBar: true
             debug: false
             timeOut: 6000
-            extendedTimeOut: 1000
+            extendedTimeOut: 500
             closeHtml: '<button type="button">&times;</button>'
-            newestOnTop: false
+            newestOnTop: true
     info_entites:
         article:
             icon: fa-shopping-cart
+            nestedAttributes:
+                articles:
+                    data-limit: 10
+                    class: ['article']
+                    required: false
+                articles_reseaus:
+                    data-limit: 0
+                    class: ['reseau']
+                    required: false
+                article_ficherecette:
+                    data-limit: 0
+                    class: ['ficherecette']
+                    required: false
+                article_ficheboisson:
+                    data-limit: 0
+                    class: ['ficheboisson']
+                    required: false
+                nesteds:
+                    data-limit: 0
+                    class: ['categorie']
+                    required: false
+            singleFields:
+                vendable: true
+                surdevis: false
+                prix: 1.00
+                unitprix: 'Kg'
+                unit: 'Kg'
+                defaultquantity: 10
+                maxquantity: 1000
+                minquantity: 1
+                increment: 10
+        nested:
+            icon: fa-folder
+            nestedAttributes:
+                categorie_parent:
+                    data-limit: 1
+                    class: ['categorie']
+                    required: false
+                images:
+                    data-limit: 1000
+                    class: ['image']
+                    required: false
+        categorie:
+            nestedAttributes:
+                nesteds:
+                    data-limit: 0
+                    class: 'method::getAccepts'
+                    required: false
+                pagewebs:
+                    data-limit: 12
+                    class: ['pageweb']
+                    required: false
         pageweb:
             icon: fa-desktop
+            nestedAttributes:
+                nesteds:
+                    data-limit: 0
+                    class: ['categorie']
+                    required: false
         media:
             preferedStockage: database
+        reseau:
+            nestedAttributes:
+                articles_reseaus:
+                    data-limit: 0
+                    class: ['article']
+                    required: false
+        fiche:
+            nestedAttributes:
+                fiches:
+                    data-limit: 10
+                    class: ['fiche']
+                    required: false
+                nesteds:
+                    data-limit: 0
+                    class: ['categorie']
+                    required: false
+        ficherecette:
+            nestedAttributes:
+                    data-limit: 0
+                    class: ['article']
+                    required: false
+        ficheboisson:
+            nestedAttributes:
+                    data-limit: 0
+                    class: ['article']
+                    required: false
     marketplace:
         active: true #gérer des articles, boutiques, etc.
         vente: true #afficher les prix et remplir le panier

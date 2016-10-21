@@ -38,8 +38,11 @@ marketplace:
 icons:
     default_icon: default icon
 default:
-    bydefault: Set as default element
-    nomore: You can not either add element. Disable some other element if you want to attribute this one.
+    bydefault: 'Set as default-enabled element.'
+    notDefaultEntity: 'this element has not default attribute.'
+    nomore: 'You can not either add element (max. %max%). Default-disable some other element if you want to attribute this one.'
+    deleted: '{0}No element has been default-enabled.|{1}One element has been default-enabled.|]1,Inf[%number% elements have been default-enabled.'
+    notsettotrue: 'Element "%item%" has not been default-enabled.'
 vendable:
     set: sale this product
     unset: do not sale this product

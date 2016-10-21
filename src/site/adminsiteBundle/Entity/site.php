@@ -137,11 +137,24 @@ class site extends subentity {
 		$this->optionArticlePriceOnly = true;
 	}
 
+	/**
+	 * Un élément par défaut dans la table est-il optionnel ?
+	 * @return boolean
+	 */
+	public function isDefaultNullable() {
+		return false;
+	}
 
-    // abstract public function getClassName();
-    public function getClassName() {
-        return $this->getClass(true);
-    }
+	/**
+	 * Peut'on attribuer plusieurs éléments par défaut ?
+	 * true 		= illimité
+	 * integer 		= nombre max. d'éléments par défaut
+	 * false, 0, 1 	= un seul élément
+	 * @return boolean
+	 */
+	public function isDefaultMultiple() {
+		return false;
+	}
 
 	/**
 	 * Renvoie l'image principale
@@ -154,17 +167,6 @@ class site extends subentity {
 		return null;
 	}
 
-	/**
-	 * Renvoie le nom de la classe (short name par défaut)
-	 * @param boolean $short = false
-	 * @return string
-	 */
-	public function getClass($short = false) {
-		$class = new ReflectionClass(get_called_class());
-		return $short ?
-			$class->getShortName():
-			$class->getName();
-	}
 
 	/**
 	 * Set accroche

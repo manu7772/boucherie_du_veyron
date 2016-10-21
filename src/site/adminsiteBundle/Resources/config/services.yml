@@ -8,11 +8,11 @@ services:
 #        class: %acme_grouplabo_inspinia.example.class%
 #        arguments: [@service_id, "plain_value", %parameter%]
 
-    labo_subQueryBlocks:
-        class: %LaboAdminBundleservices%\subQueryBlocks
-        arguments: [@service_container]
-        tags:
-            - { name: twig.extension }
+    # labo_subQueryBlocks:
+    #     class: %LaboAdminBundleservices%\subQueryBlocks
+    #     arguments: [@service_container]
+    #     tags:
+    #         - { name: twig.extension }
 
     labo_user_roles:
         class: %LaboAdminBundleservices%\RolesService
@@ -29,9 +29,9 @@ services:
     #     arguments: [@service_container]
 
     # fonctionnalités de messages (flashbag) & Exceptions
-    aetools.aeExceptions:
-        class: %LaboAdminBundleservices%\aeServiceMessages
-        arguments: [@service_container]
+    # aetools.aeExceptions:
+    #     class: %LaboAdminBundleservices%\aeServiceMessages
+    #     arguments: [@service_container]
 
     flash_messages:
         class: %LaboAdminBundleservices%\flashMessages

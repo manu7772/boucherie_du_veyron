@@ -15,10 +15,10 @@ services:
         tags:
             - { name: form.type, alias: site_user_profile }
 
-    aetools.aeLaboUser:
-        class: site\UserBundle\services\aeServiceLaboUser
-        arguments: [@fos_user.user_manager, @security.encoder_factory]
+    # aetools.aeLaboUser:
+    #     class: site\UserBundle\services\aeServiceLaboUser
+    #     arguments: [@fos_user.user_manager, @security.encoder_factory]
 
     aetools.aeUser:
         class: site\UserBundle\services\aeServiceUser
-        arguments: [@fos_user.user_manager, @security.encoder_factory]
+        arguments: [@service_container]

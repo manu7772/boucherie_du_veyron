@@ -82,17 +82,7 @@ class categorie extends nested {
 	protected $type_description;
 	protected $type_list;
 
-	// NESTED VIRTUAL GROUPS
-	// les noms doivent commencer par "$group_" et finir par "Parents" (pour les parents) ou "Childs" (pour les enfants)
-	// et la partie variable doit comporter au moins 3 lettres
-	// reconnaissance auto par : "#^(add|remove|get)(Group_).{3,}(Parent|Child)(s)?$#" (self::VIRTUALGROUPS_PARENTS_PATTERN et self::VIRTUALGROUPS_CHILDS_PATTERN)
 	protected $passBySetParent;
-	// nesteds
-	protected $group_nestedsParents;
-	protected $group_nestedsChilds;
-	// pages web
-	protected $group_pagewebsParents;
-	protected $group_pagewebsChilds;
 
 
 	public function __construct() {
@@ -124,34 +114,23 @@ class categorie extends nested {
 	}
 
 	/**
-	 * @ORM\PostLoad
-	 * @return categorie
+	 * Un élément par défaut dans la table est-il optionnel ?
+	 * @return boolean
 	 */
-	public function initNestedAttributes($description) {
-		parent::initNestedAttributes();
-		$this->initTypes($description);
-		// $parents = $this->getParentsByGroup('categorie_parent');
-		// $this->categorieParent = count($parents > 0) ? reset($parents) : null;
-		$this->passBySetParent = false;
-		return $this;
+	public function isDefaultNullable() {
+		return true;
 	}
 
-	public function getNestedAttributesParameters() {
-		$new = array(
-			'nesteds' => array(
-				'data-limit' => 0,
-				'class' => $this->getAccepts(),
-				'required' => false,
-				),
-			'pagewebs' => array(
-				'data-limit' => 12,
-				'class' => array('pageweb'),
-				'required' => false,
-				),
-			);
-		return array_merge(parent::getNestedAttributesParameters(), $new);
+	/**
+	 * Peut'on attribuer plusieurs éléments par défaut ?
+	 * true 		= illimité
+	 * integer 		= nombre max. d'éléments par défaut
+	 * false, 0, 1 	= un seul élément
+	 * @return boolean
+	 */
+	public function isDefaultMultiple() {
+		return true;
 	}
-
 
 	/**
 	 * @Assert\IsTrue(message="La catégorie n'est pas conforme.")
@@ -160,25 +139,6 @@ class categorie extends nested {
 		$result = true;
 		$result = $result && is_string($this->getType());
 		return $result;
-	}
-
-	/**
-	 * @ORM\PrePersist
-	 * @ORM\PreUpdate
-	 * 
-	 * Check categorie
-	 * @return array
-	 */
-	public function check() {
-		parent::check();
-	}
-
-	/**
-	 * Un élément par défaut dans la table est-il obligatoire ?
-	 * @return boolean
-	 */
-	public function isDefaultNullable() {
-		return true;
 	}
 
 	/**

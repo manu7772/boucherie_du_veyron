@@ -51,14 +51,6 @@ class ficherecette extends fiche {
         300   =>  "5 h"
         );
 
-	// NESTED VIRTUAL GROUPS
-	// les noms doivent commencer par "$group_" et finir par "Parents" (pour les parents) ou "Childs" (pour les enfants)
-	// et la partie variable doit comporter au moins 3 lettres
-	// reconnaissance auto par : "#^(add|remove|get)(Group_).{3,}(Parent|Child)(s)?$#" (self::VIRTUALGROUPS_PARENTS_PATTERN et self::VIRTUALGROUPS_CHILDS_PATTERN)
-	// categories
-	// fiche_recette
-	protected $group_article_ficherecetteParents;
-	protected $group_article_ficherecetteChilds;
 
 	public function __construct() {
 		parent::__construct();
@@ -67,15 +59,23 @@ class ficherecette extends fiche {
 		$this->setTypentite(2);
 	}
 
-	public function getNestedAttributesParameters() {
-		$new = array(
-			'article_ficherecette' => array(
-				'data-limit' => 0,
-				'class' => array('article'),
-				'required' => false,
-				),
-			);
-		return array_merge(parent::getNestedAttributesParameters(), $new);
+	/**
+	 * Un élément par défaut dans la table est-il optionnel ?
+	 * @return boolean
+	 */
+	public function isDefaultNullable() {
+		return true;
+	}
+
+	/**
+	 * Peut'on attribuer plusieurs éléments par défaut ?
+	 * true 		= illimité
+	 * integer 		= nombre max. d'éléments par défaut
+	 * false, 0, 1 	= un seul élément
+	 * @return boolean
+	 */
+	public function isDefaultMultiple() {
+		return true;
 	}
 
 	/**

@@ -8,7 +8,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Gedmo\Mapping\Annotation as Gedmo;
 
-use Labo\Bundle\AdminBundle\Entity\panier as aeServicePanier;
+use Labo\Bundle\AdminBundle\Entity\panier as aeBasePanier;
 
 /**
  * panier
@@ -17,7 +17,7 @@ use Labo\Bundle\AdminBundle\Entity\panier as aeServicePanier;
  * @ORM\Table(name="panier", options={"comment":"paniers du site"})
  * @ORM\HasLifecycleCallbacks
  */
-class panier extends aeServicePanier {
+class panier extends aeBasePanier {
 
 	/**
 	 * @ORM\Id

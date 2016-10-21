@@ -32,33 +32,37 @@ class reseau extends tier {
 	 */
 	protected $nom;
 
-	// NESTED VIRTUAL GROUPS
-	// les noms doivent commencer par "$group_" et finir par "Parents" (pour les parents) ou "Childs" (pour les enfants)
-	// et la partie variable doit comporter au moins 3 lettres
-	// reconnaissance auto par : "#^(add|remove|get)(Group_).{3,}(Parent|Child)(s)?$#" (self::VIRTUALGROUPS_PARENTS_PATTERN et self::VIRTUALGROUPS_CHILDS_PATTERN)
-	protected $group_articles_reseausParents;
-	protected $group_articles_reseausChilds;
-
 	// public function __construct() {
 	// 	parent::__construct();
 	// }
 
-	public function getNestedAttributesParameters() {
-		$new = array(
-			'articles_reseaus' => array(
-				'data-limit' => 0,
-				'class' => array('reseau'),
-				'required' => false,
-				),
-			);
-		return array_merge(parent::getNestedAttributesParameters(), $new);
-	}
+	// public function getNestedAttributesParameters() {
+	// 	$new = array(
+	// 		'articles_reseaus' => array(
+	// 			'data-limit' => 0,
+	// 			'class' => array('reseau'),
+	// 			'required' => false,
+	// 			),
+	// 		);
+	// 	return array_merge(parent::getNestedAttributesParameters(), $new);
+	// }
 
 	/**
-	 * Un élément par défaut dans la table est-il obligatoire ?
+	 * Un élément par défaut dans la table est-il optionnel ?
 	 * @return boolean
 	 */
 	public function isDefaultNullable() {
+		return true;
+	}
+
+	/**
+	 * Peut'on attribuer plusieurs éléments par défaut ?
+	 * true 		= illimité
+	 * integer 		= nombre max. d'éléments par défaut
+	 * false, 0, 1 	= un seul élément
+	 * @return boolean
+	 */
+	public function isDefaultMultiple() {
 		return true;
 	}
 

@@ -122,25 +122,6 @@ class article extends item {
 	 */
 	protected $pdf;
 
-	// NESTED VIRTUAL GROUPS
-	// les noms doivent commencer par "$group_" et finir par "Parents" (pour les parents) ou "Childs" (pour les enfants)
-	// et la partie variable doit comporter au moins 3 lettres
-	// reconnaissance auto par : "#^(add|remove|get)(Group_).{3,}(Parent|Child)(s)?$#" (self::VIRTUALGROUPS_PARENTS_PATTERN et self::VIRTUALGROUPS_CHILDS_PATTERN)
-	// categories
-	protected $group_nestedsParents;
-	protected $group_nestedsChilds;
-	// article
-	protected $group_articlesParents;
-	protected $group_articlesChilds;
-	// reseau
-	protected $group_articles_reseausParents;
-	protected $group_articles_reseausChilds;
-	// fiche_recette
-	protected $group_article_ficherecetteParents;
-	protected $group_article_ficherecetteChilds;
-	// fiche_boisson
-	protected $group_article_ficheboissonParents;
-	protected $group_article_ficheboissonChilds;
 
 	protected $aeUnits;
 
@@ -179,42 +160,30 @@ class article extends item {
 		return $this->aeUnits->getChoiceListOfUnits();
 	}
 
-	public function getNestedAttributesParameters() {
-		$new = array(
-			'articles' => array(				// groupe articles => group_articlesParents / group_imagesChilds
-				'data-limit' => 10,				// nombre max. d'enfants / 0 = infini
-				'class' => array('article'),	// classes acceptées (array) / null = toutes les classes de nested
-				'required' => false,
-				),
-			'articles_reseaus' => array(
-				'data-limit' => 0,
-				'class' => array('reseau'),
-				'required' => false,
-				),
-			'article_ficherecette' => array(
-				'data-limit' => 0,
-				'class' => array('ficherecette'),
-				'required' => false,
-				),
-			'article_ficheboisson' => array(
-				'data-limit' => 0,
-				'class' => array('ficheboisson'),
-				'required' => false,
-				),
-			'nesteds' => array(
-				'data-limit' => 0,
-				'class' => array('categorie'),
-				'required' => false,
-				),
-			);
-		return array_merge(parent::getNestedAttributesParameters(), $new);
+	/**
+	 * Un élément par défaut dans la table est-il optionnel ?
+	 * @return boolean
+	 */
+	public function isDefaultNullable() {
+		return true;
+	}
+
+	/**
+	 * Peut'on attribuer plusieurs éléments par défaut ?
+	 * true 		= illimité
+	 * integer 		= nombre max. d'éléments par défaut
+	 * false, 0, 1 	= un seul élément
+	 * @return boolean
+	 */
+	public function isDefaultMultiple() {
+		return true;
 	}
 
 	/**
 	 * @ORM\PrePersist
 	 * @ORM\PreUpdate
 	 */
-	public function verifPrix() {
+	public function check() {
 		// si les deux prix sont null ou 0
 		if(($this->prixHT == null || $this->prixHT == 0) && ($this->prix == null || $this->prix == 0)) {
 			$this->prix = $this->prixHT = 0;
@@ -226,6 +195,8 @@ class article extends item {
 			// enfin, calcul pour priorité au prix TTC
 			$this->prixHT = $this->prix / (1 + ($this->tauxTva->getTaux() / 100));
 		}
+		// parent
+		parent::check();
 	}
 
 	// /**

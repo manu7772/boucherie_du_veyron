@@ -13,7 +13,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage as
 // Paramétrage de formulaire
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormEvent;
-use Labo\Bundle\AdminBundle\services\aetools;
+use Labo\Bundle\AdminBundle\services\aeYaml;
 
 class cropperType extends baseType {
 
@@ -32,7 +32,12 @@ class cropperType extends baseType {
 			// si pas de lien, info dans la colonne "owner"
 			$imagesData['owner'] = $builder->getData()->getOwner();
 		}
-		$cropperInfo = $this->getCropperInfo();
+		if($this->controller !== null) {
+			$cropperInfo = $this->controller->getParameter('cropperInfo');
+		} else {
+			$yaml = new aeYaml();
+			$cropperInfo = $yaml->getConfigParameters('cropper.yml', 'cropperInfo');
+		}
 		// formats par défaut
 		$imagesData['formats'] = $cropperInfo['formats']['default'];
 		// Formats propriétaire…
@@ -162,10 +167,5 @@ class cropperType extends baseType {
 		return 'site_adminsitebundle_cropper_image';
 	}
 
-
-	public function getCropperInfo() {
-		$aetools = new aetools();
-		return $aetools->getConfigParameters('cropper.yml');
-	}
 
 }

@@ -27,11 +27,11 @@
 					</thead>
 					<tbody>
 						<tr>
-							<td><strong>{{ UCfirst('fields.prix'|trans({}, entite.className)) }} {{ 'fields.TTC'|trans({}, entite.className) }}</strong></td>
+							<td><strong>{{ UCfirst('fields.prix'|trans({}, entite.shortName)) }} {{ 'fields.TTC'|trans({}, entite.shortName) }}</strong></td>
 							<td>{{ entite|articlePrice|raw }}</td>
 						</tr>
 						<tr>
-							<td><strong>{{ UCfirst('fields.prix'|trans({}, entite.className)) }} {{ 'fields.HT'|trans({}, entite.className) }}</strong></td>
+							<td><strong>{{ UCfirst('fields.prix'|trans({}, entite.shortName)) }} {{ 'fields.HT'|trans({}, entite.shortName) }}</strong></td>
 							<td>{{ entite|articlePrice(true)|raw }}</td>
 						</tr>
 						<tr>
@@ -41,30 +41,30 @@
 							</td>
 						</tr>
 						<tr>
-							<td><strong>{{ UCfirst('fields.TVA'|trans({}, entite.className)) }}</strong></td>
+							<td><strong>{{ UCfirst('fields.TVA'|trans({}, entite.shortName)) }}</strong></td>
 							<td>{{ entite.tauxTVA.taux|number_format(2, ',', '') }}% <i>({{ entite.tauxTVA.nom }})</i></td>
 						</tr>
 						<tr>
-							<td><strong>{{ UCfirst('fields.keywords'|trans({}, entite.className)) }}</strong></td>
+							<td><strong>{{ UCfirst('fields.keywords'|trans({}, entite.shortName)) }}</strong></td>
 							<td>{{ entite.keywords }}</td>
 						</tr>
 						<tr>
-							<td><strong>{{ UCfirst('fields.parents'|trans({}, entite.className)) }}</strong></td>
+							<td><strong>{{ UCfirst('fields.parents'|trans({}, entite.shortName)) }}</strong></td>
 							<td>{{ actions.labelLinkList(entite.parentsByGroup('nesteds'), [], null, type, type_value_joiner, 'show') }}</td>
 						</tr>
 						<tr>
-							<td><strong>{{ UCfirst('fields.created'|trans({}, entite.className)) }}</strong></td>
+							<td><strong>{{ UCfirst('fields.created'|trans({}, entite.shortName)) }}</strong></td>
 							<td>0
 								{{ entite.created|date(formatDateHeure) }}
 							</td>
 						</tr>
 						<tr>
-							<td><strong>{{ UCfirst('fields.updated'|trans({}, entite.className)) }}</strong></td>
+							<td><strong>{{ UCfirst('fields.updated'|trans({}, entite.shortName)) }}</strong></td>
 							<td>
 								{% if entite.updated|default(null) != null %}
 								{{ entite.updated|date(formatDateHeure) }}
 								{% else %}
-								<small><i class='text-muted'>({{ UCfirst('fields.jamais'|trans({}, entite.className)) }})</i></small>
+								<small><i class='text-muted'>({{ UCfirst('fields.jamais'|trans({}, entite.shortName)) }})</i></small>
 								{% endif %}
 							</td>
 						</tr>
@@ -77,7 +77,7 @@
 	<div class="col-lg-6">
 		<div class="ibox float-e-margins">
 			<div class="ibox-title">
-				<h3>{{ UCfirst('fields.autres'|trans({}, entite.className)) }}</h3>
+				<h3>{{ UCfirst('fields.autres'|trans({}, entite.shortName)) }}</h3>
 			</div>
 			<div class="ibox-content">
 				<div class="tabs-container">
@@ -92,7 +92,7 @@
 					<div class="tab-content">
 						<div id="tab-1" class="tab-pane">
 							<div class="panel-body"{{ style|raw }}>
-								<h3 class='text-navy' style='margin-top:0px;'>{{ UCfirst('fields.descriptif'|trans({}, entite.className)) }}</h3>
+								<h3 class='text-navy' style='margin-top:0px;'>{{ UCfirst('fields.descriptif'|trans({}, entite.shortName)) }}</h3>
 								<hr class="m-t-xs m-b-xs">
 								{{ entite.descriptif|raw }}
 							</div>
@@ -103,10 +103,10 @@
 								{{ actions.sortList(entite, 'articles', null, type, type_value_joiner) }}
 								<hr class="m-t-xs m-b-xs">
 								<h3 class='text-navy' style='margin-top:0px;'>Articles qui le conseillent</h3>
-								{% if entite.group_articlesParents|length > 0 %}
-								{{ actions.labelLinkList(entite.group_articlesParents, [], null, type, type_value_joiner, 'show') }}
+								{% if entite.parentsByGroup('nesteds')|length > 0 %}
+								{{ actions.labelLinkList(entite.parentsByGroup('nesteds'), [], null, type, type_value_joiner, 'show') }}
 								{% else %}
-								<p>{{ UCfirst('not_found'|trans({}, entite.className)) }}</p>
+								<p>{{ UCfirst('not_found'|trans({}, entite.shortName)) }}</p>
 								{% endif %}
 							</div>
 						</div>
@@ -151,11 +151,12 @@
 	<div class="col-sm-6 col-md-4 col-lg-3">
 		<div class="ibox float-e-margins">
 			<div class="ibox-title">
-				<h3>{{ UCfirst('fields.image'|trans({}, entite.className)) }} {% if entite.mainMedia != null %}<a href="{{ path('siteadmin_entite', {entite: entite.className, action: 'delete_linked_image', id: entite.id}) }}" data-title="{{ UCfirst('supprime.nom'|trans({}, 'image')) }}" data-message="{{ UCfirst('supprime.confirm-definitif'|trans({}, 'image')) }}" class="btn btn-xs btn-white pull-right need-confirmation"><i class="fa fa-times icon-wait-on-click"></i></a>{% endif %}</h3>
+				<h3>{{ UCfirst('fields.image'|trans({}, entite.shortName)) }} {% if entite.mainMedia != null %}<a href="{{ path('siteadmin_entite', {entite: entite.shortName, action: 'delete_linked_image', id: entite.id}) }}" data-title="{{ UCfirst('supprime.nom'|trans({}, 'image')) }}" data-message="{{ UCfirst('supprime.confirm-definitif'|trans({}, 'image')) }}" class="btn btn-xs btn-white pull-right need-confirmation"><i class="fa fa-times icon-wait-on-click"></i></a>{% endif %}</h3>
 			</div>
 			<div class="ibox-content text-center">
 				{% if entite.mainMedia|default(null) != null %}
-				<img src="{{ entite.mainMedia.img|raw }}" class="img-responsive center-block img-rounded">
+				<img src="{{ entite.mainMedia.img }}" class="img-responsive center-block img-rounded">
+				<p>{{ entite.mainMedia.nom }}{% if entite.mainMedia.nom != entite.image.nom %}<em><i> (image : {{ entite.image.nom }})</i></em>{% endif %}</p>
 				{% else %}
 				<i class="fa fa-ban fa-5x text-muted fa-border"></i>
 				{% endif %}

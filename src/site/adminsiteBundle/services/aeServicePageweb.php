@@ -5,6 +5,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\Extension\Core\ChoiceList\ChoiceList;
 use Doctrine\ORM\EntityManager;
 use Labo\Bundle\AdminBundle\services\aeData;
+// use Doctrine\ORM\Event\PreUpdateEventArgs;
+// use Doctrine\ORM\Event\LifecycleEventArgs;
 
 use Labo\Bundle\AdminBundle\services\aeServiceItem;
 
@@ -38,39 +40,56 @@ class aeServicePageweb extends aeServiceItem {
         return $this;
     }
 
-    public function getNom() {
-        return self::NAME;
-    }
+    // /**
+    //  * Check entity integrity in context
+    //  * @param pageweb $entity
+    //  * @param string $context ('new', 'PostLoad', 'PrePersist', 'PostPersist', 'PreUpdate', 'PostUpdate', 'PreRemove', 'PostRemove')
+    //  * @param $eventArgs = null
+    //  * @return aeServicePageweb
+    //  */
+    // public function checkIntegrity(&$entity, $context = null, $eventArgs = null) {
+    //     parent::checkIntegrity($entity, $context, $eventArgs);
+    //     // if($entity instanceOf pageweb) {
+    //         switch(strtolower($context)) {
+    //             case 'new':
+    //                 break;
+    //             case 'postload':
+    //                 break;
+    //             case 'prepersist':
+    //                 break;
+    //             case 'postpersist':
+    //                 break;
+    //             case 'preupdate':
+    //                 break;
+    //             case 'postupdate':
+    //                 break;
+    //             case 'preremove':
+    //                 break;
+    //             case 'postremove':
+    //                 break;
+    //             default:
+    //                 break;
+    //         }
+    //     // }
+    //     return $this;
+    // }
 
-    public function callName() {
-        return self::CALL_NAME;
-    }
-
-    /**
-     * Check entity after change (edit…)
-     * @param baseEntity $entity
-     * @return aeServicePageweb
-     */
-    public function checkAfterChange(&$entity, $butEntities = []) {
-        parent::checkAfterChange($entity, $butEntities);
-        return $this;
-    }
 
     public function getDefaultPage() {
-        $this->container->get(aeData::PREFIX_CALL_SERVICE.'aeDebug')->startChrono();
+        // $this->container->get(aeData::PREFIX_CALL_SERVICE.'aeDebug')->startChrono();
         $page = $this->getRepo()->findDefaultPage();
         if(is_array($page)) $page = reset($page);
         $this->completePageweb($page);
-        $this->container->get(aeData::PREFIX_CALL_SERVICE.'aeDebug')->printChrono('Get default pagweb', true);
+        // $this->container->get(aeData::PREFIX_CALL_SERVICE.'aeDebug')->printChrono('Get default pagweb', true);
         return $page;
     }
 
     public function getPageBySlug($itemSlug) {
-        $this->container->get(aeData::PREFIX_CALL_SERVICE.'aeDebug')->startChrono();
+        // $this->container->get(aeData::PREFIX_CALL_SERVICE.'aeDebug')->startChrono();
         $page = $this->getRepo()->getPageBySlug($itemSlug);
         if(is_array($page)) $page = reset($page);
         $this->completePageweb($page);
-        $this->container->get(aeData::PREFIX_CALL_SERVICE.'aeDebug')->printChrono('Get "'.$itemSlug.'" pagweb', true);
+        // $this->container->get(aeData::PREFIX_CALL_SERVICE.'aeDebug')->printChrono('Get "'.$itemSlug.'" pagweb', true);
         return $page;
     }
 

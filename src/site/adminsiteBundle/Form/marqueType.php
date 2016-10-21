@@ -59,7 +59,7 @@ class marqueType extends baseType {
 			// 	'translation_domain' => 'marque',
 			// 	"query_builder" => function($repo) {
 			// 		if(method_exists($repo, 'defaultValsListClosure'))
-			// 			return $repo->defaultValsListClosure($this->aeEntities);
+			// 			return $repo->defaultValsListClosure($this->controller);
 			// 			else return $repo->findAllClosure();
 			// 		},
 			// 	))

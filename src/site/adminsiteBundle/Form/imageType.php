@@ -32,7 +32,7 @@ class imageType extends baseType {
 			// si pas de lien, info dans la colonne "owner"
 			$imagesData['owner'] = $builder->getData()->getOwner();
 		}
-		$cropperInfo = $this->getCropperInfo();
+		$cropperInfo = $this->controller->getParameter('cropperInfo');
 		// formats par défaut
 		$imagesData['formats'] = $cropperInfo['formats']['default'];
 		// Formats propriétaire…
@@ -163,9 +163,5 @@ class imageType extends baseType {
 	}
 
 
-	public function getCropperInfo() {
-		$aetools = new aetools();
-		return $aetools->getConfigParameters('cropper.yml');
-	}
 
 }

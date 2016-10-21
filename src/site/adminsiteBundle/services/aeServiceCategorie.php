@@ -3,6 +3,8 @@ namespace site\adminsiteBundle\services;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Doctrine\ORM\EntityManager;
+// use Doctrine\ORM\Event\PreUpdateEventArgs;
+// use Doctrine\ORM\Event\LifecycleEventArgs;
 
 use Labo\Bundle\AdminBundle\services\aeServiceNested;
 
@@ -24,15 +26,15 @@ class aeServiceCategorie extends aeServiceNested {
         return $this;
     }
 
-    /**
-     * Check entity after change (edit…)
-     * @param baseEntity $entity
-     * @return aeServiceCategorie
-     */
-    public function checkAfterChange(&$entity, $butEntities = []) {
-        parent::checkAfterChange($entity, $butEntities);
-        return $this;
-    }
+    // /**
+    //  * Check entity after change (edit…)
+    //  * @param baseEntity $entity
+    //  * @return aeServiceCategorie
+    //  */
+    // public function checkAfterChange(&$entity, $butEntities = []) {
+    //     parent::checkAfterChange($entity, $butEntities);
+    //     return $this;
+    // }
 
     public function getNom() {
         return self::NAME;
@@ -41,6 +43,42 @@ class aeServiceCategorie extends aeServiceNested {
     public function callName() {
         return self::CALL_NAME;
     }
+
+
+    // /**
+    //  * Check entity integrity in context
+    //  * @param categorie $entity
+    //  * @param string $context ('new', 'PostLoad', 'PrePersist', 'PostPersist', 'PreUpdate', 'PostUpdate', 'PreRemove', 'PostRemove')
+    //  * @param $eventArgs = null
+    //  * @return aeServiceCategorie
+    //  */
+    // public function checkIntegrity(&$entity, $context = null, $eventArgs = null) {
+    //     parent::checkIntegrity($entity, $context, $eventArgs);
+    //     // if($entity instanceOf categorie) {
+    //         switch(strtolower($context)) {
+    //             case 'new':
+    //                 break;
+    //             case 'postload':
+    //                 break;
+    //             case 'prepersist':
+    //                 break;
+    //             case 'postpersist':
+    //                 break;
+    //             case 'preupdate':
+    //                 break;
+    //             case 'postupdate':
+    //                 break;
+    //             case 'preremove':
+    //                 break;
+    //             case 'postremove':
+    //                 break;
+    //             default:
+    //                 break;
+    //         }
+    //     // }
+    //     return $this;
+    // }
+
 
     /**
      * Get list of types of $cagetories = categorie or array of categorie

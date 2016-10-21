@@ -1,12 +1,12 @@
 # To get started with security, check out the documentation:
 # http://symfony.com/doc/current/book/security.html
 parameters:
-    roles_redirect:
-        ROLE_USER:          sitesite_homepage
-        ROLE_TRANSLATOR:    sitetranslate_homepage
-        ROLE_EDITOR:        siteadmin_homepage
-        ROLE_ADMIN:         siteadmin_homepage
-        ROLE_SUPER_ADMIN:   siteadmin_homepage
+    # roles_redirect:
+    #     ROLE_USER:          sitesite_homepage
+    #     ROLE_TRANSLATOR:    sitetranslate_homepage
+    #     ROLE_EDITOR:        siteadmin_homepage
+    #     ROLE_ADMIN:         siteadmin_homepage
+    #     ROLE_SUPER_ADMIN:   siteadmin_homepage
 
 security:
     encoders:

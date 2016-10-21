@@ -34,8 +34,8 @@
 			</div>
 			<p class="tab-name-product elipsis">
 				<a {{ actions.elementHref(item, categorie|default(null))|raw }}>{{ item.nom }}</a>
-				{%- if EDITORMODE %} <a {{ actions.adminHref(path('siteadmin_entite', {entite: item.className|default(item.class_name|default(null)), id: item.id, action: 'show'})) }}><i class="fa fa-eye icon-wait-on-click text-danger"></i></a>{% endif %}
-				{%- if EDITORMODE %} <a {{ actions.adminHref(path('siteadmin_entite', {entite: item.className|default(item.class_name|default(null)), id: item.id, action: 'edit'})) }}><i class="fa fa-pencil icon-wait-on-click text-danger"></i></a>{% endif %}
+				{%- if EDITORMODE %} <a {{ actions.adminHref(path('siteadmin_entite', {entite: item.className|default(item.shortName|default(null)), id: item.id, action: 'show'})) }}><i class="fa fa-eye icon-wait-on-click text-danger"></i></a>{% endif %}
+				{%- if EDITORMODE %} <a {{ actions.adminHref(path('siteadmin_entite', {entite: item.className|default(item.shortName|default(null)), id: item.id, action: 'edit'})) }}><i class="fa fa-pencil icon-wait-on-click text-danger"></i></a>{% endif %}
 			</p>
 			<p class="tab-info-category">{{ categorie.nom|default('') }}</p>
 		</div>
@@ -44,7 +44,7 @@
 
 {% macro boxArticle(item, categorie, params, classes) %}
 {# Affichage d'une box pour articles #}
-{% if item.className|default(item.class_name|default(null)) matches '#^article#' %}
+{% if item.className|default(item.shortName|default(null)) matches '#^article#' %}
 {% import _self as self %}
 	{% if params.col|default('on') != 'off' %}
 	<div class="col-sm-6 col-md-3 {{ classes|default([])|join(' ') }}">
@@ -58,7 +58,7 @@
 
 {% macro boxArticleProducts(item, categorie, params, classes) %}
 {# Affichage d'une box pour articles #}
-{% if item.className|default(item.class_name|default(null)) matches '#^article#' %}
+{% if item.className|default(item.shortName|default(null)) matches '#^article#' %}
 {% import _self as self %}
 	{% if params.col|default('on') != 'off' %}
 	<div class="col-sm-6 col-md-4 col-lg-4 {{ classes|default([])|join(' ') }}">

@@ -95,7 +95,7 @@ class articleType extends baseType {
 				'required'	=> true,
 				"query_builder" => function($repo) {
 					if(method_exists($repo, 'defaultValsListClosure'))
-						return $repo->defaultValsListClosure($this->aeEntities);
+						return $repo->defaultValsListClosure($this->controller);
 						else return $repo->findAllClosure();
 					},
 				'placeholder'   => 'form.select',
@@ -149,7 +149,7 @@ class articleType extends baseType {
 			// 	'multiple'  => false,
 			// 	"query_builder" => function($repo) {
 			// 		if(method_exists($repo, 'defaultValsListClosure'))
-			// 			return $repo->defaultValsListClosure($this->aeEntities);
+			// 			return $repo->defaultValsListClosure($this->controller);
 			// 			else return $repo->findAllClosure();
 			// 		},
 			// 	))
@@ -162,7 +162,7 @@ class articleType extends baseType {
 			// 	'required' => false,
 			// 	"query_builder" => function($repo) {
 			// 		if(method_exists($repo, 'defaultValsListClosure'))
-			// 			return $repo->defaultValsListClosure($this->aeEntities);
+			// 			return $repo->defaultValsListClosure($this->controller);
 			// 			else return $repo->findAllClosure();
 			// 		},
 			// 	'placeholder'   => 'form.select',
@@ -186,7 +186,7 @@ class articleType extends baseType {
 			// 	// 'group_by' => 'class_name',
 			// 	"query_builder" => function($repo) use ($data, $nestedAttributesParameters) {
 			// 		if(method_exists($repo, 'defaultValsListClosure'))
-			// 			return $repo->defaultValsListClosure($this->aeEntities, $nestedAttributesParameters['articles_reseaus']['class']);
+			// 			return $repo->defaultValsListClosure($this->controller, $nestedAttributesParameters['articles_reseaus']['class']);
 			// 			else return $repo->findAllClosure();
 			// 		},
 			// 	))
@@ -212,7 +212,7 @@ class articleType extends baseType {
 				'group_by' => 'class_name',
 				"query_builder" => function($repo) use ($data, $nestedAttributesParameters) {
 					if(method_exists($repo, 'defaultValsListClosure'))
-						return $repo->defaultValsListClosure($this->aeEntities, $nestedAttributesParameters['images']['class']);
+						return $repo->defaultValsListClosure($this->controller, $nestedAttributesParameters['images']['class']);
 						else return $repo->findAllClosure();
 					},
 				))
@@ -246,7 +246,7 @@ class articleType extends baseType {
 			// 		),
 			// 	"query_builder" => function($repo) {
 			// 		if(method_exists($repo, 'defaultValsListClosure'))
-			// 			return $repo->defaultValsListClosure($this->aeEntities);
+			// 			return $repo->defaultValsListClosure($this->controller);
 			// 			else return $repo->findAllClosure();
 			// 		},
 			// 	))
@@ -264,7 +264,7 @@ class articleType extends baseType {
 					),
 				"query_builder" => function($repo) {
 					if(method_exists($repo, 'defaultValsListClosure'))
-						return $repo->defaultValsListClosure($this->aeEntities);
+						return $repo->defaultValsListClosure($this->controller);
 						else return $repo->findAllClosure();
 					},
 				))
@@ -284,7 +284,7 @@ class articleType extends baseType {
 				'group_by' => 'class_name',
 				"query_builder" => function($repo) use ($data, $nestedAttributesParameters) {
 					if(method_exists($repo, 'defaultValsListClosure'))
-						return $repo->defaultValsListClosure($this->aeEntities, $nestedAttributesParameters['article_ficherecette']['class']);
+						return $repo->defaultValsListClosure($this->controller, $nestedAttributesParameters['article_ficherecette']['class']);
 						else return $repo->findAllClosure();
 					},
 				))
@@ -304,7 +304,7 @@ class articleType extends baseType {
 				'group_by' => 'class_name',
 				"query_builder" => function($repo) use ($data, $nestedAttributesParameters) {
 					if(method_exists($repo, 'defaultValsListClosure'))
-						return $repo->defaultValsListClosure($this->aeEntities, $nestedAttributesParameters['article_ficheboisson']['class']);
+						return $repo->defaultValsListClosure($this->controller, $nestedAttributesParameters['article_ficheboisson']['class']);
 						else return $repo->findAllClosure();
 					},
 				))
@@ -324,13 +324,13 @@ class articleType extends baseType {
 				'group_by' => 'class_name',
 				"query_builder" => function($repo) use ($data, $nestedAttributesParameters) {
 					if(method_exists($repo, 'defaultValsListClosure'))
-						return $repo->defaultValsListClosure($this->aeEntities, $nestedAttributesParameters['articles']['class']);
+						return $repo->defaultValsListClosure($this->controller, $nestedAttributesParameters['articles']['class']);
 						else return $repo->findAllClosure();
 					},
 				))
 		;
 
-		// $choices = $this->_em->getRepository('site\adminsiteBundle\Entity\categorie')->defaultValsListClosure($this->aeEntities, $nestedAttributesParameters['nesteds']['class']);
+		// $choices = $this->_em->getRepository('site\adminsiteBundle\Entity\categorie')->defaultValsListClosure($this->controller, $nestedAttributesParameters['nesteds']['class']);
 		// $choices = $choices->select('element.id')->addSelect('element.nom')->addSelect('element.type')->getQuery()->getArrayResult();
 		// // echo('<pre><h3>Nested choices :</h3>');var_dump($choices);die('</pre>');
 		// $index = array();
@@ -360,7 +360,7 @@ class articleType extends baseType {
                 'group_by' => 'class_name',
                 "query_builder" => function($repo) use ($nestedAttributesParameters) {
                     if(method_exists($repo, 'defaultValsListClosure'))
-                        return $repo->defaultValsListClosure($this->aeEntities, $nestedAttributesParameters['nesteds']['class']);
+                        return $repo->defaultValsListClosure($this->controller, $nestedAttributesParameters['nesteds']['class']);
                         else return $repo->findAllClosure($aeEntities);
                     },
                 // "choice_list"   => new ChoiceList($label, $index),

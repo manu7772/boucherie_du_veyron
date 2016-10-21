@@ -3,6 +3,8 @@ namespace site\adminsiteBundle\services;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\Event\PreUpdateEventArgs;
+use Doctrine\ORM\Event\LifecycleEventArgs;
 
 use Labo\Bundle\AdminBundle\services\aeServiceItem;
 
@@ -23,16 +25,16 @@ class aeServiceArticle extends aeServiceItem {
 		return $this;
 	}
 
-	/**
-	 * Check entity after change (edit…)
-	 * @param baseEntity $entity
-	 * @return aeServiceArticle
-	 */
-	public function checkAfterChange(&$entity, $butEntities = []) {
-		parent::checkAfterChange($entity, $butEntities);
-		$this->checkTva($entity);
-		return $this;
-	}
+	// /**
+	//  * Check entity after change (edit…)
+	//  * @param baseEntity $entity
+	//  * @return aeServiceArticle
+	//  */
+	// public function checkAfterChange(&$entity, $butEntities = []) {
+	// 	parent::checkAfterChange($entity, $butEntities);
+	// 	$this->checkTva($entity);
+	// 	return $this;
+	// }
 
 	public function getNom() {
 		return self::NAME;
@@ -42,24 +44,54 @@ class aeServiceArticle extends aeServiceItem {
 		return self::CALL_NAME;
 	}
 
+	/**
+	 * Check entity integrity in context
+	 * @param article $entity
+	 * @param string $context ('new', 'PostLoad', 'PrePersist', 'PostPersist', 'PreUpdate', 'PostUpdate', 'PreRemove', 'PostRemove')
+	 * @param $eventArgs = null
+	 * @return aeServiceArticle
+	 */
+	public function checkIntegrity(&$entity, $context = null, $eventArgs = null) {
+		parent::checkIntegrity($entity, $context, $eventArgs);
+		// if($entity instanceOf article) {
+			switch(strtolower($context)) {
+				case 'new':
+					break;
+				case 'postload':
+					break;
+				case 'prepersist':
+					$this->checkTva($entity);
+					break;
+				case 'postpersist':
+					break;
+				case 'preupdate':
+					$this->checkTva($entity);
+					break;
+				case 'postupdate':
+					break;
+				case 'preremove':
+					break;
+				case 'postremove':
+					break;
+				default:
+					break;
+			}
+		// }
+		return $this;
+	}
+
+
 	// TVA
 	public function checkTva(&$entity, $flush = true) {
-		return $this->checkField($entity, 'tauxTva', $flush);
+		return $this->checkAssociation($entity, 'tauxTva', $flush);
 	}
 
 
 	public function setAsVendable(&$entite, $set = null, $flush = true) {
-		if(method_exists($entite, 'setVendable') && method_exists($entite, 'getVendable')) {
-			if($entite->getVendable() === $set) return null;
-			if($set === false || ($set == null && $entite->getVendable() === true)) {
-				// set false
-				$entite->setVendable(false);
-			} else {
-				$entite->setVendable(true);
-			}
-			// flush
-			if($flush) $this->getEm()->flush();
-		}
+		if($entite->getVendable() === $set) return null;
+		$entite->setVendable(!($set === false || ($set == null && $entite->getVendable() === true)));
+		// flush
+		if($flush) $this->getEm()->flush();
 		return $entite->getVendable();
 	}
 

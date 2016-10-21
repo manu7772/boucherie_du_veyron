@@ -48,13 +48,6 @@ class boutique extends tier {
 		$this->sites = new ArrayCollection();
 	}
 
-	// public function memOldValues($addedfields = null) {
-	// 	$fields = array('sites');
-	// 	if(count($addedfields) > 0 && is_array($addedfields)) $fields = array_unique(array_merge($fields, $addedfields));
-	// 	parent::memOldValues($fields);
-	// 	return $this;
-	// }
-
 	// /**
 	//  * Renvoie l'image principale
 	//  * @return media
@@ -62,6 +55,25 @@ class boutique extends tier {
 	// public function getMainMedia() {
 	// 	return $this->getLogo();
 	// }
+
+	/**
+	 * Un élément par défaut dans la table est-il optionnel ?
+	 * @return boolean
+	 */
+	public function isDefaultNullable() {
+		return true;
+	}
+
+	/**
+	 * Peut'on attribuer plusieurs éléments par défaut ?
+	 * true 		= illimité
+	 * integer 		= nombre max. d'éléments par défaut
+	 * false, 0, 1 	= un seul élément
+	 * @return boolean
+	 */
+	public function isDefaultMultiple() {
+		return true;
+	}
 
 	/**
 	 * Set sites

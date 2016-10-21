@@ -89,7 +89,7 @@ class ficheboissonType extends baseType {
 			// 	'translation_domain' => 'statut',
 			// 	"query_builder" => function($repo) {
 			// 		if(method_exists($repo, 'defaultValsListClosure'))
-			// 			return $repo->defaultValsListClosure($this->aeEntities);
+			// 			return $repo->defaultValsListClosure($this->controller);
 			// 			else return $repo->findAllClosure();
 			// 		},
 			// 	))
@@ -127,7 +127,7 @@ class ficheboissonType extends baseType {
 				'group_by' => 'class_name',
 				"query_builder" => function($repo) use ($data, $nestedAttributesParameters) {
 					if(method_exists($repo, 'defaultValsListClosure'))
-						return $repo->defaultValsListClosure($this->aeEntities, $nestedAttributesParameters['article_ficheboisson']['class']);
+						return $repo->defaultValsListClosure($this->controller, $nestedAttributesParameters['article_ficheboisson']['class']);
 						else return $repo->findAllClosure();
 					},
 				))
