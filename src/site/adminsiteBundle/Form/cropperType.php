@@ -65,26 +65,27 @@ class cropperType extends baseType {
 				;
 		} else {
 			// pas d'image à l'origine
-			$builder->add('binaryFile', 'filecropper', array(
-				'label' => 'fields.binaryFile',
-				'translation_domain' => 'image',
-				'required'		=> false,
-				'plain_image' => $imagesData['plain'],
-				'cropper' => array(
-					'init' => $imagesData['init'],
-					// 'modelWidth' => $imagesData['cropperInfo']['modelWidth'],
-					'ratioIndex' => $imagesData['ratioIndex'],
-					'options' => array(
-						"flipable" => false,
-						"zoomable" => false,
-						"rotatable" => false,
+			$builder
+				->add('binaryFile', 'filecropper', array(
+					'label' => 'fields.binaryFile',
+					'translation_domain' => 'image',
+					'required'		=> false,
+					'plain_image' => $imagesData['plain'],
+					'cropper' => array(
+						'init' => $imagesData['init'],
+						// 'modelWidth' => $imagesData['cropperInfo']['modelWidth'],
+						'ratioIndex' => $imagesData['ratioIndex'],
+						'options' => array(
+							"flipable" => false,
+							"zoomable" => false,
+							"rotatable" => false,
+							),
+						'deletable' => true,
+						'format' => $imagesData['formats'],
+						'accept' => ".jpeg,.jpg,.png,.gif",
+						'filenameCopy' => array('nom', 'originalnom'),
+						'maxfilesize' => 12,
 						),
-					'deletable' => true,
-					'format' => $imagesData['formats'],
-					'accept' => ".jpeg,.jpg,.png,.gif",
-					'filenameCopy' => array('nom', 'originalnom'),
-					'maxfilesize' => 12,
-					),
 				))
 				->add('nom', 'hidden', array(
 					'label'         => 'fields.nom',
@@ -93,17 +94,6 @@ class cropperType extends baseType {
 				))
 			;
 		}
-
-		$builder
-			->add('originalnom', 'hidden', array(
-				'label' => 'fields.originalnom',
-				'required'		=> false,
-				'translation_domain' => 'image',
-				))
-			->add('infoForPersist', 'hidden', array(
-				'required'		=> false,
-				))
-		;
 
 		$builder->addEventListener(
 			FormEvents::PRE_SET_DATA, function (FormEvent $event) use ($imagesData) {
@@ -143,6 +133,16 @@ class cropperType extends baseType {
 			}
 		);
 
+		$builder
+			->add('originalnom', 'hidden', array(
+				'label' => 'fields.originalnom',
+				'required'		=> false,
+				'translation_domain' => 'image',
+				))
+			->add('infoForPersist', 'hidden', array(
+				'required'		=> false,
+				))
+		;
 
 		// ajoute les valeurs hidden, passés en paramètre
 		$this->addHiddenValues($builder, true);

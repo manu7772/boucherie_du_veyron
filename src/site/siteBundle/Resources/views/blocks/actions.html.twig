@@ -1,12 +1,12 @@
 {% macro elementHref(item, parent, target) -%}
 	{%- set clss = null -%}
 	{%- for classtest in ['article','fiche','categorie','pageweb'] -%}
-		{%- if item.className|default(item.shortName|default(null)) matches '#^' ~ classtest ~ '#' -%}
+		{%- if item.shortName|default(null) matches '#^' ~ classtest ~ '#' -%}
 			{%- set clss = classtest -%}
 		{%- endif -%}
 	{%- endfor -%}
 	{%- if clss != null -%}
-		{%- if item.className|default(item.shortName|default(null)) == 'categorie' -%}
+		{%- if item.shortName|default(null) == 'categorie' -%}
 		href="{{ url('site_pageweb_' ~ clss, {itemSlug: item.slug, parentSlug: parent.slug|default(item.categorieParent.slug|default(null))}) }}"{%- if target|default('_self') in ['_self', '_blank'] -%} target="{{ target|raw }}"{%- endif -%}
 		{%- else -%}
 		href="{{ url('site_pageweb_' ~ clss, {itemSlug: item.slug, parentSlug: parent.slug|default(null)}) }}"{%- if target|default('_self') in ['_self', '_blank'] -%} target="{{ target|raw }}"{%- endif -%}
@@ -23,3 +23,4 @@
 		href="{{ site_domains.admin.reseau|default('http://') }}{{ site_domains.admin.prefix }}.{{ site_domains.admin.domain }}.{{ site_domains.admin.extensions[0] }}/{{ app.request.locale|default(app.request.defaultLocale) }}{{ path }}"
 	{%- endif -%}
 {%- endmacro %}
+

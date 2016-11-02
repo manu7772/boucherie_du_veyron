@@ -124,7 +124,7 @@ class ficheboissonType extends baseType {
 					'class'			=> 'select2',
 					'data-limit'	=> $nestedAttributesParameters['article_ficheboisson']['data-limit'],
 					),
-				'group_by' => 'class_name',
+				'group_by' => 'shortName',
 				"query_builder" => function($repo) use ($data, $nestedAttributesParameters) {
 					if(method_exists($repo, 'defaultValsListClosure'))
 						return $repo->defaultValsListClosure($this->controller, $nestedAttributesParameters['article_ficheboisson']['class']);

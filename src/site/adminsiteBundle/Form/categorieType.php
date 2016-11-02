@@ -70,25 +70,25 @@ class categorieType extends baseType {
                     'class'         => 'select2',
                     'data-limit'    => $nestedAttributesParameters['pagewebs']['data-limit'],
                     ),
-                'group_by' => 'class_name',
+                'group_by' => 'shortName',
                 "query_builder" => function($repo) use ($categorie, $nestedAttributesParameters) {
                     if(method_exists($repo, 'defaultValsListClosure'))
                         return $repo->defaultValsListClosure($this->controller, $nestedAttributesParameters['pagewebs']['class'], $categorie);
                         else return $repo->findAllClosure($this->aeEntities);
                     },
                 ))
-                // ->add('icon', 'choice', array(
-                //  "required"  => false,
-                //  "label"     => 'fields.icon',
-                //  'translation_domain' => 'categorie',
-                //  'multiple'  => false,
-                //  "choices"   => $categorie->getListIcons(),
-                //  'placeholder'   => 'form.select',
-                //  'attr'      => array(
-                //      'class'         => 'select2',
-                //      'data-format'   => 'formatState',
-                //      ),
-                //  ))
+                ->add('icon', 'choice', array(
+                 "required"  => false,
+                 "label"     => 'fields.icon',
+                 'translation_domain' => 'categorie',
+                 'multiple'  => false,
+                 "choices"   => $categorie->getListIcons(),
+                 'placeholder'   => 'form.select',
+                 'attr'      => array(
+                     'class'         => 'select2',
+                     'data-format'   => 'formatState',
+                     ),
+                 ))
                 // ->add('type', 'choice', array(
                 //  'disabled'  => true,
                 //  "required"  => true,
@@ -118,7 +118,7 @@ class categorieType extends baseType {
                         'class'         => 'select2',
                         'data-limit'    => $nestedAttributesParameters['nesteds']['data-limit'],
                         ),
-                    'group_by' => 'class_name',
+                    'group_by' => 'shortName',
                     "query_builder" => function($repo) use ($categorie, $nestedAttributesParameters) {
                         if(method_exists($repo, 'defaultValsListClosure'))
                             return $repo->defaultValsListClosure($this->controller, $nestedAttributesParameters['nesteds']['class'], $categorie);
@@ -135,7 +135,7 @@ class categorieType extends baseType {
 
                 if(is_object($categorie) && method_exists($categorie, "getId")) {
                     if($categorie->getId() === null) {
-                        // L'entité n'existe pas
+                        // L'entité n'existe pas : visible but disabled !!!
                         $form->add('categorieParent', 'entity', array(
                             'disabled'  => true,
                             "label"     => 'fields.parent',
@@ -151,13 +151,13 @@ class categorieType extends baseType {
                                 ),
                             "query_builder" => function($repo) use ($categorie, $nestedAttributesParameters) {
                                 if(method_exists($repo, 'defaultValsListClosure'))
-                                    return $repo->defaultValsListClosure($this->controller, $nestedAttributesParameters['categorie_parent']['class'], $categorie);
+                                    return $repo->defaultValsListClosure($this->controller, $nestedAttributesParameters['categorie_nested']['class'], $categorie);
                                     else return $repo->findAllClosure($this->aeEntities);
                                 },
                             ))
                         ;
                     } else {
-                        // L'entité existe
+                        // L'entité existe : visble and enabled
                         $form->add('categorieParent', 'entity', array(
                             'disabled'  => false,
                             "label"     => 'fields.parent',
@@ -173,7 +173,7 @@ class categorieType extends baseType {
                                 ),
                             "query_builder" => function($repo) use ($categorie, $nestedAttributesParameters) {
                                 if(method_exists($repo, 'defaultValsListClosure'))
-                                    return $repo->defaultValsListClosure($this->controller, $nestedAttributesParameters['categorie_parent']['class'], $categorie);
+                                    return $repo->defaultValsListClosure($this->controller, $nestedAttributesParameters['categorie_nested']['class'], $categorie);
                                     else return $repo->findAllClosure($this->aeEntities);
                                 },
                             ))

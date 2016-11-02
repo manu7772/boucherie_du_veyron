@@ -50,7 +50,7 @@
 						</tr>
 						<tr>
 							<td><strong>{{ UCfirst('fields.parents'|trans({}, entite.shortName)) }}</strong></td>
-							<td>{{ actions.labelLinkList(entite.parentsByGroup('nesteds'), [], null, type, type_value_joiner, 'show') }}</td>
+							<td>{{ actions.labelLinkList(entite.group_nesteds_parents, [], null, type, type_value_joiner, 'show') }}</td>
 						</tr>
 						<tr>
 							<td><strong>{{ UCfirst('fields.created'|trans({}, entite.shortName)) }}</strong></td>
@@ -103,8 +103,8 @@
 								{{ actions.sortList(entite, 'articles', null, type, type_value_joiner) }}
 								<hr class="m-t-xs m-b-xs">
 								<h3 class='text-navy' style='margin-top:0px;'>Articles qui le conseillent</h3>
-								{% if entite.parentsByGroup('nesteds')|length > 0 %}
-								{{ actions.labelLinkList(entite.parentsByGroup('nesteds'), [], null, type, type_value_joiner, 'show') }}
+								{% if entite.group_articles_parents|length > 0 %}
+								{{ actions.labelLinkList(entite.group_articles_parents, [], null, type, type_value_joiner, 'show') }}
 								{% else %}
 								<p>{{ UCfirst('not_found'|trans({}, entite.shortName)) }}</p>
 								{% endif %}

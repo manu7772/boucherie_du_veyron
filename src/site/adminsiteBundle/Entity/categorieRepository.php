@@ -121,7 +121,7 @@ class categorieRepository extends nestedRepository {
 		$qb->where(self::ELEMENT.'.type = :type')
 			->setParameter('type', $type);
 		if($level != null) $this->getByLevel((integer)$level, $qb);
-			else $this->getNotRoots($qb);
+			else $this->excludeRoots($qb);
 		if($shortCutContext == false) $this->contextStatut($qb);
 		return $qb->getQuery()->getResult();
 	}
@@ -173,7 +173,7 @@ class categorieRepository extends nestedRepository {
 	// Select selon ACCEPT / But root
 	public function getElementsBySubTypeButRoot($types, &$qb = null, $shortCutContext = false) {
 		$qb = $this->getElementsBySubType($types, $qb, $shortCutContext);
-		return $this->getNotRoots($qb);
+		return $this->excludeRoots($qb);
 	}
 
 	// Select selon ACCEPT
@@ -190,7 +190,7 @@ class categorieRepository extends nestedRepository {
 
 	public function getElementsByTypeButRoot($types, &$qb = null, $shortCutContext = false) {
 		$qb = $this->getElementsByType($types, $qb, $shortCutContext);
-		return $this->getNotRoots($qb);
+		return $this->excludeRoots($qb);
 	}
 
 	public function getElementsByType($types, &$qb = null, $shortCutContext = false) {
@@ -233,7 +233,7 @@ class categorieRepository extends nestedRepository {
 		return $qb;
 	}
 
-	public function getNotRoots(&$qb = null) {
+	public function excludeRoots(&$qb = null) {
 		if($qb == null) $qb = $this->createQueryBuilder(self::ELEMENT);
 		$qb->andWhere(self::ELEMENT.'.lvl != 0');
 		// resultat

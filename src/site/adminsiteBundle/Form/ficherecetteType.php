@@ -132,7 +132,7 @@ class ficherecetteType extends baseType {
 					'class'			=> 'select2',
 					'data-limit'	=> $nestedAttributesParameters['article_ficherecette']['data-limit'],
 					),
-				'group_by' => 'class_name',
+				'group_by' => 'shortName',
 				"query_builder" => function($repo) use ($data, $nestedAttributesParameters) {
 					if(method_exists($repo, 'defaultValsListClosure'))
 						return $repo->defaultValsListClosure($this->controller, $nestedAttributesParameters['article_ficherecette']['class']);

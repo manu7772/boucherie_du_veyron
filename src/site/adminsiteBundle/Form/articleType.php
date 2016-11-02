@@ -183,7 +183,7 @@ class articleType extends baseType {
 			// 		'class'			=> 'select2',
 			// 		'data-limit'	=> $nestedAttributesParameters['articles_reseaus']['data-limit'],
 			// 		),
-			// 	// 'group_by' => 'class_name',
+			// 	// 'group_by' => 'shortName',
 			// 	"query_builder" => function($repo) use ($data, $nestedAttributesParameters) {
 			// 		if(method_exists($repo, 'defaultValsListClosure'))
 			// 			return $repo->defaultValsListClosure($this->controller, $nestedAttributesParameters['articles_reseaus']['class']);
@@ -209,7 +209,7 @@ class articleType extends baseType {
 					'class'			=> 'select2',
 					'data-limit'	=> $nestedAttributesParameters['images']['data-limit'],
 					),
-				'group_by' => 'class_name',
+				'group_by' => 'shortName',
 				"query_builder" => function($repo) use ($data, $nestedAttributesParameters) {
 					if(method_exists($repo, 'defaultValsListClosure'))
 						return $repo->defaultValsListClosure($this->controller, $nestedAttributesParameters['images']['class']);
@@ -281,7 +281,7 @@ class articleType extends baseType {
 					'class'			=> 'select2',
 					'data-limit'	=> $nestedAttributesParameters['article_ficherecette']['data-limit'],
 					),
-				'group_by' => 'class_name',
+				'group_by' => 'shortName',
 				"query_builder" => function($repo) use ($data, $nestedAttributesParameters) {
 					if(method_exists($repo, 'defaultValsListClosure'))
 						return $repo->defaultValsListClosure($this->controller, $nestedAttributesParameters['article_ficherecette']['class']);
@@ -301,7 +301,7 @@ class articleType extends baseType {
 					'class'			=> 'select2',
 					'data-limit'	=> $nestedAttributesParameters['article_ficheboisson']['data-limit'],
 					),
-				'group_by' => 'class_name',
+				'group_by' => 'shortName',
 				"query_builder" => function($repo) use ($data, $nestedAttributesParameters) {
 					if(method_exists($repo, 'defaultValsListClosure'))
 						return $repo->defaultValsListClosure($this->controller, $nestedAttributesParameters['article_ficheboisson']['class']);
@@ -321,7 +321,7 @@ class articleType extends baseType {
 					'class'			=> 'select2',
 					'data-limit'	=> $nestedAttributesParameters['articles']['data-limit'],
 					),
-				'group_by' => 'class_name',
+				'group_by' => 'shortName',
 				"query_builder" => function($repo) use ($data, $nestedAttributesParameters) {
 					if(method_exists($repo, 'defaultValsListClosure'))
 						return $repo->defaultValsListClosure($this->controller, $nestedAttributesParameters['articles']['class']);
@@ -357,7 +357,7 @@ class articleType extends baseType {
                     'class'         => 'select2',
                     'data-limit'    => $nestedAttributesParameters['nesteds']['data-limit'],
                     ),
-                'group_by' => 'class_name',
+                'group_by' => 'shortName',
                 "query_builder" => function($repo) use ($nestedAttributesParameters) {
                     if(method_exists($repo, 'defaultValsListClosure'))
                         return $repo->defaultValsListClosure($this->controller, $nestedAttributesParameters['nesteds']['class']);

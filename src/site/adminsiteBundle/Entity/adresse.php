@@ -176,8 +176,8 @@ class adresse extends baseEntity {
 			$ob = $this->$get();
 			if($ob !== null) {
 				if(is_array($ob)) $ob = reset($ob);
-				if(method_exists($ob, 'getClassName')) {
-					$this->type = $ob->getClassName();
+				if(method_exists($ob, 'getShortName')) {
+					$this->type = $ob->getShortName();
 				} else {
 					$this->type = $value;
 				}

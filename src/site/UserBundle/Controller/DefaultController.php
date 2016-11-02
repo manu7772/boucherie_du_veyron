@@ -87,9 +87,6 @@ class DefaultController extends Controller {
 	 */
 	public function editAction($username) {
 		// echo('<p>Enrgistrement user (edit)</p>');
-		set_time_limit(300);
-		$memory = $this->get('aetools.aetools')->getConfigParameters('cropper.yml', 'memory_limit');
-		ini_set("memory_limit", $memory);
 		$request = $this->getRequest();
 		$userManager = $this->get('fos_user.user_manager');
 		$data['user'] = $userManager->findUserByUsername($username);

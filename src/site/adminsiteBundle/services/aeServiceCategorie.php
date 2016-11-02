@@ -45,40 +45,51 @@ class aeServiceCategorie extends aeServiceNested {
     }
 
 
-    // /**
-    //  * Check entity integrity in context
-    //  * @param categorie $entity
-    //  * @param string $context ('new', 'PostLoad', 'PrePersist', 'PostPersist', 'PreUpdate', 'PostUpdate', 'PreRemove', 'PostRemove')
-    //  * @param $eventArgs = null
-    //  * @return aeServiceCategorie
-    //  */
-    // public function checkIntegrity(&$entity, $context = null, $eventArgs = null) {
-    //     parent::checkIntegrity($entity, $context, $eventArgs);
-    //     // if($entity instanceOf categorie) {
-    //         switch(strtolower($context)) {
-    //             case 'new':
-    //                 break;
-    //             case 'postload':
-    //                 break;
-    //             case 'prepersist':
-    //                 break;
-    //             case 'postpersist':
-    //                 break;
-    //             case 'preupdate':
-    //                 break;
-    //             case 'postupdate':
-    //                 break;
-    //             case 'preremove':
-    //                 break;
-    //             case 'postremove':
-    //                 break;
-    //             default:
-    //                 break;
-    //         }
-    //     // }
-    //     return $this;
-    // }
+    /**
+     * Check entity integrity in context
+     * @param categorie $entity
+     * @param string $context ('new', 'PostLoad', 'PrePersist', 'PostPersist', 'PreUpdate', 'PostUpdate', 'PreRemove', 'PostRemove')
+     * @param $eventArgs = null
+     * @return aeServiceCategorie
+     */
+    public function checkIntegrity(&$entity, $context = null, $eventArgs = null) {
+        parent::checkIntegrity($entity, $context, $eventArgs);
+        // if($entity instanceOf categorie) {
+            switch(strtolower($context)) {
+                case 'edit':
+                    $this->setTypesDescription($entity);
+                    break;
+                case 'new':
+                    $this->setTypesDescription($entity);
+                    // echo('<h3 style="color:green;">New entity on '.json_encode($entity->getType()).'</h3>');
+                    break;
+                case 'postload':
+                    // echo('<h3 style="color:green;">PostLoad on '.json_encode($entity->getNom()).'</h3>');
+                    // $this->setTypesDescription($entity);
+                    break;
+                case 'prepersist':
+                    break;
+                case 'postpersist':
+                    break;
+                case 'preupdate':
+                    break;
+                case 'postupdate':
+                    break;
+                case 'preremove':
+                    break;
+                case 'postremove':
+                    break;
+                default:
+                    break;
+            }
+        // }
+        return $this;
+    }
 
+    public function setTypesDescription(&$entity) {
+        // echo('<pre><h3>setTypesDescription on '.json_encode($entity->getNom()).'</h3>');var_dump($this->container->getParameter('info_entites')[self::CLASS_SHORT_ENTITY]['types_descrition']);echo('</pre>');
+        $entity->setTypesDescription($this->container->getParameter('info_entites')[self::CLASS_SHORT_ENTITY]['types_descrition']);
+    }
 
     /**
      * Get list of types of $cagetories = categorie or array of categorie

@@ -32,7 +32,7 @@ fields:
     updated: mise à jour
     descriptif: descriptif
     jamais: aucune modification
-    pageweb: page web
+    pagewebs: pages web
     image: image
     children: enfants
     directChildren: enfants directs
@@ -51,7 +51,7 @@ fields:
     technique: détails
     icon: icône
     group_pagewebsChilds: Pages web
-    group_categorie_parentParents: Collection parent
+    group_categorie_nestedParents: Collection parent
     parent: Collection parent
     group_nestedsChilds: Éléments contenus
 types:

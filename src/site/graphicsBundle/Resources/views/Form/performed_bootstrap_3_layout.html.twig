@@ -334,7 +334,7 @@
 				<div class="col-sm-8">
 					<div class="image-crop">
 						<h5 class="m-t-none text-muted m-t-xs"><i class="fa fa-file-picture-o m-r-xs"></i>{{ 'table.col.original'|trans|capitalize }}</h5>
-						<img id="{{ id }}_image" class='img-responsive' src="{{ plain_image|default('#')|raw }}" alt="Image">
+						<img id="{{ id }}_image" class='img-responsive' src="{{ plain_image|default('#') }}" alt="Image">
 					</div>
 				</div>
 				<div class="col-sm-4">
@@ -438,18 +438,18 @@
 		</div>
 	</div>
 	{% set attr = attr|merge({'class': "hidden"}) %}
-	<textarea {{ block('widget_attributes') }}>{{ value|raw }}</textarea>
+	<textarea {{ block('widget_attributes') }}>{% if form.parent.parent == null %}{{ value|raw }}{% endif %}</textarea>
 	<hr class="m-t-xs m-b-sm">
 {% endblock filecropper_widget %}
 
-{% block multiCollection_widget %}
+{# {% block multiCollection_widget %}
 	<span id="multi-form_{{ name }}" class="multi-form" data-table-prototype="{{ '<table class=\'table table-hover table-bordered table-condensed table-responsive xsmall m-b-xs\' style=\'background-color:#ffffff;\'><thead><tr></tr></thead><tbody></tbody></table>'|e }}">
 		<button class="btn btn-primary btn-outline btn-sm btn-block add_multiform_link" data-target="#multi-form_{{ name }}"><i class="fa fa-plus m-r-xs"></i>Ajouter</button>
 		{{- block('form_widget_list') -}}
 	</span>
-{% endblock multiCollection_widget %}
+{% endblock multiCollection_widget %} #}
 
-{%- block form_widget_list -%}
+{# {%- block form_widget_list -%}
 	{%- set attr = attr|merge({'class': "multi-form-ul list-unstyled" }) -%}
 	{%- set attr = attr|merge({'style': "margin-top: 6px;" }) -%}
 	{% if prototype is defined %}
@@ -467,8 +467,8 @@
 	{% endfor %}
 	</ul>
 	{{- form_rest(form) -}}
-{%- endblock form_widget_list -%}
+{%- endblock form_widget_list -%} #}
 
-{%- block bs_button_widget -%}
+{# {%- block bs_button_widget -%}
 	<button type="{{ type|default('button') }}" {{ block('button_attributes') }}>{{ label|trans({}, translation_domain)|raw }}</button>
-{%- endblock bs_button_widget -%}
+{%- endblock bs_button_widget -%} #}

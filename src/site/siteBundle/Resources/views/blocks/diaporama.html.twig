@@ -38,7 +38,8 @@
 						{% if item['image_id'] != null %}
 						<img src="{{ imageB64sized(item['image_id'], 500, 350, 'cut') }}" alt="{{ 'name'|trans({}, item.className) }} {{ item.slug }}" class="slid-img img-responsive" />
 						{% else %}
-						<img src="{{ asset('bundles/sitesite/images/defaults/no-picture.png') }}" style="height:322px;" alt="{{ 'name'|trans({}, item.className) }} {{ item.slug }}" class="slid-img img-responsive" />
+						<img src="{{ missingImage(500,350) }}" alt="{{ 'name'|trans({}, item.className) }} {{ item.slug }}" class="slid-img img-responsive" />
+						{# <img src="{{ asset('bundles/sitesite/images/defaults/no-picture.png') }}" style="height:322px;" alt="{{ 'name'|trans({}, item.className) }} {{ item.slug }}" class="slid-img img-responsive" /> #}
 						{% endif %}
 					</div>
 				</div>

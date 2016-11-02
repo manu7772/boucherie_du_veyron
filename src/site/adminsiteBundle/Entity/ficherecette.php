@@ -152,4 +152,12 @@ class ficherecette extends fiche {
 		return $this->duree;
 	}
 
+	/**
+	 * Get duree as text
+	 * @return string 
+	 */
+	public function getDureeTxt() {
+		return $this->durees[$this->duree];
+	}
+
 }

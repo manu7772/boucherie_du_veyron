@@ -20,16 +20,18 @@
 {%- endmacro blockmini %}
 
 {% macro imageprint(item, x, y, classes) %}
+	{# {{ dump(item) }} #}
 	{% set x = x|default(250) %}
 	{% set y = y|default(175) %}
-	{# {% set imgpath = asset('bundles/sitesite/images/defaults/no-picture-' ~ x ~ 'x' ~ y ~ 'px.png') %} #}
-	{% set imgpath = asset('bundles/sitesite/images/defaults/no-picture.png') %}
-	{% if item.mainMedia|default(null) != null %}
-		{% if item.mainMedia.isScreenableImage %}
-			{% set imgpath = item.mainMedia.imgThumbnail(x,y,'cut') %}
-		{% endif %}
+	{% if item.image|default(null) != null %}
+		{% set image = item.image.imgThumbnail(x,y,'cut') %}
+	{% elseif item['image_id']|default(null) != null %}
+		{% set image = imageB64sized(item['image_id'], x,y,'cut') %}
 	{% endif %}
-	<img src="{{ imgpath|raw }}" alt="{{ 'name'|trans({}, item.className|default(item.shortName|default(null))) }} {{ item.slug }}" class="{{ classes|default([])|join(' ') }}" />
+	{% if image|default(null) == null %}
+		{% set image = missingImage(x,y) %}
+	{% endif %}
+	<img src="{{ image }}" alt="{{ 'name'|trans({}, item.className|default(item.shortName|default(null))) }} {{ item.slug }}" class="{{ classes|default([])|join(' ') }}" />
 {%- endmacro imageprint %}
 
 {% macro breadcrumb(item, categories) %}
@@ -41,3 +43,4 @@
 		{% endfor %}
 	</small>{{ item.nom }}
 {% endmacro %}
+

@@ -86,6 +86,10 @@ parameters:
             closeHtml: '<button type="button">&times;</button>'
             newestOnTop: true
     info_entites:
+        default:
+            icon: fa-question
+        site:
+            icon: fa-building
         article:
             icon: fa-shopping-cart
             nestedAttributes:
@@ -119,10 +123,14 @@ parameters:
                 maxquantity: 1000
                 minquantity: 1
                 increment: 10
+        marque:
+            icon: fa-trophy
+        panier:
+            icon: fa-shopping-cart
         nested:
             icon: fa-folder
             nestedAttributes:
-                categorie_parent:
+                categorie_nested:
                     data-limit: 1
                     class: ['categorie']
                     required: false
@@ -131,6 +139,7 @@ parameters:
                     class: ['image']
                     required: false
         categorie:
+            icon: fa-folder
             nestedAttributes:
                 nesteds:
                     data-limit: 0
@@ -140,6 +149,47 @@ parameters:
                     data-limit: 12
                     class: ['pageweb']
                     required: false
+            types_descrition:
+                defaults:
+                    accepts: ['pageweb', 'article','image','fiche','marque','reseau','boutique','pdf', 'categorie']
+                    couleur: 'rgba(128,128,128,1)'
+                types:
+                    menu:
+                        nom: 'types.menu'
+                        accepts: ['pageweb', 'article','image','fiche','marque','reseau','boutique','pdf', 'categorie']
+                    # multimedia:
+                    #     nom: 'types.multimedia'
+                    #     accepts: ['pageweb', 'article','image','fiche','marque','reseau','boutique','pdf']
+                    diapo:
+                        nom: 'types.diapo'
+                        accepts: ['article','image','fiche']
+                    pageweb:
+                        nom: 'types.pageweb'
+                        accepts: ['pageweb']
+                    article:
+                        nom: 'types.article'
+                        accepts: ['article']
+                    image:
+                        nom: 'types.image'
+                        accepts: ['image']
+                    fiche_recettes:
+                        nom: 'types.fiche_recettes'
+                        accepts: ['ficherecette']
+                    fiche_boissons:
+                        nom: 'types.fiche_boissons'
+                        accepts: ['ficheboisson']
+                    # marque:
+                    #     nom: 'types.marque'
+                    #     accepts: ['marque']
+                    # reseau:
+                    #     nom: 'types.reseau'
+                    #     accepts: ['reseau']
+                    # boutique:
+                    #     nom: 'types.boutique'
+                    #     accepts: ['boutique']
+                    # pdf:
+                    #     nom: 'types.pdf'
+                    #     accepts: ['pdf']
         pageweb:
             icon: fa-desktop
             nestedAttributes:
@@ -148,14 +198,17 @@ parameters:
                     class: ['categorie']
                     required: false
         media:
+            icon: fa-film
             preferedStockage: database
         reseau:
+            icon: fa-share-alt
             nestedAttributes:
                 articles_reseaus:
                     data-limit: 0
                     class: ['article']
                     required: false
         fiche:
+            icon: fa-file-text-o
             nestedAttributes:
                 fiches:
                     data-limit: 10
@@ -166,15 +219,41 @@ parameters:
                     class: ['categorie']
                     required: false
         ficherecette:
+            icon: fa-file-text-o
             nestedAttributes:
+                article_ficherecette:
                     data-limit: 0
                     class: ['article']
                     required: false
         ficheboisson:
+            icon: fa-file-text-o
             nestedAttributes:
+                article_ficheboisson:
                     data-limit: 0
                     class: ['article']
                     required: false
+        image:
+            icon: fa-file-image-o
+        pdf:
+            icon: fa-file-pdf-o
+        multimedia:
+            icon: fa-film
+        rawfile:
+            icon: fa-file-o
+        tag:
+            icon: fa-tag
+        statut:
+            icon: fa-toggle-on
+        message:
+            icon: fa-paper-plane
+        User:
+            icon: fa-user
+        adresse:
+            icon: fa-map-marker
+        boutique:
+            icon: fa-building-o
+        tauxTva: 
+            icon: fa-calculator
     marketplace:
         active: true #gérer des articles, boutiques, etc.
         vente: true #afficher les prix et remplir le panier
@@ -192,48 +271,48 @@ parameters:
                 name: livre
                 symb: £
                 ratio: 0.72
-    categorie:
-        descrition:
-            defaults:
-                accepts: ['pageweb', 'article','image','fiche','marque','reseau','boutique','pdf', 'categorie']
-                couleur: 'rgba(128,128,128,1)'
-            types:
-                menu:
-                    nom: 'types.menu'
-                    accepts: ['pageweb', 'article','image','fiche','marque','reseau','boutique','pdf', 'categorie']
-                # multimedia:
-                #     nom: 'types.multimedia'
-                #     accepts: ['pageweb', 'article','image','fiche','marque','reseau','boutique','pdf']
-                diapo:
-                    nom: 'types.diapo'
-                    accepts: ['article','image','fiche']
-                pageweb:
-                    nom: 'types.pageweb'
-                    accepts: ['pageweb']
-                article:
-                    nom: 'types.article'
-                    accepts: ['article']
-                image:
-                    nom: 'types.image'
-                    accepts: ['image']
-                fiche_recettes:
-                    nom: 'types.fiche_recettes'
-                    accepts: ['ficherecette']
-                fiche_boissons:
-                    nom: 'types.fiche_boissons'
-                    accepts: ['ficheboisson']
-                # marque:
-                #     nom: 'types.marque'
-                #     accepts: ['marque']
-                # reseau:
-                #     nom: 'types.reseau'
-                #     accepts: ['reseau']
-                # boutique:
-                #     nom: 'types.boutique'
-                #     accepts: ['boutique']
-                # pdf:
-                #     nom: 'types.pdf'
-                #     accepts: ['pdf']
+    # categorie:
+    #     descrition:
+    #         defaults:
+    #             accepts: ['pageweb', 'article','image','fiche','marque','reseau','boutique','pdf', 'categorie']
+    #             couleur: 'rgba(128,128,128,1)'
+    #         types:
+    #             menu:
+    #                 nom: 'types.menu'
+    #                 accepts: ['pageweb', 'article','image','fiche','marque','reseau','boutique','pdf', 'categorie']
+    #             # multimedia:
+    #             #     nom: 'types.multimedia'
+    #             #     accepts: ['pageweb', 'article','image','fiche','marque','reseau','boutique','pdf']
+    #             diapo:
+    #                 nom: 'types.diapo'
+    #                 accepts: ['article','image','fiche']
+    #             pageweb:
+    #                 nom: 'types.pageweb'
+    #                 accepts: ['pageweb']
+    #             article:
+    #                 nom: 'types.article'
+    #                 accepts: ['article']
+    #             image:
+    #                 nom: 'types.image'
+    #                 accepts: ['image']
+    #             fiche_recettes:
+    #                 nom: 'types.fiche_recettes'
+    #                 accepts: ['ficherecette']
+    #             fiche_boissons:
+    #                 nom: 'types.fiche_boissons'
+    #                 accepts: ['ficheboisson']
+    #             # marque:
+    #             #     nom: 'types.marque'
+    #             #     accepts: ['marque']
+    #             # reseau:
+    #             #     nom: 'types.reseau'
+    #             #     accepts: ['reseau']
+    #             # boutique:
+    #             #     nom: 'types.boutique'
+    #             #     accepts: ['boutique']
+    #             # pdf:
+    #             #     nom: 'types.pdf'
+    #             #     accepts: ['pdf']
 
 
 
