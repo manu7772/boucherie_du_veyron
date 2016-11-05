@@ -92,11 +92,14 @@ class DefaultController extends Controller {
 
 	public function categorieAction($itemSlug, $parentSlug = null) {
 		// categorie
-		$data['categorie'] = $this->get('aetools.aeServiceCategorie')->getRepo()->findParentsOfCategorieBySlug($itemSlug, $parentSlug);
+		$data['categorie'] = $this->get('aetools.aeServiceCategorie')->getRepo()->findBySlug($itemSlug)[0];
+		// $data['categorie'] = $this->get('aetools.aeServiceCategorie')->getRepo()->findParentsOfCategorieBySlug($itemSlug, $parentSlug);
 		// echo('<pre>');var_dump($data['categorie']);die('</pre>');
-		$data['items'] = $this->get('aetools.aeServiceNested')->getRepo()->findAllItemsByGroup($data['categorie'][0]['id'], 'nesteds', array('article'), self::ACCEPT_ALIAS_ITEMS, self::ADD_ALIAS_ITEMS);
+		// $data['items'] = $this->get('aetools.aeServiceNested')->getRepo()->findAllItemsByGroup($data['categorie'][0]['id'], 'nesteds', array('article'), self::ACCEPT_ALIAS_ITEMS, self::ADD_ALIAS_ITEMS);
+		// $data['items'] = $data['categorie']->getAllNestedChildsByGroup('nesteds');
 		// pageweb template
-		$data['pageweb'] = $this->get('aetools.aeServicePageweb')->getPageBySlug('categorie');
+		if($data['categorie']->getPageweb() != null) $data['pageweb'] = $data['categorie']->getPageweb();
+			else $data['pageweb'] = $this->get('aetools.aeServicePageweb')->getPageBySlug('categorie');
 		$this->pagewebactions($data);
 		return $this->render($data['pageweb']["template"], $data);
 	}
@@ -116,29 +119,19 @@ class DefaultController extends Controller {
 	////////////////////
 
 	public function articleAction($itemSlug, $parentSlug = null) {
-		$data['article'] = $this->get('aetools.aeServiceArticle')->getRepo()->findArticleBySlug($itemSlug, $parentSlug);
-		// echo('<pre>');var_dump($data['article']);die('</pre>');
-		if($data['article'] === false) {
-			// parentSlug n'est pas un parent direct… on le retrouve…
-			$data['article'] = $this->get('aetools.aeServiceArticle')->getRepo()->findArticleBySlug($itemSlug);
-			foreach ($data['article']['nestedpositionParents'] as $index => $parents) {
-				$parents = $this->get('aetools.aeServiceCategorie')->getRepo()->findParentsOfCategorie($data['article']['nestedpositionParents'][$index]['parent']['id']);
-				if(is_array($parents)) {
-					foreach ($parents as $key => $parent) {
-						if($parent['slug'] === $parentSlug) {
-							$data['categories'] = $parents;
-							break 2;
-						}
-					}
-				}
-			}
+		$data['article'] = $this->get('aetools.aeServiceArticle')->getRepo()->findBySlug($itemSlug)[0];
+		$data['categorie'] = null;
+		if($parentSlug != null) {
+			$data['categorie'] = $this->get('aetools.aeServiceCategorie')->getRepo()->findBySlug($parentSlug)[0];
 		} else {
-			// if($data['article'] !== false) {
-				if(count($data['article']['nestedpositionParents']) > 0)
-					$data['categories'] = $this->get('aetools.aeServiceCategorie')->getRepo()->findParentsOfCategorie($data['article']['nestedpositionParents'][0]['parent']['id']);
-					// echo('<pre>');var_dump($data['categories']);die('</pre>');
-			// }
+			$data['categorie'] = $this->get('aetools.aeServiceCategorie')->getRepo()->find($this->getSitedata()['menuArticle_id']);
 		}
+		// foreach($data['article']->getCategorieParents() as $parent) {
+		// 	if((preg_match('#^(article)#', $parent->getType()) && $parentSlug == null) || $parent->getSlug() == $parentSlug) {
+		// 		$data['categorie'] = $parent;
+		// 		break 1;
+		// 	}
+		// }
 		$data['pageweb'] = $this->get('aetools.aeServicePageweb')->getPageBySlug('article');
 		$this->pagewebactions($data);
 		return $this->render($data['pageweb']["template"], $data);

@@ -41,6 +41,18 @@ parameters:
                     - [800, 600]
                     - [800, 800]
                     - [600, 800]
+            ficherecette:
+                image:
+                    - [1024, 600]
+                    - [800, 800]
+                    - [600, 800]
+            ficheboisson:
+                image:
+                    - [800, 600]
+                    - [800, 800]
+                    - [600, 800]
+                    - [450, 800]
+                    # - null
             ### TIER
             tier:
                 image:

@@ -14,9 +14,7 @@
 
 			<div class="col-sm-9 col-md-9 padding-left-resp">
 				<div class="content-page-right">
-					<h2 class="title">
-						{{ blocks_actions.breadcrumb(categorie.0, categorie|reverse) }}
-					</h2>
+					<h2 class="title">{{ blocks_actions.breadcrumb(categorie, categorie.categorieParent) }}</h2>
 					{% block content %}
 						{% if pageweb['#image_id'] != null or pageweb.code != null %}
 							{% if pageweb['#image_id'] != null %}
@@ -25,13 +23,13 @@
 							{% if pageweb.code != null %}
 							<p style='margin:0px;padding:0px;'>{{ pageweb.code|raw }}</p>
 							{% endif %}
-							<div style="height:30px;"></div>
+							<div style="height:30px;clear:both;"></div>
 							<hr>
 						{% endif %}
 						<div class="row">
 							{% set hasArticles = false %}
-							{% for item in items if siteFilter(item) == true %}
-								{{ categories_actions.boxCategorie(item, categorie.0) }}
+							{% for item in categorie.allNestedChildsByGroup('nesteds') %}
+								{{ categories_actions.boxCategorie(item, categorie) }}
 								{# {{ dump(item) }} #}
 								{% set hasArticles = true %}
 							{% endfor %}

@@ -34,7 +34,7 @@
 	<img src="{{ image }}" alt="{{ 'name'|trans({}, item.className|default(item.shortName|default(null))) }} {{ item.slug }}" class="{{ classes|default([])|join(' ') }}" />
 {%- endmacro imageprint %}
 
-{% macro breadcrumb(item, categories) %}
+{% macro breadcrumbArray(item, categories) %}
 	<small style="font-weight:300;">
 		{% for parent in categories %}
 			{% set parentSlug = null %}
@@ -42,5 +42,13 @@
 			{% if parent != item %}<a href="{{ path('site_pageweb_categorie', {itemSlug: parent.slug, parentSlug: parentSlug}) }}">{{ parent.nom }}</a> / {% endif %}
 		{% endfor %}
 	</small>{{ item.nom }}
-{% endmacro %}
+{% endmacro breadcrumbArray %}
+
+{% macro breadcrumb(item, categorie) %}
+	{% if categorie|default(null) != null %}
+	<small style="font-weight:300;">
+		{% for parent in categorie.categorieParents_inverse(true) if parent.lvl > 0 -%}
+			<a href="{{ path('site_pageweb_categorie', {itemSlug: parent.slug, parentSlug: parent.categorieParent.slug}) }}">{{ parent.nom }}</a> / {% endfor %}
+	</small>{% endif %}{{ item.nom }}
+{% endmacro breadcrumb %}
 

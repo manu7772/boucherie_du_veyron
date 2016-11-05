@@ -92,8 +92,8 @@ class pagewebType extends baseType {
                 'required' => false,
                 'group_by' => 'categorieParent.nom',
                 "query_builder" => function($repo) {
-                    if(method_exists($repo, 'getElementsBySubTypeButRoot'))
-                        return $repo->getElementsBySubTypeButRoot(array('article', 'pageweb', 'fiche'));
+                    if(method_exists($repo, 'getDiaporamas'))
+                        return $repo->getDiaporamas();
                         else return $repo->findAllClosure();
                     },
                 'placeholder'   => 'form.select',

@@ -125,6 +125,27 @@ class categorieType extends baseType {
                             else return $repo->findAllClosure($this->aeEntities);
                         },
                     ))
+                ->add('group_categorie_nestedChilds', 'entity', array(
+                    'by_reference' => false,
+                    "label"     => 'fields.group_categorie_nestedChilds',
+                    'translation_domain' => 'categorie',
+                    'choice_label'  => 'nom',
+                    'class'     => 'LaboAdminBundle:nested',
+                    'multiple'  => true,
+                    'expanded'  => false,
+                    "required"  => $nestedAttributesParameters['categorie_nested']['required'],
+                    'placeholder'   => 'form.select',
+                    'attr'      => array(
+                        'class'         => 'select2',
+                        // 'data-limit'    => $nestedAttributesParameters['categorie_nested']['data-limit'],
+                        ),
+                    'group_by' => 'shortName',
+                    "query_builder" => function($repo) use ($categorie, $nestedAttributesParameters) {
+                        if(method_exists($repo, 'defaultValsListClosure'))
+                            return $repo->defaultValsListClosure($this->controller, $nestedAttributesParameters['categorie_nested']['class'], $categorie);
+                            else return $repo->findAllClosure($this->aeEntities);
+                        },
+                    ))
 		;
 
 		$user = $this->user;

@@ -357,7 +357,7 @@ class articleType extends baseType {
                     'class'         => 'select2',
                     'data-limit'    => $nestedAttributesParameters['nesteds']['data-limit'],
                     ),
-                'group_by' => 'shortName',
+                'group_by' => 'categorieParent.nom',
                 "query_builder" => function($repo) use ($nestedAttributesParameters) {
                     if(method_exists($repo, 'defaultValsListClosure'))
                         return $repo->defaultValsListClosure($this->controller, $nestedAttributesParameters['nesteds']['class']);

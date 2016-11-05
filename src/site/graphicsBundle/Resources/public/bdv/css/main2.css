@@ -1015,8 +1015,9 @@ p.tab-name-product {
 	padding-top:6px;
 	margin-bottom: 29px;
 	font-weight: bold;
-	background: rgb(169, 210, 127);
-	background: rgba(169, 210, 127, .5);
+	/*background: rgb(169, 210, 127);*/
+  /*background: rgba(169, 210, 127, .5);*/
+	background: rgba(207, 234, 180, 0.75);
 }
 p.tab-info-category{
 	position: absolute;

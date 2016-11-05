@@ -20,9 +20,13 @@ class aeServiceCategorie extends aeServiceNested {
     const CLASS_ENTITY          = 'site\adminsiteBundle\Entity\categorie';
     const CLASS_SHORT_ENTITY    = 'categorie';
 
+    const TRASH_NAME            = 'corbeille';
+    protected $trash;
+
     public function __construct(ContainerInterface $container, EntityManager $EntityManager = null) {
         parent::__construct($container, $EntityManager);
         $this->defineEntity(self::CLASS_ENTITY);
+        $this->trash = false;
         return $this;
     }
 
@@ -105,6 +109,23 @@ class aeServiceCategorie extends aeServiceNested {
             }
         }
         return array_unique($types);
+    }
+
+    public function controlTrashCategorie() {
+        if($this->trash == false) {
+            $trash = $this->getRepo()->findByType('trash');
+            if(count($trash) < 1) {
+                $trash = $this->getNewEntity(self::CLASS_ENTITY);
+                $trash->setNom(self::TRASH_NAME);
+                $trash->setType('trash');
+                $trash->setIcon('fa-trash');
+                $this->getEm()->persist($trash);
+                $result = $this->getEm()->flush();
+                if($result) $this->trash = $trash;
+                return $result;
+            }
+        }
+        return true;
     }
 
 }

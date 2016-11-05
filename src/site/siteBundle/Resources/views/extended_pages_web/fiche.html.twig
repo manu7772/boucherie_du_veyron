@@ -19,10 +19,24 @@
 						{{ categorie.nom }} / </span>{% endif %}
 						{{ fiche.nom }}
 					</h2>
-					<div class="single-section">
-						<div class="section-tabs">
-							{{ fiches_macros.boxFiche(fiche, categorie|default(null)) }}
-						</div>
+					<div class="product-details fiche-recette background-gray"><!--product-details-->
+						{% if fiche.mainMedia.isScreenableImage|default(null) != null %}
+						<div class="col-sm-5">
+							<div class="product-image-wrapper">
+								<div class="single-products">
+									<div class="productinfo">
+										<img src="{{ fiche.mainMedia.img }}" alt="image" />
+									</div>
+								</div>
+							</div>
+						</div><!--/col-sm-5-->
+						{% endif %}
+						<div class="col-sm-7">
+							<div class="product-information"><!--/product-information-->
+								{{ fiche.descriptif|raw }}
+								
+							</div><!--/product-information-->
+						</div><!--/col-sm-7-->
 					</div>
 				</div>
 			</div>
@@ -34,3 +48,4 @@
 	{{ render(controller('sitesiteBundle:Default:miniListeInfo')) }}    
 
 {% endblock mainContainer %}
+

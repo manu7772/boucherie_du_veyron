@@ -176,6 +176,19 @@ class categorieRepository extends nestedRepository {
 		return $this->excludeRoots($qb);
 	}
 
+	// Select diaporamas with no children an with elements (at least one) / But root
+	public function getDiaporamas($shortCutContext = false) {
+		$qb = $this->getElementsByType('diapo', $qb, $shortCutContext);
+		// where categorie has no child
+		// $qb->leftJoin(self::ELEMENT.'.nestedpositionChilds', 'npc1', "WITH", 'npc1.group = \'categorie_nested\'');
+		// where categorie has at least one element
+		$qb->innerJoin(self::ELEMENT.'.nestedpositionChilds', 'npc2', "WITH", 'npc2.group = \'nesteds\'')
+			// ->andWhere('npc2.group = :nest')
+			// ->setParameter('nest', 'nesteds')
+			;
+		return $this->excludeRoots($qb);
+	}
+
 	// Select selon ACCEPT
 	public function getElementsBySubType($types, &$qb = null, $shortCutContext = false) {
 		if($qb == null) $qb = $this->createQueryBuilder(self::ELEMENT);

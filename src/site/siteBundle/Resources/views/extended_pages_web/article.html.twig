@@ -14,25 +14,25 @@
 			{{ render(controller('sitesiteBundle:Default:menuArticle')) }}
 			{% endblock menuArticle %}
 
-			{% if siteFilter(article) %}
+			{% if article %}
 			<div class="col-sm-9 col-md-9 padding-left-resp"><!--colonne right-->
 				<div class="content-page-right">
 					<h2 class="title">
-						{{ blocks_actions.breadcrumb(article, categories|default([])|reverse) }}
-						{%- if EDITORMODE %} <a {{ actions.adminHref(path('siteadmin_entite', {entite: article.className|default(article.shortName|default(null)), id: article.id, action: 'show'})) }}><i class="fa fa-eye icon-wait-on-click text-danger"></i></a>{% endif %}
-						{%- if EDITORMODE %} <a {{ actions.adminHref(path('siteadmin_entite', {entite: article.className|default(article.shortName|default(null)), id: article.id, action: 'edit'})) }}><i class="fa fa-pencil icon-wait-on-click text-danger"></i></a>{% endif %}
+						{{ blocks_actions.breadcrumb(article, categorie) }}
+						{%- if EDITORMODE %} <a {{ actions.adminHref(path('siteadmin_entite', {entite: article.class_name|default(article.shortName|default(null)), id: article.id, action: 'show'})) }}><i class="fa fa-eye icon-wait-on-click text-danger"></i></a>{% endif %}
+						{%- if EDITORMODE %} <a {{ actions.adminHref(path('siteadmin_entite', {entite: article.class_name|default(article.shortName|default(null)), id: article.id, action: 'edit'})) }}><i class="fa fa-pencil icon-wait-on-click text-danger"></i></a>{% endif %}
 					</h2>
 					<div class="product-details background-gray"><!--product-details-->
-						{% if article.imageId|default(null) != null %}
+						{% if article.image.id|default(null) != null %}
 						<div class="col-sm-6">
 							<div class="product-image-wrapper">
 								<div class="single-products">
-									{% if categories|default([]).0.imageId != null %}
-									<div class="productinfo">
-										<img src="{{ imageB64sized(categories.0.imageId, 64, 64, 'cut') }}" alt="{{ categories.0.slug }}" />
-									</div>
-									{% endif %}
-									<img src="{{ imageB64sized(article.imageId, 398, 279, 'cut') }}" alt="{{ article.slug }}" data-image-id="{{ article.imageId }}" class="img-responsive">
+									{# {% if categorie.image.id != null %} #}
+									{# <div class="productinfo"> #}
+										{# <img src="{{ imageB64sized(categorie.image.id, 64, 64, 'cut') }}" alt="{{ categorie.0.slug }}" /> #}
+									{# </div> #}
+									{# {% endif %} #}
+									<img src="{{ imageB64sized(article.image.id, 398, 279, 'cut') }}" alt="{{ article.slug }}" data-image-id="{{ article.image.id }}" class="img-responsive">
 								</div>
 							</div>
 						</div><!--/col-sm-6-->
@@ -45,13 +45,9 @@
 								{% if article.accroche|default(null) != null %}
 								<p><i>{{ article.accroche|raw }}</i></p>
 								{% endif %}
-
-								{% set parents = [] %}
-								{% if article.nestedpositionParents|length > 0 %}
-									{% for parent in article.nestedpositionParents if (parent.parent.type == 'article' and parent.parent.shortName == 'categorie') %}
-										{% set parents = parents|merge([parent.parent.nom]) %}
-									{% endfor %}
-								{% endif %}
+								{# <p>Parent level 1 of {{ categorie }} : {{ categorie.parentOfLevel(1) }}</p> #}
+								{# <p>Parent to childs : {{ categorie.parentOfLevel(1).allCategorieChilds()|join(' / ') }}</p> #}
+								{% set parents = article.parentsByGroupForCategorie('nesteds', categorie) %}
 								{% if parents|length > 0 %}
 								<p><strong>{{ parents|join(' / ') }}</strong></p>
 								{% endif %}
@@ -78,18 +74,16 @@
 					</div><!--/product-details-->
 					
 					<!-- -->
-					{% set ficherecettes = 0 %}
-					{% for fiche in article.nestedpositionChilds|default([]) if fiche.child['class_name'] == 'ficherecette' %}{% set ficherecettes = ficherecettes + 1 %}{% endfor %}
-					{% set ficheboissons = 0 %}
-					{% for fiche in article.nestedpositionChilds|default([]) if fiche.child['class_name'] == 'ficheboisson' %}{% set ficheboissons = ficheboissons + 1 %}{% endfor %}
+					{% set ficherecettes = article.group_articleFicherecette_childs %}
+					{% set ficheboissons = article.group_articleFicheboisson_childs %}
 					<div class="category-tab shop-details-tab"><!--category-tab-->
 						<div class="col-sm-12">
 							<ul class="nav nav-tabs">
 								<li class="active"><a href="#details" data-toggle="tab">Details du produit</a></li>
-								{% if ficherecettes > 0 %}
+								{% if ficherecettes|length > 0 %}
 								<li class=""><a href="#ficherecette" data-toggle="tab">Fiches recettes</a></li>
 								{% endif %}
-								{% if ficheboissons > 0 %}
+								{% if ficheboissons|length > 0 %}
 								<li class=""><a href="#ficheboisson" data-toggle="tab">Conseil en vin</a></li>
 								{% endif %}
 							</ul>
@@ -97,7 +91,7 @@
 						<div class="tab-content">
 							<div class="tab-pane fade active in" id="details">
 								<div class="col-sm-12 p-b-sm">
-									<h3 class="m-t-none">{{ article.nom }}</h3>
+									{# <h3 class="m-t-none">{{ article.nom }}</h3> #}
 									{% if article.descriptif matches ('#(.)+#') %}
 									{# <b>Conseil :</b></br> #}
 									{# <div class="col-sm-12 padding-left-right-null"> #}
@@ -107,22 +101,24 @@
 									{# </div> #}
 									{% endif %}
 								</div>
+								{% if article.group_articles_childs|length > 0 %}
 								<div class="col-sm-12 p-b-sm">
 									<h4>À voir également…</h4>
 								</div>
-									{# <div class="col-sm-6 padding-left-right-null"> #}
-									{% for artChild in article.nestedpositionChilds|default([]) if (artChild.child['class_name'] == 'article' and siteFilter(artChild.child)) %}
-										{{ articles_macros.boxArticle(artChild.child, null, {'buy': 'off', 'col': 'on'}) }}
-									{% endfor %}
-									{# </div> #}
+								{# <div class="col-sm-6 padding-left-right-null"> #}
+								{% for artChild in article.group_articles_childs %}
+									{{ articles_macros.boxArticle(artChild, null, {'buy': 'off', 'col': 'on'}) }}
+								{% endfor %}
+								{# </div> #}
+								{% endif %}
 							</div>
-							{% if ficherecettes > 0 %}
+							{% if ficherecettes|length > 0 %}
 							<div class="tab-pane fade active" id="ficherecette">
 								<div class="col-sm-12">
 									<div class="col-sm-6 padding-left-right-null">
 										<ul class="shop-details-ul">
-											{% for fiche in article.nestedpositionChilds|default([]) if fiche.child['class_name'] == 'ficherecette' %}
-											<li><a href="{{ path('site_pageweb_fiche', {itemSlug: fiche.child.slug}) }}"><i class="fa fa-caret-right"></i>{{ fiche.child.nom }}</a></li>
+											{% for fiche in ficherecettes %}
+											<li><a href="{{ path('site_pageweb_fiche', {itemSlug: fiche.slug}) }}"><i class="fa fa-caret-right"></i>{{ fiche.nom }}</a></li>
 											{% endfor %}
 										</ul>
 									</div>
@@ -135,13 +131,13 @@
 								</div>
 							</div>
 							{% endif %}
-							{% if ficheboissons > 0 %}
+							{% if ficheboissons|length > 0 %}
 							<div class="tab-pane fade" id="ficheboisson">
 								<div class="col-sm-12">
 									<div class="col-sm-6 padding-left-right-null">
 										<ul class="shop-details-ul">
-											{% for fiche in article.nestedpositionChilds|default([]) if fiche.child['class_name'] == 'ficheboisson' %}
-											<li><a href="{{ path('site_pageweb_fiche', {itemSlug: fiche.child.slug}) }}"><i class="fa fa-caret-right"></i>{{ fiche.child.nom }}</a></li>
+											{% for fiche in ficheboissons %}
+											<li><a href="{{ path('site_pageweb_fiche', {itemSlug: fiche.slug}) }}"><i class="fa fa-caret-right"></i>{{ fiche.nom }}</a></li>
 											{% endfor %}
 										</ul>
 									</div>
@@ -164,7 +160,7 @@
 
 		</div>
 	</div>
-	{# {{ dump(article) }} #}
+	{# {{ dump(categorie) }} #}
 </section>
 
 	{# {{ render(controller('sitesiteBundle:Default:miniListeInfo')) }}     #}

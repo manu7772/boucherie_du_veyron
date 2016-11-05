@@ -32,6 +32,14 @@ site_pageweb_fiche:
     path:       /fiche/{itemSlug}/{parentSlug}
     defaults:   { _controller: sitesiteBundle:Default:fiche, parentSlug: null }
 
+site_pageweb_ficherecette:
+    path:       /fiche-recette/{itemSlug}/{parentSlug}
+    defaults:   { _controller: sitesiteBundle:Default:fiche, parentSlug: null }
+
+site_pageweb_ficheboisson:
+    path:       /fiche-boisson/{itemSlug}/{parentSlug}
+    defaults:   { _controller: sitesiteBundle:Default:fiche, parentSlug: null }
+
 site_pageweb_fiches:
     path:       /fiches/{categorieSlug}
     defaults:   { _controller: sitesiteBundle:Default:fichesByCategorie }

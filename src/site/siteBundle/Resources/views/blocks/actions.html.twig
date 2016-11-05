@@ -1,18 +1,11 @@
 {% macro elementHref(item, parent, target) -%}
-	{%- set clss = null -%}
-	{%- for classtest in ['article','fiche','categorie','pageweb'] -%}
-		{%- if item.shortName|default(null) matches '#^' ~ classtest ~ '#' -%}
-			{%- set clss = classtest -%}
-		{%- endif -%}
-	{%- endfor -%}
-	{%- if clss != null -%}
-		{%- if item.shortName|default(null) == 'categorie' -%}
+	{% set clss = item.shortName|default(item.className|default(null)) %}
+	{%- if clss in ['categorie'] -%}
 		href="{{ url('site_pageweb_' ~ clss, {itemSlug: item.slug, parentSlug: parent.slug|default(item.categorieParent.slug|default(null))}) }}"{%- if target|default('_self') in ['_self', '_blank'] -%} target="{{ target|raw }}"{%- endif -%}
-		{%- else -%}
+	{%- elseif clss in ['article','fiche','ficherecette','ficheboisson','pageweb'] -%}
 		href="{{ url('site_pageweb_' ~ clss, {itemSlug: item.slug, parentSlug: parent.slug|default(null)}) }}"{%- if target|default('_self') in ['_self', '_blank'] -%} target="{{ target|raw }}"{%- endif -%}
-		{%- endif -%}
 	{%- else -%}
-		href="#"
+		{# href="#" #}
 	{%- endif -%}
 {%- endmacro elementHref %}
 

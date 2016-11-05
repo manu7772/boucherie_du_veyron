@@ -46,6 +46,18 @@ class categorieRootType extends baseType {
 					'data-height' => 140,
 					)
 				))
+            ->add('icon', 'choice', array(
+             "required"  => false,
+             "label"     => 'fields.icon',
+             'translation_domain' => 'categorie',
+             'multiple'  => false,
+             "choices"   => $categorie->getListIcons(),
+             'placeholder'   => 'form.select',
+             'attr'      => array(
+                 'class'         => 'select2',
+                 'data-format'   => 'formatState',
+                 ),
+             ))
 			->add('couleur', 'insColorpicker', array(
 				'label'     => 'fields.couleur',
 				'translation_domain' => 'categorie',

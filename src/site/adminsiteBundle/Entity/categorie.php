@@ -8,6 +8,8 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Doctrine\Common\Collections\ArrayCollection;
 
 use Labo\Bundle\AdminBundle\services\aeDebug;
+use Labo\Bundle\AdminBundle\services\aeSnake;
+use Labo\Bundle\AdminBundle\services\aeData;
 
 use Labo\Bundle\AdminBundle\Entity\nested;
 
@@ -134,35 +136,45 @@ class categorie extends nested {
 	 */
 	public function __call($method, $arguments) {
 		$this->addGetIfNoAction($method);
-		if($method !== 'set'.ucfirst(parent::VIRTUAL_PROPERTIES_PREFIX).'categorie_nested'.parent::PARENTS_NAME) {
-			// echo('<p>__call '.$method.' with '.count($arguments).' arguments</p>');
-			return parent::__call($method, $arguments);
-		}
-		$categorie = null;
-		// echo('<p>method '.json_encode($method).' : '.json_encode($this->hasNestedAttribute($method)).'</p>');
-		// echo('<pre><h3>Properties :</h3>');var_dump($this->getNestedAttributeNames());echo('</pre>');
-		// echo('<pre><h3>Properties (short) :</h3>');var_dump($this->getNestedAttributeNames(false));echo('</pre>');
-		// if(null !== $arguments->first()) {
-			if($arguments->count() > 0) {
-				$categorie = $arguments->first();
+		// if($method !== 'set'.$this->getSnake()->getPropPrefix().'_categorie_nested'.parent::PARENTS_NAME) {
+		// if(!preg_match('#^(set|add|remove)'.$this->getSnake()->getPropPrefix().'_categorie_nested('.implode('|', $this->getSnake()->getHierarchyNames()).')$#', $method)) {
+		// 	return parent::__call($method, $arguments);
+		// }
+		$group = $this->getSnake()->getGroupName($method, false);
+		$categorie = $arguments;
+		switch(aeData::decamelize($method)) {
+			case 'set_'.$this->getSnake()->getPropPrefix().'_categorie_nested_parent':
+			case 'set_'.$this->getSnake()->getPropPrefix().'_categorie_nested_parents':
+				if(!($categorie instanceOf categorie)) {
+					if($arguments->count() > 0) $categorie = $arguments->first();
+						else $categorie = null;
+				}
+				// DO NOT BREAK HERE !
+			case 'add_'.$this->getSnake()->getPropPrefix().'_categorie_nested_parent':
+			case 'add_'.$this->getSnake()->getPropPrefix().'_categorie_nested_parents':
 				if($categorie instanceOf categorie) {
-					$group = preg_replace(self::VIRTUALGROUPS_PARENTS_PATTERN, '${3}', $method);
-					// echo('<p>Parent is categorie : '.json_encode($categorie->getNom()).' in group "'.$group.'"</p>');
-					parent::__call($method, $arguments);
+					echo('<p>Parent of '.json_encode($this->getNom()).' is categorie '.json_encode($categorie->getNom()).' in group "'.$group.'"</p>');
+					parent::__call($method, new ArrayCollection(array($categorie)));
 					if(!$this->passBySetParent) $this->setCategorieParent($categorie);
 					// if($this->getLvl() > 0) $this->setCouleur($this->getRootParent()->getCouleur());
 				}
-			}
-		// }
-		// if($categorie === null) echo('<p>No parent !</p>');
-		if(!$this->passBySetParent && ($categorie === null)) {
-			$this->setCategorieParent(null);
+				// if(!$this->passBySetParent && ($categorie === null)) $this->setCategorieParent(null);
+				$this->setType();
+				$this->setLvl();
+				break;
+			case 'set_'.$this->getSnake()->getPropPrefix().'_categorie_nested_child':
+			case 'set_'.$this->getSnake()->getPropPrefix().'_categorie_nested_childs':
+				if($categorie instanceOf categorie) $categorie = new ArrayCollection(array($categorie));
+				if($categorie == null) $categorie = new ArrayCollection(array());
+				parent::__call($method, $categorie);
+				foreach($categorie as $cat) {
+					$cat->setCategorieParent($this);
+				}
+				break;
+			default:
+				return parent::__call($method, $arguments);
+				break;
 		}
-
-		$this->setType();
-		$this->setLvl();
-		// echo('<p>Type '.json_encode($this->getType()).'</p>');
-		// echo('<p>Level '.json_encode($this->getLvl()).'</p>');
 		return $this;
 	}
 
@@ -187,8 +199,8 @@ class categorie extends nested {
 		// categorie_nested
 		$this->passBySetParent = true;
 		$this->categorieParent = $categorie;
-		// echo('<p>Parent is '.json_encode($categorie->getNom()).'</p>');
-		$this->__call('set'.ucfirst(parent::VIRTUAL_PROPERTIES_PREFIX).'categorie_nestedParents', new ArrayCollection(array($categorie)));
+		echo('<p>Set parent of '.json_encode($this->getNom()).' is categorie '.json_encode($categorie->getNom()).'</p>');
+		$this->__call('set_'.$this->getSnake()->getPropPrefix().'_categorie_nested_parents', new ArrayCollection(array($categorie)));
 		$this->passBySetParent = false;
 		if($categorie instanceOf categorie) {
 			// as parent, so in first position !
@@ -199,19 +211,22 @@ class categorie extends nested {
 
 	/**
 	 * Get array list of parents
+	 * @param boolean $self = false
 	 * @return array
 	 */
-	public function getCategorieParents() {
+	public function getCategorieParents($self = false) {
+		$self = (boolean)$self ? array($this) : array();
 		$parent = $this->getCategorieParent();
-		return is_object($parent) ? array_merge(array($parent), $parent->getCategorieParents()) : array();
+		return is_object($parent) ? array_merge($self, array($parent), $parent->getCategorieParents(false)) : $self;
 	}
 
 	/**
 	 * Get inversed array list of parents
+	 * @param boolean $self = false
 	 * @return array
 	 */
-	public function getCategorieParents_inverse() {
-		return array_reverse($this->getCategorieParents());
+	public function getCategorieParents_inverse($self = false) {
+		return array_reverse($this->getCategorieParents($self));
 	}
 
 	/**
@@ -219,7 +234,7 @@ class categorie extends nested {
 	 * @return boolean
 	 */
 	public function hasCategorieParents() {
-		return count($this->getCategorieParents()) > 0;
+		return count($this->getCategorieParents(false)) > 0;
 	}
 
 	/**
@@ -231,7 +246,7 @@ class categorie extends nested {
 		if($parent === null) {
 			return $this->hasCategorieParents();
 		}
-		$parents = new ArrayCollection($this->getCategorieParents());
+		$parents = new ArrayCollection($this->getCategorieParents(false));
 		return $parents->contains($parent);
 	}
 
@@ -240,7 +255,7 @@ class categorie extends nested {
 	 * @return categorie
 	 */
 	public function getRootParent() {
-		$rootParent = $this->getCategorieParents();
+		$rootParent = $this->getCategorieParents(false);
 		return count($rootParent) > 0 ? reset($rootParent) : null;
 	}
 
@@ -298,7 +313,7 @@ class categorie extends nested {
 	 */
 	public function getAllNestedChildsByTypes($types = [], $limit = null) {
 		if($limit === null) $limit = self::LIMIT;
-		if(is_string($types)) $types = array($types);
+		$types = array($types);
 		if(count($types) < 1) $types = $this->getAccepts();
 		// if(in_array(self::CLASS_CATEGORIE, $types)) unset($types[self::CLASS_CATEGORIE]);
 		$nesteds = $this->getNestedChildsByTypes($types);
@@ -441,7 +456,7 @@ class categorie extends nested {
 	 * @return categorie
 	 */
 	public function setLvl($lvl = null) {
-		// $this->lvl = $lvl == null ? count($this->getCategorieParents()) : (integer) $lvl;
+		// $this->lvl = $lvl == null ? count($this->getCategorieParents(false)) : (integer) $lvl;
 		$mem = $this->lvl;
 		if(is_integer($lvl)) {
 			$this->lvl = $lvl;

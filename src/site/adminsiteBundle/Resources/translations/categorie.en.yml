@@ -52,17 +52,18 @@ fields:
     icon: icon
     group_pagewebsChilds: Web pages
     group_categorie_nestedParents: Parent collection
+    group_categorie_nestedChilds: child collections
     parent: Parent collection
     group_nestedsChilds: Contains items
 types:
     all: types
     multimedia: multimedias
+    trash: trash
     menu: menus
     diapo: slideshows
     image: photographs
     article: products
     pdf: pdf files
-    menu: menus
     fiche_recettes: recipes cards
     fiche_boissons: drinks cards
     marque: brands

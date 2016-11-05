@@ -1,12 +1,13 @@
 {# {{ dump(diaporama) }} #}
 {% if diaporama.nbOfNotCategorieChildren|default(0) > 0 %}
 {% import 'sitesiteBundle:blocks:blocks_actions.html.twig' as blocks_actions %}
+{% import 'sitesiteBundle:blocks:actions.html.twig' as actions %}
 <div class="col-sm-9 col-md-9 padding-left-resp"><!--colonne right-->
 	<div id="slider-home"><!--slider-->
 		<div id="slider-carousel" class="carousel slide" data-ride="carousel">
 
 			<ol class="carousel-indicators">
-				{% for item in diaporama.children|default([]) %}
+				{% for item in diaporama.children|default([]) if item.className != "categorie" %}
 				<li data-target="#slider-carousel" data-slide-to="{{ loop.index0 }}"{% if loop.first %} class="active"{% endif %}></li>
 				{% endfor %}
 			</ol>
@@ -14,35 +15,43 @@
 			<div class="carousel-inner">
 
 				{% for item in diaporama.children|default([]) %}
+
 				{% if item.className == "article" %}
 				<div class="item{% if loop.first %} active{% endif %}">
 					<div class="item-margin">
-					<div class="col-sm-5 col-md-4 col-lg-5 padding-right padding-left">
-						<h1>{{ UCfirst(item.nom) }}</h1>
-						{{ item.accroche|default('')|raw }}
-						<small>{{ item.descriptif|default('')|raw }}</small>
-						<h2>{{ articlePrix(item)|raw }}</h2>
-						{% if marketplace.vente and item.vendable %}
-						<div class="btn-group order-group in-slide commande-cmd" data-article="{{ dataForPanier(item) }}" role="group" aria-label="...">
-							<button type="button" class="btn btn-default btn-commander">Commander</button>
-							<input class="command_quantity" type="text" name="quantity" value="{{ item.defaultquantity }}{% if item.unit != null %} {{ shortUnit(item.unit) }}{% endif %}" autocomplete="off" size="6">
-							<span class="btn-quantity">
-								<a class="btn quantity-top" href="#"><i class="fa fa-angle-up"></i></a>
-								<a class="btn quantity-bottom" href="#"><i class="fa fa-angle-down"></i></a>
-							</span>
+						<div class="col-sm-5 col-md-4 col-lg-5 padding-right padding-left">
+							<h1><a {{ actions.elementHref(item, '_self') }}>{{ UCfirst(item.nom) }}</a></h1>
+							{{ item.accroche|default('')|raw }}
+							<small>{{ item.descriptif|default('')|raw }}</small>
+							{% if marketplace.vente and item.surdevis %}
+							<h4>Demandez un devis</h4>
+							{% else %}
+							<h2>{{ articlePrix(item)|raw }}</h2>
+							{% if marketplace.vente and item.vendable %}
+							<div class="btn-group order-group in-slide commande-cmd" data-article="{{ dataForPanier(item) }}" role="group" aria-label="...">
+								<button type="button" class="btn btn-default btn-commander">Commander</button>
+								<input class="command_quantity" type="text" name="quantity" value="{{ item.defaultquantity }}{% if item.unit != null %} {{ shortUnit(item.unit) }}{% endif %}" autocomplete="off" size="6">
+								<span class="btn-quantity">
+									<a class="btn quantity-top" href="#"><i class="fa fa-angle-up"></i></a>
+									<a class="btn quantity-bottom" href="#"><i class="fa fa-angle-down"></i></a>
+								</span>
+							</div>
+							{% endif %}
+							{% endif %}
 						</div>
-						{% endif %}
 					</div>
-					</div>
-					<div class="col-sm-7 col-md-8 col-lg-7 padding-right padding-left">
-						{% if item['image_id'] != null %}
-						<img src="{{ imageB64sized(item['image_id'], 500, 350, 'cut') }}" alt="{{ 'name'|trans({}, item.className) }} {{ item.slug }}" class="slid-img img-responsive" />
-						{% else %}
-						<img src="{{ missingImage(500,350) }}" alt="{{ 'name'|trans({}, item.className) }} {{ item.slug }}" class="slid-img img-responsive" />
-						{# <img src="{{ asset('bundles/sitesite/images/defaults/no-picture.png') }}" style="height:322px;" alt="{{ 'name'|trans({}, item.className) }} {{ item.slug }}" class="slid-img img-responsive" /> #}
-						{% endif %}
-					</div>
+					<a {{ actions.elementHref(item, '_self') }}>
+						<div class="col-sm-7 col-md-8 col-lg-7 padding-right padding-left">
+							{% if item['image_id'] != null %}
+							<img src="{{ imageB64sized(item['image_id'], 500, 350, 'cut') }}" alt="{{ 'name'|trans({}, item.className) }} {{ item.slug }}" class="slid-img img-responsive" />
+							{% else %}
+							<img src="{{ missingImage(500,350) }}" alt="{{ 'name'|trans({}, item.className) }} {{ item.slug }}" class="slid-img img-responsive" />
+							{# <img src="{{ asset('bundles/sitesite/images/defaults/no-picture.png') }}" style="height:322px;" alt="{{ 'name'|trans({}, item.className) }} {{ item.slug }}" class="slid-img img-responsive" /> #}
+							{% endif %}
+						</div>
+					</a>
 				</div>
+
 				{% elseif item.className == "pageweb" %}
 				<div class="item{% if loop.first %} active{% endif %}">
 					<div class="col-sm-5 col-md-4 col-lg-5 padding-right padding-left">
@@ -53,6 +62,7 @@
 						<img src="{{ imageB64sized(item['image_id'], 500, 350, 'cut') }}" alt="{{ 'name'|trans({}, item.className) }} {{ item.slug }}" class="slid-img img-responsive" />
 					</div>
 				</div>
+
 				{% elseif item.className matches "#^fiche#" %}
 				<div class="item{% if loop.first %} active{% endif %}">
 					<div class="col-sm-5 col-md-4 col-lg-5 padding-right padding-left">
@@ -63,10 +73,21 @@
 						<img src="{{ imageB64sized(item['image_id'], 500, 350, 'cut') }}" alt="{{ 'name'|trans({}, item.className) }} {{ item.slug }}" class="slid-img img-responsive" />
 					</div>
 				</div>
+
 				{% elseif item.className matches "#^image#" %}
 				<div class="item{% if loop.first %} active{% endif %}">
-					<div class="col-sm-12 padding-right padding-left">
-						<img src="{{ imageB64sized(item['element_id'], 800, null, 'cut') }}" alt="{{ 'name'|trans({}, item.className) }} {{ item.slug }}" class="slid-img img-responsive" />
+					<div class="item-margin">
+						<div class="col-sm-5 col-md-4 col-lg-5 padding-right padding-left">
+							<h4>{{ UCfirst(item.nom) }}</h4>
+							{{ item.descriptif|default('')|raw }}
+						</div>
+					</div>
+					<div class="col-sm-7 col-md-8 col-lg-7 padding-right padding-left">
+						{% if item['element_id'] != null %}
+						<img src="{{ imageB64sized(item['element_id'], 500, 350, 'cut') }}" alt="{{ 'name'|trans({}, item.className) }} {{ item.slug }}" class="slid-img img-responsive" />
+						{% else %}
+						<img src="{{ missingImage(500,350) }}" alt="{{ 'name'|trans({}, item.className) }} {{ item.slug }}" class="slid-img img-responsive" />
+						{% endif %}
 					</div>
 				</div>
 				{% endif %}

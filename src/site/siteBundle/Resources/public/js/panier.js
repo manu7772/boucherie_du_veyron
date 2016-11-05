@@ -19,6 +19,7 @@ jQuery(document).ready(function($) {
 				if(data.defaultquantity == null) data.defaultquantity = 1;
 				// save unit
 				var value = data.targets.quantity.val();
+				if(value == undefined) return false;
 				var values = value.split(' ');
 				data.unit = values[1];
 				$(parent).data('panierData', data);
@@ -30,6 +31,7 @@ jQuery(document).ready(function($) {
 
 	var controleValues = function (data) {
 		var value = data.targets.quantity.val();
+		if(value == undefined) return false;
 		if(value == undefined || value == null) return [data.defaultquantity, data.unit];
 		var values = value.split(' ');
 		if(values.length == 0) return [data.defaultquantity, data.unit];

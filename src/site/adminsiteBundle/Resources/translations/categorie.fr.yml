@@ -52,17 +52,18 @@ fields:
     icon: icône
     group_pagewebsChilds: Pages web
     group_categorie_nestedParents: Collection parent
+    group_categorie_nestedChilds: Collections enfants
     parent: Collection parent
     group_nestedsChilds: Éléments contenus
 types:
     all: types
     multimedia: multimedias
+    trash: corbeille
     menu: menus
     diapo: diaporamas
     image: photographies
     article: articles
     pdf: fichiers PDF
-    menu: menus
     fiche_recettes: fiches recettes
     fiche_boissons: fiches boissons
     marque: marques
