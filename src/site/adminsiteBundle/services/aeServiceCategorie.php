@@ -119,10 +119,14 @@ class aeServiceCategorie extends aeServiceNested {
                 $trash->setNom(self::TRASH_NAME);
                 $trash->setType('trash');
                 $trash->setIcon('fa-trash');
-                $this->getEm()->persist($trash);
-                $result = $this->getEm()->flush();
-                if($result) $this->trash = $trash;
-                return $result;
+                if($trash->getStatut() != null) {
+                    $this->getEm()->persist($trash);
+                    $result = $this->getEm()->flush();
+                    if($result) $this->trash = $trash;
+                    return $result;
+                } else {
+                    return false;
+                }
             }
         }
         return true;
