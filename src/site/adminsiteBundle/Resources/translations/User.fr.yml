@@ -22,6 +22,7 @@ roles:
 fields:
     id: id
     nom: nom
+    telephone: téléphone
     created: création
     updated: mis à jour
     jamais: aucune modification

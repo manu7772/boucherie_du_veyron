@@ -116,11 +116,23 @@
 						{% endif %}
 						<tr>
 							<td><strong>Email</strong></td>
-							<td><a href="mailto:{{ user.email }}">{{ user.email }}</a></td>
+							<td title="{{ user.email }}"><a href="mailto:{{ user.email }}">{{ phraseCut(user.email, 22) }}</a></td>
+						</tr>
+						<tr>
+							<td><strong>Téléphone</strong></td>
+							<td>{{ user.telephone }}</td>
+						</tr>
+						<tr>
+							<td><strong>Last login</strong></td>
+							{% if user.lastLogin is not null %}
+							<td>{{ user.lastLogin|date(formatDateHeure) }}</td>
+							{% else %}
+							<td>-</td>
+							{% endif %}
 						</tr>
 						<tr>
 							<td><strong>Last password request</strong></td>
-							{% if user.passwordRequestedAt != null %}
+							{% if user.passwordRequestedAt is not null %}
 							<td>{{ user.passwordRequestedAt|date(formatDateHeure) }}</td>
 							{% else %}
 							<td>-</td>

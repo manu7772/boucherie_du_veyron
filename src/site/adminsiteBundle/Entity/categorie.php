@@ -142,6 +142,7 @@ class categorie extends nested {
 		// }
 		$group = $this->getSnake()->getGroupName($method, false);
 		$categorie = $arguments;
+		if(is_array($arguments)) $arguments = new ArrayCollection($arguments);
 		switch(aeData::decamelize($method)) {
 			case 'set_'.$this->getSnake()->getPropPrefix().'_categorie_nested_parent':
 			case 'set_'.$this->getSnake()->getPropPrefix().'_categorie_nested_parents':
