@@ -78,7 +78,7 @@ class ProfileController extends BaseController {
                 $image = $data['user']->getAvatar();
                 if(is_object($image)) {
                     $infoForPersist = $image->getInfoForPersist();
-                    $this->container->get('aetools.aeDebug')->debugFile($infoForPersist);
+                    // $this->container->get('aetools.aeDebug')->debugFile($infoForPersist);
                     if($infoForPersist['removeImage'] === true || $infoForPersist['removeImage'] === 'true') {
                         // Supression de l'image
                         $data['user']->setAvatar(null);

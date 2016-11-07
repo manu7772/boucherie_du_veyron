@@ -49,7 +49,7 @@ class DefaultController extends Controller {
 					break;
 				default:
 					// WEB SITE
-					return $this->redirect('http://admin.boucherie-du-veyron.fr/'.$locale.'/admin/generate');
+					return $this->redirect($domain_admin['reseau'].$domain_admin['prefix'].$domain_admin[''].'/'.$domain_admin['domain'].'.'.$domain_admin['extensions'][0].'/'.$locale.$domain_admin['path'].'/generate');
 					break;
 			}
 		}

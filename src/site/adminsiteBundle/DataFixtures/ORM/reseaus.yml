@@ -10,4 +10,4 @@ reseau:
             couleur: 'rgba(242,62,62,0.29)'
         -
             nom: 'Grande distribution'
-            couleur: ~
+            # couleur: ~

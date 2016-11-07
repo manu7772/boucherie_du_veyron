@@ -39,7 +39,9 @@ class ficherecette extends fiche {
 		);
 
 	protected $durees = array(
+        15    =>  "15\"",
         30    =>  "30\"",
+        45    =>  "45\"",
         60    =>  "1 h",
         90    =>  "1 h 30\"",
         120   =>  "2 h",

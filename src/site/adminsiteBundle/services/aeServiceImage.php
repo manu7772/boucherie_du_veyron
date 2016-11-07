@@ -122,7 +122,7 @@ class aeServiceImage extends aeServiceMedia {
 						// rawfile
 						if($info['removeImage'] !== true) {
 							if(isset($info['rawfiles']['actual'])) {
-								$rawfile = $this->getRepo('Labo\Bundle\AdminBundle\Entity\rawfile')->find((integer)$info['rawfiles']['actual']);
+								$rawfile = $this->getRepo('Labo\Bundle\AdminBundle\Entity\rawfile')->find((integer)$info['rawfiles']['actual'], true);
 								if(is_object($rawfile)) {
 									$oldrawfile = $entity->getRawfile();
 									if($rawfile !== $oldrawfile) {
