@@ -15,7 +15,7 @@ pageweb:
             diaporama:
                 field: nom
                 value: 'Diaporamas accueil'
-            group_nestedsParents:
+            group_nesteds_parents:
                 field: nom
                 value: 'menu principal'
         -
@@ -27,7 +27,7 @@ pageweb:
             # keywords: 'boucherie, boucher, traiteur, commander, en ligne'
             metadescription: 'Commander sur le site de la Boucherie du Veyron'
             modele: 'src/site/siteBundle/Resources/views/basic_pages_web/simple_1col_wrap.html.twig'
-            group_nestedsParents:
+            group_nesteds_parents:
                 field: nom
                 value: 'menu principal'
         -
@@ -39,7 +39,7 @@ pageweb:
             # keywords: 'boucherie, boucher, traiteur'
             metadescription: 'Contact Boucherie du Veyron'
             modele: 'src/site/siteBundle/Resources/views/basic_pages_web/contact.html.twig'
-            group_nestedsParents:
+            group_nesteds_parents:
                 field: nom
                 value: 'menu principal'
 
@@ -53,7 +53,7 @@ pageweb:
             # keywords: 'boucherie, boucher, traiteur, commander, en ligne'
             metadescription: 'Conditions générales de vente'
             modele: 'src/site/siteBundle/Resources/views/basic_pages_web/simple_1col_wrap.html.twig'
-            group_nestedsParents:
+            group_nesteds_parents:
                 field: nom
                 value: 'informations'
         -
@@ -65,7 +65,7 @@ pageweb:
             # keywords: 'boucherie, boucher, traiteur, mentions légales'
             metadescription: 'Mentions légales'
             modele: 'src/site/siteBundle/Resources/views/basic_pages_web/simple_1col_wrap.html.twig'
-            group_nestedsParents:
+            group_nesteds_parents:
                 field: nom
                 value: 'informations'
         -
@@ -77,7 +77,7 @@ pageweb:
             # keywords: 'boucherie, boucher, traiteur, Charte de qualité'
             metadescription: 'Charte de qualité'
             modele: 'src/site/siteBundle/Resources/views/basic_pages_web/simple_1col_wrap.html.twig'
-            group_nestedsParents:
+            group_nesteds_parents:
                 field: nom
                 value: 'informations'
         -
@@ -89,7 +89,7 @@ pageweb:
             # keywords: 'boucherie, boucher, traiteur, commander, en ligne'
             metadescription: 'Nos partenaires'
             modele: 'src/site/siteBundle/Resources/views/basic_pages_web/partenaires.html.twig'
-            group_nestedsParents:
+            group_nesteds_parents:
                 field: nom
                 value: 'informations'
 

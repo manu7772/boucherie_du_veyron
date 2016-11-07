@@ -86,6 +86,15 @@ class ProfileFormType extends BaseType {
 					'class' => 'input-sm form-control',
 					),
 				))
+			->add('telephone', 'text', array(
+				'translation_domain' => 'siteUserBundle',
+				'label'     => 'fields.telephone',
+				'label_attr' => array('class' => 'text-muted'),
+				'required'  => false,
+				'attr' => array(
+					'class' => 'input-sm form-control',
+					),
+				))
 			// ->add('langue', 'text', array(
 			// 	'translation_domain' => 'siteUserBundle',
 			// 	"required" => true,

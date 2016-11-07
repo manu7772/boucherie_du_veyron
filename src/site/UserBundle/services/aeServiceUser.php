@@ -47,7 +47,7 @@ class aeServiceUser extends aeServiceLaboUser {
 	 * @param LifecycleEventArgs $eventArgs = null
 	 * @return aeServiceLaboUser
 	 */
-	public function checkIntegrity(&$entity, $context = null, LifecycleEventArgs $eventArgs = null) {
+	public function checkIntegrity(&$entity, $context = null, $eventArgs = null) {
 		parent::checkIntegrity($entity, $context, $eventArgs);
 		// if($entity instanceOf user) {
 			switch(strtolower($context)) {

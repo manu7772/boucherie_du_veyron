@@ -48,6 +48,7 @@ fields:
     email: courriel
     nom: nom
     prenom: prénom
+    telephone: téléphone
     help: aide admin
     mail_sitemessages: copie mail des messages du site
     theme: thème admin

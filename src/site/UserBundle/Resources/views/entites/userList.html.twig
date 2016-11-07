@@ -51,13 +51,13 @@
 						{% set classtype = userColor(user) %}
 						<tr>
 							<td>
-								<p class="text-{{ classtype|default('muted')|raw }}">{{ user.username }}</p>
+								<p class="text-{{ classtype|default('muted')|raw }} no-margins">{{ user.username }}</p>
 								{% if user.lastLogin is not null %}
-								<p><em class='text-primary'>Dernier log&nbsp;: {{ user.lastLogin|date(formatDateHeure) }}</em></p>
+								<p class='no-margins'><em class='text-primary'>Dernier log&nbsp;: {{ user.lastLogin|date(formatDateHeure) }}</em></p>
 								{% else %}
-								<p><em class='text-muted'>(jamais connecté)</em></p>
+								<p class='no-margins'><em class='text-muted'>(jamais connecté)</em></p>
 								{% endif %}
-								<p>{{ UCfirst('name'|trans({}, 'panier')) }} : {{ 'x_found'|transchoice(user.articlesPanier, {}, 'article') }}</p>
+								<p class='no-margins'>{{ UCfirst('name'|trans({}, 'panier')) }} : {{ 'x_found'|transchoice(user.articlesPanier, {}, 'article') }}</p>
 							</td>
 							<td class='text-center'>
 								{% if user.avatar.isScreenableImage|default(false) != false %}
@@ -126,7 +126,7 @@
 					<strong>{{ user.adresse|default('-') }}</strong><br>
 					{{ user.cp|default('-') }}<br>
 					{{ user.ville|default('-') }}<br>
-					<abbr title="Téléphone">Tél. </abbr> {{ user.tel|default('-') }}
+					<abbr title="Téléphone">Tél. </abbr> {{ user.telephone|default('-') }}
 				</address>
 			</a>
 			<div class="contact-box-footer">
@@ -160,7 +160,7 @@
 					<strong>{{ user.adresse|default('-') }}</strong><br>
 					{{ user.cp|default('-') }}<br>
 					{{ user.ville|default('-') }}<br>
-					<abbr title="Téléphone">Tél. </abbr> {{ user.tel|default('-') }}
+					<abbr title="Téléphone">Tél. </abbr> {{ user.telephone|default('-') }}
 				</address>
 			</div>
 			<div class="clearfix"></div>
