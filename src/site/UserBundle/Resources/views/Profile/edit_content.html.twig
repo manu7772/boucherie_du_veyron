@@ -32,6 +32,7 @@
 							{{ form_widget(form.telephone) }}
 							{{ form_errors(form.telephone) }}
 						</div>
+
 						<h5>{{ 'adresse'|trans|capitalize }}</h5>
 						<div class="form-group col-md-12">
 							{{ form_widget(form.adresse.children.adresse) }}
@@ -67,6 +68,7 @@
 							{{ form_widget(form.adresseLivraison.children.commentaire) }}
 							{{ form_widget(form.adresseLivraison.children.url) }}
 						</div>
+
 						<h5>{{ 'fields.avatar'|trans|capitalize }}</h5>
 						<div class="form-group col-md-12">
 							{{ form_widget(form.avatar) }}
