@@ -7,6 +7,6 @@ parameters:
     database_password: azetyu123
     mailer_transport: smtp
     mailer_host: auth.smtp.1and1.fr
-    mailer_user: emmanuel@aequation-webdesign.fr
-    mailer_password: Xylanthropus_Teta_12
+    mailer_user: noreply@boucherie-du-veyron.fr 
+    mailer_password: boucherie_veyron_789      
     secret: thisisthesiteofboucherieduveyron123

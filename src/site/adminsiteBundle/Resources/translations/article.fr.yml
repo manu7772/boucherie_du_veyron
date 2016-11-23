@@ -30,6 +30,7 @@ fields:
     image: image
     vendable: en vente
     surdevis: sur devis
+    groupbasket: amalgamer dans le panier
     defaultquantity: quantité par défaut
     maxquantity: quantité maximale
     minquantity: quantité minimale

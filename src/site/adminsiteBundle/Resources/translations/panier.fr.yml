@@ -18,3 +18,19 @@ fields:
     created: création
     updated: mis à jour
     jamais: aucune modification
+actions:
+    articleadded: "{0}Aucun article n'a été ajouté au panier|{1}Un article %article% a été ajouté au panier|[2,+Inf] %count% articles %article% ont été ajoutés au panier"
+    contenudeleted: Le contenu du panier a été supprimé
+    contenuempty: Le panier est déjà vide
+    articlenotexist: L'article %article% n'existe pas dans le panier
+    articlenotpanierable: L'article %article% ne peut être ajouté au panier
+    articledeleted: L'article %article% a été supprimé du panier
+    articledretired: "{0}Aucun article n'a été retiré du panier|{1}Un article %article% a été retiré du panier|[2,+Inf] %count% articles %article% ont été retirés du panier"
+    articleverified: "{0}Aucun article indisponible n'a été retiré du panier|{1}Un article indisponible %articles% a été retiré du panier|[2,+Inf] %count% articles indisponibles : %articles%, ont été retirés du panier"
+errors:
+    errorpanier: Erreur panier. Aucune action enregistrée
+    usernotfound: Utilisateur non trouvé
+    articlenotfound: Article non trouvé
+
+
+

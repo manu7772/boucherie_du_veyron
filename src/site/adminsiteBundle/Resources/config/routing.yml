@@ -15,6 +15,10 @@ siteadmin_sadmin_panier:
     path:     /superadmin/panier/tests
     defaults: { _controller: siteadminsiteBundle:superadmin:panierTest }
 
+siteadmin_sadmin_sessiondata:
+    path:     /superadmin/sessiondata
+    defaults: { _controller: siteadminsiteBundle:superadmin:sessiondata }
+
 siteadmin_sadmin_routes:
     path:     /superadmin/routes
     defaults: { _controller: siteadminsiteBundle:superadmin:routes }
@@ -153,6 +157,10 @@ siteUser_edit:
 siteUser_delete:
     path:     /user/delete/{username}
     defaults: { _controller: siteUserBundle:Default:delete }
+
+siteUser_check_messagescollaborators:
+    path:     /user/check/messagescollaborators/{repar}
+    defaults: { _controller: siteadminsiteBundle:superadmin:checkMessagesCollaborators, repar: false }
 
 # MEDIA / IMAGES / PDF
 siteMedia_saveRawFile:

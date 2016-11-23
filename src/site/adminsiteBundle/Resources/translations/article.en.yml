@@ -30,6 +30,7 @@ fields:
     image: picture
     vendable: is salable
     surdevis: by price request
+    groupbasket: group in basket
     defaultquantity: default quantity
     maxquantity: max quantity
     minquantity: min quantity

@@ -5,6 +5,7 @@ namespace site\UserBundle\Form\Type;
 
 use Symfony\Component\Form\FormBuilderInterface;
 use FOS\UserBundle\Form\Type\RegistrationFormType as BaseType;
+use site\adminsiteBundle\Form\adresseType;
 
 class RegistrationFormType extends BaseType {
 
@@ -19,15 +20,6 @@ class RegistrationFormType extends BaseType {
 		parent::buildForm($builder, $options);
 		// add your custom field
 		$builder
-            ->add('email', 'email', array(
-                'label' => 'fields.email',
-                'label_attr' => array('class' => 'text-muted'),
-                'translation_domain' => 'siteUserBundle',
-                'attr'      => array(
-                    'class'         => 'input-sm form-control',
-                    'placeholder'   => 'fields.email',
-                    ),
-                ))
             ->add('username', null, array(
                 'label' => 'fields.username',
                 'label_attr' => array('class' => 'text-muted'),
@@ -35,6 +27,15 @@ class RegistrationFormType extends BaseType {
                 'attr'      => array(
                     'class'         => 'input-sm form-control',
                     'placeholder'   => 'fields.username',
+                    ),
+                ))
+            ->add('email', 'email', array(
+                'label' => 'fields.email',
+                'label_attr' => array('class' => 'text-muted'),
+                'translation_domain' => 'siteUserBundle',
+                'attr'      => array(
+                    'class'         => 'input-sm form-control',
+                    'placeholder'   => 'fields.email',
                     ),
                 ))
             ->add('nom', 'text', array(
@@ -71,6 +72,23 @@ class RegistrationFormType extends BaseType {
                     'attr'  => array('class' => 'input-sm form-control'),
                     ),
                 'invalid_message' => 'fos_user.password.mismatch',
+                ))
+            ->add('telephone', 'text', array(
+                'translation_domain' => 'siteUserBundle',
+                'label'     => 'fields.telephone',
+                'label_attr' => array('class' => 'text-muted'),
+                'required'  => false,
+                'attr' => array(
+                    'class' => 'input-sm form-control',
+                    ),
+                ))
+            ->add('adresse', new adresseType(), array(
+                'label' => 'Adresse',
+                'required' => false,
+                ))
+            ->add('adresseLivraison', new adresseType(), array(
+                'label' => 'Adresse de livraison',
+                'required' => false,
                 ))
         ;
 	}

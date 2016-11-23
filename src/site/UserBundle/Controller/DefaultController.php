@@ -15,6 +15,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 // use site\UserBundle\Form\Type\ProfileFormType;
+use Labo\Bundle\AdminBundle\services\aeData;
 
 class DefaultController extends Controller {
 
@@ -72,6 +73,7 @@ class DefaultController extends Controller {
 		$userRoles = $this->get('labo_user_roles');
 		$data['roleNames'] = $userRoles->getRoleNames();
 		$data['roleColors'] = $userRoles->getRoleColors();
+		$data['panier'] = $this->get(aeData::PREFIX_CALL_SERVICE.'aeServiceFacture')->getUserPanier($data['user']);
 		$data['htitle'] = "Informations ".self::USER_NAME;
 		if(is_object($data['user'])) {
 			return $this->render('siteUserBundle:entites:userShow.html.twig', $data);

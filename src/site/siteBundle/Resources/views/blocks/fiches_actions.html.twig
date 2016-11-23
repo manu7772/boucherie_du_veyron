@@ -1,6 +1,6 @@
 {% macro boxFiche(item, categorie) %}
 
-{% if item.className|default(item.shortName|default(null)) matches '#^fiche#' %}
+{% if item.shortName matches '#^fiche#' %}
 	{% import 'sitesiteBundle:blocks:actions.html.twig' as actions %}
 	{% import 'sitesiteBundle:blocks:blocks_actions.html.twig' as blocks_actions %}
 	{% set EDITORMODE = (app.environment in ['DEV', 'TEST']) or (is_granted('ROLE_EDITOR')) %}
@@ -11,18 +11,18 @@
 					<a {{ actions.elementHref(item, categorie|default(null))|raw }}>{{ blocks_actions.imageprint(item, 275, null) }}</a>
 					<div class="product-bottom">
 						<div class="btn-group order-group for-fiche full-width" role="group" style="width:100%;text-align:center;margin-top:0px;">
-							{% if item.className|default(item.shortName|default(null)) matches '#recette$#' %}
-							<h2 style="width:100%;text-align:center;line-height:12px;"><small><i>{{ 'fields.niveau'|trans({}, item.className|default(item.shortName|default(null))) }} {# {{ item.niveau|trans({}, item.className|default(item.shortName|default(null))) }} #}</i></small></h2>
-							{% elseif item.className|default(item.shortName|default(null)) matches '#boisson$#' %}
-							<h2 style="width:100%;text-align:center;line-height:12px;"><small><i>{{ 'fields.note'|trans({}, item.className|default(item.shortName|default(null))) }} {{ item.note|default('/')|trans({}, item.className|default(item.shortName|default(null))) }}</i></small></h2>
+							{% if item.shortName matches '#recette$#' %}
+							<h2 style="width:100%;text-align:center;line-height:12px;"><small><i>{{ 'fields.niveau'|trans({}, item.shortName) }} {# {{ item.niveau|trans({}, item.shortName) }} #}</i></small></h2>
+							{% elseif item.shortName matches '#boisson$#' %}
+							<h2 style="width:100%;text-align:center;line-height:12px;"><small><i>{{ 'fields.note'|trans({}, item.shortName) }} {{ item.note|default('/')|trans({}, item.shortName) }}</i></small></h2>
 							{% endif %}
 						</div>
 					</div>
 				</div>
 				<p class="tab-name-product">
 					<a {{ actions.elementHref(item, categorie|default(null))|raw }}>{{ item.nom }}</a>
-					{%- if EDITORMODE %} <a href="{{ path('siteadmin_entite', {entite: item.className|default(item.shortName|default(null)), id: item.id, action: 'show'}) }}"><i class="fa fa-eye icon-wait-on-click"></i></a>{% endif %}
-					{%- if EDITORMODE %} <a href="{{ path('siteadmin_entite', {entite: item.className|default(item.shortName|default(null)), id: item.id, action: 'edit'}) }}"><i class="fa fa-pencil icon-wait-on-click"></i></a>{% endif %}
+					{%- if EDITORMODE %} <a href="{{ path('siteadmin_entite', {entite: item.shortName, id: item.id, action: 'show'}) }}"><i class="fa fa-eye icon-wait-on-click"></i></a>{% endif %}
+					{%- if EDITORMODE %} <a href="{{ path('siteadmin_entite', {entite: item.shortName, id: item.id, action: 'edit'}) }}"><i class="fa fa-pencil icon-wait-on-click"></i></a>{% endif %}
 				</p>
 				<p class="tab-info-category">{{ categorie.nom|default('') }}</p>
 			</div>
@@ -37,18 +37,18 @@
 			<h2 style="width:100%;text-align:center;line-height:12px;">
 				<small>
 					<a {{ actions.elementHref(item, categorie|default(null))|raw }}>{{ item.nom }}</a>
-					{%- if EDITORMODE %} <a href="{{ path('siteadmin_entite', {entite: item.className|default(item.shortName|default(null)), id: item.id, action: 'show'}) }}"><i class="fa fa-eye icon-wait-on-click"></i></a>{% endif %}
-					{%- if EDITORMODE %} <a href="{{ path('siteadmin_entite', {entite: item.className|default(item.shortName|default(null)), id: item.id, action: 'edit'}) }}"><i class="fa fa-pencil icon-wait-on-click"></i></a>{% endif %}
+					{%- if EDITORMODE %} <a href="{{ path('siteadmin_entite', {entite: item.shortName, id: item.id, action: 'show'}) }}"><i class="fa fa-eye icon-wait-on-click"></i></a>{% endif %}
+					{%- if EDITORMODE %} <a href="{{ path('siteadmin_entite', {entite: item.shortName, id: item.id, action: 'edit'}) }}"><i class="fa fa-pencil icon-wait-on-click"></i></a>{% endif %}
 				</small>
 			</h2>
 		</div>
 	</div>
 </div>
 <p class="tab-name-product">
-	{% if item.className|default(item.shortName|default(null)) matches '#recette$#' %}
-	<i>{{ 'fields.niveau'|trans({}, item.className|default(item.shortName|default(null))) }} {{ item.niveau|trans({}, item.className|default(item.shortName|default(null))) }}</i>
-	{% elseif item.className|default(item.shortName|default(null)) matches '#boisson$#' %}
-	<i>{{ 'fields.note'|trans({}, item.className|default(item.shortName|default(null))) }} {{ item.note|default('/')|trans({}, item.className|default(item.shortName|default(null))) }}</i>
+	{% if item.shortName matches '#recette$#' %}
+	<i>{{ 'fields.niveau'|trans({}, item.shortName) }} {{ item.niveau|trans({}, item.shortName) }}</i>
+	{% elseif item.shortName matches '#boisson$#' %}
+	<i>{{ 'fields.note'|trans({}, item.shortName) }} {{ item.note|default('/')|trans({}, item.shortName) }}</i>
 	{% endif %}
 </p> #}
 

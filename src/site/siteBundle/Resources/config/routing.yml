@@ -44,9 +44,21 @@ site_pageweb_fiches:
     path:       /fiches/{categorieSlug}
     defaults:   { _controller: sitesiteBundle:Default:fichesByCategorie }
 
+# AJAX LIVE
+ajaxlive_global_serialized:
+    path:       /global-serialized/{requirements}/{user}
+    defaults:   { _controller: sitesiteBundle:ajaxlive:globalinfos, requirements: null, user: null }
+
+entity_serialized:
+    path:       /serialized/{requirements}/{user}/{shortname}
+    defaults:   { _controller: sitesiteBundle:ajaxlive:entiteinfos, requirements: null, user: null, shortname: null }
 
 # Gestion du panier
 panier_action:
-    path:       /panier/action/{action}/{id}/{param}
-    defaults:   { _controller: sitesiteBundle:panier:panier, action: 'add', id: null, param: null }
+    path:       /panier/action/{getdata}
+    defaults:   { _controller: sitesiteBundle:panier:panier, getdata: null }
+
+panier_test_action:
+    path:       /panier-test/action/{getdata}
+    defaults:   { _controller: sitesiteBundle:panier:panierTest, getdata: null }
 

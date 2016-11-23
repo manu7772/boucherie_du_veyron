@@ -67,7 +67,7 @@
 								{% endif %}
 							</td>
 							<td>
-								<strong>{{ user.nom }}</strong><br>{{ user.prenom }}
+								<strong>{{ user.nom }}</strong><br>{{ user.prenom }}{% if user.isCollaborator %}<br><strong class="text-success">Collaborator</strong>{% endif %}
 							</td>
 							<td>
 								<div class="btn-group">
@@ -97,6 +97,9 @@
 								{% for role in user.roles %}
 								<label class="label label-{{ roleColor(role) }}" title="{{ role }}">{{ roleName(role) }}</label> 
 								{% endfor %}
+								{% if user.isCollaborator %}
+								<label class="label label-success">Collaborator</label> 
+								{% endif %}
 							</td>
 						</tr>
 						{% endfor %}
