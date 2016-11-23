@@ -53,6 +53,8 @@ twig:
         list_locales: %list_locales%
         info_entites: %info_entites%
         marketplace: %marketplace%
+        ajaxlive: %ajaxlive%
+        serializer: %serializer%
         site_domains: %site_domains%
     form:
         resources:
@@ -164,6 +166,12 @@ fos_user:
     use_flash_notifications:  true
     use_username_form_type:   true
     from_email: %mail%
+
+# JMS Serializer configuration
+jms_serializer:
+  metadata:
+    auto_detection: true
+    debug: "%kernel.debug%"
 
 # Stof\DoctrineExtensionBundle configuration
 stof_doctrine_extensions:

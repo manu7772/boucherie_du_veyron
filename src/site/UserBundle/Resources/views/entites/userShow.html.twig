@@ -45,6 +45,9 @@
 						{% for role in user.roles %}
 						<div class="label label-{{ roleColors[role] }}">{{ roleNames[role] }}</div> 
 						{% endfor %}
+						{% if user.isCollaborator %}
+						<div class="label label-success">Collaborator</div>
+						{% endif %}
 					</h4>
 					<!-- <small> -->
 						<!-- There are many variations of passages of Lorem Ipsum available, but the majority -->
@@ -62,7 +65,7 @@
 					<td{% if user.lastLogin is not null %} title="{{ user.lastLogin|date(formatDateHeure) }}"{% endif %}>
 						<strong>Login</strong> 
 						{% if user.lastLogin is not null %}
-						{{ dateFR(user.lastLogin, true)|raw }} {{ user.lastLogin|date('H\\hi')|raw }}
+						{{ dateFR(user.lastLogin, true)|raw }} {{ user.lastLogin|date('H:i:s')|raw }}
 						{% else %}
 						<i class="text-muted">(jamais)</i>
 						{% endif %}
@@ -71,7 +74,11 @@
 						<p></p>
 					</td>
 					<td>
-						<strong>Messages</strong> {{ user.messages(true)|length }}
+						{% if user.isCollaborator %}
+						<strong>Messages non lus</strong> {{ user.messageusers|length }}
+						{% else %}
+						<strong>Messages </strong> <i class="text-muted">non abonné</i>
+						{% endif %}
 					</td>
 				</tr>
 				{% if marketplace.active|default(false) %}
@@ -108,10 +115,16 @@
 						</tr>
 					</thead>
 					<tbody>
-						{% if user.adresse is defined %}
+						{% if user.adresse|default(null) != null %}
 						<tr>
 							<td><strong>Adresse</strong></td>
-							<td>{{ user.adresse|default('-') }}<br>{{ user.cp|default('-') }} {{ user.ville|default('-') }}</td>
+							<td>{{ user.adresse.adresse|default('-') }}<br>{{ user.adresse.cp|default('-') }} {{ user.adresse.ville|default('-') }}</td>
+						</tr>
+						{% endif %}
+						{% if user.adresseLivraison|default(null) != null %}
+						<tr>
+							<td><strong>Adresse de livraison</strong></td>
+							<td>{{ user.adresseLivraison.adresse|default('-') }}<br>{{ user.adresseLivraison.cp|default('-') }} {{ user.adresseLivraison.ville|default('-') }}</td>
 						</tr>
 						{% endif %}
 						<tr>
@@ -264,6 +277,7 @@
 				<table class="table table-striped table-bordered table-hover">
 					<tbody>
 						{% for message in user.messages(true)|default({}) %}
+						{% if loop.index < 5 %}
 						<tr>
 							<td>{{ message.position }} | <strong>{{ message.objet|default('<i class="fa fa-ban text-muted"></i>')|raw }}</strong></td>
 						</tr>
@@ -277,6 +291,7 @@
 								</blockquote>
 							</td>
 						</tr>
+						{% endif %}
 						{% endfor %}
 					</tbody>
 				</table>
@@ -302,5 +317,9 @@
 	</div>
 </div>
 {% endif %}
+
+{{ dump(panier.panier) }}
+{{ dump(panier.frozenuser) }}
+{{ dump(panier) }}
 
 {% endblock content %}

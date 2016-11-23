@@ -10,8 +10,15 @@ use Doctrine\ORM\Event\LifecycleEventArgs;
 use FOS\UserBundle\Doctrine\UserManager;
 use Symfony\Component\Security\Core\Encoder\EncoderFactory;
 
+use Labo\Bundle\AdminBundle\services\aeData;
+
 use Labo\Bundle\AdminBundle\services\aeServiceLaboUser;
+use Labo\Bundle\AdminBundle\Entity\messageuser;
 use site\UserBundle\Entity\user;
+use Labo\Bundle\AdminBundle\Entity\message;
+use Labo\Bundle\AdminBundle\Entity\LaboUser;
+
+use \DateTime;
 
 class aeServiceUser extends aeServiceLaboUser {
 
@@ -54,6 +61,8 @@ class aeServiceUser extends aeServiceLaboUser {
 				case 'new':
 					break;
 				case 'postload':
+					if($entity->isCollaborator()) $this->container->get(aeData::PREFIX_CALL_SERVICE.'aeServiceMessage')->checkMessagesCollaborator($entity, true);
+					// echo('<p>User loaded. ('.$entity->getUsername().')</p>');
 					break;
 				case 'prepersist':
 					break;

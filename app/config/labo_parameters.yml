@@ -1,6 +1,41 @@
 parameters:
     cache:
         delay: '-10 MINUTES'
+    ajaxlive:
+        name: ajaxlive          # name
+        parameters:
+            frequency: 3000         # frequency in seconds
+            frequencyMax: 300000    # frequencyMax in seconds
+            frequencyMin: 3000      # frequencyMin in seconds
+        entities:
+            panier:
+                JmsGroups: ['ajaxlive']
+                shortname: panier
+                QueryMethod:
+                    method: findAllOfUser
+                    shortCutContext: false
+                user_condition: id
+            message:
+                JmsGroups: ['ajaxlive']
+                shortname: message
+                QueryMethod:
+                    method: findNotRead
+                    shortCutContext: false
+                user_condition: mail_sitemessages
+            sessiondata:
+                JmsGroups: ['ajaxlive']
+                shortname: sessiondata
+                QueryMethod:
+                    method: findAllOfUser
+                    shortCutContext: false
+                user_condition: is_collaborator
+    serializer:
+        default:
+            JmsGroups: ['complete']
+            QueryMethod:
+                method: findAllOfUser
+                shortCutContext: false
+            user_condition: all
     site_domains:
         main_domain: 'boucherie-du-veyron.fr'
         public:

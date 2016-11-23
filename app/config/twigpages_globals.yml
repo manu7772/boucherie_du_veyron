@@ -28,8 +28,7 @@ twig:
                 icon: 'entite.webmaster'
                 level2: 
                     sadminHome:
-                        nom: 'roles.ROLE_SUPER_ADMIN'
-                        trans_domain: User
+                        nom: 'Tableau de bord'
                         path: 'siteadmin_sadmin_index'
                     generate:
                         nom: 'install.name'
@@ -46,6 +45,9 @@ twig:
                     panier:
                         nom: 'Testpanier'
                         path: 'siteadmin_sadmin_panier'
+                    sessions:
+                        nom: 'Session data'
+                        path: 'siteadmin_sadmin_sessiondata'
             categories:
                 role: 'ROLE_EDITOR'
                 nom: 'name_s'

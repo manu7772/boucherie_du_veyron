@@ -1,25 +1,26 @@
 {% extends 'sitesiteBundle:bases:base_simple.html.twig' %}
 
 {% block js %}
-    <script type="text/javascript" src="http://maps.google.com/maps/api/js"></script>
-    {% javascripts filter='?yui_js'
-    'bundles/sitegraphics/bdv/js/jquery.js'
-    'bundles/sitegraphics/bdv/js/bootstrap.min.js'
-    'bundles/sitegraphics/bdv/js/jquery.scrollUp.min.js'
-    'bundles/laboadmin/framework_inspinia/js/plugins/toastr/toastr.min.js'
-    'bundles/sitegraphics/bdv/js/main.js'
-    'bundles/sitegraphics/bdv/js/gmaps.js'
-    'bundles/sitegraphics/bdv/js/specifics.js'
-    'bundles/laboadmin/js/inspinia-data-messages.js'
-    'bundles/sitegraphics/fancyapps-fancyBox/source/jquery.fancybox.js'
-    'bundles/sitesite/js/panier.js'
-     %}
-    <script type="text/javascript" src="{{ asset_url }}"></script>
-    {% endjavascripts %}
-    <script type="text/javascript">
-    jQuery(document).ready(function($) {
-        {% block end_javascripts %}
-        {% endblock end_javascripts %}
-    });
-    </script>
+	<script type="text/javascript" src="http://maps.google.com/maps/api/js"></script>
+	{% javascripts filter='?yui_js'
+	'bundles/sitegraphics/bdv/js/jquery.js'
+	'bundles/sitegraphics/bdv/js/bootstrap.min.js'
+	'bundles/sitegraphics/bdv/js/jquery.scrollUp.min.js'
+	'bundles/laboadmin/framework_inspinia/js/plugins/toastr/toastr.min.js'
+	'bundles/sitegraphics/bdv/js/main.js'
+	'bundles/laboadmin/css/ajaxlive.css'
+	'bundles/sitegraphics/bdv/js/gmaps.js'
+	'bundles/sitegraphics/bdv/js/specifics.js'
+	'bundles/laboadmin/js/inspinia-data-messages.js'
+	'bundles/sitegraphics/fancyapps-fancyBox/source/jquery.fancybox.js'
+	'bundles/sitesite/js/ajaxlive.js'
+	 %}
+	<script type="text/javascript" src="{{ asset_url }}"></script>
+	{% endjavascripts %}
+	<script type="text/javascript">
+	jQuery(document).ready(function($) {
+		{% block end_javascripts %}
+		{% endblock end_javascripts %}
+	});
+	</script>
 {% endblock js %}

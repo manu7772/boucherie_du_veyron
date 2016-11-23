@@ -46,8 +46,9 @@ security:
                 invalidate_session: false
             remember_me:
                 key:  %secret%
-                # lifetime: 1000
-                # path: /
+                lifetime: 20
+                path: /
+                always_remember_me: true
             switch_user: true
 
     access_control:

@@ -95,6 +95,5 @@ class aeServiceArticle extends aeServiceItem {
 		return $entite->getVendable();
 	}
 
-
 }
 

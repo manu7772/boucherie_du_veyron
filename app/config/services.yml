@@ -98,6 +98,16 @@ services:
 
 
     #######################
+    ### SESSION DATA    ###
+    #######################
+
+    # fonctionnalités de SESSION
+    aetools.aeServiceSessiondata:
+        class: %ae_services%aeServiceSessiondata
+        arguments: [@service_container]
+
+
+    #######################
     ### ROLES           ###
     #######################
 
@@ -181,10 +191,18 @@ services:
     aetools.aeServiceMessage:
         class: %site_services%aeServiceMessage
         arguments: [@service_container]
+    aetools.aeServiceMessageuser:
+        class: %ae_services%aeServiceMessageuser
+        arguments: [@service_container]
 
     # service panier
     aetools.aeServicePanier:
         class: %ae_services%aeServicePanier
+        arguments: [@service_container]
+
+    # service facture
+    aetools.aeServiceFacture:
+        class: %ae_services%aeServiceFacture
         arguments: [@service_container]
 
 

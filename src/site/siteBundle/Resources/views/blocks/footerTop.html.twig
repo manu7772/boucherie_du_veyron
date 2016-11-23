@@ -3,20 +3,20 @@
 <div class="footer-widget">
 	<div class="container">
 		<div class="row">
-			{% if app.session.get('sitedata') != null %}
+			{# {% if app.session.get('sitedata') != null %} #}
 			{% for item1 in categorieFooters|default([]) %}
 			<div class="col-sm-2">
 				<div class="single-widget">
 					<h2 title="{{ phraseCut(item1.descriptif|default(item1.nom)|striptags, 160) }}">{{ item1.nom }}</h2>
 					<ul class="nav nav-pills nav-stacked">
-						{%- for item2 in item1.children|default([]) -%}
+						{%- for item2 in item1.nestedChilds()|merge(item1.categorieChilds(true)) -%}
 						<li title="{{ phraseCut(item2.descriptif|default(item2.nom)|striptags, 160) }}"><a {{ actions.elementHref(item2, '_self') }}>{{ UCfirst(item2.nom) }}</a></li>
 						{%- endfor -%}
 					</ul>
 				</div>
 			</div>
 			{% endfor %}
-			{% endif %}
+			{# {% endif %} #}
 		</div>
 	</div>
 </div>

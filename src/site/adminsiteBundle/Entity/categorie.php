@@ -6,6 +6,11 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Doctrine\Common\Collections\ArrayCollection;
+// JMS Serializer
+use JMS\Serializer\Annotation\ExclusionPolicy;
+use JMS\Serializer\Annotation\Expose;
+use JMS\Serializer\Annotation\MaxDepth;
+use JMS\Serializer\Annotation\Groups;
 
 use Labo\Bundle\AdminBundle\services\aeDebug;
 use Labo\Bundle\AdminBundle\services\aeSnake;
@@ -18,6 +23,8 @@ use \DateTime;
 
 /**
  * categorie
+ *
+ * @ExclusionPolicy("all")
  *
  * @ORM\Entity(repositoryClass="site\adminsiteBundle\Entity\categorieRepository")
  * @ORM\Table(name="categorie", options={"comment":"collections hiérarchisables d'éléments. Diaporamas, catégories, etc."})
@@ -71,6 +78,8 @@ class categorie extends nested {
 	 * type de catégorie
 	 * @var string
 	 * @ORM\Column(name="type", type="string", length=64, nullable=false, unique=false)
+	 * @Expose
+	 * @Groups({"complete", "export"})
 	 */
 	protected $type;
 
@@ -154,7 +163,7 @@ class categorie extends nested {
 			case 'add_'.$this->getSnake()->getPropPrefix().'_categorie_nested_parent':
 			case 'add_'.$this->getSnake()->getPropPrefix().'_categorie_nested_parents':
 				if($categorie instanceOf categorie) {
-					echo('<p>Parent of '.json_encode($this->getNom()).' is categorie '.json_encode($categorie->getNom()).' in group "'.$group.'"</p>');
+					// echo('<p>Parent of '.json_encode($this->getNom()).' is categorie '.json_encode($categorie->getNom()).' in group "'.$group.'"</p>');
 					parent::__call($method, new ArrayCollection(array($categorie)));
 					if(!$this->passBySetParent) $this->setCategorieParent($categorie);
 					// if($this->getLvl() > 0) $this->setCouleur($this->getRootParent()->getCouleur());
@@ -200,7 +209,7 @@ class categorie extends nested {
 		// categorie_nested
 		$this->passBySetParent = true;
 		$this->categorieParent = $categorie;
-		echo('<p>Set parent of '.json_encode($this->getNom()).' is categorie '.json_encode($categorie->getNom()).'</p>');
+		// echo('<p>Set parent of '.json_encode($this->getNom()).' is categorie '.json_encode($categorie->getNom()).'</p>');
 		$this->__call('set_'.$this->getSnake()->getPropPrefix().'_categorie_nested_parents', new ArrayCollection(array($categorie)));
 		$this->passBySetParent = false;
 		if($categorie instanceOf categorie) {

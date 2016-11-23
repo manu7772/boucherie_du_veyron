@@ -5,6 +5,13 @@ namespace site\siteBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+
+use Labo\Bundle\AdminBundle\services\aeData;
+use Labo\Bundle\AdminBundle\services\aeReponse;
+use Labo\Bundle\AdminBundle\services\flashMessage;
+use Labo\Bundle\AdminBundle\services\aeServicePanier;
 
 use site\adminsiteBundle\Entity\message;
 use Labo\Bundle\AdminBundle\Form\contactmessageType;
@@ -12,30 +19,88 @@ use \DateTime;
 
 use site\adminsiteBundle\Entity\panier;
 use site\adminsiteBundle\Entity\article;
+use site\UserBundle\Entity\User;
+use Labo\Bundle\AdminBundle\Entity\LaboUser;
 
 class panierController extends Controller {
 
-	public function panierAction($action = 'add', $id = null, $param = null) {
-		$servicePanier = $this->get('aetools.aeServicePanier');
-		if($id != null) $id = $this->getDoctrine()->GetManager()->getRepository('site\adminsiteBundle\Entity\article')->find($id);
-		if($param == null) $param = 1;
-		switch ($action) {
+	const ARTICLE_CLASSNAME = 'site\adminsiteBundle\Entity\article';
+
+	/**
+	 * info on Panier
+	 * @param integer $user = null
+	 * @param boolean $complete = false
+	 * @param Request $request
+	 * @return JsonResponse
+	 */
+	public function infoPanierAction($user = null, $complete = false, Request $request) {
+		// if($user == null) $user = $this->getUser();
+		$infopanier = $this->get(aeData::PREFIX_CALL_SERVICE.'aeServicePanier')->getInfosPanier($user, $complete);
+		$aeReponse = new aeReponse(is_array($infopanier), $infopanier, null);
+		return $request->isXmlHttpRequest() ? $aeReponse->getJSONreponse() : $aeReponse;
+	}
+
+	/**
+	 * Actions on Panier
+	 * @param Json $getdata = null
+	 * @param Request $request
+	 * @return JsonResponse
+	 */
+	public function panierAction($getdata = null, Request $request) {
+		$aeReponse = null;
+		$servicePanier = $this->get(aeData::PREFIX_CALL_SERVICE.'aeServicePanier');
+		// POST Params
+		$postParams = $request->request->get('params');
+		if($postParams == null && $getdata != null) {
+			$postParams = json_decode($getdata, true);
+		}
+		$servicePanier->computePanier($postParams);
+		// echo('<pre>');var_dump($postParams);die('</pre>');
+		switch($postParams['action']) {
+			// actions…
 			case 'add':
-				$servicePanier->ajouteArticle($id, $this->getUser(), $param);
+				$aeReponse = $servicePanier->ajouteArticle($postParams);
 				break;
 			case 'supp':
-				$servicePanier->reduitArticle($id, $this->getUser(), $param);
+				$aeReponse = $servicePanier->reduitArticle($postParams);
 				break;
 			case 'remove':
-				$servicePanier->SupprimeArticle($id, $this->getUser());
+				$aeReponse = $servicePanier->SupprimeArticle($postParams);
 				break;
 			case 'empty':
-				$servicePanier->videPanier($this->getUser());
+				$aeReponse = $servicePanier->videPanier($postParams['user']);
 				break;
 		}
-		
-		//
-		return $this->redirectToRoute('siteadmin_sadmin_panier');
+		if($aeReponse == null) $aeReponse = new aeReponse(false, null, ucfirst($this->get('translator')->trans('errors.errorpanier', [], aeServicePanier::CLASS_SHORT_ENTITY)));
+		// Response if AJAX
+		return $request->isXmlHttpRequest() ? $aeReponse->getJSONreponse() : $aeReponse;
 	}
+
+
+	/**
+	 * @Security("has_role('ROLE_USER')")
+	 * Actions de tests sur panier
+	 * @param Json $getdata = null
+	 * @param Request $request
+	 * @return JsonResponse
+	 */
+	public function panierTestAction($getdata = null, Request $request) {
+		$aeReponse = $this->panierAction($getdata, $request);
+		if($aeReponse instanceOf aeReponse) {
+			$message = $aeReponse->getMessage();
+			$typeMessage = $aeReponse->getResult() ? flashMessage::MESSAGES_SUCCESS : flashMessage::MESSAGES_ERROR;
+			if(trim($message) != '') $this->get('flash_messages')->send(array(
+				'title'		=> ucfirst('Action Panier'),
+				'type'		=> $typeMessage,
+				'text'		=> $message,
+			));
+		} else {
+			throw new Exception("Action is not AJAX, so aeReponse must be an object, in panierController::panierTestAction().", 1);
+		}
+		return $this->redirect($this->generateUrl('siteadmin_sadmin_panier'));
+	}
+
+
+
 
 }

@@ -25,6 +25,8 @@ use Symfony\Component\Form\FormEvent;
 use site\UserBundle\Entity\User;
 use Labo\Bundle\AdminBundle\Form\imageType;
 use site\adminsiteBundle\Form\cropperType;
+use site\adminsiteBundle\Form\adresseType;
+
 
 use FOS\UserBundle\Form\Type\ProfileFormType as BaseType;
 
@@ -107,6 +109,14 @@ class ProfileFormType extends BaseType {
 			->add('avatar', new cropperType(null, array('image' => $this->imagesData['image'])), array(
 				'translation_domain' => 'siteUserBundle',
 				'label' => 'fields.avatar',
+				'required' => false,
+				))
+			->add('adresse', new adresseType(), array(
+				'label' => 'Adresse',
+				'required' => false,
+				))
+			->add('adresseLivraison', new adresseType(), array(
+				'label' => 'Adresse de livraison',
 				'required' => false,
 				))
 		;

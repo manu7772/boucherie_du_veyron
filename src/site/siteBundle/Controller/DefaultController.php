@@ -6,6 +6,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Labo\Bundle\AdminBundle\services\flashMessage;
+use Labo\Bundle\AdminBundle\services\aeData;
 
 use site\adminsiteBundle\Entity\message;
 use site\adminsiteBundle\Entity\pageweb;
@@ -40,7 +41,7 @@ class DefaultController extends Controller {
 			$locale = $this->get('request')->getLocale();
 			// echo('<p>No data in base : user creation…</p>');
 			// echo('<p><strong>'.$httpHost.' / '.$locale.'</strong></p>');
-			$userService = $this->get('aetools.aeUser');
+			$userService = $this->get('aetools.aeServiceUser');
 			$userService->usersExist(true);
 			switch ($httpHost) {
 				case 'http://localhost':
@@ -83,7 +84,7 @@ class DefaultController extends Controller {
 	// 	} else {
 	// 		// si aucune page web… chargement de la page par défaut…
 	// 		return $this->redirectToRoute('sitesite_homepage');
-	// 		// $userService = $this->get('aetools.aeUser');
+	// 		// $userService = $this->get('aetools.aeServiceUser');
 	// 		// $userService->usersExist(true);
 	// 		// return $this->redirectToRoute('generate');
 	// 	}
@@ -208,8 +209,9 @@ class DefaultController extends Controller {
 							'text'		=> ucfirst($trans->trans('message.success')),
 						));
 						// envoi mail aux admin (si option User::mailSitemessages == true)
-						$users = $this->getDoctrine()->getManager()->getRepository('Labo\Bundle\AdminBundle\Entity\LaboUser')->findCollaborators($this->getRequest()->getSession()->get('sitedata')['id']);
-						$this->get('aetools.aeEmail')->emailMessage($users, $message);
+						// $users = $this->getDoctrine()->getManager()->getRepository('Labo\Bundle\AdminBundle\Entity\LaboUser')->findCollaborators($this->getRequest()->getSession()->get('sitedata')['id']);
+						$users = $this->get(aeData::PREFIX_CALL_SERVICE.'aeServiceSite')->getAllCollaborateurs($this->getRequest()->getSession()->get('sitedata')['id']);
+						$this->get('aetools.aeEmail')->emailCollatoratorMessage($users, $message);
 						// nouveau formulaire
 						// info in session…
 						$olddata = $this->getRequest()->getSession()->get('user');
@@ -316,7 +318,6 @@ class DefaultController extends Controller {
 	}
 
 	public function miniListeInfoAction($categorieArticles = []) {
-		// $this->get('aetools.aeDebug')->startChrono();
 		if(count((array)$categorieArticles) < 1) {
 			// données de siteDate
 			$categorieArticles = [];
@@ -325,37 +326,24 @@ class DefaultController extends Controller {
 		$data['items'] = array();
 		if(count((array)$categorieArticles) > 0) {
 			foreach((array)$categorieArticles as $key => $value) {
-				$it = $this->get('aetools.aeServiceNested')->getRepo()->findArrayTree($value['id'], 'all', null, false, null, self::FIND_EXTENDED);
-				if(count($it) > 0) $data['items'][$value['id']] = $it[0];
+				$data['items'][$value['id']] = $this->get('aetools.aeServiceNested')->getRepo()->find($value['id']);
 			}
 		}
-		// $this->get('aetools.aeDebug')->printChrono('Mini list action', true);
 		return $this->render('sitesiteBundle:blocks:mini-liste-info.html.twig', $data);
 	}
 
 	public function footerTopAction() {
-        // $this->get('aetools.aeDebug')->startChrono();
-		$data['categorieFooters'] = $this->get('aetools.aeCache')->getCacheNamedFile('categorieFooters', $this->getParameter('cache')['delay']);
-		if($data['categorieFooters'] === null) {
-			if(isset($this->getSitedata()['categorieFooters'])) {
-				foreach($this->getSitedata()['categorieFooters'] as $dat) {
-					$it = $this->get('aetools.aeServiceNested')->getRepo()->findArrayTree($dat['id'], 'all', null, false, 1, self::FIND_EXTENDED);
-					if(count($it) > 0) {
-						$data['categorieFooters'][] = $it[0];
-					}
-				}
-				$this->get('aetools.aeCache')->cacheNamedFile('categorieFooters', $data['categorieFooters'], false, true);
-			} else {
-				$data['categorieFooters'] = array();
+		$data['categorieFooters'] = array();
+		if(isset($this->getSitedata()['categorieFooters'])) {
+			foreach($this->getSitedata()['categorieFooters'] as $dat) {
+				$data['categorieFooters'][] = $this->get('aetools.aeServiceNested')->getRepo()->find($dat['id']);
 			}
 		}
-		// $this->get('aetools.aeDebug')->printChrono('Get site footer', true);
 		return $this->render('sitesiteBundle:blocks:footerTop.html.twig', $data);
 	}
 
 	public function diaporamaAction($id) {
-		$data['diaporama'] = $this->get('aetools.aeServiceNested')->getRepo()->findArrayTree($id, 'all', null, false, 2, self::FIND_EXTENDED);
-		if(is_array($data['diaporama'])) $data['diaporama'] = reset($data['diaporama']);
+		$data['diaporama'] = $this->get('aetools.aeServiceNested')->getRepo()->find($id);
 		return $this->render('sitesiteBundle:blocks:diaporama.html.twig', $data);
 	}
 
