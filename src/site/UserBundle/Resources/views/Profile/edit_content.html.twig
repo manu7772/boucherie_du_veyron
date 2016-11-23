@@ -32,6 +32,41 @@
 							{{ form_widget(form.telephone) }}
 							{{ form_errors(form.telephone) }}
 						</div>
+						<h5>{{ 'adresse'|trans|capitalize }}</h5>
+						<div class="form-group col-md-12">
+							{{ form_widget(form.adresse.children.adresse) }}
+							{{ form_errors(form.adresse.children.adresse) }}
+						</div>
+						<div class="form-group col-md-12">
+							{{ form_widget(form.adresse.children.cp) }}
+							{{ form_errors(form.adresse.children.cp) }}
+						</div>
+						<div class="form-group col-md-12">
+							{{ form_widget(form.adresse.children.ville) }}
+							{{ form_errors(form.adresse.children.ville) }}
+						</div>
+						<div class="hidden" style='display:none;'>
+							{{ form_widget(form.adresse.children.commentaire) }}
+							{{ form_widget(form.adresse.children.url) }}
+						</div>
+
+						<h5>{{ 'adresse de livraison'|trans|capitalize }}</h5>
+						<div class="form-group col-md-12">
+							{{ form_widget(form.adresseLivraison.children.adresse) }}
+							{{ form_errors(form.adresseLivraison.children.adresse) }}
+						</div>
+						<div class="form-group col-md-12">
+							{{ form_widget(form.adresseLivraison.children.cp) }}
+							{{ form_errors(form.adresseLivraison.children.cp) }}
+						</div>
+						<div class="form-group col-md-12">
+							{{ form_widget(form.adresseLivraison.children.ville) }}
+							{{ form_errors(form.adresseLivraison.children.ville) }}
+						</div>
+						<div class="hidden" style='display:none;'>
+							{{ form_widget(form.adresseLivraison.children.commentaire) }}
+							{{ form_widget(form.adresseLivraison.children.url) }}
+						</div>
 						<h5>{{ 'fields.avatar'|trans|capitalize }}</h5>
 						<div class="form-group col-md-12">
 							{{ form_widget(form.avatar) }}
