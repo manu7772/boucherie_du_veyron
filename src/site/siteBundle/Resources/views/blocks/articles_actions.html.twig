@@ -58,7 +58,7 @@
 {% endmacro %}
 
 {% macro blockPrix(item, params) %}
-	{% set panierable = marketplace.vente and item.isPanierable and params.buy|default('on') == 'on' %}
+	{% set panierable = marketplace.vente and item.isPanierable and params.buy|default('on') == 'on' and app.user|default(null) != null %}
 	{% import _self as self %}
 	<div class="btn-group order-group for-product{% if panierable %} commande-cmd panier-data{% endif %}" role="group" {{ self.paramsLine('add', item, 1) }}>
 		{% if not item.surdevis %}
@@ -73,7 +73,7 @@
 {% endmacro %}
 
 {% macro blockPrixSansTitre(item, params) %}
-	{% if marketplace.vente and item.isPanierable and params.buy|default('on') == 'on' %}
+	{% if marketplace.vente and item.isPanierable and params.buy|default('on') == 'on' and app.user|default(null) != null %}
 	{% import _self as self %}
 	<div class="btn-group order-group commande-cmd panier-data" role="group" {{ self.paramsLine('add', item, 1) }}>
 		{% import _self as self %}
@@ -83,7 +83,7 @@
 {% endmacro %}
 
 {% macro blockPrixDiapo(item, params) %}
-	{% if marketplace.vente and item.isPanierable and params.buy|default('on') == 'on' %}
+	{% if marketplace.vente and item.isPanierable and params.buy|default('on') == 'on' and app.user|default(null) != null %}
 	{% import _self as self %}
 	<div class="btn-group order-group in-slide commande-cmd panier-data" role="group" {{ self.paramsLine('add', item, 1) }}>
 		{% import _self as self %}
@@ -95,7 +95,7 @@
 
 {% macro blockBlockPrix(item) %}
 	{% import _self as self %}
-	<button type="button" class="btn btn-default btn-commander panier-action"><i class="fa fa-shopping-cart fa-flip-horizontal fa-fw"></i></button>
+	<button type="button" class="btn btn-default btn-commander panier-action"><i class="fa for-pulse fa-shopping-cart fa-flip-horizontal fa-fw"></i></button>
 	<input class="command_quantity" type="text" name="quantity" value="{{ item.defaultquantity }}{% if item.unit != null %} {{ shortUnit(item.unit) }}{% endif %}" autocomplete="off" size="8">
 	<span class="btn-quantity">
 		<a class="btn quantity-top"><i class="fa fa-angle-up fa-fw"></i></a>

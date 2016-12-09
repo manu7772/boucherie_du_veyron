@@ -1,0 +1,63 @@
+{% extends 'sitesiteBundle::base_pages.html.twig' %}
+{% set cssjsloads = 'simple' %}
+{% set EDITORMODE = (app.environment in ['DEV', 'TEST']) or (is_granted('ROLE_EDITOR')) %}
+{% import 'sitesiteBundle:blocks:articles_actions.html.twig' as articles_macros %}
+
+{% block mainContainer %}
+<section>
+	<div class="container">
+		<div class="row">
+
+			{% block menuArticle %}
+			{{ render(controller('sitesiteBundle:Default:menuArticle')) }}
+			{% endblock menuArticle %}
+
+			{% if user|default(null) != null %}
+			<div class="col-sm-9 col-md-9 padding-left-resp"><!--colonne right-->
+				<div class="content-page-right">
+					<h2 class="title">
+						Votre panier <span class="badge" pla-if="panier.byarticle > 0" pla-vars>[[ panier.quantite ]]</span>
+						<span class="pull-right"><a pla-enable="panier.quantite > 0" class="btn btn-xs btn-maroon m-l-xs"><i class="fa fa-fw for-pulse fa-check m-r-xs"></i>Confirmer votre commande</a></span>
+						<span class="pull-right"><a pla-enable="panier.quantite > 0" class="btn btn-xs btn-brow m-l-xs panier-data panier-action" {{ articles_macros.paramsLine('empty') }}><i class="fa fa-fw for-pulse fa-trash m-r-xs"></i>Vider le panier</a></span>
+					</h2>
+					<div class="row" pla-vars>
+						<div class="col-sm-6 col-md-3 m-b-sm"><div class="border-bottom-fine p-b-xxs">Total articles : [[ panier.quantite ]]</div></div>
+						<div class="col-sm-6 col-md-3 m-b-sm"><div class="border-bottom-fine p-b-xxs">Articles (par unité) : [[ panier.bytype ]]</div></div>
+						<div class="col-sm-6 col-md-3 m-b-sm"><div class="border-bottom-fine p-b-xxs">Articles différents : [[ panier.byarticle ]]</div></div>
+						<div class="col-sm-6 col-md-3 m-b-sm"><div class="border-bottom-fine p-b-xxs text-right">Prix Total : [[ panier.prixtotal ]] {{ marketplace.devises[app.request.locale].symb }}<sup>TTC</sup></div></div>
+					</div>
+					{# <hr> #}
+					<table class="table table-striped table-bordered table-hover dtr-inline">
+						<thead>
+							<tr>
+								<th>Articles</th>
+								<th class='text-center'>Actions</th>
+								<th class='text-center'>Quantité</th>
+								<th class='text-right'>Volume</th>
+								<th class='text-right'>Prix <sup>TTC</sup></th>
+							</tr>
+						</thead>
+						<tbody pla-repeat="onepanier in panier.paniers">
+							<tr>
+								<td><strong>[[ onepanier.article.nom ]]</strong> <i class="text-muted pull-right">[[ onepanier.article.prix_unit_text ]] <small>(TVA [[ onepanier.article.text_tva ]])</small></i></td>
+								<td class='text-center'><a class="btn btn-xs btn-brow m-l-xs panier-data panier-action" data-number="1" data-action="remove" data-article="[[ onepanier.jsonArticle ]]" panier-action-url='[[ onepanier.panierActionUrl ]]' data-user='{{ app.user|serialize('json', ajax_serialization_context(['ajaxlive'], true)) }}'><i class="fa fa-fw for-pulse fa-trash-o"></i></a></td>
+								<td class='text-center'>[[ onepanier.quantite ]]</td>
+								<td class='text-right'>[[ onepanier.volume ]] [[ onepanier.unit ]]</td>
+								<td class='text-right'>[[ panier.prixtotal ]] €</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			{% else %}
+			<h6 class="text-center m-t-lg">Vous devez vous connecter à votre compte ou créer un compte pour accéder à votre panier.</h6>
+			{% endif %}
+
+		</div>
+	</div>
+	{# {{ dump(categorie) }} #}
+</section>
+
+	{# {{ render(controller('sitesiteBundle:Default:miniListeInfo')) }}     #}
+
+{% endblock mainContainer %}

@@ -54,6 +54,10 @@ entity_serialized:
     defaults:   { _controller: sitesiteBundle:ajaxlive:entiteinfos, requirements: null, user: null, shortname: null }
 
 # Gestion du panier
+panier_pageweb:
+    path:       /panier/detail/{username}
+    defaults:   { _controller: sitesiteBundle:panier:panierdetail, username: null }
+
 panier_action:
     path:       /panier/action/{getdata}
     defaults:   { _controller: sitesiteBundle:panier:panier, getdata: null }

@@ -184,7 +184,7 @@ class article extends item {
 	protected $isPanierable;
 	/**
 	 * @Expose
-	 * @Groups({"complete", "facture"})
+	 * @Groups({"complete", "ajaxlive", "facture"})
 	 * @Accessor(getter="getPrixUnitText")
 	 */
 	protected $prixUnitText;
@@ -196,13 +196,13 @@ class article extends item {
 	protected $unitprixText;
 	/**
 	 * @Expose
-	 * @Groups({"complete", "facture"})
+	 * @Groups({"complete", "ajaxlive", "facture"})
 	 * @Accessor(getter="getTextTva")
 	 */
 	protected $textTva;
 	/**
 	 * @Expose
-	 * @Groups({"complete", "facture"})
+	 * @Groups({"complete", "ajaxlive", "facture"})
 	 * @Accessor(getter="getFloatTva")
 	 */
 	protected $floatTva;
@@ -237,7 +237,8 @@ class article extends item {
 		$this->maxquantity = null;
 		$this->minquantity = 1;
 		$this->unitprix = $this->aeUnits->getDefaultUnit();
-		$this->unit = $this->aeUnits->getDefaultUnit();
+		$this->unit = null;
+		// $this->unit = $this->aeUnits->getDefaultUnit();
 	}
 
 	/**
@@ -289,6 +290,10 @@ class article extends item {
 		} else {
 			// enfin, calcul pour priorité au prix TTC
 			$this->prixHT = $this->prix / (1 + ($this->tauxTva->getTaux() / 100));
+		}
+		if($this->unit == null || $this->unit == $this->unitprix) {
+			$this->unit = $this->getUnitprix();
+			$this->setGroupbasket(true);
 		}
 		// parent
 		parent::check();
@@ -511,8 +516,8 @@ class article extends item {
 	 * @param string $unit
 	 * @return article
 	 */
-	public function setUnit($unit) {
-		$this->unit = $this->aeUnits->unitExists($unit) ? $unit : $this->unit;
+	public function setUnit($unit = null) {
+		$this->unit = $this->aeUnits->unitExists($unit) || ($unit == null) ? $unit : $this->unit;
 		return $this;
 	}
 
@@ -632,7 +637,8 @@ class article extends item {
 	 * @return string 
 	 */
 	public function getTextTva() {
-		return number_format($this->prixHT * ($this->tauxTva->getTaux() / 100), 2, ",", "").'€';
+		// return number_format($this->prixHT * ($this->tauxTva->getTaux() / 100), 2, ",", "").'€';
+		return preg_replace('#,?(0)*$#', '', number_format($this->tauxTva->getTaux(), 2, ",", "")).'%';
 	}
 
 	/**

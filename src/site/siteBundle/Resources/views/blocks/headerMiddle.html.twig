@@ -29,9 +29,12 @@
 										</a>
 										<ul class="dropdown-menu dropdown-menu-right animated fadeInLeft" aria-labelledby="dropdownMenu1">
 											<li pla-if="panier.quantite == 0">Aucun article dans le panier</li>
-											<li pla-if="panier.quantite > 0" pla-repeat="onepanier in panier.paniers"><div><span class="text-info">[[ onepanier.quantite ]]</span> x [[ onepanier.article.nom ]] <small><i class='text-muted'>[[ onepanier.volume ]] [[ onepanier.unit ]]</i></small></div></li>
+											<li pla-if="panier.quantite > 0" pla-repeat="onepanier in panier.paniers">
+												<div pla-if="onepanier.article.unit == onepanier.article.unitprix"><span class="text-info">[[ onepanier.volume ]] [[ onepanier.unit ]]</span> [[ onepanier.article.nom ]]</div>
+												<div pla-if="onepanier.article.unit != onepanier.article.unitprix"><span class="text-info">[[ onepanier.quantite ]]</span> x [[ onepanier.article.nom ]] <small><i class='text-muted'>[[ onepanier.volume ]] [[ onepanier.unit ]]</i></small></div>
+											</li>
 											<li role="separator" class="divider" style="display:block;"></li>
-											<li><a href="#" style="margin-top:0px;">Détails du panier</a></li>
+											<li><a href="{{ path('panier_pageweb') }}" style="margin-top:0px;">Détails du panier</a></li>
 										</ul>
 									</li>
 									{% endif %}

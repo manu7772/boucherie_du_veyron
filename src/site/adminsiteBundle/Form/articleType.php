@@ -111,7 +111,7 @@ class articleType extends baseType {
 				"label"     => 'fields.unitprix',
 				// 'translation_domain' => 'units',
 				'multiple'  => false,
-				"required"  => false,
+				"required"  => true,
 				"choice_list"   => $data->getChoiceListOfUnits(),
 				'placeholder'   => 'form.select',
 				'attr'		=> array(
