@@ -50,7 +50,8 @@ class DefaultController extends Controller {
 					break;
 				default:
 					// WEB SITE
-					return $this->redirect($domain_admin['reseau'].$domain_admin['prefix'].$domain_admin[''].'/'.$domain_admin['domain'].'.'.$domain_admin['extensions'][0].'/'.$locale.$domain_admin['path'].'/generate');
+					$domain_admin = $this->getParameter('site_domains')['admin'];
+					return $this->redirect($domain_admin['reseau'].$domain_admin['prefix'].'.'.$domain_admin['domain'].'.'.$domain_admin['extensions'][0].'/'.$locale);
 					break;
 			}
 		}

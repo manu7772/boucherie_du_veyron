@@ -27,9 +27,8 @@ use Labo\Bundle\AdminBundle\Entity\messageuser;
 class message extends baseMessage {
 
 	/**
-	 * @var integer
-	 * @ORM\Column(name="id", type="integer")
 	 * @ORM\Id
+	 * @ORM\Column(type="integer")
 	 * @ORM\GeneratedValue(strategy="AUTO")
 	 */
 	protected $id;
