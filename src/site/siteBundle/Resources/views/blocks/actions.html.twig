@@ -13,7 +13,7 @@
 	{%- if 'localhost' in app.request.headers.get('host') -%}
 		href="{{ path }}"
 	{%- else -%}
-		href="{{ site_domains.admin.reseau|default('http://') }}{{ site_domains.admin.prefix }}.{{ site_domains.admin.domain }}.{{ site_domains.admin.extensions[0] }}/{{ path }}"
+		href="{{ site_domains.admin.reseau|default('http://') }}{{ site_domains.admin.prefix }}.{{ site_domains.admin.domain }}.{{ site_domains.admin.extensions[0] }}{{ path }}"
 	{%- endif -%}
 {%- endmacro %}
 
