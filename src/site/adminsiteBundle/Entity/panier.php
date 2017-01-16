@@ -73,6 +73,9 @@ class panier extends aeBasePanier {
 		);
 	}
 
+	public function calculPrix($prix) {
+		return parent::calculPrix($prix) * $this->getVolume();
+	}
 
 	/**
 	 * Set volume

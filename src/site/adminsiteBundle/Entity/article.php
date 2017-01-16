@@ -185,6 +185,12 @@ class article extends item {
 	/**
 	 * @Expose
 	 * @Groups({"complete", "ajaxlive", "facture"})
+	 * @Accessor(getter="getPrixUnit")
+	 */
+	protected $prixUnit;
+	/**
+	 * @Expose
+	 * @Groups({"complete", "facture"})
 	 * @Accessor(getter="getPrixUnitText")
 	 */
 	protected $prixUnitText;
@@ -218,6 +224,18 @@ class article extends item {
 	 * @Accessor(getter="getListOfUnits")
 	 */
 	protected $aeUnits;
+	/**
+	 * @Expose
+	 * @Groups({"complete", "ajaxlive", "facture"})
+	 * @Accessor(getter="getDevise")
+	 */
+	protected $devise;
+	/**
+	 * @Expose
+	 * @Groups({"complete"})
+	 * @Accessor(getter="getDevises")
+	 */
+	protected $devises;
 
 	public function __construct() {
 		parent::__construct();
@@ -238,6 +256,8 @@ class article extends item {
 		$this->minquantity = 1;
 		$this->unitprix = $this->aeUnits->getDefaultUnit();
 		$this->unit = null;
+		$this->devise = null;
+		$this->devises = null;
 		// $this->unit = $this->aeUnits->getDefaultUnit();
 	}
 
@@ -449,7 +469,7 @@ class article extends item {
 	 * @return float 
 	 */
 	public function getPrix() {
-		return $this->prix;
+		return $this->prix * $this->getDevise()['ratio'];
 	}
 
 	/**
@@ -467,7 +487,7 @@ class article extends item {
 	 * @return float 
 	 */
 	public function getPrixHT() {
-		return $this->prixHT;
+		return $this->prixHT * $this->getDevise()['ratio'];
 	}
 
 	/**
@@ -489,11 +509,20 @@ class article extends item {
 	}
 
 	/**
+	 * Get unitprix
+	 * @return string 
+	 */
+	public function getPrixUnit() {
+		return number_format($this->getPrix(), 2, ',', '');
+	}
+
+	/**
 	 * Get text of prix and unit (please, use raw filter in twig)
 	 * @return string (of html code)
 	 */
 	public function getPrixUnitText() {
-		return number_format($this->getPrix(), 2, ',', '').'<small><sup>€</sup><span>/'.$this->getUnitprix().'</span></small>';
+		$devise = $this->getDevise()['symb'];
+		return $this->getPrixUnit().'<small><sup>'.$devise.'TTC</sup><span>/'.$this->getUnitprix().'</span></small>';
 	}
 
 	/**
@@ -502,6 +531,34 @@ class article extends item {
 	 */
 	public function getUnitprixText() {
 		return $this->aeUnits->getUnitName($this->getUnitprix());
+	}
+
+	/**
+	 * Set devises info
+	 * @param array $devises
+	 * @return article
+	 */
+	public function setDevises($devises) {
+		$this->devises = $devises;
+		return $this;
+	}
+
+	/**
+	 * Get devises info
+	 * @return array 
+	 */
+	public function getDevises() {
+		return $this->devises;
+	}
+
+	/**
+	 * Get devise info
+	 * @param string $lang = null
+	 * @return array
+	 */
+	public function getDevise($lang = null) {
+		if($lang === null) $lang = $this->getLocale();
+		return $this->devises[$lang];
 	}
 
 	/**

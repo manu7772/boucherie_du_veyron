@@ -79,6 +79,9 @@ a#scrollUp i{
   font-size: 30px;
 }
 
+table, thead, tbody, tr, td, th, tfoot {
+  border: none;
+}
 
 /*************************
 *******Header CSS******

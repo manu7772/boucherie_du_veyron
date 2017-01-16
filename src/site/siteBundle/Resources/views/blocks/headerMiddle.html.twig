@@ -22,18 +22,18 @@
 						<div class="col-xs-5 col-sm-5 col-md-4">
 							<div class="shop-menu pull-right">
 								<ul class="nav navbar-nav">
-									{% if is_granted("IS_AUTHENTICATED_REMEMBERED") and marketplace.vente %}
-									<li>
+									{% if is_granted("IS_AUTHENTICATED_REMEMBERED") and marketplace.active and marketplace.vente %}
+									<li TemplaxZone>
 										<a href="#" class="dropdown-toggle" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-											<i class="fa fa-shopping-cart fa-flip-horizontal fa-fw"></i> Panier <span class="badge" pla-if="panier.byarticle > 0" pla-vars>[[ panier.quantite ]]</span>
+											<i class="fa fa-shopping-cart fa-flip-horizontal fa-fw"></i> Panier <span class="badge" pla-if="globals.panier.quantite > 0">[[ globals.panier.quantite ]]</span>
 										</a>
 										<ul class="dropdown-menu dropdown-menu-right animated fadeInLeft" aria-labelledby="dropdownMenu1">
-											<li pla-if="panier.quantite == 0">Aucun article dans le panier</li>
-											<li pla-if="panier.quantite > 0" pla-repeat="onepanier in panier.paniers">
+											{# <li pla-if="globals.panier.quantite == 0">Aucun article dans le panier</li> #}
+											<li pla-if="globals.panier.quantite > 0" pla-repeat="onepanier in globals.panier.paniers">
 												<div pla-if="onepanier.article.unit == onepanier.article.unitprix"><span class="text-info">[[ onepanier.volume ]] [[ onepanier.unit ]]</span> [[ onepanier.article.nom ]]</div>
 												<div pla-if="onepanier.article.unit != onepanier.article.unitprix"><span class="text-info">[[ onepanier.quantite ]]</span> x [[ onepanier.article.nom ]] <small><i class='text-muted'>[[ onepanier.volume ]] [[ onepanier.unit ]]</i></small></div>
 											</li>
-											<li role="separator" class="divider" style="display:block;"></li>
+											<li role="separator" class="divider" style="display:block;" pla-if="globals.panier.quantite > 0"></li>
 											<li><a href="{{ path('panier_pageweb') }}" style="margin-top:0px;">Détails du panier</a></li>
 										</ul>
 									</li>
@@ -42,7 +42,6 @@
 									<li class="dropdown">
 										<a href="#" class="dropdown-toggle" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
 											<i class="fa fa-user fa-fw"></i> {{ phraseCut(app.user.username, 10) }} 
-											<!-- <span class="caret"></span> -->
 										</a>
 										<ul class="dropdown-menu dropdown-menu-right animated fadeInLeft" aria-labelledby="dropdownMenu2">
 											<li><a href="{{ path('fos_user_profile_show') }}">{{ 'profile.name'|trans({}, 'siteUserBundle')|capitalize }}</a></li>

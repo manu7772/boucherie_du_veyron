@@ -1,11 +1,5 @@
 twig:
     globals:
-        keywords:
-            title: site.title
-            description: site.description
-            keywords: site.keywords
-        formatDate:      "dd-MM-yyyy"
-        formatDateHeure: "d-m-Y H:i:s"
         # fileFormats:
         #     pdf:        pdf
         #     jpg:        image

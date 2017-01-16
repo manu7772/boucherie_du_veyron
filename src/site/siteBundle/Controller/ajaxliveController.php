@@ -59,7 +59,7 @@ class ajaxliveController extends Controller {
 		if(!$this->get(aeData::PREFIX_CALL_SERVICE.'aeServiceSessiondata')->checkChangedSessionAjaxlivedata(json_encode($entities))) {
 			$aeReponse = new aeReponse(true, array(0 => 'no-changes'), 'Aucune modification dans la base de données serveur.');
 		}
-
+		// return new JsonResponse($aeReponse->getData());
 		return $request->isXmlHttpRequest() ? $aeReponse->getJSONreponse() : $aeReponse;
 	}
 

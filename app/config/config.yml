@@ -12,6 +12,15 @@ imports:
 parameters:
     locale:                 "fr"
     default_locales:        "fr|en"
+    keywords:
+        title: site.title
+        description: site.description
+        keywords: site.keywords
+    formatDate:      "dd-MM-yyyy"
+    formatDateHeure: "d-m-Y H:i:s"
+    admin:
+        accueil_nb_messages: 6
+
 
 framework:
     #esi:             ~

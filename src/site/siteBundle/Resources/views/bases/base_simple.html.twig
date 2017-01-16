@@ -1,5 +1,5 @@
 <!DOCTYPE html> <!-- HTML 5 -->
-<html lang="fr">
+<html lang="{{ app.request.locale|default(app.request.defaultLocale) }}">
 	<head>
 		{% block entete %}
 		{{ include('sitesiteBundle:blocks:keywords.html.twig') }}
@@ -44,6 +44,7 @@
 		{% block js %}
 		{% javascripts filter='?yui_js'
 		'bundles/sitegraphics/bdv/js/jquery.js'
+		'bundles/sitegraphics/bdv/js/jquery-ui-1.12.1/jquery-ui.js'
 		'bundles/sitegraphics/bdv/js/bootstrap.min.js'
 		'bundles/sitegraphics/bdv/js/jquery.scrollUp.min.js'
 		'bundles/laboadmin/framework_inspinia/js/plugins/toastr/toastr.min.js'
@@ -51,6 +52,7 @@
 		'bundles/sitegraphics/bdv/js/specifics.js'
 		'bundles/laboadmin/js/inspinia-data-messages.js'
 		'bundles/sitegraphics/fancyapps-fancyBox/source/jquery.fancybox.js'
+        'bundles/laboadmin/js/templax.js'
 		'bundles/laboadmin/js/ajaxlive.js'
 		 %}
 		<script type="text/javascript" src="{{ asset_url }}"></script>
