@@ -1,0 +1,71 @@
+{% extends 'sitesiteBundle::base_pages.html.twig' %}
+{% set cssjsloads = 'simple' %}
+{% set EDITORMODE = (app.environment in ['DEV', 'TEST']) or (is_granted('ROLE_EDITOR')) %}
+{% import 'sitesiteBundle:blocks:articles_actions.html.twig' as articles_macros %}
+
+{% block title %}{{ parent() }} - Confirmation de votre commande{% endblock title %}
+
+{% block mainContainer %}
+<section>
+	<div class="container">
+		<div class="row">
+
+			{% block menuArticle %}
+			{{ render(controller('sitesiteBundle:Default:menuArticle')) }}
+			{% endblock menuArticle %}
+
+			{% if not marketplace.active or not marketplace.vente %}
+			<div class="col-sm-9 col-md-9 padding-left-resp">
+				<div class="content-page-right">
+					<h5 class="text-center m-t-lg">La vente en ligne est désactivée,<br>vous ne pouvez passer commande sur votre panier pour le moment.</h5>
+				</div>
+			</div>
+			{% elseif user|default(null) != null %}
+			<div class="col-sm-9 col-md-9 padding-left-resp" TemplaxZone><!--colonne right-->
+				<div class="content-page-right">
+					<h2 class="title">
+						Commander <span class="badge" pla-if="globals.panier.byarticle > 0">[[ globals.panier.quantite ]]</span>
+						<span class="pull-right"><a href="{{ path('panier_pageweb') }}" pla-enable="globals.panier.quantite > 0" class="btn btn-xs btn-maroon m-l-xs"><i class="fa fa-shopping-cart fa-flip-horizontal fa-fw m-r-xs"></i>Votre panier</a></span>
+					</h2>
+					<div pla-if-not="globals.panier.quantite > 0">
+						<h5 class="text-center m-t-lg">Votre panier est vide.</h5>
+					</div>
+					<div pla-if="globals.panier.quantite > 0">
+						<div class="row">
+							<div class="col-md-9">
+								<h5>À quel moment souhaitez-vous récupérer votre commande ?</h5>
+								<ul>
+									<li pla-if="timenow() < 9"><input type="radio" name="recup" value="AM"> Cet après-midi</li>
+									<li><input type="radio" name="recup" value="TOMORROW"> Demain</li>
+									<li><input type="radio" name="recup" value="NEXT"> Samedi prochain</li>
+								</ul>
+							</div>
+							<div class="col-md-3 m-t-sm">
+								<div class="border-bottom-fine p-b-xxs text-right">Prix Total : <strong>[[ globals.panier.prixtotal ]] {{ marketplace.devises[app.request.locale].symb }}<sup>TTC</sup></strong></div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-md-12 m-b-lg">
+								<h2 class="title text-center">
+									<a href="{{ path('panier_pageweb_valid') }}" pla-enable="globals.panier.quantite > 0" class="btn btn-xs btn-maroon m-l-xs"><i class="fa fa-check fa-fw m-r-xs"></i>VALIDER VOTRE COMMANDE</a>
+								</h2>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			{% else %}
+			<div class="col-sm-9 col-md-9 padding-left-resp"><!--colonne right-->
+				<div class="content-page-right">
+					<h5 class="text-center m-t-lg">Vous devez vous connecter à votre compte ou créer un compte pour accéder à votre panier.</h5>
+				</div>
+			</div>
+			{% endif %}
+
+		</div>
+	</div>
+</section>
+
+	{# {{ render(controller('sitesiteBundle:Default:miniListeInfo')) }}     #}
+
+{% endblock mainContainer %}

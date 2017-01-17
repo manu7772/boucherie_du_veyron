@@ -16,11 +16,11 @@
 						<li><a href="mailto:{{ app.session.get('sitedata').boutiques.0.email }}"><i class="fa fa-envelope m-r-xs"></i> {{ app.session.get('sitedata').boutiques.0.email }}</a></li>
 						{% endif %}
 						{% endif %}
-						{% if (app.environment in ['DEV', 'TEST']) or (is_granted('ROLE_SUPER_ADMIN')) %}
+{# 						{% if (app.environment in ['DEV', 'TEST']) or (is_granted('ROLE_SUPER_ADMIN')) %}
 						<li>
 							<small>AJAX Lasts: <span class="ajax_lasts"></span> / Session: <span class="ajax_session"></span> / Timelaps: <span class="ajax_timelaps"></span> / REFRESH Lasts: <span class="refresh_lasts"></span> / Session: <span class="refresh_session"></span> / Timelaps: <span class="refresh_timelaps"></span></small>
 						</li>
-						{% endif %}
+						{% endif %} #}
 					</ul>
 				</div>
 			</div>

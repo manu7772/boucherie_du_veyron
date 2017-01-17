@@ -58,6 +58,14 @@ panier_pageweb:
     path:       /panier/detail/{username}
     defaults:   { _controller: sitesiteBundle:panier:panierdetail, username: null }
 
+panier_pageweb_commande:
+    path:       /panier/commande/{username}
+    defaults:   { _controller: sitesiteBundle:panier:paniercommande, username: null }
+
+panier_pageweb_valid:
+    path:       /panier/valid/{username}
+    defaults:   { _controller: sitesiteBundle:panier:paniervalid, username: null }
+
 panier_action:
     path:       /panier/action/{getdata}
     defaults:   { _controller: sitesiteBundle:panier:panier, getdata: null }

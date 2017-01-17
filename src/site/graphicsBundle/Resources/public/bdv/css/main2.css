@@ -30,7 +30,7 @@ a:hover {
 	color:#a3401b;
 }
 a:visited{
-	color:#a3401b;
+	/*color:#a3401b;*/
 }
 a:focus, input:focus, div:focus, span:focus, li:focus, p:focus {
   outline:none;

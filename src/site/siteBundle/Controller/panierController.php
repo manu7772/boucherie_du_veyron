@@ -47,6 +47,13 @@ class panierController extends Controller {
 		return $this->render('sitesiteBundle:Default:panierdetail.html.twig', $data);
 	}
 
+	public function paniercommandeAction($username = null) {
+		$userManager = $this->get('fos_user.user_manager');
+		if($username != null) $data['user'] = $userManager->fingUserByUsername($username);
+			else $data['user'] = $this->getUser();
+		return $this->render('sitesiteBundle:Default:paniercommande.html.twig', $data);
+	}
+
 	/**
 	 * Actions on Panier
 	 * @param Json $getdata = null
