@@ -29,7 +29,7 @@ jQuery(document).ready(function($) {
 			"hideMethod": "slideUp",
 		};
 		// init moment
-		moment.locale(locale);
+		moment.updateLocale(locale);
 
 		var FORM = $(this).closest('form');
 		if(FORM !== undefined) {
