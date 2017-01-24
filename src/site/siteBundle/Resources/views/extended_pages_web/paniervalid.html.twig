@@ -10,39 +10,53 @@
 	<div class="container">
 		<div class="row">
 
-			{% block menuArticle %}
-			{{ render(controller('sitesiteBundle:Default:menuArticle')) }}
-			{% endblock menuArticle %}
-
-			{% if facture == null %}
-			<div class="col-sm-9 col-md-9 padding-left-resp"><!--colonne right-->
-				<div class="content-page-right">
+			{% if facture|default(null) == null %}
+			<div class="col-sm-12"><!--colonne right-->
+				<div>
 					<h1 class="title">
 						Votre commande n'a pu être enregistrée, une erreur est survenue.
+						<br><small>Ou vous êtes arrivés sur cette page par erreur</small>
 						<span class="pull-right"><a href="{{ path('sitesite_homepage') }}" class="btn btn-xs btn-maroon m-l-xs"><i class="fa fa-check fa-fw m-r-xs"></i>Retour à l'accueil</a></span>
 					</h1>
 					{# <p class="text-center m-t-lg m-b-lg">Votre commande n'a pas été enregistrée,<br>Veuillez d'abord passer par la <a href="{{ path('site_pageweb_pageweb', {itemSlug: 'panier-commande'}) }}">page de commande</a> pour valider votre commande.</p> #}
 					<br>
+					{% if app.user.factures|length > 0 %}
+					<h5>Vous pouvez également consulter vos anciennes commandes :</h5>
+					<div class="row">
+						{% for facture in app.user.factures %}
+						<div class="col-xs-12 col-sm-6 col-md-3 col-lg-2">
+							<a class="btn btn-{{ facture.state in [0,2,3] ? 'maroon' : 'brow' }} btn-block btn-lg m-b-md"><small>{{ facture.created|date('d/m/Y') }}<br><small>{{ facture.id }}</small></small></a>
+						</div>
+						{% endfor %}
+					</div>
+					{% endif %}
 					<br>
 				</div>
 			</div>
 			{% else %}
-			<div class="col-sm-9 col-md-9 padding-left-resp"><!--colonne right-->
-				<div class="content-page-right">
+			<div class="col-sm-12"><!--colonne right-->
+				<div>
 					<h1 class="title">
 						Commande validée
 						<span class="pull-right"><a href="{{ path('sitesite_homepage') }}" class="btn btn-xs btn-maroon m-l-xs"><i class="fa fa-check fa-fw m-r-xs"></i>Retour à l'accueil</a></span>
 					</h1>
 					<h3 class="text-center m-t-lg m-b-lg">Votre commande a été enregistrée,<br>nous préparons votre panier.</h3>
-					<p>Numéro de facture : <strong>{{ facture.id }}</strong></p>
-					<p>Votre panier sera disponible dès <strong>{{ dateFR(facture.delailivraison) }} à partir de {{ facture.delailivraison|date('H\\hi') }}</strong></p>
-					<p>Montant de votre commande : <strong>{{ facture.prixtotal|number_format(2, ',', '') }}&nbsp;{{ facture.devise.symb }}</strong></p>
+
+					<p class="m-b-none text-center text-muted">Numéro de commande</p>
+					<p class="m-t-none text-center"><strong>{{ facture.id }}</strong></p>
+
+					<p class="m-b-none text-center text-muted">Votre panier sera disponible dès</p>
+					<p class="m-t-none text-center"><strong>{{ dateFR(facture.delailivraison) }} à partir de {{ facture.delailivraison|date('H\\hi') }}</strong></p>
+
+					<p class="m-b-none text-center text-muted">Montant de votre commande :</p>
+					<p class="m-t-none text-center"><strong>{{ facture.prixtotal|number_format(2, ',', '') }}&nbsp;{{ facture.devise.symb }}</strong></p>
+
 					{% if is_granted('ROLE_TESTER') %}<h2 class="title well well-xs well-warning text-center">ATTENTION : vous êtes en mode testeur.<br>Votre commande ne sera donc pas prise en compte.</h2>{% endif %}
 					<br>
 				</div>
 			</div>
-			<div class="col-sm-9 col-md-9 padding-left-resp m-b-lg"><!--colonne right-->
-				<div class="content-page-right background-gray m-b-lg p-t-xs p-b-xs">
+			<div class="col-sm-12 m-b-lg"><!--colonne right-->
+				<div class="background-gray m-b-lg p-t-xs p-b-xs">
 					<div class="row">
 						<div class="col-xs-12">
 							<h5 class='text-center'><i class="fa fa-envelope m-r-xs"></i> Un mail récapitulatif de votre commande vous a été envoyé.<br>Vous recevrez également un mail lorsque votre commande sera prête.</h5>
@@ -56,15 +70,11 @@
 					</div>
 					{% endif %}
 				</div>
-				{# {{ dump(facture.panier|default([])) }} #}
-				{# {{ dump(request|default([])) }} #}
 			</div>
 			{% endif %}
 
 		</div>
 	</div>
 </section>
-
-	{# {{ render(controller('sitesiteBundle:Default:miniListeInfo')) }}     #}
 
 {% endblock mainContainer %}

@@ -10,19 +10,15 @@
 	<div class="container">
 		<div class="row">
 
-			{% block menuArticle %}
-			{{ render(controller('sitesiteBundle:Default:menuArticle')) }}
-			{% endblock menuArticle %}
-
 			{% if not marketplace.active or not marketplace.vente %}
-			<div class="col-sm-9 col-md-9 padding-left-resp">
-				<div class="content-page-right">
+			<div class="col-sm-12">
+				<div>
 					<h5 class="text-center m-t-lg">La vente en ligne est désactivée,<br>vous ne pouvez passer commande sur votre panier pour le moment.</h5>
 				</div>
 			</div>
 			{% elseif app.user|default(null) != null %}
-			<div class="col-sm-9 col-md-9 padding-left-resp" TemplaxZone><!--colonne right-->
-				<div class="content-page-right">
+			<div class="col-sm-12" TemplaxZone><!--colonne right-->
+				<div>
 					<h1 class="title">
 						{{ pageweb.titreh1|raw }} <span class="badge" pla-if="globals.panier.byarticle > 0" style='display:none;'>[[ globals.panier.quantite ]]</span>
 						<span class="pull-right"><a href="{{ path('site_pageweb_pageweb', {itemSlug: 'panier-commande'}) }}" pla-enable="globals.panier.quantite > 0" class="btn btn-xs btn-maroon m-l-xs"><i class="fa fa-fw for-pulse fa-check m-r-xs"></i>Commander</a></span>
@@ -67,14 +63,14 @@
 				</div>
 			</div>
 			{% else %}
-			<div class="col-sm-9 col-md-9 padding-left-resp"><!--colonne right-->
-				<div class="content-page-right">
+			<div class="col-sm-12"><!--colonne right-->
+				<div>
 					<h5 class="text-center m-t-lg">Vous devez vous connecter à votre compte ou créer un compte pour accéder à votre panier.</h5>
 				</div>
 			</div>
 			{% endif %}
-			<div class="col-sm-9 col-md-9 padding-left-resp m-b-lg"><!--colonne right-->
-				<div class="content-page-right background-gray m-b-lg p-t-sm p-b-sm" TemplaxZone>
+			<div class="col-sm-12 m-b-lg"><!--colonne right-->
+				<div class="background-gray m-b-lg p-t-sm p-b-sm" TemplaxZone>
 					{{ pageweb.code|raw }}
 				</div>
 			</div>
