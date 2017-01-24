@@ -16,6 +16,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 // use site\UserBundle\Form\Type\ProfileFormType;
 use Labo\Bundle\AdminBundle\services\aeData;
+use site\adminsiteBundle\Entity\boutique;
 
 class DefaultController extends Controller {
 
@@ -43,6 +44,7 @@ class DefaultController extends Controller {
 		
 		switch ($data["type"]) {
 			case 'ROLE_USER':
+			case 'ROLE_TESTER':
 			case 'ROLE_EDITOR':
 			case 'ROLE_ADMIN':
 			case 'ROLE_SUPER_ADMIN':
@@ -70,15 +72,21 @@ class DefaultController extends Controller {
 		$userManager = $this->get('fos_user.user_manager');
 		$data['user'] = $userManager->findUserByUsername($username);
 
-		$userRoles = $this->get('labo_user_roles');
-		$data['roleNames'] = $userRoles->getRoleNames();
-		$data['roleColors'] = $userRoles->getRoleColors();
-		$data['panier'] = $this->get(aeData::PREFIX_CALL_SERVICE.'aeServiceFacture')->getUserPanier($data['user']);
-		$data['htitle'] = "Informations ".self::USER_NAME;
 		if(is_object($data['user'])) {
+			$userRoles = $this->get('labo_user_roles');
+			$data['roleNames'] = $userRoles->getRoleNames();
+			$data['roleColors'] = $userRoles->getRoleColors();
+			$data['panier'] = $this->get(aeData::PREFIX_CALL_SERVICE.'aeServiceFacture')->getUserPanier($data['user']);
+			$data['htitle'] = "Informations ".self::USER_NAME;
 			return $this->render('siteUserBundle:entites:userShow.html.twig', $data);
 		} else {
-			throw new Exception(self::USER_NAME." ".$username." inconnu.", 1);
+			// throw new Exception(self::USER_NAME." ".$username." inconnu.", 1);
+			$message = $this->get('flash_messages')->send(array(
+				'title'		=> 'Échec requête',
+				'type'		=> 'error',
+				'text'		=> 'L\'utilisateur "'.$username.'" n\'a pu être trouvée.'
+			));
+			return $this->redirectToRoute('siteUser_users');
 		}
 	}
 
@@ -93,7 +101,7 @@ class DefaultController extends Controller {
 		$userManager = $this->get('fos_user.user_manager');
 		$data['user'] = $userManager->findUserByUsername($username);
 		if (!is_object($data['user']) || !$data['user'] instanceof UserInterface) {
-			throw new AccessDeniedException('This user "'.$username.'" does not have access to this section.');
+			throw new AccessDeniedException('You do not have access to this user "'.$username.'".');
 		} else {
 			/** @var $formFactory \FOS\UserBundle\Form\Factory\FactoryInterface */
 			$formFactory = $this->get('fos_user.profile.form.factory');
@@ -110,13 +118,13 @@ class DefaultController extends Controller {
 				$image = $data['user']->getAvatar();
 				if(is_object($image)) {
 				    $infoForPersist = $image->getInfoForPersist();
-				    $this->container->get('aetools.aeDebug')->debugFile($infoForPersist);
+				    // $this->container->get(aeData::PREFIX_CALL_SERVICE.'aeDebug')->debugFile($infoForPersist);
 				    if($infoForPersist['removeImage'] === true || $infoForPersist['removeImage'] === 'true') {
 				        // Supression de l'image
 				        $data['user']->setAvatar(null);
 				    } else {
 				        // Gestion de l'image
-				        // $service = $this->container->get('aetools.aeServiceBaseEntity')->getEntityService($image);
+				        // $service = $this->container->get(aeData::PREFIX_CALL_SERVICE.'aeServiceBaseEntity')->getEntityService($image);
 				        // $service->checkAfterChange($image);
 				    }
 				}
@@ -165,6 +173,83 @@ class DefaultController extends Controller {
 	// 	));
 	// }
 
+	public function changeroleAction($username, $role) {
+		$userManager = $this->get('fos_user.user_manager');
+		$user = $userManager->findUserByUsername($username);
+		$tools = $this->get(aeData::PREFIX_CALL_SERVICE.'twigToolsTextutilities');
+		if($tools->compareRoles($this->getUser(), $user, false)) {
+			if($role === 'ROLE_USER') {
+				$this->get('flash_messages')->send(array(
+					'title'		=> 'Modification non effectuée',
+					'type'		=> 'warning',
+					'text'		=> 'L\'utilisateur "'.$user->getUsername().'" ne peut être retiré de '.$role.'. Si vous souhaitez, vous pouvez le <a href="'.$this->generateUrl('user_enable', array('id' => $id, 'enable' => 'disable')).'">désactiver</a>.',
+				));
+			} else {
+				$hisRoles = $user->getRoles();
+				if(in_array($role, $hisRoles)) {
+					$user->removeRole($role);
+					$add = 'retiré de';
+					// vérif collaborator
+					$collab = array_intersect($hisRoles, ['ROLE_ADMIN','ROLE_SUPER_ADMIN']);
+					if(count($collab) < 1) {
+						$sites = $user->getSites();
+						foreach ($sites as $site) {
+							$site->removeCollaborateur($user);
+							// $user->removeSite($site); // ???
+							$this->getDoctrine()->getManager()->flush();
+						}
+						// $user->setCollaborator(false);
+					}
+				} else {
+					$user->addRole($role);
+					$add = 'ajouté à';
+				}
+				// update
+				$userManager->updateUser($user);
+				$this->get('flash_messages')->send(array(
+					'title'		=> 'Modification de rôle',
+					'type'		=> 'success',
+					'text'		=> 'Le role "'.$role.'" a été '.$add.' l\'utilisateur "'.$user->getUsername().'".',
+				));
+			}
+		} else {
+			// modifications interdites : l'utilisateur n'a pas les droits sur l'user
+			$this->get('flash_messages')->send(array(
+				'title'		=> 'Modification interdite',
+				'type'		=> 'error',
+				'text'		=> 'Vous n\'avez pas les droits requis pour modifier cet utilisateur.',
+			));
+		}
+		return $this->redirectToRoute('siteUser_info', array('username' => $username));
+		// return $this->redirectToRoute('siteUser_users');
+	}
+
+	public function enableAction($username, $enable = 'enable') {
+		$userManager = $this->get('fos_user.user_manager');
+		$user = $userManager->findUserByUsername($username);
+		$tools = $this->get(aeData::PREFIX_CALL_SERVICE.'twigToolsTextutilities');
+		if($tools->compareRoles($this->getUser(), $user, false)) {
+			$enable = $enable !== 'disable';
+			$done = $enable ? 'activé' : 'désactivé';
+			$user->setEnabled($enable);
+			// update
+			$userManager->updateUser($user);
+			$this->get('flash_messages')->send(array(
+				'title'		=> 'Activation/désactivation',
+				'type'		=> 'success',
+				'text'		=> 'L\'utilisateur '.$user->getUsername().' a été '.$done.'.',
+			));
+		} else {
+			// modifications interdites : l'utilisateur n'a pas les droits sur l'user
+			$this->get('flash_messages')->send(array(
+				'title'		=> 'Modification interdite',
+				'type'		=> 'error',
+				'text'		=> 'Vous n\'avez pas les droits requis pour modifier cet utilisateur.',
+			));
+		}
+		return $this->redirectToRoute('siteUser_info', array('username' => $username));
+		// return $this->redirectToRoute('siteUser_users');
+	}
 
 	/**
 	 * Suppression User
@@ -279,22 +364,27 @@ class DefaultController extends Controller {
 		return $form;
 	}
 
-	public function checkUsersAction($params = null) {
-		set_time_limit(600);
+	public function checkUsersAction() {
+		// set_time_limit(600);
+		$em = $this->getDoctrine()->getManager();
 		// $userManager = $this->getDoctrine()->getManager()->getRepository(self::ENTITE_CLASSNAME);
 		$userManager = $this->get('fos_user.user_manager');
-		if(isset($params['username'])) $data_users = array($userManager->findUserByUsername($params['username']));
-			else $data_users = $userManager->findUsers();
+		$data_users = $userManager->findUsers();
 
 		if(count($data_users) > 1) foreach($data_users as $user) {
-			$roles = $user->getRoles()->toArray();
+			// ROLES
+			$roles = $user->getRoles();
 			if(count($roles) < 1) $user->addRole('ROLE_USER');
 			foreach ($roles as $key => $value) {
 				# code...
 			}
+			// FACTURES
+			foreach ($user->getFactures() as $facture) {
+				if(!($facture->getBoutique() instanceof boutique)) $em->remove($facture);
+			}
 			$userManager->updateUser($user, false);
 		}
-		$this->getDoctrine()->getManager()->flush();
+		$em->flush();
 
 		$flashMsg = $this->get('flash_messages');
 		$message = $flashMsg->create(array(
@@ -320,7 +410,7 @@ class DefaultController extends Controller {
 		// 	'text'		=> 'Texte pour test…'
 		// 	));
 		$flashMsg->sendAll();
-		return $data_users;
+		return $this->redirectToRoute('siteUser_users');
 	}
 
 
@@ -361,7 +451,7 @@ class DefaultController extends Controller {
 					$user->setAdminhelp((boolean)$state);
 					$this->get('fos_user.user_manager')->updateUser($user);
 					$result = true;
-					return $this->get('aetools.aeReponse')
+					return $this->get(aeData::PREFIX_CALL_SERVICE.'aeReponse')
 						->setResult($result)
 						->setMessage($trans->trans('found.found', array('%username%' => $user->getUsername()), 'siteUserBundle'))
 						->getJSONreponse()
@@ -375,7 +465,7 @@ class DefaultController extends Controller {
 				$message = $trans->trans('actions.modif.forbidden', array('%username%' => $user->getUsername()), 'siteUserBundle');
 			}
 		}
-		return $this->get('aetools.aeReponse')
+		return $this->get(aeData::PREFIX_CALL_SERVICE.'aeReponse')
 			->setResult($result)
 			->setMessage($message)
 			->getJSONreponse()

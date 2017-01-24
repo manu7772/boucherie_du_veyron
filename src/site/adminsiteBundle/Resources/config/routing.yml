@@ -75,7 +75,24 @@ siteadmin_set_vendable:
     path:     /entite-set/as-vendable/{id}/{entite}/{redir}
     defaults: { _controller: siteadminsiteBundle:entite:entite_as_vendable, redir: 'siteadmin_homepage' }
 
+# CALENDAR
+siteadmin_calendar_viewer:
+    path:     /calendar/viewer/{itemSlug}/{class}
+    defaults: { _controller: siteadminsiteBundle:calendar:calendarViewer }
 
+siteadmin_calendar_edit:
+    path:     /calendar/edit/{eventSlug}
+    defaults: { _controller: siteadminsiteBundle:calendar:calendarEdit }
+
+siteadmin_calendar_ajax:
+    path:     /ajax-calendar/{itemSlug}/{class}
+    defaults: { _controller: siteadminsiteBundle:calendar:ajaxCalendar }
+    # methods: ['post']
+
+siteadmin_calendar_feed:
+    path:     /feed-calendar/{itemSlug}/{class}
+    defaults: { _controller: siteadminsiteBundle:calendar:ajaxFeed }
+    # methods: ['post']
 
 #CATEGORIES
 siteadmin_list_categorie:

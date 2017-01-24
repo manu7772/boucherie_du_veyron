@@ -32,7 +32,7 @@
 							{{ form_widget(form.telephone) }}
 							{{ form_errors(form.telephone) }}
 						</div>
-						<h5>{{ 'adresse'|trans|capitalize }}</h5>
+{# 						<h5>{{ 'adresse'|trans|capitalize }}</h5>
 						<div class="form-group col-md-12">
 							{{ form_widget(form.adresse.children.adresse) }}
 							{{ form_errors(form.adresse.children.adresse) }}
@@ -49,8 +49,8 @@
 							{{ form_widget(form.adresse.children.commentaire) }}
 							{{ form_widget(form.adresse.children.url) }}
 						</div>
-
-						<h5>{{ 'adresse de livraison'|trans|capitalize }}</h5>
+ #}
+{# 						<h5>{{ 'adresse de livraison'|trans|capitalize }}</h5>
 						<div class="form-group col-md-12">
 							{{ form_widget(form.adresseLivraison.children.adresse) }}
 							{{ form_errors(form.adresseLivraison.children.adresse) }}
@@ -72,7 +72,7 @@
 							{{ form_widget(form.avatar) }}
 							{{ form_errors(form.avatar) }}
 						</div>
-
+ #}
 						{% if is_granted('ROLE_EDITOR') %}
 						<div class="form-group col-md-12">
 							<label class="text-muted">{{ 'fields.help'|trans|capitalize }} </label>

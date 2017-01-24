@@ -63,6 +63,8 @@ actions:
     forbidden: actions interdites
     repondre: répondre
     analyse: analyse
+    disable: désactiver
+    enable: activer
 table:
     col:
         id: id

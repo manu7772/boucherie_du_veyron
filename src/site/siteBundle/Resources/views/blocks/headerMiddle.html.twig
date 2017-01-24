@@ -25,7 +25,7 @@
 									{% if is_granted("IS_AUTHENTICATED_REMEMBERED") and marketplace.active and marketplace.vente %}
 									<li TemplaxZone>
 										<a href="#" class="dropdown-toggle" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-											<i class="fa fa-shopping-cart fa-flip-horizontal fa-fw"></i> Panier <span class="badge" pla-if="globals.panier.quantite > 0">[[ globals.panier.quantite ]]</span>
+											<i class="fa fa-shopping-cart fa-flip-horizontal fa-fw"></i> Panier <span class="badge" pla-if="globals.panier.quantite > 0" style='display:none;'>[[ globals.panier.quantite ]]</span>
 										</a>
 										<ul class="dropdown-menu dropdown-menu-right animated fadeInLeft" aria-labelledby="dropdownMenu1">
 											{# <li pla-if="globals.panier.quantite == 0">Aucun article dans le panier</li> #}
@@ -34,8 +34,8 @@
 												<div pla-if="onepanier.article.unit != onepanier.article.unitprix"><span class="text-info">[[ onepanier.quantite ]]</span> x [[ onepanier.article.nom ]] <small><i class='text-muted'>[[ onepanier.volume ]] [[ onepanier.unit ]]</i></small></div>
 											</li>
 											<li role="separator" class="divider" style="display:block;" pla-if="globals.panier.quantite > 0"></li>
-											<li><a href="{{ path('panier_pageweb') }}" style="margin-top:0px;">Détails du panier</a></li>
-											<li><a href="{{ path('panier_pageweb_commande') }}" pla-if="globals.panier.quantite > 0">Confirmer la commande</a></li>
+											<li><a href="{{ path('site_pageweb_pageweb', {itemSlug: 'panier-liste'}) }}" style="margin-top:0px;">Détails du panier</a></li>
+											<li><a href="{{ path('site_pageweb_pageweb', {itemSlug: 'panier-commande'}) }}" style="margin-top:0px;" pla-if="globals.panier.quantite > 0">Commander</a></li>
 										</ul>
 									</li>
 									{% endif %}

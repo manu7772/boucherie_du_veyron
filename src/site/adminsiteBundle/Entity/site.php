@@ -225,7 +225,7 @@ class site extends subentity {
 	/**
 	 * Set categorieArticles
 	 * @param arrayCollection $categorieArticles
-	 * @return subentity
+	 * @return site
 	 */
 	public function setCategorieArticles(ArrayCollection $categorieArticles) {
 		// $this->categorieArticles->clear();
@@ -265,7 +265,7 @@ class site extends subentity {
 	/**
 	 * Set categorieFooters
 	 * @param arrayCollection $categorieFooters
-	 * @return subentity
+	 * @return site
 	 */
 	public function setCategorieFooters(ArrayCollection $categorieFooters) {
 		// $this->categorieFooters->clear();
@@ -305,7 +305,7 @@ class site extends subentity {
 	/**
 	 * Set boutiques
 	 * @param arrayCollection $boutiques
-	 * @return subentity
+	 * @return site
 	 */
 	public function setBoutiques(ArrayCollection $boutiques) {
 		// $this->boutiques->clear();

@@ -1,0 +1,98 @@
+{% extends 'sitesiteBundle::base_pages.html.twig' %}
+{% set cssjsloads = 'form' %}
+{% set EDITORMODE = (app.environment in ['DEV', 'TEST']) or (is_granted('ROLE_EDITOR')) %}
+{% import 'sitesiteBundle:blocks:articles_actions.html.twig' as articles_macros %}
+
+{% block title %}{{ parent() }} - Confirmation de votre commande{% endblock title %}
+
+{% block mainContainer %}
+<section>
+	<div class="container">
+		<div class="row">
+
+			{% block menuArticle %}
+			{{ render(controller('sitesiteBundle:Default:menuArticle')) }}
+			{% endblock menuArticle %}
+
+			{% if not marketplace.active or not marketplace.vente or (command_form is not defined) %}
+			<div class="col-sm-9 col-md-9 padding-left-resp">
+				<div class="content-page-right">
+					<h5 class="text-center m-t-lg">La vente en ligne est désactivée,<br>vous ne pouvez passer commande sur votre panier pour le moment.</h5>
+				</div>
+			</div>
+			{% elseif app.user|default(null) != null %}
+			<div class="col-sm-9 col-md-9 padding-left-resp" TemplaxZone><!--colonne right-->
+				<div class="content-page-right m-b-none">
+					<h1 class="title">
+						{{ pageweb.titreh1|raw }} <span class="badge" pla-if="globals.panier.byarticle > 0" style='display:none;'>[[ globals.panier.quantite ]]</span>
+						<span class="pull-right"><a href="{{ path('site_pageweb_pageweb', {itemSlug: 'panier-liste'}) }}" pla-enable="globals.panier.quantite > 0" class="btn btn-xs btn-brow m-l-xs"><i class="fa fa-shopping-cart fa-flip-horizontal fa-fw m-r-xs"></i>Votre panier</a></span>
+					</h1>
+					<div pla-if-not="globals.panier.quantite > 0" style="display:none;">
+						<h5 class="text-center m-t-lg">Votre panier est vide.</h5>
+					</div>
+					<div pla-if="globals.panier.quantite > 0" style="display:none;">
+						{{ form_start(command_form) }}
+						<div class="row">
+							<div class="col-sm-9 m-t-xs">
+								<h5>Choisissez les options de votre commande :<br>Prochain enlèvement possible : <strong>{{ dateFR(nextOpen.startDate) }}</strong> à partir de <strong>{{ nextOpen.startDate|date("H \\h i") }}</strong></h5>
+							</div>
+							<div class="col-sm-3 m-t-sm">
+								<div class="border-bottom-fine p-b-xxs text-right">Prix Total : <strong>[[ globals.panier.prixtotal ]] {{ marketplace.devises[app.request.locale].symb }}<sup>TTC</sup></strong></div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-sm-12 m-t-xxs m-b-xxs">
+								{{ form_errors(command_form) }}
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-sm-6 m-t-xs">
+								{# form left #}
+								<h4>Date d'enlèvement</h4>
+								{{ form_widget(command_form.date) }}
+							</div>
+							<div class="col-sm-6 m-t-sm">
+								{# form right #}
+								<h4>Demi-journée</h4>
+								{{ form_widget(command_form.demijournee) }}
+							</div>
+						</div>
+						<div class="row m-t-md">
+							<div class="col-md-12 m-b-xs">
+								{% if is_granted('ROLE_TESTER') %}<h2 class="title well well-xs well-warning text-center">ATTENTION : vous êtes en mode testeur.<br>Votre commande ne sera donc pas prise en compte.</h2>{% endif %}
+								<h2 class="title text-center">
+									<p style='display:none;'>Votre commande sera prête <span id="commandeready_display"></span></p>
+									{{ form_widget(command_form.submit) }}
+								</h2>
+							</div>
+						</div>
+						{{ form_rest(command_form) }}
+						{{ form_end(command_form) }}
+					</div>
+				</div>
+			</div>
+			{% else %}
+			<div class="col-sm-9 col-md-9 padding-left-resp"><!--colonne right-->
+				<div class="content-page-right">
+					<h5 class="text-center m-t-lg">Vous devez vous connecter à votre compte ou créer un compte pour accéder à votre panier.</h5>
+				</div>
+			</div>
+			{% endif %}
+			<div class="col-sm-9 col-md-9 padding-left-resp m-b-lg"><!--colonne right-->
+				<div class="content-page-right background-gray m-b-lg p-t-sm p-b-sm" TemplaxZone>
+					{{ pageweb.code|raw }}
+				</div>
+			</div>
+
+		</div>
+	</div>
+</section>
+
+	{# {{ render(controller('sitesiteBundle:Default:miniListeInfo')) }}     #}
+
+{% endblock mainContainer %}
+
+
+
+
+

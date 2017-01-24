@@ -11,6 +11,16 @@ group:
         created: The group has been created
         deleted: The group has been deleted
 
+roles:
+    IS_AUTHENTICATED_ANONYMOUSLY: authenticated
+    ROLE_USER: user
+    ROLE_TESTER: tester
+    ROLE_TRANSLATOR: translator
+    ROLE_EDITOR: editor
+    ROLE_ADMIN: administrator
+    ROLE_SUPER_ADMIN: super admin
+    ROLE_ALLOWED_TO_SWITCH: switch user
+
 # Security
 security:
     login:
@@ -138,3 +148,6 @@ form:
     password_confirmation: Repeat password
     new_password: New password
     new_password_confirmation: Repeat new password
+
+'User account is disabled.': 'User account is disabled.'
+'Bad credentials.': 'Login or password is wrong. Try again, please.'

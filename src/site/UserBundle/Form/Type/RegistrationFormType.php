@@ -80,16 +80,17 @@ class RegistrationFormType extends BaseType {
                 'required'  => false,
                 'attr' => array(
                     'class' => 'input-sm form-control',
+                    'placeholder'   => 'fields.telephone',
                     ),
                 ))
-            ->add('adresse', new adresseType(), array(
-                'label' => 'Adresse',
-                'required' => false,
-                ))
-            ->add('adresseLivraison', new adresseType(), array(
-                'label' => 'Adresse de livraison',
-                'required' => false,
-                ))
+            // ->add('adresse', new adresseType(), array(
+            //     'label' => 'Adresse',
+            //     'required' => false,
+            //     ))
+            // ->add('adresseLivraison', new adresseType(), array(
+            //     'label' => 'Adresse de livraison',
+            //     'required' => false,
+            //     ))
         ;
 	}
 

@@ -6,6 +6,12 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Doctrine\Common\Collections\ArrayCollection;
+// JMS Serializer
+use JMS\Serializer\Annotation\ExclusionPolicy;
+use JMS\Serializer\Annotation\Expose;
+use JMS\Serializer\Annotation\MaxDepth;
+use JMS\Serializer\Annotation\Groups;
+use JMS\Serializer\Annotation\Accessor;
 
 use Labo\Bundle\AdminBundle\Entity\baseEntity;
 use Labo\Bundle\AdminBundle\Entity\tier;
@@ -16,6 +22,8 @@ use \Exception;
 
 /**
  * adresse
+ *
+ * @ExclusionPolicy("all")
  *
  * @ORM\Entity(repositoryClass="site\adminsiteBundle\Entity\adresseRepository")
  * @ORM\Table(name="adresse", options={"comment":"adresses du site"})
@@ -40,12 +48,16 @@ class adresse extends baseEntity {
 	 *      minMessage = "Le nom doit comporter au moins {{ limit }} lettres.",
 	 *      maxMessage = "Le nom doit comporter au maximum {{ limit }} lettres."
 	 * )
+	 * @Expose
+	 * @Groups({"complete", "facture"})
 	 */
 	protected $nom;
 
 	/**
 	 * @var string
 	 * @ORM\Column(name="url", type="text", nullable=true, unique=false)
+	 * @Expose
+	 * @Groups({"complete"})
 	 */
 	protected $url;
 
@@ -58,18 +70,24 @@ class adresse extends baseEntity {
 	/**
 	 * @var string
 	 * @ORM\Column(name="adresse", type="text", nullable=true, unique=false)
+	 * @Expose
+	 * @Groups({"complete", "facture"})
 	 */
 	protected $adresse;
 
 	/**
 	 * @var string
 	 * @ORM\Column(name="cp", type="string", length=10, nullable=true, unique=false)
+	 * @Expose
+	 * @Groups({"complete", "facture"})
 	 */
 	protected $cp;
 
 	/**
 	 * @var string
 	 * @ORM\Column(name="ville", type="string", length=255, nullable=true, unique=false)
+	 * @Expose
+	 * @Groups({"complete", "facture"})
 	 */
 	protected $ville;
 

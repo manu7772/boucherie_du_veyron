@@ -17,6 +17,7 @@ use site\adminsiteBundle\Entity\message;
 use Labo\Bundle\AdminBundle\Form\contactmessageType;
 use \DateTime;
 
+use site\adminsiteBundle\Entity\pageweb;
 use site\adminsiteBundle\Entity\panier;
 use site\adminsiteBundle\Entity\article;
 use site\UserBundle\Entity\User;
@@ -24,7 +25,6 @@ use Labo\Bundle\AdminBundle\Entity\LaboUser;
 
 class panierController extends Controller {
 
-	const ARTICLE_CLASSNAME = 'site\adminsiteBundle\Entity\article';
 
 	/**
 	 * info on Panier
@@ -38,20 +38,6 @@ class panierController extends Controller {
 		$infopanier = $this->get(aeData::PREFIX_CALL_SERVICE.'aeServicePanier')->getInfosPanier($user, $complete);
 		$aeReponse = new aeReponse(is_array($infopanier), $infopanier, null);
 		return $request->isXmlHttpRequest() ? $aeReponse->getJSONreponse() : $aeReponse;
-	}
-
-	public function panierdetailAction($username = null) {
-		$userManager = $this->get('fos_user.user_manager');
-		if($username != null) $data['user'] = $userManager->fingUserByUsername($username);
-			else $data['user'] = $this->getUser();
-		return $this->render('sitesiteBundle:Default:panierdetail.html.twig', $data);
-	}
-
-	public function paniercommandeAction($username = null) {
-		$userManager = $this->get('fos_user.user_manager');
-		if($username != null) $data['user'] = $userManager->fingUserByUsername($username);
-			else $data['user'] = $this->getUser();
-		return $this->render('sitesiteBundle:Default:paniercommande.html.twig', $data);
 	}
 
 	/**
@@ -90,6 +76,84 @@ class panierController extends Controller {
 		return $request->isXmlHttpRequest() ? $aeReponse->getJSONreponse() : $aeReponse;
 	}
 
+	/**
+	 * @Security("has_role('ROLE_USER')")
+	 * Validation du panier
+	 * @param Request $request
+	 * @return Response
+	 */
+	public function paniervalidAction(Request $request) {
+		$data = array();
+		$form = $request->request->get('form');
+		$commandeready = new DateTime($form['commandeready']);
+		// boutique
+		$boutiques = $this->get(aeData::PREFIX_CALL_SERVICE.'aeServiceBoutique')->getRepo()->findAll();
+		// echo('<pre>');var_dump($boutiques);die('</pre>');
+		$boutique = reset($boutiques);
+
+		$serviceFacture = $this->get(aeData::PREFIX_CALL_SERVICE.'aeServiceFacture');
+		$aeReponse = $serviceFacture->saveUserFacture($this->getUser(), $boutique, !$this->getUser()->hasRole('ROLE_TESTER'));
+
+		$message = $aeReponse->getMessage();
+		$typeMessage = $aeReponse->getResult() ? flashMessage::MESSAGES_SUCCESS : flashMessage::MESSAGES_ERROR;
+		if(trim($message) != '') $this->get('flash_messages')->send(array(
+			'title'		=> ucfirst('Action Panier'),
+			'type'		=> $typeMessage,
+			'text'		=> $message,
+		));
+
+		if($aeReponse->getResult()) {
+			$facture = $aeReponse->getData();
+			$facture->setDelailivraison($commandeready);
+			$serviceFacture->saveFacture($facture);
+			$factureId = $facture->getId();
+			// envois mails
+			$serviceEmail = $this->get(aeData::PREFIX_CALL_SERVICE.'aeEmail');
+			$serviceEmail->emailToUserAfterCommand($this->getUser(), $facture);
+			$collaborateurs = $this->get(aeData::PREFIX_CALL_SERVICE.'aeServiceSite')->getAllCollaborateurs($this->getRequest()->getSession()->get('sitedata')['id']);
+			$serviceEmail->emailConfirmCdeCollaborateurs($collaborateurs, $this->getUser(), $facture);
+		} else {
+			$factureId = null;
+		}
+		// redirect…
+		// return $this->render('sitesiteBundle:extended_pages_web:paniervalid.html.twig', $data);
+		return $this->redirect($this->generateUrl('panier_pageweb_valid_confirm', array('factureId' => $factureId)));
+	}
+
+	/**
+	 * @Security("has_role('ROLE_USER')")
+	 * Pageweb validation du panier
+	 * @param string $factureId
+	 * @return Response
+	 */
+	public function paniervalidconfirmAction($factureId = null) {
+		$data = array();
+		if($factureId !== null) {
+			$data['facture'] = $this->get(aeData::PREFIX_CALL_SERVICE.'aeServiceFacture')->getRepo()->findOneById($factureId);
+			// echo('<pre>');var_dump($data['facture']);die('</pre>');
+		} else {
+			$data['facture'] = null;
+		}
+		$servicePageweb = $this->get(aeData::PREFIX_CALL_SERVICE.'aeServicePageweb');
+		$data['pageweb'] = $servicePageweb->getRepo()->findPaniervalid();
+		if($data['pageweb'] instanceOf pageweb)
+			$template = $servicePageweb->getPageBySlug($data['pageweb']->getSlug())['template'];
+			else $template = 'sitesiteBundle:extended_pages_web:paniervalid.html.twig';
+		return $this->render($template, $data);
+	}
+
+	/**
+	 * @Security("has_role('ROLE_USER')")
+	 * Verification date d'enlèvement pour confirmation de commande
+	 * @param Request $request
+	 * @return JsonResponse
+	 */
+	public function commandeVerifDateAction(Request $request) {
+		$date = $request->request->get('date');
+		$date = preg_replace('([^0-9])', '-', $date);
+		$aeReponse = $this->get(aeData::PREFIX_CALL_SERVICE.'aeServiceCalendar')->verifDate(new DateTime($date), 'boutique', 'boutique-de-poncin', 'OUVERT', true);
+		return $aeReponse->getArrayJSONreponse();
+	}
 
 	/**
 	 * @Security("has_role('ROLE_USER')")

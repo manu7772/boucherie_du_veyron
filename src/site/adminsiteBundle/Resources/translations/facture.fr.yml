@@ -19,6 +19,8 @@ state:
     valid: validée
     archived: archivée
     canceled: annulée
+    test: test
+    TEMP: temporaire-panier
 fields:
     id: id
     user: utilisateur

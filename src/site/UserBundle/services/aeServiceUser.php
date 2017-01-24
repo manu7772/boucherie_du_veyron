@@ -46,7 +46,6 @@ class aeServiceUser extends aeServiceLaboUser {
 		return $users;
 	}
 
-
 	/**
 	 * Check entity integrity in context
 	 * @param baseEntity $entity
@@ -61,8 +60,6 @@ class aeServiceUser extends aeServiceLaboUser {
 				case 'new':
 					break;
 				case 'postload':
-					if($entity->isCollaborator()) $this->container->get(aeData::PREFIX_CALL_SERVICE.'aeServiceMessage')->checkMessagesCollaborator($entity, true);
-					// echo('<p>User loaded. ('.$entity->getUsername().')</p>');
 					break;
 				case 'prepersist':
 					break;

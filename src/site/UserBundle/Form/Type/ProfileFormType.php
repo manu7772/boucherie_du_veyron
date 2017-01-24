@@ -18,6 +18,8 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Security\Core\Validator\Constraint\UserPassword as OldUserPassword;
 use Symfony\Component\Security\Core\Validator\Constraints\UserPassword;
 use Symfony\Component\Form\Extension\Core\ChoiceList\ChoiceList;
+use FOS\UserBundle\Util\LegacyFormHelper;
+
 // Paramétrage de formulaire
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormEvent;
@@ -64,6 +66,22 @@ class ProfileFormType extends BaseType {
 		// $themesListKeys = array_keys($entity->getAdminskins());
 
 		$builder
+			->add('username', null, array(
+				'label' => 'form.username',
+				'translation_domain' => 'FOSUserBundle',
+				'attr' => array(
+					'class' => 'input-sm form-control',
+					'placeholder'   => 'Nom utilisateur',
+					),
+				))
+			->add('email', LegacyFormHelper::getType('Symfony\Component\Form\Extension\Core\Type\EmailType'), array(
+				'label' => 'form.email',
+				'translation_domain' => 'FOSUserBundle',
+				'attr' => array(
+					'class' => 'input-sm form-control',
+					'placeholder'   => 'Email',
+					),
+				))
 			// ->add('current_password', 'password', array(
 			//     'label' => 'form.current_password',
 			//     'translation_domain' => 'FOSUserBundle',
@@ -77,6 +95,7 @@ class ProfileFormType extends BaseType {
 				'required'  => false,
 				'attr' => array(
 					'class' => 'input-sm form-control',
+					'placeholder'   => 'fields.nom',
 					),
 				))
 			->add('prenom', 'text', array(
@@ -86,6 +105,7 @@ class ProfileFormType extends BaseType {
 				'required'  => false,
 				'attr' => array(
 					'class' => 'input-sm form-control',
+					'placeholder'   => 'fields.prenom',
 					),
 				))
 			->add('telephone', 'text', array(
@@ -95,6 +115,7 @@ class ProfileFormType extends BaseType {
 				'required'  => false,
 				'attr' => array(
 					'class' => 'input-sm form-control',
+					'placeholder' => 'fields.telephone',
 					),
 				))
 			// ->add('langue', 'text', array(
@@ -111,14 +132,14 @@ class ProfileFormType extends BaseType {
 				'label' => 'fields.avatar',
 				'required' => false,
 				))
-			->add('adresse', new adresseType(), array(
-				'label' => 'Adresse',
-				'required' => false,
-				))
-			->add('adresseLivraison', new adresseType(), array(
-				'label' => 'Adresse de livraison',
-				'required' => false,
-				))
+			// ->add('adresse', new adresseType(), array(
+			// 	'label' => 'Adresse',
+			// 	'required' => false,
+			// 	))
+			// ->add('adresseLivraison', new adresseType(), array(
+			// 	'label' => 'Adresse de livraison',
+			// 	'required' => false,
+			// 	))
 		;
 
 		$builder->addEventListener(

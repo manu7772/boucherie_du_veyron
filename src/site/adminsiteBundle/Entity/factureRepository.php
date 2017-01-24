@@ -16,4 +16,11 @@ use Doctrine\ORM\Mapping\ClassMetadata;
  */
 class factureRepository extends EntityBaseRepository {
 
+	/** Renvoie la(les) valeur(s) par défaut --> ATTENTION : dans un array()
+	 * @param $defaults = liste des éléments par défaut
+	 */
+	public function defaultVal() {
+		return array();
+	}
+
 }

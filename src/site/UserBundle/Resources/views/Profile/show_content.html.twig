@@ -17,7 +17,7 @@
 					<div class="row">
 						<div class="col-sm-4 text-muted text-right hidden-xs">{{ 'profile.show.username'|trans }}</div>
 						<div class="col-sm-4 text-muted teleft visible-xs">{{ 'profile.show.username'|trans }}</div>
-						<div class="col-sm-8"><strong>{{ user.username }}</strong></div>
+						<div class="col-sm-8"><strong>{{ user.username }}</strong>{% if is_granted('ROLE_TESTER') %} <i><small class="label label-{{ roleColor('ROLE_TESTER') }}">Testeur</small></i>{% endif %}</div>
 					</div>
 					<div class="row">
 						<div class="col-sm-4 text-muted text-right hidden-xs">{{ 'profile.show.email'|trans }}</div>

@@ -200,6 +200,11 @@ services:
         class: %ae_services%aeServicePanier
         arguments: [@service_container]
 
+    # service calendar
+    aetools.aeServiceCalendar:
+        class: %ae_services%aeServiceCalendar
+        arguments: [@service_container]
+
     # service facture
     aetools.aeServiceFacture:
         class: %ae_services%aeServiceFacture
@@ -235,8 +240,13 @@ services:
     #######################
 
     # service tier
-    aetools.aeServiceFiche:
+    aetools.aeServiceTier:
         class: %ae_services%aeServiceTier
+        arguments: [@service_container]
+
+    # service boutique
+    aetools.aeServiceBoutique:
+        class: %site_services%aeServiceBoutique
         arguments: [@service_container]
 
     #######################

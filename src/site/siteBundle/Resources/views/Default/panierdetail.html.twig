@@ -23,7 +23,7 @@
 			{% elseif user|default(null) != null %}
 			<div class="col-sm-9 col-md-9 padding-left-resp" TemplaxZone><!--colonne right-->
 				<div class="content-page-right">
-					<h2 class="title allRefreshAjaxlive">
+					<h2 class="title">
 						Votre panier <span class="badge" pla-if="globals.panier.byarticle > 0">[[ globals.panier.quantite ]]</span>
 						<span class="pull-right"><a href="{{ path('panier_pageweb_commande') }}" pla-enable="globals.panier.quantite > 0" class="btn btn-xs btn-maroon m-l-xs"><i class="fa fa-fw for-pulse fa-check m-r-xs"></i>Commander</a></span>
 						<span class="pull-right"><a pla-enable="globals.panier.quantite > 0" class="btn btn-xs btn-brow m-l-xs panier-data panier-action" {{ articles_macros.paramsLine('empty') }}><i class="fa fa-fw for-pulse fa-trash m-r-xs"></i>Vider le panier</a></span>

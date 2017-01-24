@@ -6,7 +6,8 @@
 			<div class="bg">
 				<div class="row">
 					<div class="col-xs-12">
-						<h2 class="title">Contact {{ app.session.get('sitedata').nom|default('') }}</h2>
+						{% if ouvert.next|length > 0 %}{% set nexttext = " - Ouvert le " ~ dateFR(ouvert.next.0.startDate) ~ " à " ~ ouvert.next.0.startDate|date('H\\hi') %}{% endif %}
+						<h2 class="title">Contact {{ app.session.get('sitedata').nom|default('') }}<small> - {{ ouvert.now|length > 0 ? "OUVERT ACTUELLEMENT" : "Fermé actuellement" ~ nexttext|default('') }}</small></h2>
 					</div>
 					{% for boutique in app.session.get('sitedata').boutiques|default([]) %}
 					<div class="col-sm-4">
@@ -15,6 +16,9 @@
 								<h4>{{ boutique.nom }}</h4>
 								{% if boutique.adresse is not null %}
 								<p>{{  boutique.adresse.adresse }}<br>{{  boutique.adresse.cp }} {{  boutique.adresse.ville }}</p>
+								{% if boutique.adresse.commentaire is not null %}
+								<p><i><small>{{ boutique.adresse.commentaire }}</small></i></p>
+								{% endif %}
 								{% endif %}
 								{% if boutique.telfixe is not null %}
 								<p>Tel. {{ boutique.telfixe }}</p>
@@ -24,6 +28,10 @@
 								{% endif %}
 								{% if boutique.email is not null %}
 								<p>Email {{ boutique.email }}</p>
+								{% endif %}
+								{% if boutique.descriptif is not null %}
+								<hr>
+								<p>{{ boutique.descriptif|raw }}</p>
 								{% endif %}
 							</address>
 						</div>

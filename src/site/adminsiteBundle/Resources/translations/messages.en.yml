@@ -63,6 +63,8 @@ actions:
     forbidden: actions are forbidden
     repondre: answer
     analyse: analyse
+    disable: disable
+    enable: enable
 table:
     col:
         id: id

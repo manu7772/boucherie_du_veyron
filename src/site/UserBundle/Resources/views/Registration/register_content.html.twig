@@ -51,14 +51,14 @@
 							{{ form_widget(form.telephone) }}
 							{{ form_errors(form.telephone) }}
 						</div>
-						<div class="form-group col-md-12">
-							{{ form_widget(form.adresse) }}
-							{{ form_errors(form.adresse) }}
-						</div>
-						<div class="form-group col-md-12">
-							{{ form_widget(form.adresseLivraison) }}
-							{{ form_errors(form.adresseLivraison) }}
-						</div>
+						{# <div class="form-group col-md-12"> #}
+							{# {{ form_widget(form.adresse) }} #}
+							{# {{ form_errors(form.adresse) }} #}
+						{# </div> #}
+						{# <div class="form-group col-md-12"> #}
+							{# {{ form_widget(form.adresseLivraison) }} #}
+							{# {{ form_errors(form.adresseLivraison) }} #}
+						{# </div> #}
 						<div class="form-group col-md-12">
 							<input type="submit" id="_submit" name="_submit" class="btn btn-primary btn-md btn-block" value="{{ 'registration.submit'|trans|capitalize }}">
 						</div>

@@ -85,7 +85,7 @@ class article extends item {
 	 * @var boolean
 	 * @ORM\Column(name="groupbasket", type="boolean", nullable=false, unique=false)
 	 * @Expose
-	 * @Groups({"complete", "ajaxlive"})
+	 * @Groups({"complete", "ajaxlive", "facture"})
 	 */
 	protected $groupbasket;
 
@@ -242,7 +242,7 @@ class article extends item {
 		$this->load();
 		$this->vendable = true;
 		$this->surdevis = false;
-		$this->groupbasket = true;
+		$this->groupbasket = false;
 		$this->refFabricant = null;
 		$this->accroche = null;
 		$this->prix = 0;

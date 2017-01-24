@@ -19,6 +19,8 @@ state:
     valid: valid
     archived: archived
     canceled: canceled
+    test: test
+    TEMP: temporary-basket
 fields:
     id: id
     user: user
