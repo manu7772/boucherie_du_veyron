@@ -22,9 +22,11 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 use FOS\UserBundle\Controller\ChangePasswordController as BaseController;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security as FEBsecurity;
 
 /**
  * Controller managing the password change
+ * @FEBsecurity("has_role('ROLE_USER')")
  *
  * @author Thibault Duplessis <thibault.duplessis@gmail.com>
  * @author Christophe Coevoet <stof@notk.org>

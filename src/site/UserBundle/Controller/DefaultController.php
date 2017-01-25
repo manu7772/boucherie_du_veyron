@@ -14,10 +14,14 @@ use FOS\UserBundle\Model\UserInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 // use site\UserBundle\Form\Type\ProfileFormType;
 use Labo\Bundle\AdminBundle\services\aeData;
 use site\adminsiteBundle\Entity\boutique;
 
+/**
+ * @Security("has_role('ROLE_ADMIN')")
+ */
 class DefaultController extends Controller {
 
 	const ENTITE_CLASSNAME = 'site\\UserBundle\\Entity\\User';

@@ -30,6 +30,8 @@ entite:
     # entités
     site: fa-building
     article: fa-shopping-cart
+    facture: fa-money
+    calendar: fa-calendar
     panier: fa-shopping-cart
     adresse: fa-map-marker
     pageweb: fa-desktop

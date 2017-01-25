@@ -20,11 +20,13 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security as FEBsecurity;
 
 use FOS\UserBundle\Controller\ProfileController as BaseController;
 
 /**
  * Controller managing the user profile
+ * @FEBsecurity("has_role('ROLE_USER')")
  *
  * @author Christophe Coevoet <stof@notk.org>
  */

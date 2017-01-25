@@ -183,6 +183,15 @@ twig:
                     #         path: 'siteadmin_entite'
                     #         params:
                     #             entite: reseau
+                    facture:
+                        role: 'ROLE_ADMIN'
+                        nom: 'name_s'
+                        trans_domain: facture
+                        icon: 'entite.facture'
+                        path: 
+                            path: 'siteadmin_entite'
+                            params:
+                                entite: facture
                     tauxTva:
                         role: 'ROLE_ADMIN'
                         nom: 'name_s'

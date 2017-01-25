@@ -292,6 +292,10 @@ parameters:
             icon: fa-building-o
         tauxTva: 
             icon: fa-calculator
+        facture: 
+            icon: fa-money
+        calendar: 
+            icon: fa-calendar
     marketplace:
         active: true #gérer des articles, boutiques, etc.
         vente: true #afficher les prix et remplir le panier

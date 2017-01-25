@@ -211,8 +211,7 @@ class DefaultController extends Controller {
 						));
 						// envoi mail aux admin (si option User::mailSitemessages == true)
 						// $collaborateurs = $this->getDoctrine()->getManager()->getRepository('Labo\Bundle\AdminBundle\Entity\LaboUser')->findCollaborators($this->getRequest()->getSession()->get('sitedata')['id']);
-						$collaborateurs = $this->get(aeData::PREFIX_CALL_SERVICE.'aeServiceSite')->getAllCollaborateurs($this->getRequest()->getSession()->get('sitedata')['id']);
-						$this->get('aetools.aeEmail')->emailCollatoratorMessage($collaborateurs, $message);
+						$this->get('aetools.aeEmail')->emailCollatoratorMessage($message);
 						$this->get('aetools.aeEmail')->emailCopyToUserAfterMessage($message);
 						// nouveau formulaire
 						// info in session…

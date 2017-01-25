@@ -94,6 +94,13 @@ siteadmin_calendar_feed:
     defaults: { _controller: siteadminsiteBundle:calendar:ajaxFeed }
     # methods: ['post']
 
+
+# FACTURE
+siteadmin_facture_changestate:
+    path:     /change-state-facture/{factureId}/{state}
+    defaults: { _controller: siteadminsiteBundle:facture:changeStateFacture }
+    # methods: ['post']
+
 #CATEGORIES
 siteadmin_list_categorie:
     path:     /categorie/list/{type_related}/{type_field}/{type_values}
