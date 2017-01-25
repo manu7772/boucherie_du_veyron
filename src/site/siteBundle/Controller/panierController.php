@@ -110,8 +110,8 @@ class panierController extends Controller {
 			// envois mails
 			$serviceEmail = $this->get(aeData::PREFIX_CALL_SERVICE.'aeEmail');
 			$serviceEmail->emailToUserAfterCommand($this->getUser(), $facture);
-			$collaborateurs = $this->get(aeData::PREFIX_CALL_SERVICE.'aeServiceSite')->getAllCollaborateurs($this->getRequest()->getSession()->get('sitedata')['id']);
-			$serviceEmail->emailConfirmCdeCollaborateurs($collaborateurs, $this->getUser(), $facture);
+			// $collaborateurs = $this->get(aeData::PREFIX_CALL_SERVICE.'aeServiceSite')->getAllCollaborateurs($this->getRequest()->getSession()->get('sitedata')['id']);
+			$serviceEmail->emailConfirmCdeCollaborateurs($this->getUser(), $facture);
 		} else {
 			$factureId = null;
 		}
