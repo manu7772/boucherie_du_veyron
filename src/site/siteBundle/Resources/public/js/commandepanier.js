@@ -96,7 +96,7 @@ jQuery(document).ready(function($) {
 							data: {date: date}, // string : 2016/12/31 ou 2016-12-31…
 							}).fail(function (err) { console.log('Error:', err); })
 					).done(function (result) {
-						console.log('##################### Return data:', {result: $.extend(true, {}, result)});
+						// console.log('##################### Return data:', {result: $.extend(true, {}, result)});
 						if(result.result === false) {
 							// invalid date : remove it !
 							if(result.message+'' !== '') toastr["error"](result.message);
@@ -105,7 +105,7 @@ jQuery(document).ready(function($) {
 						} else {
 							// valid date : fix it !
 							last_result = $.extend(true, {}, result);
-							console.log('Result message:', {type: $.type(last_result.message), brut: last_result.message, trim: last_result.message.trim(), trim_length: last_result.message.trim().length});
+							// console.log('Result message:', {type: $.type(last_result.message), brut: last_result.message, trim: last_result.message.trim(), trim_length: last_result.message.trim().length});
 							if(last_result.message.trim().length > 0) toastr["success"](last_result.message);							
 						}
 						$validdate.val($INPUT.datepicker('getDate').toString());

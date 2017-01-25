@@ -9,5 +9,3 @@
 /composer.phar
 /vendor/
 /web/*/
-!/web/css/
-!/web/js/
