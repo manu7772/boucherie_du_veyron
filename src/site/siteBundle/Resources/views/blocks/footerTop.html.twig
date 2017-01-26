@@ -4,7 +4,7 @@
 	<div class="container">
 		<div class="row">
 			{# {% if app.session.get('sitedata') != null %} #}
-			{% for item1 in categorieFooters|default([]) %}
+			{% for item1 in categorieFooters|default([]) if item1 is not null %}
 			<div class="col-sm-2">
 				<div class="single-widget">
 					<h2 title="{{ phraseCut(item1.descriptif|default(item1.nom)|striptags, 160) }}">{{ item1.nom }}</h2>

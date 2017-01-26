@@ -101,6 +101,19 @@ siteadmin_facture_changestate:
     defaults: { _controller: siteadminsiteBundle:facture:changeStateFacture }
     # methods: ['post']
 
+# ---- external facture actions ------ #
+site_ext_facture_changestate:
+    path:     /external/change-state-facture/{factureId}/{state}/{username}/{key}
+    defaults: { _controller: siteadminsiteBundle:factureExt:changeStateFacture }
+    requirements:
+        state: '[0-6]'
+
+site_ext_facture_delete:
+    path:     /external/delete-test-facture/{factureId}/{username}/{key}
+    defaults: { _controller: siteadminsiteBundle:factureExt:deleteTestFacture }
+
+
+
 #CATEGORIES
 siteadmin_list_categorie:
     path:     /categorie/list/{type_related}/{type_field}/{type_values}
