@@ -618,9 +618,9 @@ class article extends item {
 	 * @param integer $maxquantity
 	 * @return article
 	 */
-	public function setMaxquantity($maxquantity) {
-		$this->maxquantity = (integer)$maxquantity;
-		if($this->maxquantity <= $this->minquantity) $this->maxquantity = $this->minquantity;
+	public function setMaxquantity($maxquantity = null) {
+		$this->maxquantity = $maxquantity;
+		if($this->maxquantity !== null && $this->maxquantity < $this->minquantity) $this->maxquantity = $this->minquantity;
 		return $this;
 	}
 
@@ -640,7 +640,7 @@ class article extends item {
 	public function setMinquantity($minquantity) {
 		$this->minquantity = (integer)$minquantity;
 		if($this->minquantity < 1) $this->minquantity = 1;
-		if($this->maxquantity <= $this->minquantity) $this->maxquantity = $this->minquantity;
+		if($this->maxquantity !== null && $this->maxquantity <= $this->minquantity) $this->maxquantity = $this->minquantity;
 		return $this;
 	}
 
