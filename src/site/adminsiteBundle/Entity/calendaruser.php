@@ -23,13 +23,13 @@ use \DateTime;
 use \Exception;
 
 /**
- * calendartier
+ * calendaruser
  *
- * @ORM\Entity(repositoryClass="site\adminsiteBundle\Entity\calendartierRepository")
- * @ORM\Table(name="calendartier", options={"comment":"Agendas des tiers du site"})
+ * @ORM\Entity(repositoryClass="site\adminsiteBundle\Entity\calendaruserRepository")
+ * @ORM\Table(name="calendaruser", options={"comment":"Agendas des LaboUsers du site"})
  * @ORM\HasLifecycleCallbacks
  */
-class calendartier extends calendar {
+class calendaruser extends calendar {
 
 	/**
 	 * @var integer
@@ -43,12 +43,12 @@ class calendartier extends calendar {
 	protected $id;
 
 	/**
-	 * set user
-	 * @param LaboUser $usercal = null
-	 * @return calendartier
+	 * set tier
+	 * @param tier $tier = null
+	 * @return calendaruser
 	 */
-	public function setUsercal(LaboUser $usercal = null) {
-		if($usercal instanceOf LaboUser) throw new Exception("You can not set LaboUser as owner in calendartier entity!", 1);
+	public function setTier(tier $tier = null) {
+		if($usercal instanceOf LaboUser) throw new Exception("You can not set LaboUser as owner in calendaruser entity!", 1);
 			else $this->removeOwner();
 		return $this;
 	}
@@ -56,10 +56,10 @@ class calendartier extends calendar {
 	/**
 	 * set baseevenement
 	 * @param baseevenement $evenement = null
-	 * @return calendartier
+	 * @return calendaruser
 	 */
 	public function setEvenement(baseevenement $evenement = null) {
-		if($evenement instanceOf baseevenement) throw new Exception("You can not set baseevenement as owner in calendartier entity!", 1);
+		if($evenement instanceOf baseevenement) throw new Exception("You can not set baseevenement as ownerement in calendaruser entity!", 1);
 			else $this->removeOwner();
 		return $this;
 	}

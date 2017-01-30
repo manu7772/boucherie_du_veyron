@@ -139,7 +139,7 @@ class categorieType extends baseType {
                         'class'         => 'select2',
                         // 'data-limit'    => $nestedAttributesParameters['categorie_nested']['data-limit'],
                         ),
-                    'group_by' => 'shortName',
+                    'group_by' => 'categorieParent.shortName',
                     "query_builder" => function($repo) use ($categorie, $nestedAttributesParameters) {
                         if(method_exists($repo, 'defaultValsListClosure'))
                             return $repo->defaultValsListClosure($this->controller, $nestedAttributesParameters['categorie_nested']['class'], $categorie);

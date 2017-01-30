@@ -201,6 +201,34 @@ twig:
                             path: 'siteadmin_entite'
                             params:
                                 entite: tauxTva
+            evenement:
+                role: 'ROLE_EDITOR'
+                nom: 'name_s'
+                trans_domain: evenement
+                icon: 'entite.evenement'
+                path: 'siteadmin_homepage'
+                level2: 
+                    evenements:
+                        role: 'ROLE_EDITOR'
+                        nom: 'name_s'
+                        trans_domain: evenement
+                        icon: 'entite.evenement'
+                        path: 
+                            path: 'siteadmin_entite'
+                            params:
+                                entite: evenement
+                    # monagenda:
+                    #     role: 'ROLE_EDITOR'
+                    #     nom: 'mon agenda'
+                    #     trans_domain: calendar
+                    #     icon: 'entite.calendar'
+                    #     path: 
+                    #         path: 'siteadmin_entite_type'
+                    #         params:
+                    #             entite: calendartier
+                    #             type_related: _self
+                    #             type_field: nom
+                    #             type_values: 'OUVERT'
             pageweb:
                 role: 'ROLE_EDITOR'
                 nom: 'name_s'

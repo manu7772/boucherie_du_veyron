@@ -15,6 +15,7 @@ use JMS\Serializer\Annotation\Accessor;
 
 use Labo\Bundle\AdminBundle\Entity\baseEntity;
 use Labo\Bundle\AdminBundle\Entity\tier;
+use Labo\Bundle\AdminBundle\Entity\baseevenement;
 use site\UserBundle\Entity\User;
 
 use \DateTime;
@@ -118,6 +119,13 @@ class adresse extends baseEntity {
 	 */
 	protected $tier;
 
+	/**
+	 * - INVERSE
+	 * @ORM\OneToOne(targetEntity="Labo\Bundle\AdminBundle\Entity\baseevenement", mappedBy="adresse")
+	 * @ORM\JoinColumn(nullable=true, unique=true, onDelete="SET NULL")
+	 */
+	protected $evenement;
+
 
 
 	public function __construct() {
@@ -128,6 +136,7 @@ class adresse extends baseEntity {
 		$this->user = null;
 		$this->userLivraison = null;
 		$this->tier = null;
+		$this->evenement = null;
 	}
 
 	public function getId() {
@@ -187,6 +196,7 @@ class adresse extends baseEntity {
 			'user',
 			'userLivraison',
 			'tier',
+			'evenement',
 			);
 		$this->type = null;
 		foreach ($links as $value) {
@@ -359,6 +369,24 @@ class adresse extends baseEntity {
 	 */
 	public function getTier() {
 		return $this->tier;
+	}
+
+	/**
+	 * Set baseevenement - INVERSE
+	 * @param baseevenement $evenement
+	 * @return adresse
+	 */
+	public function setEvenement(baseevenement $evenement = null) {
+		$this->evenement = $evenement;
+		return $this;
+	}    
+
+	/**
+	 * Get baseevenement - INVERSE
+	 * @return baseevenement
+	 */
+	public function getEvenement() {
+		return $this->evenement;
 	}
 
 }

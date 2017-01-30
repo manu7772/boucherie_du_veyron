@@ -95,6 +95,7 @@ class categorie extends nested {
 	protected $type_list;
 
 	protected $passBySetParent;
+	protected $forceType;
 
 
 	public function __construct() {
@@ -107,6 +108,15 @@ class categorie extends nested {
 		$this->type_list = null;
 		$this->categorieParent = null;
 		$this->passBySetParent = false;
+		$this->forceType = false;
+	}
+
+
+	/**
+	 * @ORM\PostLoad
+	 */
+	public function load() {
+		$this->forceType = false;
 	}
 
 	/**
@@ -625,13 +635,14 @@ class categorie extends nested {
 			$this->type = $type;
 		}
 		// echo('<h5 style="color:green;">setType to '.$this->getType().' on '.json_encode($this->getNom()).'</h5>');
-		if($mem != $this->type) {
+		if($mem != $this->type || $this->forceType) {
 			// refresh accepts
 			$this->setAccepts();
 			// the same type for children
 			// WARNING ! Not aliases --> recursivity hazard !! …and it should not be true !
 			foreach($this->getCategorieChilds(false) as $child) {
-				$child->setType($this->type, $level + 1);
+				if($this->forceType) $child->checkType();
+					else $child->setType($this->type, $level + 1);
 			}
 			// deleting children wich is not accepted
 			foreach($this->getNestedChildsByTypes($this->getNotAccepts()) as $child) {
@@ -645,6 +656,12 @@ class categorie extends nested {
 		return $this;
 	}
 
+	public function checkType() {
+		$this->forceType = true;
+		$this->setType($this->getType());
+		$this->forceType = false;
+		return $this;
+	}
 
 	/**
 	 * Set open

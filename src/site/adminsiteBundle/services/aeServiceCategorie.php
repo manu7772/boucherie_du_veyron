@@ -68,6 +68,7 @@ class aeServiceCategorie extends aeServiceNested {
                     // echo('<h3 style="color:green;">New entity on '.json_encode($entity->getType()).'</h3>');
                     break;
                 case 'postload':
+                    $this->setTypesDescription($entity);
                     // echo('<h3 style="color:green;">PostLoad on '.json_encode($entity->getNom()).'</h3>');
                     // $this->setTypesDescription($entity);
                     break;
@@ -109,6 +110,29 @@ class aeServiceCategorie extends aeServiceNested {
             }
         }
         return array_unique($types);
+    }
+
+    /**
+     * Check types of categories (use this function if changes in labo_paremeters.yml)
+     * @return aeReponse
+     */
+    public function checkCategoriesTypes() {
+        $report = array();
+        $aeReponse = $this->container->get('aetools.aeReponse');
+        $categories = $this->getRepo()->findByLvl(0);
+        foreach ($categories as $categorie) {
+            $report[$categorie->getSlug()] = array();
+            $report[$categorie->getSlug()]['old']['type'] = $categorie->getType();
+            $report[$categorie->getSlug()]['old']['accepts'] = $categorie->getAccepts();
+            $categorie->checkType();
+            $report[$categorie->getSlug()]['new']['type'] = $categorie->getType();
+            $report[$categorie->getSlug()]['new']['accepts'] = $categorie->getAccepts();
+        }
+        $this->getEm()->flush();
+        $aeReponse->setResult(true);
+        $aeReponse->setMessage('Toutes les catégories ont été checkées. Veuillez recharger la page, s.v.p.');
+        $aeReponse->setData($report);
+        return $aeReponse;
     }
 
     public function controlTrashCategorie() {

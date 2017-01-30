@@ -13,30 +13,29 @@ use JMS\Serializer\Annotation\MaxDepth;
 use JMS\Serializer\Annotation\Groups;
 use JMS\Serializer\Annotation\Accessor;
 
-use Labo\Bundle\AdminBundle\Entity\tier;
+use Labo\Bundle\AdminBundle\Entity\baseevenement;
 use site\adminsiteBundle\Entity\site;
 
 use \DateTime;
 
 /**
- * boutique
+ * evenement
  *
  * @ExclusionPolicy("all")
  *
- * @ORM\Entity(repositoryClass="site\adminsiteBundle\Entity\boutiqueRepository")
- * @ORM\Table(name="boutique", options={"comment":"boutiques du site"})
+ * @ORM\Entity(repositoryClass="site\adminsiteBundle\Entity\evenementRepository")
+ * @ORM\Table(name="evenement", options={"comment":"evenements du site"})
  * @ORM\HasLifecycleCallbacks
- * @UniqueEntity(fields={"nom"}, message="Cette boutique est déjà enregistrée")
  */
-class boutique extends tier {
+class evenement extends baseevenement {
 
 	/**
 	 * @var string
-	 * @ORM\Column(name="nom", type="string", length=100, nullable=false, unique=false)
+	 * @ORM\Column(name="nom", type="string", length=128, nullable=false, unique=false)
 	 * @Assert\NotBlank(message = "Vous devez remplir ce champ.")
 	 * @Assert\Length(
 	 *      min = "2",
-	 *      max = "100",
+	 *      max = "128",
 	 *      minMessage = "Le nom doit comporter au moins {{ limit }} lettres.",
 	 *      maxMessage = "Le nom doit comporter au maximum {{ limit }} lettres."
 	 * )
@@ -47,12 +46,13 @@ class boutique extends tier {
 
 	/**
 	 * - INVERSE
-	 * @ORM\ManyToMany(targetEntity="site\adminsiteBundle\Entity\site", mappedBy="boutiques")
+	 * @ORM\ManyToMany(targetEntity="site\adminsiteBundle\Entity\site", mappedBy="evenements")
 	 * @ORM\JoinColumn(nullable=true, unique=false, onDelete="SET NULL")
 	 * @Expose
 	 * @Groups({"complete"})
 	 */
 	protected $sites;
+
 
 
 	public function __construct() {
@@ -84,7 +84,7 @@ class boutique extends tier {
 	 * @return boolean
 	 */
 	public function isDefaultMultiple() {
-		return true;
+		return 6;
 	}
 
 	/**
@@ -103,11 +103,11 @@ class boutique extends tier {
 	/**
 	 * Add site
 	 * @param site $site
-	 * @return boutique
+	 * @return evenement
 	 */
 	public function addSite(site $site) {
 		$this->sites->add($site);
-		$ite->addBoutique($this);
+		$site->addEvenement($this);
 		return $this;
 	}
 
@@ -118,7 +118,7 @@ class boutique extends tier {
 	 */
 	public function removeSite(site $site) {
 		$r = $this->sites->removeElement($site);
-		$site->removeBoutique($this);
+		$site->removeEvenement($this);
 		return $r;
 	}
 

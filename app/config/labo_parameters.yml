@@ -125,6 +125,15 @@ parameters:
             icon: fa-question
         site:
             icon: fa-building
+        evenement:
+            icon: fa-bell-o
+            singleFields:
+                couleur: '#0033DD'
+            nestedAttributes:
+                nesteds:
+                    data-limit: 0
+                    class: ['categorie']
+                    required: false
         article:
             icon: fa-shopping-cart
             nestedAttributes:
@@ -153,11 +162,11 @@ parameters:
                 surdevis: false
                 prix: 1.00
                 unitprix: 'Kg'
-                unit: 'Kg'
-                defaultquantity: 10
-                maxquantity: 1000
+                unit: 'g'
+                defaultquantity: 1
+                maxquantity: null
                 minquantity: 1
-                increment: 10
+                increment: 1
         marque:
             icon: fa-trophy
         panier:
@@ -186,21 +195,24 @@ parameters:
                     required: false
             types_descrition:
                 defaults:
-                    accepts: ['pageweb', 'article','image','fiche','marque','reseau','boutique','pdf', 'categorie']
+                    accepts: ['pageweb', 'article','image','evenement','fiche','marque','reseau','boutique','pdf', 'categorie']
                     couleur: 'rgba(128,128,128,1)'
                 types:
                     trash:
                         nom: 'types.trash'
-                        accepts: ['pageweb', 'article','image','fiche','marque','reseau','boutique','pdf', 'categorie']
+                        accepts: ['pageweb', 'article','image','evenement','fiche','marque','reseau','boutique','pdf', 'categorie']
                     menu:
                         nom: 'types.menu'
-                        accepts: ['pageweb', 'article','image','fiche','marque','reseau','boutique','pdf', 'categorie']
+                        accepts: ['pageweb', 'article','image','evenement','fiche','marque','reseau','boutique','pdf', 'categorie']
                     # multimedia:
                     #     nom: 'types.multimedia'
                     #     accepts: ['pageweb', 'article','image','fiche','marque','reseau','boutique','pdf']
                     diapo:
                         nom: 'types.diapo'
-                        accepts: ['article','image','fiche']
+                        accepts: ['article','evenement','image','fiche']
+                    evenement:
+                        nom: 'types.evenement'
+                        accepts: ['evenement']
                     pageweb:
                         nom: 'types.pageweb'
                         accepts: ['pageweb']
@@ -301,9 +313,6 @@ parameters:
         vente: true #afficher les prix et remplir le panier
         paiement: false #paiement en ligne
         statistiques: false
-        # devise:
-        #     name: euro
-        #     symb: €
         devises:
             fr:
                 name: euro
@@ -313,55 +322,4 @@ parameters:
                 name: livre
                 symb: £
                 ratio: 0.72
-    # categorie:
-    #     descrition:
-    #         defaults:
-    #             accepts: ['pageweb', 'article','image','fiche','marque','reseau','boutique','pdf', 'categorie']
-    #             couleur: 'rgba(128,128,128,1)'
-    #         types:
-    #             menu:
-    #                 nom: 'types.menu'
-    #                 accepts: ['pageweb', 'article','image','fiche','marque','reseau','boutique','pdf', 'categorie']
-    #             # multimedia:
-    #             #     nom: 'types.multimedia'
-    #             #     accepts: ['pageweb', 'article','image','fiche','marque','reseau','boutique','pdf']
-    #             diapo:
-    #                 nom: 'types.diapo'
-    #                 accepts: ['article','image','fiche']
-    #             pageweb:
-    #                 nom: 'types.pageweb'
-    #                 accepts: ['pageweb']
-    #             article:
-    #                 nom: 'types.article'
-    #                 accepts: ['article']
-    #             image:
-    #                 nom: 'types.image'
-    #                 accepts: ['image']
-    #             fiche_recettes:
-    #                 nom: 'types.fiche_recettes'
-    #                 accepts: ['ficherecette']
-    #             fiche_boissons:
-    #                 nom: 'types.fiche_boissons'
-    #                 accepts: ['ficheboisson']
-    #             # marque:
-    #             #     nom: 'types.marque'
-    #             #     accepts: ['marque']
-    #             # reseau:
-    #             #     nom: 'types.reseau'
-    #             #     accepts: ['reseau']
-    #             # boutique:
-    #             #     nom: 'types.boutique'
-    #             #     accepts: ['boutique']
-    #             # pdf:
-    #             #     nom: 'types.pdf'
-    #             #     accepts: ['pdf']
-
-
-
-
-
-
-
-
-
 

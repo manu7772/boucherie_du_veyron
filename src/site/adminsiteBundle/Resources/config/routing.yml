@@ -148,6 +148,10 @@ siteadmin_form_categorie:
     defaults: { _controller: siteadminsiteBundle:categorie:postform }
     # methods: ['POST']
 
+categorie_check_types:
+    path:     /categorie/check/types
+    defaults: { _controller: siteadminsiteBundle:categorie:checkCategoriesTypes }
+
 categorie_ajax_data:
     path:     /categorie/ajax-data/{id}/{types}/{groups}
     defaults: { _controller: siteadminsiteBundle:categorie:ajaxData, id: null, types: 'all', groups: null }
