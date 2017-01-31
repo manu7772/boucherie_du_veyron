@@ -453,20 +453,27 @@ twig:
                             path: 'siteUser_users'
                             params:
                                 type: ROLE_USER
-                    Traducteur:
-                        nom: 'roles.ROLE_TRANSLATOR'
+                    Testeur:
+                        nom: 'roles.ROLE_TESTER'
                         trans_domain: User
                         path: 
                             path: 'siteUser_users'
                             params:
-                                type: ROLE_TRANSLATOR
-                    Editeur:
-                        nom: 'roles.ROLE_EDITOR'
-                        trans_domain: User
-                        path: 
-                            path: 'siteUser_users'
-                            params:
-                                type: ROLE_EDITOR
+                                type: ROLE_TESTER
+                    # Traducteur:
+                    #     nom: 'roles.ROLE_TRANSLATOR'
+                    #     trans_domain: User
+                    #     path: 
+                    #         path: 'siteUser_users'
+                    #         params:
+                    #             type: ROLE_TRANSLATOR
+                    # Editeur:
+                    #     nom: 'roles.ROLE_EDITOR'
+                    #     trans_domain: User
+                    #     path: 
+                    #         path: 'siteUser_users'
+                    #         params:
+                    #             type: ROLE_EDITOR
                     Administrateur:
                         nom: 'roles.ROLE_ADMIN'
                         trans_domain: User
@@ -482,25 +489,25 @@ twig:
                             path: 'siteUser_users'
                             params:
                                 type: ROLE_SUPER_ADMIN
-                    images_User:
-                        nom: 'owner.User:avatar'
-                        trans_domain: image
-                        icon: 'entite.image'
-                        path: 
-                            path: 'siteadmin_entite_type'
-                            params:
-                                entite: image
-                                type_related: _self
-                                type_field: owner
-                                type_values: User
-                    Adresses:
-                        nom: 'name_s'
-                        trans_domain: adresse
-                        icon: 'entite.adresse'
-                        path: 
-                            path: siteadmin_entite
-                            params:
-                                entite: adresse
+                    # images_User:
+                    #     nom: 'owner.User:avatar'
+                    #     trans_domain: image
+                    #     icon: 'entite.image'
+                    #     path: 
+                    #         path: 'siteadmin_entite_type'
+                    #         params:
+                    #             entite: image
+                    #             type_related: _self
+                    #             type_field: owner
+                    #             type_values: User
+                    # Adresses:
+                    #     nom: 'name_s'
+                    #     trans_domain: adresse
+                    #     icon: 'entite.adresse'
+                    #     path: 
+                    #         path: siteadmin_entite
+                    #         params:
+                    #             entite: adresse
             messages:
                 role: %restrict_admin%
                 nom: name_s

@@ -15,6 +15,7 @@ moredetails: 'plus de détails sur %name%'
 roles:
     ALL: tous
     ROLE_USER: utilisateur
+    ROLE_TESTER: testeur
     ROLE_TRANSLATOR: traducteur
     ROLE_EDITOR: éditeur
     ROLE_ADMIN: administrateur

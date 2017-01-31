@@ -30,7 +30,7 @@
 
 {% if users|length > 0 %}
 
-	{% if type|upper not in ['ROLE_TRANSLATOR', 'ROLE_EDITOR', 'ROLE_ADMIN', 'ROLE_SUPER_ADMIN'] %}
+	{% if type|upper not in ['ROLE_SUPER_ADMIN'] %}
 	<div class="col-md-12">
 		<div class="ibox float-e-margins">
 			<div class="ibox-content">
