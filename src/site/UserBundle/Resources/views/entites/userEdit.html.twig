@@ -24,12 +24,13 @@
 {%  if app.user.haveRight(user) %}
 <div class="row m-b-lg m-t-xs">
 	<div class="col-md-12">
+		{% form_theme edit_form 'sitegraphicsBundle:Form:performed_bootstrap_3_horizontal_layout_laboadmin.html.twig' %}
 		{{ form_start(edit_form) }}
 		{{ form_errors(edit_form) }}
 		{% for child in edit_form %}
 			{{ form_row(child) }}
 		{% endfor %}
-		<input type="submit" id="_submit" name="_submit" class="btn btn-md btn-block btn-info" value="{{ 'form.enregistrer'|trans({}, 'messages')|capitalize }}">
+		<input type="submit" id="_submit" name="_submit" class="btn btn-lg btn-block btn-info m-t-lg" value="{{ 'form.enregistrer'|trans({}, 'messages')|capitalize }}">
 		{{ form_end(edit_form) }}
 	</div>
 

@@ -1,6 +1,7 @@
 <!DOCTYPE html> <!-- HTML 5 -->
 <html lang="{{ app.request.locale|default(app.request.defaultLocale) }}">
 	<head>
+		<meta name="google-site-verification" content="qgXmes3BhLHKePlhuXmZbVPl4Up_NuB6D4sVOoupf8o" />
 		{% block entete %}
 		{{ include('sitesiteBundle:blocks:keywords.html.twig') }}
 		{% endblock entete %}
@@ -9,7 +10,7 @@
 		{% endblock favicon %}
 
 		{% block css %}
-		{% stylesheets filter='cssrewrite, lessphp, ?yui_css'
+		{% stylesheets filter='cssrewrite, lessphp'
 		'bundles/sitegraphics/bdv/css/bootstrap.min.css'
 		'bundles/sitegraphics/bdv/css/font-awesome.min.css'
 		'bundles/laboadmin/framework_inspinia/css/plugins/toastr/toastr.min.css'
@@ -21,18 +22,19 @@
 		 %}
 		<link rel="stylesheet" href="{{ asset_url }}" type="text/css" />
 		{% endstylesheets %}
-		{% block ielt9 %}
+{# 		{% block ielt9 %}
 		<!--[if lt IE 9]>
 		<script src="js/html5shiv.js"></script>
 		<script src="js/respond.min.js"></script>
 		<![endif]-->
-		{% endblock ielt9 %}
+		{% endblock ielt9 %} #}
 		{% endblock css %}
-	</head>
-	<body>
+
 		{% block googleAnalyticScript %}
 		{{ include('sitesiteBundle:blocks:googleAnalyticScript.html.twig') }}
 		{% endblock googleAnalyticScript %}
+	</head>
+	<body>
 
 		{% block body %}
 		<!-- CONTENU DE LA PAGE -->
@@ -42,7 +44,7 @@
 			{{ include('LaboAdminBundle:blocks:hidden-data.html.twig') }}
 		{% endblock hiddendata %}
 		{% block js %}
-		{% javascripts filter='?yui_js'
+		{% javascripts
 		'bundles/sitegraphics/bdv/js/jquery.js'
 		'bundles/sitegraphics/bdv/js/jquery-ui-1.12.1/jquery-ui.js'
 		'bundles/sitegraphics/bdv/js/bootstrap.min.js'

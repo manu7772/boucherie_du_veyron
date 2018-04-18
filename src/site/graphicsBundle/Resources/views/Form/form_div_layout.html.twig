@@ -227,7 +227,7 @@
                 {% set label = name|humanize %}
             {%- endif -%}
         {%- endif -%}
-        <label{% for attrname, attrvalue in label_attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}>{{ label|trans({}, translation_domain|raw) }}{{ asterisque|default('')|raw }}</label>
+        <label{% for attrname, attrvalue in label_attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}>{{ UCfirst(label|trans({}, translation_domain|raw)) }}{{ asterisque|default('')|raw }}</label>
     {%- endif -%}
 {%- endblock form_label -%}
 
@@ -271,10 +271,9 @@
 
 {%- block form_start -%}
     {% set method = method|upper %}
+    {% set form_method = "POST" %}
     {%- if method in ["GET", "POST"] -%}
         {% set form_method = method %}
-    {%- else -%}
-        {% set form_method = "POST" %}
     {%- endif -%}
     <form name="{{ name }}" method="{{ form_method|lower }}" action="{{ action }}"{% for attrname, attrvalue in attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}{% if multipart %} enctype="multipart/form-data"{% endif %}>
     {%- if form_method != method -%}

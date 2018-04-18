@@ -1,0 +1,13 @@
+{% extends 'LaboAdminBundle:calendar:calendar_tier_viewer.html.twig' %}
+
+{% block externals %}
+<div class='external-event text-white' style="background-color:#2572a9;">OUVERT</div>
+<div class='external-event text-white' style="background-color:#c16625;">Atelier</div>
+<div class='external-event text-white' style="background-color:rgb(95, 181, 30);">Livraison</div>
+{# {{ parent() }} #}
+{% endblock externals %}
+
+{% block calendar_options %}
+{# <a id="editevent" class="btn btn-white btn-block btn-xs" cal-href="{{ url('siteadmin_calendar_edit', {eventSlug: '__slug__'}) }}"><i class="fa fa-pencil fa-1x"></i> Modifier</a> #}
+<button id="trash" type="button" class="btn btn-default btn-block btn-xs"><i class="fa fa-trash fa-2x"></i></button>
+{% endblock calendar_options %}

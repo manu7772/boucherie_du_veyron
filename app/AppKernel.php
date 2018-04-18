@@ -19,13 +19,14 @@ class AppKernel extends Kernel
 
             new Stof\DoctrineExtensionsBundle\StofDoctrineExtensionsBundle(),
             new JMS\SerializerBundle\JMSSerializerBundle(),
+            new Braincrafted\Bundle\BootstrapBundle\BraincraftedBootstrapBundle(),
 
             new FOS\UserBundle\FOSUserBundle(),
             new Labo\Bundle\AdminBundle\LaboAdminBundle(),
 
-            new site\adminsiteBundle\siteadminsiteBundle(),
-            new site\UserBundle\siteUserBundle(),
             new site\siteBundle\sitesiteBundle(),
+            new site\UserBundle\siteUserBundle(),
+            new site\adminsiteBundle\siteadminsiteBundle(),
             new site\graphicsBundle\sitegraphicsBundle(),
             new site\translateBundle\sitetranslateBundle(),
             new site\editionBundle\siteeditionBundle(),

@@ -23,6 +23,7 @@ fields:
     icon: icon
     descriptif: description
     group_nestedsParents: catégories
+    group_evenementsChilds: related events
     image: picture
     telfixe: phone
     mobile: mobile

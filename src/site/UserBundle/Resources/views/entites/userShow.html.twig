@@ -10,7 +10,7 @@
 			<div class="col-md-4">
 				{% if app.user.haveRight(user) %}
 				<a href="{{ path('siteUser_edit', {username: user.username}) }}" type="button" class="btn btn-xs btn-warning pull-right"><i class="fa fa-pencil icon-wait-on-click"></i> Modifier</a>
-				<a href="{{ path('siteUser_delete', {username: user.username}) }}" type="button" class="btn btn-xs btn-danger btn-outline pull-right need-confirmation" title="Supprimer {{ user.username }}" data-message="Souhaitez-vous vraiment supprimer ce compte ?"><i class="fa fa-times icon-wait-on-click"></i> Supprimer</a>
+				<a href="{{ path('siteUser_delete', {username: user.username}) }}" type="button" class="btn btn-xs btn-danger btn-outline pull-right need-confirmation m-r-xs" title="Supprimer {{ user.username }}" data-message="Souhaitez-vous vraiment supprimer ce compte ?"><i class="fa fa-times icon-wait-on-click"></i> Supprimer</a>
 				{% endif %}
 			</div>
 		</h2>

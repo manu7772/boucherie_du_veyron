@@ -6,7 +6,7 @@
      	
 		<div class="panel-group category-products" id="accordian"><!--category-products-->
 
-			{% for item1 in menuArticle.children|default([])|default([]) if (item1.className == 'categorie' and is_granted(item1.niveau)) %}
+			{% for item1 in menuArticle.children|default([]) if (item1.className == 'categorie' and is_granted(item1.niveau)) %}
 			<div class="panel panel-default">
 				<!--product {{ item1.nom }}-->
 				<div class="panel-heading">

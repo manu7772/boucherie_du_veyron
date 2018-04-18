@@ -85,6 +85,27 @@ class evenementType extends baseType {
 				'translation_domain' => 'evenement',
 				'required' => false,
 				))
+			->add('group_evenementsChilds', 'entity', array(
+				'by_reference' => false,
+				"label"		=> 'fields.group_evenementsChilds',
+				'translation_domain' => 'evenement',
+				'choice_label'	=> 'nom',
+				'class'		=> 'LaboAdminBundle:nested',
+				'multiple'	=> function() use ($nestedAttributesParameters) { return $nestedAttributesParameters['nesteds']['data-limit'] > 1; },
+				'expanded'	=> false,
+				"required"	=> $nestedAttributesParameters['evenements']['required'],
+				'placeholder'   => 'form.select',
+				'attr'		=> array(
+					'class'			=> 'select2',
+					'data-limit'	=> $nestedAttributesParameters['evenements']['data-limit'],
+					),
+				// 'group_by' => 'shortName',
+				"query_builder" => function($repo) use ($data, $nestedAttributesParameters) {
+					if(method_exists($repo, 'defaultValsListClosure'))
+						return $repo->defaultValsListClosure($this->controller, $nestedAttributesParameters['evenements']['class']);
+						else return $repo->findAllClosure();
+					},
+				))
 			->add('group_nestedsParents', 'entity', array(
                 'by_reference' => false,
                 "label"     => 'fields.group_nestedsParents',

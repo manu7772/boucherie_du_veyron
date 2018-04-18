@@ -7,7 +7,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Doctrine\Common\Collections\ArrayCollection;
 
-use site\adminsiteBundle\Entity\fiche;
+use Labo\Bundle\AdminBundle\Entity\fiche;
 
 use \DateTime;
 
@@ -26,11 +26,11 @@ class ficheboisson extends fiche {
 	 */
 	protected $note;
 
-	protected $listeTypentites = array(
-		1 => "vin",
-		2 => "alcool",
-		3 => "sans alcool",
-		);
+	// protected $listeTypentites = array(
+	// 	1 => "vin",
+	// 	2 => "alcool",
+	// 	3 => "sans alcool",
+	// 	);
 
 	protected $listeNotes = array(
 		1 => "notes.bon",
@@ -43,6 +43,18 @@ class ficheboisson extends fiche {
 		parent::__construct();
 		$this->setNote($this->getDefaultNote()); // Note par défaut
 		$this->setTypentite(1);
+	}
+
+	/**
+	 * @ORM\PostLoad
+	 */
+	public function postLoad() { // ??????
+		// $this->listeTypentites = array(1 => 'boisson', 2 => 'recette');
+		$this->listeTypentites = array(
+			1 => "vin",
+			2 => "alcool",
+			3 => "sans alcool",
+		);
 	}
 
 	/**

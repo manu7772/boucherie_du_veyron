@@ -1,0 +1,41 @@
+{% extends 'LaboAdminBundle:bases:base_' ~ cssjsloads|default('simple') ~ '.html.twig' %}
+
+{% block body %}
+
+	{% block sidebar %}
+	{{ render(controller('LaboAdminBundle:Default:sidebar', {option: null})) }}
+	{% endblock sidebar %}
+
+	<div id="page-wrapper" class="gray-bg dashbard-3">
+	{% block pagewrapper %}
+
+		{% block wrapheader %}
+		<div class="row border-bottom">
+			{% block header %}
+			{{ render(controller('LaboAdminBundle:Default:header', {option: null})) }}
+			{% endblock header %}
+		</div>
+		{% endblock wrapheader %}
+
+		{% block page_heading %}
+		{% endblock page_heading %}
+
+		{% block wrapcontent %}
+		<div class="wrapper wrapper-content animated fadeInRight">
+			{% block content %}
+			{% endblock content %}
+		</div>
+		{% endblock wrapcontent %}
+
+		{% block wrapfooter %}
+		<div class="footer">
+		{% block footer %}
+		{{ include('LaboAdminBundle:blocks:footer.html.twig') }}
+		{% endblock footer %}
+		</div>
+		{% endblock wrapfooter %}
+
+	{% endblock pagewrapper %}
+	</div>
+
+{% endblock body %}

@@ -12,8 +12,6 @@ dontexist: 'cet évènement n''existe pas'
 existe: 'cet évènement existe déjà'
 suppression: 'le évènement %name% a été supprimé'
 moredetails: 'plus de détails sur %name%'
-index:
-    addSpeech: 'Pour ajouter plusieurs évènements en une fois, séparez-les par des virgules'
 form:
     select: Sélectionnez…
 fields:
@@ -25,6 +23,7 @@ fields:
     icon: icône
     descriptif: descriptif
     group_nestedsParents: categories
+    group_evenementsChilds: évènements liés
     image: visuel
     telfixe: téléphone fixe
     mobile: téléphone mobile

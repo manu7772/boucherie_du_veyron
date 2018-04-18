@@ -100,28 +100,28 @@ class adresse extends baseEntity {
 
 	/**
 	 * - INVERSE
-	 * @ORM\OneToOne(targetEntity="site\UserBundle\Entity\User", mappedBy="adresse")
+	 * @ORM\OneToOne(targetEntity="site\UserBundle\Entity\User", mappedBy="adresse", orphanRemoval=true)
 	 * @ORM\JoinColumn(nullable=true, unique=true, onDelete="SET NULL")
 	 */
 	protected $user;
 
 	/**
 	 * - INVERSE
-	 * @ORM\OneToOne(targetEntity="site\UserBundle\Entity\User", mappedBy="adresseLivraison")
+	 * @ORM\OneToOne(targetEntity="site\UserBundle\Entity\User", mappedBy="adresseLivraison", orphanRemoval=true)
 	 * @ORM\JoinColumn(nullable=true, unique=true, onDelete="SET NULL")
 	 */
 	protected $userLivraison;
 
 	/**
 	 * - INVERSE
-	 * @ORM\OneToOne(targetEntity="Labo\Bundle\AdminBundle\Entity\tier", mappedBy="adresse")
+	 * @ORM\OneToOne(targetEntity="Labo\Bundle\AdminBundle\Entity\tier", mappedBy="adresse", orphanRemoval=true)
 	 * @ORM\JoinColumn(nullable=true, unique=true, onDelete="SET NULL")
 	 */
 	protected $tier;
 
 	/**
 	 * - INVERSE
-	 * @ORM\OneToOne(targetEntity="Labo\Bundle\AdminBundle\Entity\baseevenement", mappedBy="adresse")
+	 * @ORM\OneToOne(targetEntity="Labo\Bundle\AdminBundle\Entity\baseevenement", mappedBy="adresse", orphanRemoval=true)
 	 * @ORM\JoinColumn(nullable=true, unique=true, onDelete="SET NULL")
 	 */
 	protected $evenement;

@@ -3,6 +3,7 @@ parameters:
         delay: '-10 MINUTES'
     ajaxlive:
         name: ajaxlive          # name
+        active: true
         parameters:
             frequency: 3000         # frequency in seconds
             frequencyMax: 300000    # frequencyMax in seconds
@@ -80,13 +81,13 @@ parameters:
     formatDate:             "dd-MM-yyyy" # formulaires
     formatDateOnly:         "d-m-Y"
     formatDateHeure:        "d-m-Y H:i:s"
-    formFormatDate:         "dd/mm/yyyy"
+    formFormatDate:         "dd-mm-yyyy"
     timezone:               "Europe/Paris"
     webmaster:
         nom:        Dujardin
         prenom:     Emmanuel
         tel:        06 13 14 35 15
-        email:      emmanuel@aequation-webdesign.fr
+        email:      manu7772@gmail.com
     list_locales:
         default:            %default_locales%
         sitesite:           %default_locales%
@@ -128,11 +129,15 @@ parameters:
         evenement:
             icon: fa-bell-o
             singleFields:
-                couleur: '#0033DD'
+                couleur: '#361a56'
             nestedAttributes:
                 nesteds:
                     data-limit: 0
                     class: ['categorie']
+                    required: false
+                evenements:
+                    data-limit: 10
+                    class: ['evenement']
                     required: false
         article:
             icon: fa-shopping-cart

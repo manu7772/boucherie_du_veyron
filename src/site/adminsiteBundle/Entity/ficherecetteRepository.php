@@ -2,7 +2,7 @@
 
 namespace site\adminsiteBundle\Entity;
 
-use site\adminsiteBundle\Entity\ficheRepository;
+use Labo\Bundle\AdminBundle\Entity\ficheRepository;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\ORM\EntityManager;

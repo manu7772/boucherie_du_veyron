@@ -62,12 +62,12 @@ class aeServiceArticle extends aeServiceItem {
 					if(method_exists($entity, 'setDevises')) $entity->setDevises($this->container->getParameter('marketplace')['devises']);
 					break;
 				case 'prepersist':
-					$this->checkTva($entity);
+					// $this->checkTva($entity);
 					break;
 				case 'postpersist':
 					break;
 				case 'preupdate':
-					$this->checkTva($entity);
+					// $this->checkTva($entity);
 					break;
 				case 'postupdate':
 					break;
