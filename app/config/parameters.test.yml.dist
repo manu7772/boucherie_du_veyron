@@ -2,11 +2,11 @@
 parameters:
     database_host: localhost
     database_port: null
-    database_name: boucherieduveyron
+    database_name: testboucherieduveyron
     database_user: bdveyron
     database_password: boucherie0986867576546
     mailer_transport: sendmail
     mailer_host: localhost
     mailer_user: emmanuel@aequation.fr
     mailer_password: null
-    secret: thisisthesiteofboucherieduveyron123
+    secret: thisisthesiteoftestboucherieduveyron123

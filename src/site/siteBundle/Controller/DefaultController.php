@@ -334,8 +334,12 @@ class DefaultController extends Controller {
 			if(isset($this->getSitedata()['menuNav_id'])) {
 				$data['menuNav'] = $this->get(aeData::PREFIX_CALL_SERVICE.'aeServiceNested')->getRepo()->findArrayTree($this->getSitedata()['menuNav_id'], 'all', null, false, 2, self::FIND_EXTENDED);
 				if(is_array($data['menuNav'])) {
-					$data['menuNav'] = reset($data['menuNav']);
-					$this->get('aetools.aeCache')->cacheNamedFile('menuNavigation', $data['menuNav'], false, true);
+					if(count($data['menuNav']) > 0) {
+						$data['menuNav'] = reset($data['menuNav']);
+						$this->get('aetools.aeCache')->cacheNamedFile('menuNavigation', $data['menuNav'], false, true);
+					} else {
+						$data['menuNav'] = array();
+					}
 				}
 			} else {
 				$data['menuNav'] = array();

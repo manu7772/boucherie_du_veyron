@@ -315,7 +315,7 @@ parameters:
             icon: fa-calendar
     marketplace:
         active: true #gérer des articles, boutiques, etc.
-        vente: true #afficher les prix et remplir le panier
+        vente: false #afficher les prix et remplir le panier
         paiement: false #paiement en ligne
         statistiques: false
         devises:

@@ -12,7 +12,8 @@ imports:
 parameters:
     locale:                 "fr"
     default_locales:        "fr|en"
-    localhost:              "sitesroot.local"
+    # localhost:              "sitesroot.local"
+    localhost:              "localhost"
     domains:                "boucherie-du-veyron"
     ext:                    "fr|com"
     keywords:
