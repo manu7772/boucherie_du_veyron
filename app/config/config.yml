@@ -70,6 +70,7 @@ twig:
         ajaxlive: %ajaxlive%
         serializer: %serializer%
         site_domains: %site_domains%
+        user_account: %user_account%
     form:
         resources:
             # - 'sitegraphicsBundle:Form:form_div_layout.html.twig'

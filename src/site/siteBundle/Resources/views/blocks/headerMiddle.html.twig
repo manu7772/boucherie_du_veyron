@@ -39,6 +39,7 @@
 										</ul>
 									</li>
 									{% endif %}
+									{% if user_account.active|default(false) %}
 									{% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
 									<li class="dropdown">
 										<a href="#" class="dropdown-toggle" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
@@ -60,6 +61,7 @@
 									</li>
 									{% else %}
 									<li><a href="{{ path('fos_user_security_login') }}" style="display:inline;"><i class="fa fa-user fa-fw"></i> Mon compte</a> | <a href="{{ path('fos_user_registration_register') }}" style="display:inline;">Crée un compte</a></li>
+									{% endif %}
 									{% endif %}
 								</ul>
 							</div>
