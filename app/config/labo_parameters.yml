@@ -40,14 +40,14 @@ parameters:
     site_domains:
         main_domain: 'boucherie-du-veyron.fr'
         public:
-            reseau: 'http://'
+            reseau: 'https://'
             prefix: 'www'
             domain: 'boucherie-du-veyron'
             extensions:
                 - 'fr'
                 - 'com'
         admin:
-            reseau: 'http://'
+            reseau: 'https://'
             prefix: 'admin'
             domain: 'boucherie-du-veyron'
             extensions:
