@@ -45,10 +45,22 @@ parameters:
             domain: 'boucherie-du-veyron'
             extensions:
                 - 'fr'
-                - 'com'
         admin:
             reseau: 'https://'
             prefix: 'admin'
+            domain: 'boucherie-du-veyron'
+            extensions:
+                - 'fr'
+            path: '/admin'
+        test:
+            reseau: 'https://'
+            prefix: 'test'
+            domain: 'boucherie-du-veyron'
+            extensions:
+                - 'fr'
+        testadmin:
+            reseau: 'https://'
+            prefix: 'testadmin'
             domain: 'boucherie-du-veyron'
             extensions:
                 - 'fr'
