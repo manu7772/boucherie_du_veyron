@@ -74,14 +74,14 @@ class articleType extends baseType {
 				'label'		=> 'fields.vendable',
 				"required"  => false,
 				))
-			->add('surdevis', 'checkbox', array(
-				'label'		=> 'fields.surdevis',
-				"required"  => false,
-				))
-			->add('groupbasket', 'checkbox', array(
-				'label'		=> 'fields.groupbasket',
-				"required"  => false,
-				))
+			// ->add('surdevis', 'checkbox', array(
+			// 	'label'		=> 'fields.surdevis',
+			// 	"required"  => false,
+			// 	))
+			// ->add('groupbasket', 'checkbox', array(
+			// 	'label'		=> 'fields.groupbasket',
+			// 	"required"  => false,
+			// 	))
 			->add('prix', 'money', array(
 				'label'		=> 'fields.prixTTC',
 				"required"  => false,
@@ -129,22 +129,22 @@ class articleType extends baseType {
 					'class'			=> 'select2',
 					),
 				))
-			->add('defaultquantity', 'number', array(
-				'label' => 'fields.defaultquantity',
-				'required' => true,
-				))
-			->add('maxquantity', 'number', array(
-				'label' => 'fields.maxquantity',
-				'required' => false,
-				))
-			->add('minquantity', 'number', array(
-				'label' => 'fields.minquantity',
-				'required' => true,
-				))
-			->add('increment', 'number', array(
-				'label' => 'fields.increment',
-				'required' => true,
-				))
+			// ->add('defaultquantity', 'number', array(
+			// 	'label' => 'fields.defaultquantity',
+			// 	'required' => true,
+			// 	))
+			// ->add('maxquantity', 'number', array(
+			// 	'label' => 'fields.maxquantity',
+			// 	'required' => false,
+			// 	))
+			// ->add('minquantity', 'number', array(
+			// 	'label' => 'fields.minquantity',
+			// 	'required' => true,
+			// 	))
+			// ->add('increment', 'number', array(
+			// 	'label' => 'fields.increment',
+			// 	'required' => true,
+			// 	))
 			// ->add('statut', 'entity', array(
 			// 	"label"     => 'name',
 			// 	'translation_domain' => 'statut',
@@ -272,46 +272,46 @@ class articleType extends baseType {
 						else return $repo->findAllClosure();
 					},
 				))
-			->add('group_article_ficherecetteChilds', 'entity', array(
-				'by_reference' => false,
-				"label"		=> 'fields.group_article_ficherecetteChilds',
-				'choice_label'	=> 'nom',
-				'class'		=> 'LaboAdminBundle:nested',
-				'multiple'	=> function() use ($nestedAttributesParameters) { return $nestedAttributesParameters['nesteds']['data-limit'] > 1; },
-				'expanded'	=> false,
-				"required"	=> $nestedAttributesParameters['article_ficherecette']['required'],
-				'placeholder'   => 'form.select',
-				'attr'		=> array(
-					'class'			=> 'select2',
-					'data-limit'	=> $nestedAttributesParameters['article_ficherecette']['data-limit'],
-					),
-				'group_by' => 'shortName',
-				"query_builder" => function($repo) use ($data, $nestedAttributesParameters) {
-					if(method_exists($repo, 'defaultValsListClosure'))
-						return $repo->defaultValsListClosure($this->controller, $nestedAttributesParameters['article_ficherecette']['class']);
-						else return $repo->findAllClosure();
-					},
-				))
-			->add('group_article_ficheboissonChilds', 'entity', array(
-				'by_reference' => false,
-				"label"		=> 'fields.group_article_ficheboissonChilds',
-				'choice_label'	=> 'nom',
-				'class'		=> 'LaboAdminBundle:nested',
-				'multiple'	=> function() use ($nestedAttributesParameters) { return $nestedAttributesParameters['nesteds']['data-limit'] > 1; },
-				'expanded'	=> false,
-				"required"	=> $nestedAttributesParameters['article_ficheboisson']['required'],
-				'placeholder'   => 'form.select',
-				'attr'		=> array(
-					'class'			=> 'select2',
-					'data-limit'	=> $nestedAttributesParameters['article_ficheboisson']['data-limit'],
-					),
-				'group_by' => 'shortName',
-				"query_builder" => function($repo) use ($data, $nestedAttributesParameters) {
-					if(method_exists($repo, 'defaultValsListClosure'))
-						return $repo->defaultValsListClosure($this->controller, $nestedAttributesParameters['article_ficheboisson']['class']);
-						else return $repo->findAllClosure();
-					},
-				))
+			// ->add('group_article_ficherecetteChilds', 'entity', array(
+			// 	'by_reference' => false,
+			// 	"label"		=> 'fields.group_article_ficherecetteChilds',
+			// 	'choice_label'	=> 'nom',
+			// 	'class'		=> 'LaboAdminBundle:nested',
+			// 	'multiple'	=> function() use ($nestedAttributesParameters) { return $nestedAttributesParameters['nesteds']['data-limit'] > 1; },
+			// 	'expanded'	=> false,
+			// 	"required"	=> $nestedAttributesParameters['article_ficherecette']['required'],
+			// 	'placeholder'   => 'form.select',
+			// 	'attr'		=> array(
+			// 		'class'			=> 'select2',
+			// 		'data-limit'	=> $nestedAttributesParameters['article_ficherecette']['data-limit'],
+			// 		),
+			// 	'group_by' => 'shortName',
+			// 	"query_builder" => function($repo) use ($data, $nestedAttributesParameters) {
+			// 		if(method_exists($repo, 'defaultValsListClosure'))
+			// 			return $repo->defaultValsListClosure($this->controller, $nestedAttributesParameters['article_ficherecette']['class']);
+			// 			else return $repo->findAllClosure();
+			// 		},
+			// 	))
+			// ->add('group_article_ficheboissonChilds', 'entity', array(
+			// 	'by_reference' => false,
+			// 	"label"		=> 'fields.group_article_ficheboissonChilds',
+			// 	'choice_label'	=> 'nom',
+			// 	'class'		=> 'LaboAdminBundle:nested',
+			// 	'multiple'	=> function() use ($nestedAttributesParameters) { return $nestedAttributesParameters['nesteds']['data-limit'] > 1; },
+			// 	'expanded'	=> false,
+			// 	"required"	=> $nestedAttributesParameters['article_ficheboisson']['required'],
+			// 	'placeholder'   => 'form.select',
+			// 	'attr'		=> array(
+			// 		'class'			=> 'select2',
+			// 		'data-limit'	=> $nestedAttributesParameters['article_ficheboisson']['data-limit'],
+			// 		),
+			// 	'group_by' => 'shortName',
+			// 	"query_builder" => function($repo) use ($data, $nestedAttributesParameters) {
+			// 		if(method_exists($repo, 'defaultValsListClosure'))
+			// 			return $repo->defaultValsListClosure($this->controller, $nestedAttributesParameters['article_ficheboisson']['class']);
+			// 			else return $repo->findAllClosure();
+			// 		},
+			// 	))
 			->add('group_articlesChilds', 'entity', array(
 				'by_reference' => false,
 				"label"		=> 'fields.group_articlesChilds',
