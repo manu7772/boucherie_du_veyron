@@ -1,0 +1,196 @@
+{% extends 'LaboAdminBundle:entites:entiteShow.html.twig' %}
+{% set cssjsloads = 'TAB' %}
+{% import 'LaboAdminBundle:blocks:itemBloc.html.twig' as itemBloc %}
+{% import 'LaboAdminBundle:blocks:sortable_nested_categories.html.twig' as nestcat %}
+
+{% set DEVMODE = (app.environment in ['DEV', 'TEST']) or (is_granted('ROLE_SUPER_ADMIN')) %}
+{% set style = '' %}
+{% set style = ' style="min-height: 200px; height:auto !important; height: 200px;"' %}
+
+{% block headtitle %}
+<div class="col-md-8 ellipsis">{{ actions.htmlicon(entite_name, 1, ['m-r-xs']) }}{{ UCfirst('name'|trans({}, entite.shortName)) }} <strong>{{ entite.nom|default('#' ~ entite.id)|trans({}, entite.shortName) }}</strong></div>
+<div class="col-md-4">
+	<a href="{{ path('siteadmin_entite', {entite: entite_name, id: entite.id, action: 'delete'}) }}" type="button" class="btn btn-xs btn-danger btn-outline pull-right need-confirmation" title="{{ UCfirst('actions.suppression'|trans) }}" data-message="{{ UCfirst('actions.suppQuestion'|trans({'%name%': entite.nom|default('#' ~ entite.id)})) }}"><i class="fa fa-times icon-wait-on-click"></i> {{ UCfirst('actions.supprimer'|trans) }}</a>
+	<a href="{{ path('siteadmin_edit_categorie', {id: entite.id}) }}" type="button" class="btn btn-xs btn-warning pull-right"><i class="fa fa-pencil icon-wait-on-click"></i> {{ UCfirst('actions.modifier'|trans) }}</a>
+	{#
+	<a href="{{ path('siteadmin_entite', {entite: entite_name, id: entite.id, action: 'show'}) }}" type="button" class="btn btn-xs btn-white pull-right"><i class="fa fa-eye icon-wait-on-click"></i> {{ UCfirst('actions.voir'|trans) }}</a>
+	#}
+	<a href="{{ path('siteadmin_entite', {entite: entite_name}) }}" type="button" class="btn btn-xs btn-white pull-right"><i class="fa fa-bars icon-wait-on-click"></i> {{ UCfirst('backlist_btn'|trans({}, entite.shortName)) }}</a>
+	{# <a href="{{ path('siteadmin_entite', {entite: entite_name, action: 'create'}) }}" type="button" class="btn btn-xs btn-warning pull-right"><i class="fa fa-plus icon-wait-on-click"></i> {{ UCfirst('create_btn'|trans({}, entite.shortName)) }}</a> #}
+</div>
+{% endblock headtitle %}
+
+{% block breadcrumb %}
+	<ol class="breadcrumb ellipsis col-md-9">
+		<li><a href="{{ path('siteadmin_homepage') }}"><strong>{{ UCfirst('administration'|trans) }}</strong></a></li>
+		<li><a href="{{ path('siteadmin_repo_categorie', {method: 'findRoots'}) }}"><strong>{{ UCfirst('name_s'|trans({}, entite_name)) }}</strong></a></li>
+		<li><a href="{{ path('siteadmin_repo_categorie', {method: 'findCollectionsByType', repoParams: entite.type}) }}"><strong>Types {{ UCfirst(('types.' ~ entite.type)|trans({}, entite.shortName)) }}</strong></a></li>
+		{% for parent in entite.categorieParents_inverse %}
+			<li><a href="{{ actions.entiteLink(parent, 'show', type, type_value_joiner) }}"><strong>{{ parent.nom }}</strong></a></li>
+		{% endfor %} 
+		<li>{{ entite.nom|default('#' ~ entite.id)|trans({}, entite.shortName) }}</li>
+	</ol>
+{% endblock breadcrumb %}
+
+{% block buttons %}
+	<a href="{{ path('siteadmin_create_categorie', {rootParent: entite.id}) }}" type="button" class="btn btn-xs btn-warning pull-right"><i class="fa fa-plus icon-wait-on-click m-r-sm"></i>{{ UCfirst('create_btn_child'|trans({'%name%': entite.nom}, entite.shortName)) }}</a>
+{% endblock buttons %}
+
+{% block content %}
+<div class="row">
+
+	<div class="col-md-6">
+		<div class="ibox float-e-margins">
+			<div class="ibox-content">
+				<div class="tabs-container">
+					<ul class="nav nav-tabs">
+						<li><a data-toggle="tab" href="#tab-0"><i class="fa fa-cog visible-xs"></i><span class="hidden-xs">{{ UCfirst('fields.technique'|trans({}, entite.shortName)) }}</span></a></li>
+						<li><a data-toggle="tab" href="#tab-1"><i class="fa fa-sitemap visible-xs"></i><span class="hidden-xs">{{ UCfirst('fields.children'|trans({}, entite.shortName)) }}</span></a></li>
+						<li><a data-toggle="tab" href="#tab-2"><i class="fa fa-sitemap visible-xs"></i><span class="hidden-xs">{{ UCfirst('fields.parents'|trans({}, entite.shortName)) }}</span></a></li>
+						<li class="active"><a data-toggle="tab" href="#tab-3"><i class="fa fa-file-o visible-xs"></i><span class="hidden-xs">{{ UCfirst('fields.subEntitys'|trans({}, entite.shortName)) }}</span></a></li>
+						<!-- <li><a data-toggle="tab" href="#tab-4"><i class="fa fa-picture-o visible-xs"></i><span class="hidden-xs">{{ UCfirst('fields.image'|trans({}, entite.shortName)) }}</span></a></li> -->
+					</ul>
+					<div class="tab-content">
+
+						<div id="tab-0" class="tab-pane">
+							<div class="panel-body"{{ style|raw }}>
+								<h3 class='text-navy visible-xs m-t-none'>{{ UCfirst('fields.technique'|trans({}, entite.shortName)) }}</h3>
+								<hr class="m-t-xs m-b-xs visible-xs">
+								<div class="row">
+									<div class="col-xs-12">
+										<p class="m-b-xs">{{ UCfirst('fields.icon'|trans({}, entite.shortName)) }} : <i class="fa {{ actions.icon(entite) }}"></i>{% if entite.icon == null %} <i class="text-muted"><small>({{ 'icons.default_icon'|trans }})</small></i>{% endif %}</p>
+										<p class="m-b-xs">{{ UCfirst('fields.lvl'|trans({}, entite.shortName)) }} : {{ entite.lvl }}{% if not entite.hasCategorieParents() %} <i class="text-muted"><small>(Root)</small></i>{% endif %}</p>
+										<p class="m-b-xs">{{ UCfirst('fields.couleur'|trans({}, entite.shortName)) }} : {{ actions.colorDot(entite.couleur, '1x') }}</p>
+										<p class="m-b-xs">{{ UCfirst('fields.pagewebs'|trans({}, entite.shortName)) }} :</p>
+										{{ actions.labelLinkList(entite.group_pagewebs_childs, [], null, type, type_value_joiner, 'show') }}
+										{# {{ actions.labelLinkList(entite.childsByGroup('pagewebs'), [], null, type, type_value_joiner, 'show') }} #}
+										{# <p class="m-b-xs">{{ UCfirst('nesteds'|trans({}, entite.shortName)) }} :</p> #}
+										{# {{ actions.labelLinkList(entite.group_nesteds_childs, [], null, type, type_value_joiner, 'show') }} #}
+										<p class="m-b-xs">
+											Type <strong>{{ ('types.' ~ entite.type)|trans({}, entite.shortName) }}</strong>, éléments acceptés :
+											<p class="m-l-lg text-muted"><i>• {{ entite.accepts|join('<br>• ')|raw }}</i></p>
+										</p>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div id="tab-1" class="tab-pane">
+							<div class="panel-body"{{ style|raw }}>
+								<h3 class='text-navy visible-xs m-t-none'>{{ UCfirst('fields.children'|trans({}, entite.shortName)) }}</h3>
+								<hr class="m-t-xs m-b-xs visible-xs">
+								<div class="row">
+									<div class="col-xs-12">
+										<h4>Enfants directs{{ actions.sortSymbol(entite, 'categorie_nested') }}</h4>
+										{{ actions.sortList(entite, 'categorie_nested', null, type, type_value_joiner) }}
+										{% if DEVMODE %}
+										<hr>
+										<h4>Enfants <small><span class="label inline label-primary"><i class="fa {{ actions.icon(entite) }}"></i></span> directs / <span class="label inline"><i class="fa {{ actions.icon(entite) }}"></i></span> indirects</small></h4>
+										{# {{ actions.labelLinkList(entite.group_categorie_nestedChilds, entite.group_categorie_nestedChilds, null, type, type_value_joiner, 'show') }} #}
+										{# {{ actions.labelLinkList(entite.allCategorieChilds('categorie_nested'), entite.categorieChilds('categorie_nested'), null, type, type_value_joiner, 'show') }} #}
+										{{ actions.labelLinkList(entite.allCategorieChilds(false), entite.categorieChilds(false), null, type, type_value_joiner, 'show') }}
+										<hr>
+										<h4>Alias <small>(liens symboliques)</small></h4>
+										{{ actions.labelLinkList(entite.allAlias(false), entite.alias(false), null, type, type_value_joiner, 'show') }}
+										<hr>
+										<h4>Enfants et Alias <small>(catégories et liens symboliques)</small></h4>
+										{{ actions.labelLinkList(entite.allCategorieChilds(true), entite.categorieChilds(true), null, type, type_value_joiner, 'show') }}
+										{% endif %}
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div id="tab-2" class="tab-pane">
+							<div class="panel-body"{{ style|raw }}>
+								<h3 class='text-navy visible-xs m-t-none'>{{ UCfirst('fields.parents'|trans({}, entite.shortName)) }}</h3>
+								<hr class="m-t-xs m-b-xs visible-xs">
+								<div class="row">
+									<div class="col-xs-12">
+										{% if entite.categorieParents_inverse|length > 0 %}
+										{{ actions.labelLinkList(entite.categorieParents_inverse, entite.categorieParent, null, null, null, 'show') }}
+										{% else %}
+										<h6><i class='text-muted'>{{ UCfirst('noParent'|trans({}, entite.shortName)) }}</i></h4>
+										{% endif %}
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div id="tab-3" class="tab-pane active">
+							<div class="panel-body"{{ style|raw }}>
+								<h3 class='text-navy visible-xs m-t-none'>{{ UCfirst('fields.subEntitys'|trans({}, entite.shortName)) }}</h3>
+								<hr class="m-t-xs m-b-xs visible-xs">
+								<div class="row">
+									<div class="col-xs-12">
+										<h4>Éléments{{ actions.sortSymbol(entite, 'nesteds') }}</h4>
+										{{ actions.sortList(entite, 'nesteds', null, type, type_value_joiner) }}
+										{% if DEVMODE %}
+										<hr>
+										<h4>Éléments d'enfants</h4>
+										{{ actions.labelLinkList(entite.allNestedChildsByGroup('nesteds'), entite.childsByGroup('nesteds'), null, type, type_value_joiner, 'show') }}
+										{% endif %}
+									</div>
+								</div>
+							</div>
+						</div>
+
+{# 						<div id="tab-4" class="tab-pane">
+							<div class="panel-body"{{ style|raw }}>
+								<h3 class='text-navy visible-xs m-t-none'>{{ UCfirst('fields.image'|trans({}, entite.shortName)) }}</h3>
+								<hr class="m-t-xs m-b-xs visible-xs">
+								<div class="row">
+									<div class="col-xs-12">
+										{% if entite.mainMedia|default(null) != null %}
+										<img src="{{ entite.mainMedia.img }}" class="img-responsive center-block img-rounded">
+										{% else %}
+										<i class="fa fa-ban fa-5x text-muted fa-border"></i>
+										{% endif %}
+									</div>
+								</div>
+							</div>
+						</div> #}
+
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="col-md-6">
+		<div class="ibox float-e-margins">
+			<div class="ibox-content">
+				<div class="tabs-container">
+					<ul class="nav nav-tabs">
+						<li class="active"><a data-toggle="tab" href="#tab-0"><i class="fa fa-folder visible-xs"></i><span class="hidden-xs">Arborescence</span></a></li>
+					</ul>
+					<div class="tab-content">
+
+						<div id="tab-0" class="tab-pane active">
+							<div class="panel-body"{{ style|raw }}>
+								<h3 class='text-navy visible-xs m-t-none'>Arborescence</h3>
+								<hr class="m-t-xs m-b-xs visible-xs">
+								<div class="row">
+									<div class="col-xs-12">
+										{# <div id="jsajx-{{ entite.id }}" class="jstree-ajax" jstree-plugins="" jstree-types='{{ entite.accepts|json_encode() }}' jstree-groups="{{ ['nesteds', 'categorie_nested', 'pagewebs']|json_encode }}"></div> #}
+										<div id="jsajx-{{ entite.id }}" class="jstree-ajax" jstree-plugins="" jstree-types='{{ entite.accepts|json_encode() }}'></div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</div>
+{# {{ dump(iconsAsJson()) }} #}
+{% endblock content %}
+
+{% block end_javascripts %}
+{{ parent() }}
+{{ nestcat.nestedtreeAjax() }}
+{% endblock end_javascripts %}
+
+
