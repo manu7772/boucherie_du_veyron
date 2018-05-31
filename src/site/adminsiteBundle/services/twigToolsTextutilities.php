@@ -38,6 +38,7 @@ class twigToolsTextutilities extends baseTwigToolsTextutilities {
 	public function getFunctions() {
 		return array_merge(parent::getFunctions(), array(
 			new Twig_SimpleFunction('sitedata', array($this, 'sitedata')),
+			new Twig_SimpleFunction('removeNonScreenable', array($this, 'removeNonScreenable')),
 			new Twig_SimpleFunction('isScreenable', array($this, 'isScreenable')),
 			));
 	}
@@ -54,6 +55,23 @@ class twigToolsTextutilities extends baseTwigToolsTextutilities {
 
 	public function sitedata() {
 		return $this->container->get('aetools.aeServiceSite')->getSiteData();
+	}
+
+	/**
+	 * Supprime les items non affichables
+	 * @param ArrayCollection | Array $array
+	 * @return ArrayCollection | Array
+	 */
+	public function removeNonScreenable($array) {
+		$AC = false;
+		if($array instanceOf ArrayCollection) {
+			$AC = true;
+			$array = $array->toArray();
+		}
+		foreach ($array as $key => $item) {
+			if(!$this->isScreenable($item)) unset($array[$key]);
+		}
+		return $AC ? new ArrayCollection($array) : $array;
 	}
 
 	/**
@@ -86,18 +104,23 @@ class twigToolsTextutilities extends baseTwigToolsTextutilities {
 
 	/**
 	 * renvoie un tableau randomisé (avec max éléments si $max non null)
-	 * @param string $t - texte
-	 * @param intger $n - nombre d'espaces à supprimer (à partir de 2, par défaut)
-	 * @return string
+	 * @param ArrayCollection | Array $array
+	 * @param intger $max = null
+	 * @return ArrayCollection | Array
 	 */
 	public function randomArray($array, $max = null) {
-		$array = (array)$array;
+		$AC = false;
+		if($array instanceOf ArrayCollection) {
+			$AC = true;
+			$array = $array->toArray();
+		}
 		foreach ($array as $key => $item) {
 			if(!$this->isScreenable($item)) unset($array[$key]);
 		}
 		if(count($array) < 1) return $array;
 		shuffle($array);
-		return (integer)$max > 0 ? array_slice($array, 0, (integer)$max) : $array;
+		$array = (integer)$max > 0 ? array_slice($array, 0, (integer)$max) : $array;
+		return $AC ? new ArrayCollection($array) : $array;
 	}
 
 

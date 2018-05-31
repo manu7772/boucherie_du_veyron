@@ -56,7 +56,6 @@
 								<h2 class="product-information-price">{{ articlePrix(article)|raw }}</h2>
 								{% else %}
 								<h2 class="product-information-price"><small>Prix sur devis</small></h2>
-								{# <p><a href="#">Demander un devis</a></p> #}
 								{% endif %}
 
 								{{ articles_macros.blockPrixSansTitre(article) }}
@@ -65,8 +64,8 @@
 					</div><!--/product-details-->
 					
 					<!-- -->
-					{% set ficherecettes = article.group_articleFicherecette_childs %}
-					{% set ficheboissons = article.group_articleFicheboisson_childs %}
+					{% set ficherecettes = removeNonScreenable(article.group_articleFicherecette_childs) %}
+					{% set ficheboissons = removeNonScreenable(article.group_articleFicheboisson_childs) %}
 					<div class="category-tab shop-details-tab"><!--category-tab-->
 						<div class="col-sm-12">
 							<ul class="nav nav-tabs">
@@ -92,12 +91,12 @@
 									{# </div> #}
 									{% endif %}
 								</div>
-								{% if article.group_articles_childs|length > 0 %}
+								{% if removeNonScreenable(article.group_articles_childs)|length > 0 %}
 								<div class="col-sm-12 p-b-sm">
 									<h4>À voir également…</h4>
 								</div>
 								{# <div class="col-sm-6 padding-left-right-null"> #}
-								{% for artChild in article.group_articles_childs %}
+								{% for artChild in removeNonScreenable(article.group_articles_childs) %}
 									{{ articles_macros.boxArticle(artChild, null, {'buy': 'off', 'col': 'on'}) }}
 								{% endfor %}
 								{# </div> #}

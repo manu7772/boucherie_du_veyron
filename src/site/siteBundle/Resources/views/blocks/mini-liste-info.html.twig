@@ -12,7 +12,7 @@
 				<ul class="nav nav-tabs">
 					{% for item in items if item.allNestedChildsByGroup('nesteds')|length > 0 %}
 					{% if item.shortName in ['categorie'] %}
-					<li class="{{ loop.first ? 'active' }}" data-target="#recommended-item-carousel" data-slide-to="{{ loop.index0 }}">
+					<li class="{{ loop.first ? 'active' }}" data-target="#recommended-item-carousel" data-slide-to="{{ loop.index0 }}" style="cursor:pointer;">
 						<a>{{ UCfirst(item.nom) }}</a>
 					</li>
 					{% endif %}
