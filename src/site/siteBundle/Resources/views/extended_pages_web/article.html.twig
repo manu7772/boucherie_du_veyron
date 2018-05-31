@@ -14,7 +14,7 @@
 			{{ render(controller('sitesiteBundle:Default:menuArticle')) }}
 			{% endblock menuArticle %}
 
-			{% if article %}
+			{% if article and isScreenable(article) %}
 			<div class="col-sm-9 col-md-9 padding-left-resp"><!--colonne right-->
 				<div class="content-page-right">
 					<h2 class="title">
@@ -146,14 +146,13 @@
 				</div>
 			</div>
 			{% else %}
-			<h6 class="text-center m-t-lg">Ce produit n'existe pas.</h6>
+			<h6 class="text-center m-t-lg">Ce produit n'est pas disponible.</h6>
 			{% endif %}
 
 		</div>
 	</div>
-	{# {{ dump(categorie) }} #}
 </section>
 
-	{# {{ render(controller('sitesiteBundle:Default:miniListeInfo')) }}     #}
+	{{ render(controller('sitesiteBundle:Default:miniListeInfo')) }}    
 
 {% endblock mainContainer %}

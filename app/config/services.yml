@@ -293,7 +293,7 @@ services:
 
     # TWIG functions and filters for texts
     aetools.twigToolsTextutilities:
-        class: %ae_services%twigToolsTextutilities
+        class: %site_services%twigToolsTextutilities
         arguments: [@service_container]
         tags:
             - { name: twig.extension }

@@ -9,7 +9,7 @@
 
 {% macro blockmini(item) -%}
 	{% import _self as self %}
-	{% set EDITORMODE = (app.environment in ['DEV', 'TEST']) or (is_granted('ROLE_EDITOR')) %}
+	{# {% set EDITORMODE = (app.environment in ['DEV', 'TEST']) or (is_granted('ROLE_EDITOR')) %} #}
 	{% if item.shortName matches '#^article#' %}
 		{% import 'sitesiteBundle:blocks:articles_actions.html.twig' as actions %}
 		{{ actions.boxArticle(item) }}

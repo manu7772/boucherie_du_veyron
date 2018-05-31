@@ -31,7 +31,7 @@
 
 {% macro boxArticle(item, categorie, params, classes) %}
 {# Affichage d'une box pour articles #}
-{% if item.shortName|default(item.className|default(null)) matches '#^article#' %}
+{% if item.shortName|default(item.className|default(null)) matches '#^article#' and isScreenable(item) %}
 {% import _self as self %}
 	{% if params.col|default('on') != 'off' %}
 	<div class="col-sm-6 col-md-3 {{ classes|default([])|join(' ') }}">
@@ -45,7 +45,7 @@
 
 {% macro boxArticleProducts(item, categorie, params, classes) %}
 {# Affichage d'une box pour articles #}
-{% if item.shortName|default(item.className|default(null)) matches '#^article#' %}
+{% if item.shortName|default(item.className|default(null)) matches '#^article#' and isScreenable(item) %}
 {% import _self as self %}
 	{% if params.col|default('on') != 'off' %}
 	<div class="col-sm-6 col-md-4 col-lg-4 {{ classes|default([])|join(' ') }}">

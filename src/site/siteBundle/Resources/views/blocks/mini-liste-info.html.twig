@@ -1,6 +1,6 @@
-{% import 'sitesiteBundle:blocks:blocks_actions.html.twig' as blocks_actions %}
 {% if items|default([])|length > 0 %}
-{% set acceptList = ['article','ficherecette','ficheboisson'] %}
+{% import 'sitesiteBundle:blocks:blocks_actions.html.twig' as blocks_actions %}
+{# {% set acceptList = ['article','ficherecette','ficheboisson'] %} #}
 <section id="section-color">
 {# <section> #}
 
@@ -12,7 +12,7 @@
 				<ul class="nav nav-tabs">
 					{% for item in items if item.allNestedChildsByGroup('nesteds')|length > 0 %}
 					{% if item.shortName in ['categorie'] %}
-					<li class="{% if loop.first %}active{% endif %}" data-target="#recommended-item-carousel" data-slide-to="{{ loop.index0 }}">
+					<li class="{{ loop.first ? 'active' }}" data-target="#recommended-item-carousel" data-slide-to="{{ loop.index0 }}">
 						<a>{{ UCfirst(item.nom) }}</a>
 					</li>
 					{% endif %}
@@ -32,7 +32,7 @@
 						{% set nbitems = 0 %}
 						{% for item in items if item.allNestedChildsByGroup('nesteds')|length > 0 %}
 						{% if item.shortName in ['categorie'] %}
-						<div class="item{% if loop.first %} active{% endif %}">
+						<div class="item{{ loop.first ? ' active' }}">
 							{{ blocks_actions.list_blockmini(item.allNestedChildsByGroup('nesteds'), 4) }}
 						</div>
 						{% set nbitems = nbitems + 1 %}
@@ -53,5 +53,13 @@
 	</div><!--/row-->
 	<!--/container-->
 </section>
+
+{# {% for item in items if item.allNestedChildsByGroup('nesteds')|length > 0 %}
+{% if item.shortName in ['categorie'] %}
+	{{ dump(randomArray(item.allNestedChildsByGroup('nesteds'),4)) }}
+{% endif %}
+{% endfor %} #}
+{# {{ dump(sitedata()) }} #}
+
 {% endif %}
 

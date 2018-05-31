@@ -401,6 +401,9 @@ class DefaultController extends Controller {
 
 	public function diaporamaAction($id) {
 		$data['diaporama'] = $this->get(aeData::PREFIX_CALL_SERVICE.'aeServiceNested')->getRepo()->find($id);
+		// foreach ($data['diaporama']->getGroupNestedsChilds() as $child) {
+			// if(!$this->isGranted($child->getStatut()->getNiveau())) $data['diaporama']->removeGroupNestedsChild($child);
+		// }
 		return $this->render('sitesiteBundle:blocks:diaporama.html.twig', $data);
 	}
 

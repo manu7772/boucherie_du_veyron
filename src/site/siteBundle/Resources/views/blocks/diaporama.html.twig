@@ -7,7 +7,7 @@
 		<div id="slider-carousel" class="carousel slide" data-ride="carousel">
 
 			<ol class="carousel-indicators">
-				{% for item in diaporama.group_nesteds_childs if item.shortName != "categorie" %}
+				{% for item in diaporama.group_nesteds_childs if (item.shortName != "categorie" and is_granted(item.statut.niveau)) %}
 				<li data-target="#slider-carousel" data-slide-to="{{ loop.index0 }}"{% if loop.first %} class="active"{% endif %}></li>
 				{% endfor %}
 			</ol>
@@ -15,7 +15,7 @@
 			<div class="carousel-inner">
 
 				{% set forceHeight = 'height:322px;overflow:hidden;' %}
-				{% for item in diaporama.group_nesteds_childs %}
+				{% for item in diaporama.group_nesteds_childs if is_granted(item.statut.niveau) %}
 
 				{% if item.shortName matches "#^article#" %}
 				<div class="item{% if loop.first %} active{% endif %}" style="{{ forceHeight|raw }}">
@@ -142,6 +142,8 @@
 		</div>
 	</div><!--/slider-->
 </div><!--/col-->
+{# <hr><pre>{{ dump(diaporama.group_nesteds_childs) }}</pre> #}
+
 {% endif %}
 
 

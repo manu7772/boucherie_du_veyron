@@ -1,12 +1,14 @@
 
 {% macro boxCategorie(item, categorie) %}
 	{# Affichage d'une box pour articles #}
+	{% if isScreenable(item) %}
 	{% if item.shortName|default(item.className|default(null)) matches "#^article#" %}
 		{% import 'sitesiteBundle:blocks:articles_actions.html.twig' as articles_macros %}
 		{{ articles_macros.boxArticleProducts(item, categorie) }}
 	{% elseif item.shortName|default(item.className|default(null)) matches "#^fiche#" %}
 		{% import 'sitesiteBundle:blocks:fiches_actions.html.twig' as fiches_macros %}
 		{{ fiches_macros.boxFiche(item, categorie) }}
+	{% endif %}
 	{% endif %}
 {% endmacro %}
 

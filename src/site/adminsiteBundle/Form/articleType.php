@@ -74,10 +74,10 @@ class articleType extends baseType {
 				'label'		=> 'fields.vendable',
 				"required"  => false,
 				))
-			// ->add('surdevis', 'checkbox', array(
-			// 	'label'		=> 'fields.surdevis',
-			// 	"required"  => false,
-			// 	))
+			->add('surdevis', 'checkbox', array(
+				'label'		=> 'fields.surdevis',
+				"required"  => false,
+				))
 			// ->add('groupbasket', 'checkbox', array(
 			// 	'label'		=> 'fields.groupbasket',
 			// 	"required"  => false,

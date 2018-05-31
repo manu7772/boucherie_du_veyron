@@ -1,6 +1,6 @@
 {% macro boxFiche(item, categorie) %}
 
-{% if item.shortName matches '#^fiche#' %}
+{% if item.shortName matches '#^fiche#' and isScreenable(item) %}
 	{% import 'sitesiteBundle:blocks:actions.html.twig' as actions %}
 	{% import 'sitesiteBundle:blocks:blocks_actions.html.twig' as blocks_actions %}
 	{% set EDITORMODE = (app.environment in ['DEV', 'TEST']) or (is_granted('ROLE_EDITOR')) %}
