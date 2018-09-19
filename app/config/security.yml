@@ -3,6 +3,7 @@
 parameters:
     # roles_redirect:
     #     ROLE_USER:          sitesite_homepage
+    #     ROLE_TESER:         sitesite_homepage
     #     ROLE_TRANSLATOR:    sitetranslate_homepage
     #     ROLE_EDITOR:        siteadmin_homepage
     #     ROLE_ADMIN:         siteadmin_homepage
@@ -17,6 +18,7 @@ security:
     role_hierarchy:
         IS_AUTHENTICATED_ANONYMOUSLY: null
         ROLE_USER:         [ROLE_USER, IS_AUTHENTICATED_ANONYMOUSLY]
+        ROLE_TESTER:       [ROLE_USER, IS_AUTHENTICATED_ANONYMOUSLY]
         ROLE_TRANSLATOR:   [ROLE_USER, IS_AUTHENTICATED_ANONYMOUSLY]
         ROLE_EDITOR:       [ROLE_USER, ROLE_TRANSLATOR, IS_AUTHENTICATED_ANONYMOUSLY]
         ROLE_ADMIN:        [ROLE_USER, ROLE_TRANSLATOR, ROLE_EDITOR, IS_AUTHENTICATED_ANONYMOUSLY]
@@ -25,6 +27,7 @@ security:
     providers:
         main:
             id: fos_user.user_provider.username_email
+            # id: fos_user.user_provider.username
 
     firewalls:
         dev:
@@ -46,18 +49,13 @@ security:
                 invalidate_session: false
             remember_me:
                 key:  %secret%
-                # lifetime: 1000
-                # path: /
+                lifetime: 20
+                path: /
+                always_remember_me: true
             switch_user: true
 
     access_control:
         - { path: ^/login$, role: IS_AUTHENTICATED_ANONYMOUSLY }
-        # - { host: 'admin.boucherie-du-veyron.fr', roles: ROLE_TRANSLATOR }
-        # - { path: ^/(.*/)?translate, roles: ROLE_TRANSLATOR }
-        # - { path: ^/(.*/)?edition, roles: ROLE_EDITOR }
-        # - { path: ^/(.*/)?user, roles: ROLE_ADMIN }
-        # - { path: ^/(.*/)?admin, roles: ROLE_ADMIN }
-        # - { path: ^/(.*/)?admin\/superadmin, roles: ROLE_SUPER_ADMIN }
 
     # ROLE_ALLOWED_TO_SWITCH :
     # ?_switch_user=username

@@ -6,6 +6,7 @@ use Doctrine\ORM\EntityManager;
 use Labo\Bundle\AdminBundle\services\aeData;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Doctrine\ORM\Event\LifecycleEventArgs;
+use Doctrine\Common\Collections\ArrayCollection;
 
 use Labo\Bundle\AdminBundle\services\aeServiceSubentity;
 
@@ -106,5 +107,15 @@ class aeServiceSite extends aeServiceSubentity {
         return $this->siteData;
     }
 
+    public function getAllCollaborateurs($siteId = null) {
+        $siteId = null;
+        $collaborateurs = new ArrayCollection();
+        $sites = $this->getRepo()->findAll();
+        foreach ($sites as $site) if($siteId == null || $site->getId() == $siteId) {
+            $collsite = $site->getCollaborateurs();
+            foreach ($collsite as $coll) if($coll->isEnabled() && !$collaborateurs->contains($coll)) $collaborateurs->add($coll);
+        }
+        return $collaborateurs;
+    }
 
 }

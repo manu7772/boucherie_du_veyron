@@ -10,6 +10,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Labo\Bundle\AdminBundle\Entity\subentity;
 use site\adminsiteBundle\Entity\categorie;
 use site\adminsiteBundle\Entity\boutique;
+use site\adminsiteBundle\Entity\evenement;
 use site\adminsiteBundle\Entity\image;
 
 use \ReflectionClass;
@@ -83,10 +84,16 @@ class site extends subentity {
 	protected $categorieFooters;
 
 	/**
-	 * @ORM\ManyToMany(targetEntity="site\adminsiteBundle\Entity\boutique", inversedBy="sites", cascade={"persist"})
+	 * @ORM\ManyToMany(targetEntity="site\adminsiteBundle\Entity\boutique", inversedBy="sites")
 	 * @ORM\JoinColumn(nullable=true, unique=false, onDelete="SET NULL")
 	 */
 	protected $boutiques;
+
+	/**
+	 * @ORM\ManyToMany(targetEntity="site\adminsiteBundle\Entity\evenement", inversedBy="sites")
+	 * @ORM\JoinColumn(nullable=true, unique=false, onDelete="SET NULL")
+	 */
+	protected $evenements;
 
     /**
      * @ORM\OneToOne(targetEntity="site\adminsiteBundle\Entity\image", orphanRemoval=true, cascade={"all"})
@@ -130,6 +137,7 @@ class site extends subentity {
 		$this->categorieArticles = new ArrayCollection();
 		$this->categorieFooters = new ArrayCollection();
 		$this->boutiques = new ArrayCollection();
+		$this->evenements = new ArrayCollection();
 		$this->logo = null;
 		$this->favicon = null;
 		$this->adminLogo = null;
@@ -225,7 +233,7 @@ class site extends subentity {
 	/**
 	 * Set categorieArticles
 	 * @param arrayCollection $categorieArticles
-	 * @return subentity
+	 * @return site
 	 */
 	public function setCategorieArticles(ArrayCollection $categorieArticles) {
 		// $this->categorieArticles->clear();
@@ -265,7 +273,7 @@ class site extends subentity {
 	/**
 	 * Set categorieFooters
 	 * @param arrayCollection $categorieFooters
-	 * @return subentity
+	 * @return site
 	 */
 	public function setCategorieFooters(ArrayCollection $categorieFooters) {
 		// $this->categorieFooters->clear();
@@ -305,7 +313,7 @@ class site extends subentity {
 	/**
 	 * Set boutiques
 	 * @param arrayCollection $boutiques
-	 * @return subentity
+	 * @return site
 	 */
 	public function setBoutiques(ArrayCollection $boutiques) {
 		// $this->boutiques->clear();
@@ -342,6 +350,48 @@ class site extends subentity {
 	 */
 	public function getBoutiques() {
 		return $this->boutiques;
+	}
+
+	/**
+	 * Set evenements
+	 * @param arrayCollection $evenements
+	 * @return site
+	 */
+	public function setEvenements(ArrayCollection $evenements) {
+		// $this->evenements->clear();
+		// incorporation avec "add" et "remove" au cas où il y aurait des opérations (inverse notamment)
+		foreach ($this->getEvenements() as $evenement) if(!$evenement->contains($evenement)) $this->removeEvenement($evenement); // remove
+		foreach ($evenements as $evenement) $this->addEvenement($evenement); // add
+		return $this;
+	}
+
+	/**
+	 * Add evenement
+	 * @param evenement $evenement
+	 * @return site
+	 */
+	public function addEvenement(evenement $evenement) {
+		$this->evenements->add($evenement);
+		// $evenement->addSite($this);
+		return $this;
+	}
+
+	/**
+	 * Remove evenement
+	 * @param evenement $evenement
+	 * @return boolean
+	 */
+	public function removeEvenement(evenement $evenement) {
+		// $evenement->removeSite($this);
+		return $this->evenements->removeElement($evenement);
+	}
+
+	/**
+	 * Get evenements
+	 * @return ArrayCollection
+	 */
+	public function getEvenements() {
+		return $this->evenements;
 	}
 
 	/**

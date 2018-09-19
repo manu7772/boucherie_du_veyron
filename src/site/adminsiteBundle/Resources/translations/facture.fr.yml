@@ -1,0 +1,31 @@
+name_s: factures
+name: facture
+not_found: 'aucune facture trouvée'
+x_found: '{0} aucune facture trouvée|{1} 1 facture trouvée|[2,+Inf] %count% factures trouvées'
+create: 'créer une nouvelle facture'
+create_btn: 'nouvelle facture'
+backlist: 'retour à la liste des factures'
+backlist_btn: 'retour liste'
+dontexist: 'cette facture n''existe pas'
+moredetails: 'plus de détails sur %name%'
+existe: cette facture existe déjà
+grants:
+    no_access: Vous n'avez pas les droits pour accéder à la facture<br>"%name%"
+form:
+    select: Sélectionnez…
+state:
+    preparation: en préparation
+    devis: devis
+    valid: validée
+    archived: archivée
+    canceled: annulée
+    test: test
+    TEMP: temporaire-panier
+fields:
+    id: id
+    user: utilisateur
+    position: position
+    state: statut
+    created: création
+    panier: détail articles
+    frozenuser: infos utilisateur figées à la date de facture

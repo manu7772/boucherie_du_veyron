@@ -1,18 +1,66 @@
 parameters:
     cache:
         delay: '-10 MINUTES'
+    ajaxlive:
+        name: ajaxlive          # name
+        active: true
+        parameters:
+            frequency: 3000         # frequency in seconds
+            frequencyMax: 300000    # frequencyMax in seconds
+            frequencyMin: 3000      # frequencyMin in seconds
+        entities:
+            panier:
+                JmsGroups: ['ajaxlive']
+                shortname: panier
+                QueryMethod:
+                    method: findAllOfUser
+                    shortCutContext: false
+                user_condition: id
+            message:
+                JmsGroups: ['ajaxlive']
+                shortname: message
+                QueryMethod:
+                    method: findNotRead
+                    shortCutContext: false
+                user_condition: mail_sitemessages
+            sessiondata:
+                JmsGroups: ['ajaxlive']
+                shortname: sessiondata
+                QueryMethod:
+                    method: findAllOfUser
+                    shortCutContext: false
+                user_condition: is_collaborator
+    serializer:
+        default:
+            JmsGroups: ['complete']
+            QueryMethod:
+                method: findAllOfUser
+                shortCutContext: false
+            user_condition: all
     site_domains:
         main_domain: 'boucherie-du-veyron.fr'
         public:
-            reseau: 'http://'
+            reseau: 'https://'
             prefix: 'www'
             domain: 'boucherie-du-veyron'
             extensions:
                 - 'fr'
-                - 'com'
         admin:
-            reseau: 'http://'
+            reseau: 'https://'
             prefix: 'admin'
+            domain: 'boucherie-du-veyron'
+            extensions:
+                - 'fr'
+            path: '/admin'
+        test:
+            reseau: 'https://'
+            prefix: 'test'
+            domain: 'boucherie-du-veyron'
+            extensions:
+                - 'fr'
+        testadmin:
+            reseau: 'https://'
+            prefix: 'testadmin'
             domain: 'boucherie-du-veyron'
             extensions:
                 - 'fr'
@@ -33,6 +81,8 @@ parameters:
     mail:
         address: noreply@boucherie-du-veyron.fr
         sender_name: boucherie du veyron
+    user_account:
+        active: false
     # menus:
     #     site-menu:
     #         bundle: sitesite
@@ -45,13 +95,13 @@ parameters:
     formatDate:             "dd-MM-yyyy" # formulaires
     formatDateOnly:         "d-m-Y"
     formatDateHeure:        "d-m-Y H:i:s"
-    formFormatDate:         "dd/mm/yyyy"
+    formFormatDate:         "dd-mm-yyyy"
     timezone:               "Europe/Paris"
     webmaster:
         nom:        Dujardin
         prenom:     Emmanuel
         tel:        06 13 14 35 15
-        email:      emmanuel@aequation-webdesign.fr
+        email:      manu7772@gmail.com
     list_locales:
         default:            %default_locales%
         sitesite:           %default_locales%
@@ -90,6 +140,19 @@ parameters:
             icon: fa-question
         site:
             icon: fa-building
+        evenement:
+            icon: fa-bell-o
+            singleFields:
+                couleur: '#361a56'
+            nestedAttributes:
+                nesteds:
+                    data-limit: 0
+                    class: ['categorie']
+                    required: false
+                evenements:
+                    data-limit: 10
+                    class: ['evenement']
+                    required: false
         article:
             icon: fa-shopping-cart
             nestedAttributes:
@@ -118,11 +181,11 @@ parameters:
                 surdevis: false
                 prix: 1.00
                 unitprix: 'Kg'
-                unit: 'Kg'
-                defaultquantity: 10
-                maxquantity: 1000
+                unit: 'g'
+                defaultquantity: 1
+                maxquantity: null
                 minquantity: 1
-                increment: 10
+                increment: 1
         marque:
             icon: fa-trophy
         panier:
@@ -151,21 +214,24 @@ parameters:
                     required: false
             types_descrition:
                 defaults:
-                    accepts: ['pageweb', 'article','image','fiche','marque','reseau','boutique','pdf', 'categorie']
+                    accepts: ['pageweb','article','image','evenement','fiche','marque','reseau','boutique','pdf','categorie']
                     couleur: 'rgba(128,128,128,1)'
                 types:
                     trash:
                         nom: 'types.trash'
-                        accepts: ['pageweb', 'article','image','fiche','marque','reseau','boutique','pdf', 'categorie']
+                        accepts: ['pageweb','article','image','evenement','fiche','marque','reseau','boutique','pdf','categorie']
                     menu:
                         nom: 'types.menu'
-                        accepts: ['pageweb', 'article','image','fiche','marque','reseau','boutique','pdf', 'categorie']
+                        accepts: ['pageweb','article','image','evenement','fiche','marque','reseau','boutique','pdf','categorie']
                     # multimedia:
                     #     nom: 'types.multimedia'
-                    #     accepts: ['pageweb', 'article','image','fiche','marque','reseau','boutique','pdf']
+                    #     accepts: ['pageweb','article','image','fiche','marque','reseau','boutique','pdf']
                     diapo:
                         nom: 'types.diapo'
-                        accepts: ['article','image','fiche']
+                        accepts: ['article','evenement','image','fiche']
+                    evenement:
+                        nom: 'types.evenement'
+                        accepts: ['evenement']
                     pageweb:
                         nom: 'types.pageweb'
                         accepts: ['pageweb']
@@ -257,14 +323,15 @@ parameters:
             icon: fa-building-o
         tauxTva: 
             icon: fa-calculator
+        facture: 
+            icon: fa-money
+        calendar: 
+            icon: fa-calendar
     marketplace:
         active: true #gérer des articles, boutiques, etc.
-        vente: true #afficher les prix et remplir le panier
+        vente: false #afficher les prix et remplir le panier
         paiement: false #paiement en ligne
         statistiques: false
-        # devise:
-        #     name: euro
-        #     symb: €
         devises:
             fr:
                 name: euro
@@ -274,55 +341,4 @@ parameters:
                 name: livre
                 symb: £
                 ratio: 0.72
-    # categorie:
-    #     descrition:
-    #         defaults:
-    #             accepts: ['pageweb', 'article','image','fiche','marque','reseau','boutique','pdf', 'categorie']
-    #             couleur: 'rgba(128,128,128,1)'
-    #         types:
-    #             menu:
-    #                 nom: 'types.menu'
-    #                 accepts: ['pageweb', 'article','image','fiche','marque','reseau','boutique','pdf', 'categorie']
-    #             # multimedia:
-    #             #     nom: 'types.multimedia'
-    #             #     accepts: ['pageweb', 'article','image','fiche','marque','reseau','boutique','pdf']
-    #             diapo:
-    #                 nom: 'types.diapo'
-    #                 accepts: ['article','image','fiche']
-    #             pageweb:
-    #                 nom: 'types.pageweb'
-    #                 accepts: ['pageweb']
-    #             article:
-    #                 nom: 'types.article'
-    #                 accepts: ['article']
-    #             image:
-    #                 nom: 'types.image'
-    #                 accepts: ['image']
-    #             fiche_recettes:
-    #                 nom: 'types.fiche_recettes'
-    #                 accepts: ['ficherecette']
-    #             fiche_boissons:
-    #                 nom: 'types.fiche_boissons'
-    #                 accepts: ['ficheboisson']
-    #             # marque:
-    #             #     nom: 'types.marque'
-    #             #     accepts: ['marque']
-    #             # reseau:
-    #             #     nom: 'types.reseau'
-    #             #     accepts: ['reseau']
-    #             # boutique:
-    #             #     nom: 'types.boutique'
-    #             #     accepts: ['boutique']
-    #             # pdf:
-    #             #     nom: 'types.pdf'
-    #             #     accepts: ['pdf']
-
-
-
-
-
-
-
-
-
 

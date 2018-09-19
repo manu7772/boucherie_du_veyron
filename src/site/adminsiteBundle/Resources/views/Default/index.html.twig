@@ -1,0 +1,130 @@
+{# {% extends 'LaboAdminBundle:Default:index.html.twig' %} #}
+{% extends 'LaboAdminBundle::page_admin_generic.html.twig' %}
+{# {% set cssjsloads = 'simple' %} #}
+{# {% set DEVMODE = (app.environment in ['dev', 'test']) or (is_granted('ROLE_SUPER_ADMIN')) %} #}
+{% set entitelist = ['article', 'pageweb', 'User', 'evenement'] %}
+
+{% block page_heading %}
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-12 m-t-xs">
+        <div class="row">
+            <div class="col-md-9">
+                <h2><i class="fa fa-home m-r-xs"></i>Accueil administration</h2>
+                <ol class="breadcrumb">
+                    <li>{{ UCfirst('administration'|trans) }}</li>
+                </ol>
+            </div>
+            {% block buttons %}
+            {% endblock buttons %}
+        </div>
+    </div>
+</div>
+{% endblock page_heading %}
+
+{% block content %}
+
+<div class="row">
+    <div class="col-sm-12 col-md-6 col-lg-4">
+        <div class="ibox float-e-margins">
+            <div class="ibox-content">
+                <h3><i class="fa fa-envelope"></i> Messages non lus <small><i>({{ messages|length }}{% if nbmessages > messages|length %}/{{ nbmessages }}{% endif %})</i></small></h3>
+                <small><a href="{{ path('siteadmin_entite', {entite: 'message'}) }}">{{ UCfirst('action.consulter'|trans({}, 'message')) }}</a></small>
+                <ul class="todo-list m-t small-list ui-sortable">
+                    {% for message in messages if (fromNow(message.creation, "secondes") >= 0) %}
+                    <li>
+                        <a href="#" class="check-link"><i class="fa {% if message.isRead %}fa-check-square{% else %}fa-square-o{% endif %}"></i> </a>
+                        <span class="m-l-xs{% if message.isRead %} todo-completed{% endif %}">{{ phraseCut(message.message, 22) }}</span>
+                        {% if fromNow(message.creation) <= 15 %}
+                        <small class="label label-warning pull-right"><i class="fa fa-clock-o"></i> {{ fromNow(message.creation) }} min.</small>
+                        {% elseif fromNow(message.creation, 'heures') < 1 %}
+                        <small class="label label-warning pull-right"><i class="fa fa-clock-o"></i> {{ fromNow(message.creation) }} min.</small>
+                        {% elseif fromNow(message.creation, 'heures') <= 24 %}
+                        <small class="label label-danger pull-right"><i class="fa fa-clock-o"></i> {{ fromNow(message.creation, 'heures') }} h</small>
+                        {% else %}
+                        <small class="label label-default pull-right"><i class="fa fa-clock-o"></i> {{ fromNow(message.creation, 'jours') }} j.</small>
+                        {% endif %}
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-sm-12 col-md-6 col-lg-8">
+        <div class="row">
+        
+{#             {% set entite = 'categorie' %}
+            <div class="col-sm-12 col-md-6 col-lg-4">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-content">
+                        <h3><i class="fa {{ ('entite.' ~ entite)|trans({}, 'icon') }} m-r-xs"></i>{{ UCfirst(('name_s')|trans({}, entite)) }}</h3>
+                        <hr class="m-t-md m-b-sm">
+                        <!-- Liste -->
+                        <a href="{{ path('siteadmin_repo_categorie', {method:'findRoots'}) }}" class="btn btn-primary btn-sm full-width"><i class="fa fa-eye fa-2x pull-left"></i> <strong class="m-t-xs pull-right">{{ UCfirst('actions.voir'|trans) }}</strong></a>
+                        <!-- Statistiques -->
+                        <a href="{{ path('siteadmin_entite', {entite: entite, action:'list'}) }}" class="btn btn-warning btn-sm full-width{% if marketplace.statistiques == false %} disabled{% endif %}"><i class="fa fa-area-chart fa-2x pull-left"></i> <strong class="m-t-xs pull-right">{{ UCfirst('actions.analyse'|trans) }}</strong></a>
+                    </div>
+                </div>
+            </div> #}
+            {% set entite = 'site' %}
+            <div class="col-sm-12 col-md-6 col-lg-4">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-content">
+                        <h3 class="ellipsis"><i class="fa {{ ('entite.' ~ entite)|trans({}, 'icon') }} m-r-xs"></i>{{ UCfirst(('name')|trans({}, entite)) }} {{ sitedata.nom }}</h3>
+                        <hr class="m-t-md m-b-sm">
+                        <!-- Show -->
+                        <a href="{{ path('siteadmin_entite', {entite: 'site', id: sitedata.id, action: 'show'}) }}" class="btn btn-primary btn-sm full-width"><i class="fa fa-eye fa-2x pull-left"></i> <strong class="m-t-xs pull-right">{{ UCfirst('actions.voir'|trans) }}</strong></a>
+                        <!-- Edit -->
+                        <a href="{{ path('siteadmin_entite', {entite: 'site', id: sitedata.id, action: 'edit'}) }}" class="btn btn-default btn-sm full-width"><i class="fa fa-pencil fa-2x pull-left"></i> <strong class="m-t-xs pull-right">{{ UCfirst('actions.modifier'|trans) }}</strong></a>
+                    </div>
+                </div>
+            </div>
+
+            {% if marketplace.active == false %}{% set marketPlaceOff = ['article','marque'] %}{% endif %}
+            {% for entite in entitelist if entite not in marketPlaceOff|default([]) %}
+            <div class="col-sm-12 col-md-6 col-lg-4">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-content">
+                        <h3><i class="fa {{ ('entite.' ~ entite)|trans({}, 'icon') }} m-r-xs"></i>{{ UCfirst(('name_s')|trans({}, entite)) }}</h3>
+                        <hr class="m-t-md m-b-sm">
+                        {% if entite == 'User' %}
+                        <!-- Liste -->
+                        <a href="{{ path('siteUser_users') }}" class="btn btn-primary btn-sm full-width"><i class="fa fa-user fa-2x pull-left"></i> <strong class="m-t-xs pull-right">Tous</strong></a>
+                        <!-- Ajouter -->
+                        <a href="{{ path('siteUser_users', {type: 'ROLE_ADMIN'}) }}" class="btn btn-primary btn-sm full-width"><i class="fa fa-lock fa-2x pull-left"></i> <strong class="m-t-xs pull-right">Admin</strong></a>
+                        <!-- Statistiques -->
+                        <a href="{{ path('siteadmin_entite', {entite: entite, action:'list'}) }}" class="btn btn-warning btn-sm full-width{% if marketplace.statistiques == false %} disabled{% endif %}"><i class="fa fa-area-chart fa-2x pull-left"></i> <strong class="m-t-xs pull-right">{{ UCfirst('actions.analyse'|trans) }}</strong></a>
+                        {% else %}
+                        <!-- Liste -->
+                        <a href="{{ path('siteadmin_entite', {entite: entite, action:'list'}) }}" class="btn btn-primary btn-sm full-width"><i class="fa fa-eye fa-2x pull-left"></i> <strong class="m-t-xs pull-right">{{ UCfirst('actions.voir'|trans) }}</strong></a>
+                        <!-- Ajouter -->
+                        <a href="{{ path('siteadmin_entite', {entite: entite, action:'create'}) }}" class="btn btn-info btn-sm full-width"><i class="fa fa-plus fa-2x pull-left"></i> <strong class="m-t-xs pull-right">{{ UCfirst('actions.creation'|trans) }}</strong></a>
+                        <!-- Statistiques -->
+                        <a href="{{ path('siteadmin_entite', {entite: entite, action:'list'}) }}" class="btn btn-warning btn-sm full-width{% if marketplace.statistiques == false %} disabled{% endif %}"><i class="fa fa-area-chart fa-2x pull-left"></i> <strong class="m-t-xs pull-right">{{ UCfirst('actions.analyse'|trans) }}</strong></a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+
+            {% if defaultPageweb['#diaporama_id']|default(null) is not null %}
+            <div class="col-sm-12 col-md-6 col-lg-4">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-content">
+                        <h3 class="ellipsis"><i class="fa {{ 'entite.multimedia'|trans({}, 'icon') }} m-r-xs"></i>{{ UCfirst(('types.diapo')|trans({}, 'categorie')) }} acceuil</h3>
+                        <hr class="m-t-md m-b-sm">
+                        <!-- Show -->
+                        <a href="{{ path('siteadmin_entite', {entite: 'categorie', id: defaultPageweb['#diaporama_id'], action: 'show'}) }}" class="btn btn-primary btn-sm full-width"><i class="fa fa-eye fa-2x pull-left"></i> <strong class="m-t-xs pull-right">{{ UCfirst('actions.voir'|trans) }}</strong></a>
+                        <!-- Edit -->
+                        <a href="{{ path('siteadmin_entite', {entite: 'categorie', id: defaultPageweb['#diaporama_id'], action: 'edit'}) }}" class="btn btn-default btn-sm full-width"><i class="fa fa-pencil fa-2x pull-left"></i> <strong class="m-t-xs pull-right">{{ UCfirst('actions.modifier'|trans) }}</strong></a>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+        </div>
+    </div>
+
+</div>
+
+{% endblock content %}

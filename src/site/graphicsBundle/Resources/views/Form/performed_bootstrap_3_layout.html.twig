@@ -15,7 +15,7 @@
 {%- endblock textarea_widget %}
 
 {% block button_widget -%}
-	{% set attr = attr|merge({class: (attr.class|default('btn-default') ~ ' btn btn-sm')|trim}) %}
+	{% set attr = attr|merge({class: (attr.class|default('btn-default') ~ ' btn')|trim}) %}
 	{{- parent() -}}
 {%- endblock %}
 
@@ -179,7 +179,7 @@
 {# Rows #}
 
 {% block form_row -%}
-	<div class="form-group{% if (not compound or force_error|default(false)) and not valid %} has-error{% endif %}">
+	<div class="form-group m-b-xs{% if (not compound or force_error|default(false)) and not valid %} has-error{% endif %}">
 		{{- form_label(form) -}}
 		{{- form_widget(form) -}}
 		{{- form_errors(form) -}}
@@ -187,7 +187,7 @@
 {%- endblock form_row %}
 
 {% block button_row -%}
-	<div class="form-group">
+	<div class="form-group m-b-xs">
 		{{- form_widget(form) -}}
 	</div>
 {%- endblock button_row %}
@@ -213,14 +213,14 @@
 {%- endblock datetime_row %}
 
 {% block checkbox_row -%}
-	<div class="form-group{% if not valid %} has-error{% endif %}">
+	<div class="form-group m-b-xs{% if not valid %} has-error{% endif %}">
 		{{- form_widget(form) -}}
 		{{- form_errors(form) -}}
 	</div>
 {%- endblock checkbox_row %}
 
 {% block radio_row -%}
-	<div class="form-group{% if not valid %} has-error{% endif %}">
+	<div class="form-group m-b-xs{% if not valid %} has-error{% endif %}">
 		{{- form_widget(form) -}}
 		{{- form_errors(form) -}}
 	</div>
@@ -439,7 +439,7 @@
 	</div>
 	{% set attr = attr|merge({'class': "hidden"}) %}
 	<textarea {{ block('widget_attributes') }}>{% if form.parent.parent == null %}{{ value|raw }}{% endif %}</textarea>
-	<hr class="m-t-xs m-b-sm">
+	{# <hr class="m-t-xs m-b-sm"> #}
 {% endblock filecropper_widget %}
 
 {# {% block multiCollection_widget %}

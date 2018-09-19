@@ -6,6 +6,12 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Doctrine\Common\Collections\ArrayCollection;
+// JMS Serializer
+use JMS\Serializer\Annotation\ExclusionPolicy;
+use JMS\Serializer\Annotation\Expose;
+use JMS\Serializer\Annotation\MaxDepth;
+use JMS\Serializer\Annotation\Groups;
+use JMS\Serializer\Annotation\Accessor;
 
 use Labo\Bundle\AdminBundle\Entity\tier;
 use site\adminsiteBundle\Entity\site;
@@ -14,6 +20,8 @@ use \DateTime;
 
 /**
  * boutique
+ *
+ * @ExclusionPolicy("all")
  *
  * @ORM\Entity(repositoryClass="site\adminsiteBundle\Entity\boutiqueRepository")
  * @ORM\Table(name="boutique", options={"comment":"boutiques du site"})
@@ -32,6 +40,8 @@ class boutique extends tier {
 	 *      minMessage = "Le nom doit comporter au moins {{ limit }} lettres.",
 	 *      maxMessage = "Le nom doit comporter au maximum {{ limit }} lettres."
 	 * )
+	 * @Expose
+	 * @Groups({"complete", "facture"})
 	 */
 	protected $nom;
 
@@ -39,6 +49,8 @@ class boutique extends tier {
 	 * - INVERSE
 	 * @ORM\ManyToMany(targetEntity="site\adminsiteBundle\Entity\site", mappedBy="boutiques")
 	 * @ORM\JoinColumn(nullable=true, unique=false, onDelete="SET NULL")
+	 * @Expose
+	 * @Groups({"complete"})
 	 */
 	protected $sites;
 
@@ -95,6 +107,7 @@ class boutique extends tier {
 	 */
 	public function addSite(site $site) {
 		$this->sites->add($site);
+		$ite->addBoutique($this);
 		return $this;
 	}
 
@@ -104,7 +117,9 @@ class boutique extends tier {
 	 * @return boolean
 	 */
 	public function removeSite(site $site) {
-		return $this->sites->removeElement($site);
+		$r = $this->sites->removeElement($site);
+		$site->removeBoutique($this);
+		return $r;
 	}
 
 	/**

@@ -6,9 +6,16 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Doctrine\Common\Collections\ArrayCollection;
+// JMS Serializer
+use JMS\Serializer\Annotation\ExclusionPolicy;
+use JMS\Serializer\Annotation\Expose;
+use JMS\Serializer\Annotation\MaxDepth;
+use JMS\Serializer\Annotation\Groups;
+use JMS\Serializer\Annotation\Accessor;
 
 use Labo\Bundle\AdminBundle\Entity\baseEntity;
 use Labo\Bundle\AdminBundle\Entity\tier;
+use Labo\Bundle\AdminBundle\Entity\baseevenement;
 use site\UserBundle\Entity\User;
 
 use \DateTime;
@@ -16,6 +23,8 @@ use \Exception;
 
 /**
  * adresse
+ *
+ * @ExclusionPolicy("all")
  *
  * @ORM\Entity(repositoryClass="site\adminsiteBundle\Entity\adresseRepository")
  * @ORM\Table(name="adresse", options={"comment":"adresses du site"})
@@ -40,12 +49,16 @@ class adresse extends baseEntity {
 	 *      minMessage = "Le nom doit comporter au moins {{ limit }} lettres.",
 	 *      maxMessage = "Le nom doit comporter au maximum {{ limit }} lettres."
 	 * )
+	 * @Expose
+	 * @Groups({"complete", "facture"})
 	 */
 	protected $nom;
 
 	/**
 	 * @var string
 	 * @ORM\Column(name="url", type="text", nullable=true, unique=false)
+	 * @Expose
+	 * @Groups({"complete"})
 	 */
 	protected $url;
 
@@ -58,18 +71,24 @@ class adresse extends baseEntity {
 	/**
 	 * @var string
 	 * @ORM\Column(name="adresse", type="text", nullable=true, unique=false)
+	 * @Expose
+	 * @Groups({"complete", "facture"})
 	 */
 	protected $adresse;
 
 	/**
 	 * @var string
 	 * @ORM\Column(name="cp", type="string", length=10, nullable=true, unique=false)
+	 * @Expose
+	 * @Groups({"complete", "facture"})
 	 */
 	protected $cp;
 
 	/**
 	 * @var string
 	 * @ORM\Column(name="ville", type="string", length=255, nullable=true, unique=false)
+	 * @Expose
+	 * @Groups({"complete", "facture"})
 	 */
 	protected $ville;
 
@@ -81,24 +100,31 @@ class adresse extends baseEntity {
 
 	/**
 	 * - INVERSE
-	 * @ORM\OneToOne(targetEntity="site\UserBundle\Entity\User", mappedBy="adresse")
+	 * @ORM\OneToOne(targetEntity="site\UserBundle\Entity\User", mappedBy="adresse", orphanRemoval=true)
 	 * @ORM\JoinColumn(nullable=true, unique=true, onDelete="SET NULL")
 	 */
 	protected $user;
 
 	/**
 	 * - INVERSE
-	 * @ORM\OneToOne(targetEntity="site\UserBundle\Entity\User", mappedBy="adresseLivraison")
+	 * @ORM\OneToOne(targetEntity="site\UserBundle\Entity\User", mappedBy="adresseLivraison", orphanRemoval=true)
 	 * @ORM\JoinColumn(nullable=true, unique=true, onDelete="SET NULL")
 	 */
 	protected $userLivraison;
 
 	/**
 	 * - INVERSE
-	 * @ORM\OneToOne(targetEntity="Labo\Bundle\AdminBundle\Entity\tier", mappedBy="adresse")
+	 * @ORM\OneToOne(targetEntity="Labo\Bundle\AdminBundle\Entity\tier", mappedBy="adresse", orphanRemoval=true)
 	 * @ORM\JoinColumn(nullable=true, unique=true, onDelete="SET NULL")
 	 */
 	protected $tier;
+
+	/**
+	 * - INVERSE
+	 * @ORM\OneToOne(targetEntity="Labo\Bundle\AdminBundle\Entity\baseevenement", mappedBy="adresse", orphanRemoval=true)
+	 * @ORM\JoinColumn(nullable=true, unique=true, onDelete="SET NULL")
+	 */
+	protected $evenement;
 
 
 
@@ -110,6 +136,7 @@ class adresse extends baseEntity {
 		$this->user = null;
 		$this->userLivraison = null;
 		$this->tier = null;
+		$this->evenement = null;
 	}
 
 	public function getId() {
@@ -169,6 +196,7 @@ class adresse extends baseEntity {
 			'user',
 			'userLivraison',
 			'tier',
+			'evenement',
 			);
 		$this->type = null;
 		foreach ($links as $value) {
@@ -341,6 +369,24 @@ class adresse extends baseEntity {
 	 */
 	public function getTier() {
 		return $this->tier;
+	}
+
+	/**
+	 * Set baseevenement - INVERSE
+	 * @param baseevenement $evenement
+	 * @return adresse
+	 */
+	public function setEvenement(baseevenement $evenement = null) {
+		$this->evenement = $evenement;
+		return $this;
+	}    
+
+	/**
+	 * Get baseevenement - INVERSE
+	 * @return baseevenement
+	 */
+	public function getEvenement() {
+		return $this->evenement;
 	}
 
 }

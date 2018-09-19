@@ -6,6 +6,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Labo\Bundle\AdminBundle\services\flashMessage;
+use Labo\Bundle\AdminBundle\services\aeData;
 
 use site\adminsiteBundle\Entity\message;
 use site\adminsiteBundle\Entity\pageweb;
@@ -23,7 +24,7 @@ class DefaultController extends Controller {
 	const SITE_DATA = 'sitedata';
 
 	public function indexAction() {
-		$data['pageweb'] = $this->get('aetools.aeServicePageweb')->getDefaultPage();
+		$data['pageweb'] = $this->get(aeData::PREFIX_CALL_SERVICE.'aeServicePageweb')->getDefaultPage();
 		if(isset($data['pageweb']['id'])) {
 			// $this->get('aetools.aeDebug')->startChrono();
 			$this->pagewebactions($data);
@@ -40,7 +41,7 @@ class DefaultController extends Controller {
 			$locale = $this->get('request')->getLocale();
 			// echo('<p>No data in base : user creation…</p>');
 			// echo('<p><strong>'.$httpHost.' / '.$locale.'</strong></p>');
-			$userService = $this->get('aetools.aeUser');
+			$userService = $this->get(aeData::PREFIX_CALL_SERVICE.'aeServiceUser');
 			$userService->usersExist(true);
 			switch ($httpHost) {
 				case 'http://localhost':
@@ -49,7 +50,8 @@ class DefaultController extends Controller {
 					break;
 				default:
 					// WEB SITE
-					return $this->redirect($domain_admin['reseau'].$domain_admin['prefix'].$domain_admin[''].'/'.$domain_admin['domain'].'.'.$domain_admin['extensions'][0].'/'.$locale.$domain_admin['path'].'/generate');
+					$domain_admin = $this->getParameter('site_domains')['admin'];
+					return $this->redirect($domain_admin['reseau'].$domain_admin['prefix'].'.'.$domain_admin['domain'].'.'.$domain_admin['extensions'][0].'/'.$locale);
 					break;
 			}
 		}
@@ -62,16 +64,16 @@ class DefaultController extends Controller {
 	// public function pagewebCategorieAction($categorieSlug, $params = null) {
 	// 	$data = $this->get('tools_json')->JSonExtract($params);
 	// 	$data['categorie'] = $categorieSlug;
-	// 	$categorie = $this->get('aetools.aeServiceCategorie')->getRepo()->findOneBySlug($categorieSlug);
+	// 	$categorie = $this->get(aeData::PREFIX_CALL_SERVICE.'aeServiceCategorie')->getRepo()->findOneBySlug($categorieSlug);
 	// 	return $this->pagewebPagewebAction($categorie->getGroup_pagewebsChilds()[0], $data);
 	// }
 
 	// public function pagewebPagewebAction($pagewebSlug, $params = null) {
 	// 	$data = $this->get('tools_json')->JSonExtract($params);
-	// 	// $data['pageweb'] = $this->get('aetools.aeServicePageweb')->getDefaultPage();
+	// 	// $data['pageweb'] = $this->get(aeData::PREFIX_CALL_SERVICE.'aeServicePageweb')->getDefaultPage();
 	// 	if(is_object($pagewebSlug)) $data['pageweb'] = $pagewebSlug;
-	// 		else $data['pageweb'] = $this->get('aetools.aeServicePageweb')->getRepo()->findOneBySlug($pagewebSlug);
-	// 	// $data['marques'] = $this->get('aetools.aeServiceBaseEntity')->getRepo('site\adminsiteBundle\Entity\marque')->findAll();
+	// 		else $data['pageweb'] = $this->get(aeData::PREFIX_CALL_SERVICE.'aeServicePageweb')->getRepo()->findOneBySlug($pagewebSlug);
+	// 	// $data['marques'] = $this->get(aeData::PREFIX_CALL_SERVICE.'aeServiceBaseEntity')->getRepo('site\adminsiteBundle\Entity\marque')->findAll();
 	// 	if(is_object($data['pageweb'])) {
 	// 		$this->pagewebactions($data);
 	// 		// chargement de la pageweb
@@ -83,7 +85,7 @@ class DefaultController extends Controller {
 	// 	} else {
 	// 		// si aucune page web… chargement de la page par défaut…
 	// 		return $this->redirectToRoute('sitesite_homepage');
-	// 		// $userService = $this->get('aetools.aeUser');
+	// 		// $userService = $this->get(aeData::PREFIX_CALL_SERVICE.'aeServiceUser');
 	// 		// $userService->usersExist(true);
 	// 		// return $this->redirectToRoute('generate');
 	// 	}
@@ -92,23 +94,23 @@ class DefaultController extends Controller {
 
 	public function categorieAction($itemSlug, $parentSlug = null) {
 		// categorie
-		$data['categorie'] = $this->get('aetools.aeServiceCategorie')->getRepo()->findBySlug($itemSlug)[0];
-		// $data['categorie'] = $this->get('aetools.aeServiceCategorie')->getRepo()->findParentsOfCategorieBySlug($itemSlug, $parentSlug);
+		$data['categorie'] = $this->get(aeData::PREFIX_CALL_SERVICE.'aeServiceCategorie')->getRepo()->findBySlug($itemSlug)[0];
+		// $data['categorie'] = $this->get(aeData::PREFIX_CALL_SERVICE.'aeServiceCategorie')->getRepo()->findParentsOfCategorieBySlug($itemSlug, $parentSlug);
 		// echo('<pre>');var_dump($data['categorie']);die('</pre>');
-		// $data['items'] = $this->get('aetools.aeServiceNested')->getRepo()->findAllItemsByGroup($data['categorie'][0]['id'], 'nesteds', array('article'), self::ACCEPT_ALIAS_ITEMS, self::ADD_ALIAS_ITEMS);
+		// $data['items'] = $this->get(aeData::PREFIX_CALL_SERVICE.'aeServiceNested')->getRepo()->findAllItemsByGroup($data['categorie'][0]['id'], 'nesteds', array('article'), self::ACCEPT_ALIAS_ITEMS, self::ADD_ALIAS_ITEMS);
 		// $data['items'] = $data['categorie']->getAllNestedChildsByGroup('nesteds');
 		// pageweb template
 		if($data['categorie']->getPageweb() != null) $data['pageweb'] = $data['categorie']->getPageweb();
-			else $data['pageweb'] = $this->get('aetools.aeServicePageweb')->getPageBySlug('categorie');
+			else $data['pageweb'] = $this->get(aeData::PREFIX_CALL_SERVICE.'aeServicePageweb')->getPageBySlug('categorie');
 		$this->pagewebactions($data);
 		return $this->render($data['pageweb']["template"], $data);
 	}
 
 	public function pagewebAction($itemSlug, $parentSlug = null) {
-		$data['pageweb'] = $this->get('aetools.aeServicePageweb')->getPageBySlug($itemSlug);
+		$data['pageweb'] = $this->get(aeData::PREFIX_CALL_SERVICE.'aeServicePageweb')->getPageBySlug($itemSlug);
 		if($parentSlug != null) {
-			$data['categorie'] = $this->get('aetools.aeServiceCategorie')->getRepo()->findOneBySlug($parentSlug);
-			// $data['categorie'] = $this->get('aetools.aeServiceNested')->getRepo()->findArrayTree($parentSlug, 'all', null, false, 0, self::FIND_EXTENDED);
+			$data['categorie'] = $this->get(aeData::PREFIX_CALL_SERVICE.'aeServiceCategorie')->getRepo()->findOneBySlug($parentSlug);
+			// $data['categorie'] = $this->get(aeData::PREFIX_CALL_SERVICE.'aeServiceNested')->getRepo()->findArrayTree($parentSlug, 'all', null, false, 0, self::FIND_EXTENDED);
 		}
 		$this->pagewebactions($data);
 		return $this->render($data['pageweb']['template'], $data);
@@ -119,12 +121,12 @@ class DefaultController extends Controller {
 	////////////////////
 
 	public function articleAction($itemSlug, $parentSlug = null) {
-		$data['article'] = $this->get('aetools.aeServiceArticle')->getRepo()->findBySlug($itemSlug)[0];
+		$data['article'] = $this->get(aeData::PREFIX_CALL_SERVICE.'aeServiceArticle')->getRepo()->findBySlug($itemSlug)[0];
 		$data['categorie'] = null;
 		if($parentSlug != null) {
-			$data['categorie'] = $this->get('aetools.aeServiceCategorie')->getRepo()->findBySlug($parentSlug)[0];
+			$data['categorie'] = $this->get(aeData::PREFIX_CALL_SERVICE.'aeServiceCategorie')->getRepo()->findBySlug($parentSlug)[0];
 		} else {
-			$data['categorie'] = $this->get('aetools.aeServiceCategorie')->getRepo()->find($this->getSitedata()['menuArticle_id']);
+			$data['categorie'] = $this->get(aeData::PREFIX_CALL_SERVICE.'aeServiceCategorie')->getRepo()->find($this->getSitedata()['menuArticle_id']);
 		}
 		// foreach($data['article']->getCategorieParents() as $parent) {
 		// 	if((preg_match('#^(article)#', $parent->getType()) && $parentSlug == null) || $parent->getSlug() == $parentSlug) {
@@ -132,15 +134,15 @@ class DefaultController extends Controller {
 		// 		break 1;
 		// 	}
 		// }
-		$data['pageweb'] = $this->get('aetools.aeServicePageweb')->getPageBySlug('article');
+		$data['pageweb'] = $this->get(aeData::PREFIX_CALL_SERVICE.'aeServicePageweb')->getPageBySlug('article');
 		$this->pagewebactions($data);
 		return $this->render($data['pageweb']["template"], $data);
 	}
 
 	public function articlesByCategorieAction($categorieSlug) {
-		$data['categorie'] = $this->get('aetools.aeServiceCategorie')->getRepo()->findOneBySlug($categorieSlug);
+		$data['categorie'] = $this->get(aeData::PREFIX_CALL_SERVICE.'aeServiceCategorie')->getRepo()->findOneBySlug($categorieSlug);
 		// $data['entites'] = $data['categorie']->getAllNestedChildsByClass('article');
-		$data['pageweb'] = $this->get('aetools.aeServicePageweb')->getPageBySlug($itemSlug);
+		$data['pageweb'] = $this->get(aeData::PREFIX_CALL_SERVICE.'aeServicePageweb')->getPageBySlug($itemSlug);
 		$this->pagewebactions($data);
 		return $this->render($data['pageweb']["template"], $data);
 	}
@@ -150,17 +152,17 @@ class DefaultController extends Controller {
 	////////////////////
 
 	public function ficheAction($itemSlug, $parentSlug = null) {
-		$data['fiche'] = $this->get('aetools.aeServiceFiche')->getRepo()->findOneBySlug($itemSlug);
+		$data['fiche'] = $this->get(aeData::PREFIX_CALL_SERVICE.'aeServiceFiche')->getRepo()->findOneBySlug($itemSlug);
 		if($parentSlug != null)
-			$data['categorie'] = $this->get('aetools.aeServiceCategorie')->getRepo()->findOneBySlug($parentSlug);
-		$data['pageweb'] = $this->get('aetools.aeServicePageweb')->getPageBySlug($itemSlug);
+			$data['categorie'] = $this->get(aeData::PREFIX_CALL_SERVICE.'aeServiceCategorie')->getRepo()->findOneBySlug($parentSlug);
+		$data['pageweb'] = $this->get(aeData::PREFIX_CALL_SERVICE.'aeServicePageweb')->getPageBySlug($itemSlug);
 		return $this->render('sitesiteBundle:extended_pages_web:fiche.html.twig', $data);
 	}
 
 	public function fichesByCategorieAction($categorieSlug) {
-		$data['categorie'] = $this->get('aetools.aeServiceCategorie')->getRepo()->findOneBySlug($categorieSlug);
+		$data['categorie'] = $this->get(aeData::PREFIX_CALL_SERVICE.'aeServiceCategorie')->getRepo()->findOneBySlug($categorieSlug);
 		// $data['entites'] = $data['categorie']->getAllNestedChildsByClass('fiche');
-		$data['pageweb'] = $this->get('aetools.aeServicePageweb')->getPageBySlug($itemSlug);
+		$data['pageweb'] = $this->get(aeData::PREFIX_CALL_SERVICE.'aeServicePageweb')->getPageBySlug($itemSlug);
 		$this->pagewebactions($data);
 		return $this->render($data['pageweb']["template"], $data);
 	}
@@ -208,8 +210,9 @@ class DefaultController extends Controller {
 							'text'		=> ucfirst($trans->trans('message.success')),
 						));
 						// envoi mail aux admin (si option User::mailSitemessages == true)
-						$users = $this->getDoctrine()->getManager()->getRepository('Labo\Bundle\AdminBundle\Entity\LaboUser')->findCollaborators($this->getRequest()->getSession()->get('sitedata')['id']);
-						$this->get('aetools.aeEmail')->emailMessage($users, $message);
+						// $collaborateurs = $this->getDoctrine()->getManager()->getRepository('Labo\Bundle\AdminBundle\Entity\LaboUser')->findCollaborators($this->getRequest()->getSession()->get('sitedata')['id']);
+						$this->get('aetools.aeEmail')->emailCollatoratorMessage($message);
+						$this->get('aetools.aeEmail')->emailCopyToUserAfterMessage($message);
 						// nouveau formulaire
 						// info in session…
 						$olddata = $this->getRequest()->getSession()->get('user');
@@ -220,7 +223,7 @@ class DefaultController extends Controller {
 						$this->getRequest()->getSession()->set('user', $olddata);
 
 						$form = $this->createForm(new contactmessageType($this, []), $this->getNewEntity('site\adminsiteBundle\Entity\message'));
-						$data['redirect'] = $this->generateUrl('site_pageweb', array('pagewebSlug' => $data['pageweb']['slug']));
+						$data['redirect'] = $this->generateUrl('site_pageweb_pageweb', array('itemSlug' => $data['pageweb']['slug']));
 					} else {
 						// $data['message_error'] = "message.error";
 						$this->get('flash_messages')->send(array(
@@ -231,11 +234,63 @@ class DefaultController extends Controller {
 					}
 				}
 				$data['message_form'] = $form->createView();
+				// ouvert/fermé
+				$now = new DateTime;
+				$cesoir = new DateTime;
+				$cesoir->modify('tomorrow');
+				$data['ouvert']['next'] = $this->get(aeData::PREFIX_CALL_SERVICE.'aeServiceCalendar')->getRepo()->findNextCal('boutique-de-poncin', 'boutique', $now, 'OUVERT');
+				$data['ouvert']['now'] = $this->get(aeData::PREFIX_CALL_SERVICE.'aeServiceCalendar')->getRepo()->findCalendarsOfItem('boutique-de-poncin', 'boutique', $now, $now, 'OUVERT');
 				break;
 			case 'articles':
 				if(is_string($data['categorie'])) {
-					$data['categorie'] = $this->get('aetools.aeServiceCategorie')->getRepo()->findOneBySlug($data['categorie']);
+					$data['categorie'] = $this->get(aeData::PREFIX_CALL_SERVICE.'aeServiceCategorie')->getRepo()->findOneBySlug($data['categorie']);
 				}
+				break;
+			case 'paniercommande':
+				$livr = new DateTime();
+				$infoDate = $this->get(aeData::PREFIX_CALL_SERVICE.'aeServiceCalendar')->verifDate($livr, 'boutique', 'boutique-de-poncin', 'OUVERT', true)->getData();
+				$infoDate_unserialized = $this->get(aeData::PREFIX_CALL_SERVICE.'aeServiceCalendar')->verifDate($livr, 'boutique', 'boutique-de-poncin', 'OUVERT', false)->getData();
+				// echo('<pre>');var_dump($infoDate);die('</pre>');
+				if(count($infoDate_unserialized['next_open']) > 0) {
+					$data['nextOpen'] = $infoDate_unserialized['next_open'][0];
+					$data['command_form'] = $this->createFormBuilder(null, array('attr' => array('checkdate-url' => $this->generateUrl('panier_commande_verifdate'), 'checkdate-initdata' => json_encode($infoDate))))
+						->setAction($this->generateUrl('panier_pageweb_valid'))
+						->setMethod('POST')
+						->add('date', 'insDatepicker', array(
+							'data' => $data['nextOpen']->getStartDate(),
+							'required' => true,
+							))
+						->add('validdate', 'hidden', array(
+							'data' => $data['nextOpen']->getStartDate()->format(DATE_ATOM),
+							'required' => true,
+							))
+						->add('commandeready', 'hidden', array(
+							'data' => $infoDate_unserialized['commandeready']['matin'] !== null ? $infoDate_unserialized['commandeready']['matin'] : $infoDate_unserialized['commandeready']['aprem'],
+							'required' => true,
+							))
+						->add('demijournee', 'insRadio', array(
+							'required' => true,
+							'label_attr' => array('class' => 'radio-inline'),
+							'choices'  => array(
+								'matin' => 'matin',
+								'après-midi' => 'aprem',
+								),
+							'choices_as_values' => true,
+							'multiple' => false,
+							'expanded' => true,
+							))
+						->add('submit', 'submit', array(
+							'label' => '<i class="fa fa-check fa-fw m-r-xs"></i> VALIDER VOTRE COMMANDE',
+							'attr' => array(
+								'class' => 'btn btn-xs btn-maroon m-l-xs',
+								'pla-enable' => 'globals.panier.quantite > 0',
+								)
+							))
+						->getForm()
+						->createView()
+						;
+				}
+
 				break;
 			default:
 				# code...
@@ -277,10 +332,14 @@ class DefaultController extends Controller {
 		$data['menuNav'] = $this->get('aetools.aeCache')->getCacheNamedFile('menuNavigation', $this->getParameter('cache')['delay']);
 		if($data['menuNav'] === null) {
 			if(isset($this->getSitedata()['menuNav_id'])) {
-				$data['menuNav'] = $this->get('aetools.aeServiceNested')->getRepo()->findArrayTree($this->getSitedata()['menuNav_id'], 'all', null, false, 2, self::FIND_EXTENDED);
+				$data['menuNav'] = $this->get(aeData::PREFIX_CALL_SERVICE.'aeServiceNested')->getRepo()->findArrayTree($this->getSitedata()['menuNav_id'], 'all', null, false, 2, self::FIND_EXTENDED);
 				if(is_array($data['menuNav'])) {
-					$data['menuNav'] = reset($data['menuNav']);
-					$this->get('aetools.aeCache')->cacheNamedFile('menuNavigation', $data['menuNav'], false, true);
+					if(count($data['menuNav']) > 0) {
+						$data['menuNav'] = reset($data['menuNav']);
+						$this->get('aetools.aeCache')->cacheNamedFile('menuNavigation', $data['menuNav'], false, true);
+					} else {
+						$data['menuNav'] = array();
+					}
 				}
 			} else {
 				$data['menuNav'] = array();
@@ -301,7 +360,7 @@ class DefaultController extends Controller {
 		// $this->get('aetools.aeDebug')->startChrono();
 		$data['menuArticle'] = $this->get('aetools.aeCache')->getCacheNamedFile('menuArticle', $this->getParameter('cache')['delay']);
 		if($data['menuArticle'] === null) {
-			$data['menuArticle'] = $this->get('aetools.aeServiceNested')->getRepo()->findArrayTree($this->getSitedata()['menuArticle_id'], 'all', null, false, 2, self::FIND_EXTENDED);
+			$data['menuArticle'] = $this->get(aeData::PREFIX_CALL_SERVICE.'aeServiceNested')->getRepo()->findArrayTree($this->getSitedata()['menuArticle_id'], 'all', null, false, 2, self::FIND_EXTENDED);
 			if(is_array($data['menuArticle'])) {
 				$data['menuArticle'] = reset($data['menuArticle']);
 				$this->get('aetools.aeCache')->cacheNamedFile('menuArticle', $data['menuArticle'], false, true);
@@ -316,7 +375,6 @@ class DefaultController extends Controller {
 	}
 
 	public function miniListeInfoAction($categorieArticles = []) {
-		// $this->get('aetools.aeDebug')->startChrono();
 		if(count((array)$categorieArticles) < 1) {
 			// données de siteDate
 			$categorieArticles = [];
@@ -325,37 +383,27 @@ class DefaultController extends Controller {
 		$data['items'] = array();
 		if(count((array)$categorieArticles) > 0) {
 			foreach((array)$categorieArticles as $key => $value) {
-				$it = $this->get('aetools.aeServiceNested')->getRepo()->findArrayTree($value['id'], 'all', null, false, null, self::FIND_EXTENDED);
-				if(count($it) > 0) $data['items'][$value['id']] = $it[0];
+				$data['items'][$value['id']] = $this->get(aeData::PREFIX_CALL_SERVICE.'aeServiceNested')->getRepo()->find($value['id']);
 			}
 		}
-		// $this->get('aetools.aeDebug')->printChrono('Mini list action', true);
 		return $this->render('sitesiteBundle:blocks:mini-liste-info.html.twig', $data);
 	}
 
 	public function footerTopAction() {
-        // $this->get('aetools.aeDebug')->startChrono();
-		$data['categorieFooters'] = $this->get('aetools.aeCache')->getCacheNamedFile('categorieFooters', $this->getParameter('cache')['delay']);
-		if($data['categorieFooters'] === null) {
-			if(isset($this->getSitedata()['categorieFooters'])) {
-				foreach($this->getSitedata()['categorieFooters'] as $dat) {
-					$it = $this->get('aetools.aeServiceNested')->getRepo()->findArrayTree($dat['id'], 'all', null, false, 1, self::FIND_EXTENDED);
-					if(count($it) > 0) {
-						$data['categorieFooters'][] = $it[0];
-					}
-				}
-				$this->get('aetools.aeCache')->cacheNamedFile('categorieFooters', $data['categorieFooters'], false, true);
-			} else {
-				$data['categorieFooters'] = array();
+		$data['categorieFooters'] = array();
+		if(isset($this->getSitedata()['categorieFooters'])) {
+			foreach($this->getSitedata()['categorieFooters'] as $dat) {
+				$data['categorieFooters'][] = $this->get(aeData::PREFIX_CALL_SERVICE.'aeServiceNested')->getRepo()->find($dat['id']);
 			}
 		}
-		// $this->get('aetools.aeDebug')->printChrono('Get site footer', true);
 		return $this->render('sitesiteBundle:blocks:footerTop.html.twig', $data);
 	}
 
 	public function diaporamaAction($id) {
-		$data['diaporama'] = $this->get('aetools.aeServiceNested')->getRepo()->findArrayTree($id, 'all', null, false, 2, self::FIND_EXTENDED);
-		if(is_array($data['diaporama'])) $data['diaporama'] = reset($data['diaporama']);
+		$data['diaporama'] = $this->get(aeData::PREFIX_CALL_SERVICE.'aeServiceNested')->getRepo()->find($id);
+		// foreach ($data['diaporama']->getGroupNestedsChilds() as $child) {
+			// if(!$this->isGranted($child->getStatut()->getNiveau())) $data['diaporama']->removeGroupNestedsChild($child);
+		// }
 		return $this->render('sitesiteBundle:blocks:diaporama.html.twig', $data);
 	}
 

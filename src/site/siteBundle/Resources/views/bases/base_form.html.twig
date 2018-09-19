@@ -1,11 +1,13 @@
 {% extends 'sitesiteBundle:bases:base_simple.html.twig' %}
 
 {% block css %}
-	{% stylesheets filter='cssrewrite, lessphp, ?yui_css'
+	{% stylesheets filter='cssrewrite, lessphp'
 	'bundles/sitegraphics/bdv/css/bootstrap.min.css'
+	'bundles/sitesite/jquery-ui-1.12.1.custom/jquery-ui.css'
 	'bundles/sitegraphics/bdv/css/font-awesome.min.css'
 	'bundles/laboadmin/framework_inspinia/css/plugins/toastr/toastr.min.css'
 	'bundles/sitegraphics/framework_inspinia/font-awesome/less/font-awesome.less'
+	'bundles/laboadmin/framework_inspinia/select2-4.0.2/dist/css/select2.min.css'
 	'bundles/sitegraphics/bdv/css/animate.css'
 	'bundles/sitegraphics/bdv/css/main2.css'
 	'bundles/sitegraphics/bdv/css/responsive.css'
@@ -14,27 +16,33 @@
 	 %}
 	<link rel="stylesheet" href="{{ asset_url }}" type="text/css" />
 	{% endstylesheets %}
-	{% block ielt9 %}
+{# 	{% block ielt9 %}
 	<!--[if lt IE 9]>
 	<script src="js/html5shiv.js"></script>
 	<script src="js/respond.min.js"></script>
 	<![endif]-->
-	{% endblock ielt9 %}
+	{% endblock ielt9 %} #}
 {% endblock css %}
 
 {% block js %}
-	{% javascripts filter='?yui_js'
-	'bundles/sitegraphics/bdv/js/jquery.js'
+	{% javascripts
+	'bundles/sitesite/jquery-ui-1.12.1.custom/external/jquery/jquery.js'
+	'bundles/sitesite/jquery-ui-1.12.1.custom/jquery-ui.js'
+	'bundles/sitesite/jquery-ui-1.12.1.custom/jquery-ui-i18n.min.js'
 	'bundles/sitegraphics/bdv/js/bootstrap.min.js'
 	'bundles/sitegraphics/bdv/js/jquery.scrollUp.min.js'
 	'bundles/laboadmin/framework_inspinia/js/plugins/toastr/toastr.min.js'
+	'bundles/laboadmin/moment/moment-with-locales.min.js'
+	'bundles/laboadmin/framework_inspinia/select2-4.0.2/dist/js/select2.full.js'
 	'bundles/sitegraphics/bdv/js/main.js'
 	'bundles/sitegraphics/bdv/js/specifics.js'
 	'bundles/laboadmin/framework_inspinia/cropper-master/dist/cropper.js'
 	'bundles/laboadmin/js/inspinia-cropper.js'
 	'bundles/laboadmin/js/inspinia-data-messages.js'
 	'bundles/sitegraphics/fancyapps-fancyBox/source/jquery.fancybox.js'
-    'bundles/sitesite/js/panier.js'
+	'bundles/laboadmin/js/templax.js'
+	'bundles/laboadmin/js/ajaxlive.js'
+	'bundles/sitesite/js/commandepanier.js'
 	 %}
 	<script type="text/javascript" src="{{ asset_url }}"></script>
 	{% endjavascripts %}

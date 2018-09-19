@@ -1,10 +1,22 @@
-{% if app.session.get("version").googleRef is defined %}
+{% set googleRef = 'UA-88935817-1' %}
+{% set test = (app.environment in ['dev', 'test']) or (is_granted('ROLE_TRANSLATOR')) or (app.request.headers.get('host') matches '#^((http|https)://)?test(admin)?\.#') or (app.request.headers.get('host') == localhost) or (googleRef|default(null) == null) %}
+{% if test %}
+<!-- !!! No Google Analytics Script, because: 
+{%- if app.environment in ['dev', 'test'] %} You are in {{ app.environment }} mode {% endif %}
+{% if is_granted('ROLE_TRANSLATOR') %} You are {{ app.user.roles|join(' / ') }} user {% endif %}
+{% if app.request.headers.get('host') matches '#^((http|https)://)?test(admin)?\.#' %} You are in test site version {% endif %}
+{% if app.request.headers.get('host') == localhost %} You are on local ({{ app.request.headers.get('host') }}) site {% endif %}
+{% if googleRef|default(null) == null %} There is no Google ID to reference Analytics {% endif %}
+ -->
+{% else %}
 <script>
-	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-	})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-	ga('create', '{{ app.session.get("version").googleRef }}', 'auto');
-	ga('send', 'pageview');
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', '{{ googleRef }}', 'auto');
+  ga('send', 'pageview');
+
 </script>
 {% endif %}

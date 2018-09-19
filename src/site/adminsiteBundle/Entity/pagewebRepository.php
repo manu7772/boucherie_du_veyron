@@ -40,4 +40,12 @@ class pagewebRepository extends itemRepository {
 		return $qb->getQuery()->getArrayResult();
 	}
 
+	public function findPaniervalid() {
+		$qb = $this->createQueryBuilder(self::ELEMENT);
+		$qb->where($qb->expr()->orX($qb->expr()->like(self::ELEMENT.'.modele', $qb->expr()->literal('%/paniervalid.html.twig'))));
+		$this->contextStatut($qb);
+		return $qb->getQuery()->getOneOrNullresult();
+	}
+
+
 }

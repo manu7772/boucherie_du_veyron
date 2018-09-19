@@ -1,11 +1,5 @@
 twig:
     globals:
-        keywords:
-            title: site.title
-            description: site.description
-            keywords: site.keywords
-        formatDate:      "dd-MM-yyyy"
-        formatDateHeure: "d-m-Y H:i:s"
         # fileFormats:
         #     pdf:        pdf
         #     jpg:        image
@@ -28,8 +22,7 @@ twig:
                 icon: 'entite.webmaster'
                 level2: 
                     sadminHome:
-                        nom: 'roles.ROLE_SUPER_ADMIN'
-                        trans_domain: User
+                        nom: 'Tableau de bord'
                         path: 'siteadmin_sadmin_index'
                     generate:
                         nom: 'install.name'
@@ -46,6 +39,9 @@ twig:
                     panier:
                         nom: 'Testpanier'
                         path: 'siteadmin_sadmin_panier'
+                    sessions:
+                        nom: 'Session data'
+                        path: 'siteadmin_sadmin_sessiondata'
             categories:
                 role: 'ROLE_EDITOR'
                 nom: 'name_s'
@@ -187,6 +183,15 @@ twig:
                     #         path: 'siteadmin_entite'
                     #         params:
                     #             entite: reseau
+                    facture:
+                        role: 'ROLE_ADMIN'
+                        nom: 'name_s'
+                        trans_domain: facture
+                        icon: 'entite.facture'
+                        path: 
+                            path: 'siteadmin_entite'
+                            params:
+                                entite: facture
                     tauxTva:
                         role: 'ROLE_ADMIN'
                         nom: 'name_s'
@@ -196,6 +201,34 @@ twig:
                             path: 'siteadmin_entite'
                             params:
                                 entite: tauxTva
+            evenement:
+                role: 'ROLE_EDITOR'
+                nom: 'name_s'
+                trans_domain: evenement
+                icon: 'entite.evenement'
+                path: 'siteadmin_homepage'
+                level2: 
+                    evenements:
+                        role: 'ROLE_EDITOR'
+                        nom: 'name_s'
+                        trans_domain: evenement
+                        icon: 'entite.evenement'
+                        path: 
+                            path: 'siteadmin_entite'
+                            params:
+                                entite: evenement
+                    # monagenda:
+                    #     role: 'ROLE_EDITOR'
+                    #     nom: 'mon agenda'
+                    #     trans_domain: calendar
+                    #     icon: 'entite.calendar'
+                    #     path: 
+                    #         path: 'siteadmin_entite_type'
+                    #         params:
+                    #             entite: calendartier
+                    #             type_related: _self
+                    #             type_field: nom
+                    #             type_values: 'OUVERT'
             pageweb:
                 role: 'ROLE_EDITOR'
                 nom: 'name_s'
@@ -420,20 +453,27 @@ twig:
                             path: 'siteUser_users'
                             params:
                                 type: ROLE_USER
-                    Traducteur:
-                        nom: 'roles.ROLE_TRANSLATOR'
+                    Testeur:
+                        nom: 'roles.ROLE_TESTER'
                         trans_domain: User
                         path: 
                             path: 'siteUser_users'
                             params:
-                                type: ROLE_TRANSLATOR
-                    Editeur:
-                        nom: 'roles.ROLE_EDITOR'
-                        trans_domain: User
-                        path: 
-                            path: 'siteUser_users'
-                            params:
-                                type: ROLE_EDITOR
+                                type: ROLE_TESTER
+                    # Traducteur:
+                    #     nom: 'roles.ROLE_TRANSLATOR'
+                    #     trans_domain: User
+                    #     path: 
+                    #         path: 'siteUser_users'
+                    #         params:
+                    #             type: ROLE_TRANSLATOR
+                    # Editeur:
+                    #     nom: 'roles.ROLE_EDITOR'
+                    #     trans_domain: User
+                    #     path: 
+                    #         path: 'siteUser_users'
+                    #         params:
+                    #             type: ROLE_EDITOR
                     Administrateur:
                         nom: 'roles.ROLE_ADMIN'
                         trans_domain: User
@@ -449,25 +489,25 @@ twig:
                             path: 'siteUser_users'
                             params:
                                 type: ROLE_SUPER_ADMIN
-                    images_User:
-                        nom: 'owner.User:avatar'
-                        trans_domain: image
-                        icon: 'entite.image'
-                        path: 
-                            path: 'siteadmin_entite_type'
-                            params:
-                                entite: image
-                                type_related: _self
-                                type_field: owner
-                                type_values: User
-                    Adresses:
-                        nom: 'name_s'
-                        trans_domain: adresse
-                        icon: 'entite.adresse'
-                        path: 
-                            path: siteadmin_entite
-                            params:
-                                entite: adresse
+                    # images_User:
+                    #     nom: 'owner.User:avatar'
+                    #     trans_domain: image
+                    #     icon: 'entite.image'
+                    #     path: 
+                    #         path: 'siteadmin_entite_type'
+                    #         params:
+                    #             entite: image
+                    #             type_related: _self
+                    #             type_field: owner
+                    #             type_values: User
+                    # Adresses:
+                    #     nom: 'name_s'
+                    #     trans_domain: adresse
+                    #     icon: 'entite.adresse'
+                    #     path: 
+                    #         path: siteadmin_entite
+                    #         params:
+                    #             entite: adresse
             messages:
                 role: %restrict_admin%
                 nom: name_s

@@ -24,6 +24,13 @@ parameters:
                     - [16, 16]
                 adminLogo:
                     - [137, 52]
+            ### EVENEMENT
+            evenement:
+                image:
+                    # - null
+                    - [2048, 1024]
+                    - [1024, 768]
+                    - [768, 1024]
             ### ITEM
             item:
                 image:

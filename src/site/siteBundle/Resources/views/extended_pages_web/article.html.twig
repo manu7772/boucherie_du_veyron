@@ -14,7 +14,7 @@
 			{{ render(controller('sitesiteBundle:Default:menuArticle')) }}
 			{% endblock menuArticle %}
 
-			{% if article %}
+			{% if article and isScreenable(article) %}
 			<div class="col-sm-9 col-md-9 padding-left-resp"><!--colonne right-->
 				<div class="content-page-right">
 					<h2 class="title">
@@ -56,26 +56,16 @@
 								<h2 class="product-information-price">{{ articlePrix(article)|raw }}</h2>
 								{% else %}
 								<h2 class="product-information-price"><small>Prix sur devis</small></h2>
-								{# <p><a href="#">Demander un devis</a></p> #}
 								{% endif %}
 
-								{% if marketplace.vente and article.vendable and not article.surdevis %}
-								<div class="btn-group order-group commande-cmd" role="group" aria-label="..." data-article='{{ dataForPanier(article) }}'>
-									<button type="button" class="btn btn-default btn-commander"><i class="fa fa-shopping-cart fa-flip-horizontal"></i> Commander</button>
-									<input class="command_quantity" type="text" name="quantity" value="{{ article.defaultquantity }}{% if article.unit != null %} {{ shortUnit(article.unit) }}{% endif %}" autocomplete="off" size="10">
-									<span class="btn-quantity">
-										<a class="btn quantity-top"><i class="fa fa-angle-up"></i></a>
-										<a class="btn quantity-bottom"><i class="fa fa-angle-down"></i></a>
-									</span>
-								</div>
-								{% endif %}
+								{{ articles_macros.blockPrixSansTitre(article) }}
 							</div><!--/product-information-->
 						</div><!--/col-sm-6-->
 					</div><!--/product-details-->
 					
 					<!-- -->
-					{% set ficherecettes = article.group_articleFicherecette_childs %}
-					{% set ficheboissons = article.group_articleFicheboisson_childs %}
+					{% set ficherecettes = removeNonScreenable(article.group_articleFicherecette_childs) %}
+					{% set ficheboissons = removeNonScreenable(article.group_articleFicheboisson_childs) %}
 					<div class="category-tab shop-details-tab"><!--category-tab-->
 						<div class="col-sm-12">
 							<ul class="nav nav-tabs">
@@ -101,12 +91,12 @@
 									{# </div> #}
 									{% endif %}
 								</div>
-								{% if article.group_articles_childs|length > 0 %}
+								{% if removeNonScreenable(article.group_articles_childs)|length > 0 %}
 								<div class="col-sm-12 p-b-sm">
 									<h4>À voir également…</h4>
 								</div>
 								{# <div class="col-sm-6 padding-left-right-null"> #}
-								{% for artChild in article.group_articles_childs %}
+								{% for artChild in removeNonScreenable(article.group_articles_childs) %}
 									{{ articles_macros.boxArticle(artChild, null, {'buy': 'off', 'col': 'on'}) }}
 								{% endfor %}
 								{# </div> #}
@@ -155,14 +145,13 @@
 				</div>
 			</div>
 			{% else %}
-			<h6 class="text-center m-t-lg">Ce produit n'existe pas.</h6>
+			<h6 class="text-center m-t-lg">Ce produit n'est pas disponible.</h6>
 			{% endif %}
 
 		</div>
 	</div>
-	{# {{ dump(categorie) }} #}
 </section>
 
-	{# {{ render(controller('sitesiteBundle:Default:miniListeInfo')) }}     #}
+	{{ render(controller('sitesiteBundle:Default:miniListeInfo')) }}    
 
 {% endblock mainContainer %}

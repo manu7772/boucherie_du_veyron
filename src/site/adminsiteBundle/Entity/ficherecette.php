@@ -7,7 +7,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Doctrine\Common\Collections\ArrayCollection;
 
-use site\adminsiteBundle\Entity\fiche;
+use Labo\Bundle\AdminBundle\Entity\fiche;
 
 use \DateTime;
 
@@ -59,6 +59,13 @@ class ficherecette extends fiche {
 		$this->setNiveau($this->getDefaultNiveau()); // Niveau par défaut
 		$this->setDuree($this->getDefaultDuree());
 		$this->setTypentite(2);
+	}
+
+	/**
+	 * @ORM\PostLoad
+	 */
+	public function postLoad() {
+		$this->listeTypentites = array(1 => 'boisson', 2 => 'recette');
 	}
 
 	/**

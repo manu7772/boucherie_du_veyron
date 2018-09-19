@@ -6,11 +6,16 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Doctrine\Common\Collections\ArrayCollection;
+use JMS\Serializer\Annotation\ExclusionPolicy;
+use JMS\Serializer\Annotation\Expose;
+use JMS\Serializer\Annotation\Groups;
 
 use Labo\Bundle\AdminBundle\Entity\baseEntity;
 
 /**
  * tauxTva
+ *
+ * @ExclusionPolicy("all")
  *
  * @ORM\Entity(repositoryClass="site\adminsiteBundle\Entity\tauxTvaRepository")
  * @ORM\Table(name="tauxTva", options={"comment":"taux de TVA du site"})
@@ -37,6 +42,8 @@ class tauxTva extends baseEntity {
 	 *      minMessage = "Le nom doit comporter au moins {{ limit }} lettres.",
 	 *      maxMessage = "Le nom doit comporter au maximum {{ limit }} lettres."
 	 * )
+	 * @Expose
+	 * @Groups({"complete", "facture"})
 	 */
 	protected $nom;
 
@@ -49,6 +56,8 @@ class tauxTva extends baseEntity {
 	/**
 	 * @var float
 	 * @ORM\Column(name="taux", type="float", nullable=false, unique=true)
+	 * @Expose
+	 * @Groups({"complete", "facture"})
 	 */
 	protected $taux;
 

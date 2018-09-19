@@ -98,6 +98,16 @@ services:
 
 
     #######################
+    ### SESSION DATA    ###
+    #######################
+
+    # fonctionnalités de SESSION
+    aetools.aeServiceSessiondata:
+        class: %ae_services%aeServiceSessiondata
+        arguments: [@service_container]
+
+
+    #######################
     ### ROLES           ###
     #######################
 
@@ -181,10 +191,23 @@ services:
     aetools.aeServiceMessage:
         class: %site_services%aeServiceMessage
         arguments: [@service_container]
+    aetools.aeServiceMessageuser:
+        class: %ae_services%aeServiceMessageuser
+        arguments: [@service_container]
 
     # service panier
     aetools.aeServicePanier:
         class: %ae_services%aeServicePanier
+        arguments: [@service_container]
+
+    # service calendar
+    aetools.aeServiceCalendar:
+        class: %ae_services%aeServiceCalendar
+        arguments: [@service_container]
+
+    # service facture
+    aetools.aeServiceFacture:
+        class: %ae_services%aeServiceFacture
         arguments: [@service_container]
 
 
@@ -217,8 +240,13 @@ services:
     #######################
 
     # service tier
-    aetools.aeServiceFiche:
+    aetools.aeServiceTier:
         class: %ae_services%aeServiceTier
+        arguments: [@service_container]
+
+    # service boutique
+    aetools.aeServiceBoutique:
+        class: %site_services%aeServiceBoutique
         arguments: [@service_container]
 
     #######################
@@ -265,7 +293,7 @@ services:
 
     # TWIG functions and filters for texts
     aetools.twigToolsTextutilities:
-        class: %ae_services%twigToolsTextutilities
+        class: %site_services%twigToolsTextutilities
         arguments: [@service_container]
         tags:
             - { name: twig.extension }
@@ -320,6 +348,12 @@ services:
         # arguments: [@service_container]
         tags:
             - { name: kernel.event_listener, event: kernel.controller, method: load }
+
+    aetools.maintenance:
+        class: %ae_services%MaintenanceListener
+        arguments: [@service_container]
+        tags:
+            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
 
 
     ###################################

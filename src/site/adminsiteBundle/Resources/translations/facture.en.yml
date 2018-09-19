@@ -1,0 +1,31 @@
+name_s: invoices
+name: invoice
+not_found: 'no invoice found'
+x_found: '{0} no invoice found|{1} 1 invoice found|[2,+Inf] %count% invoices found'
+create: 'create new invoice'
+create_btn: 'new invoice'
+backlist: 'back to list of invoices'
+backlist_btn: 'back to list'
+dontexist: 'this invoice does not exist'
+moredetails: 'more details on %name%'
+existe: this invoice already exists
+grants:
+    no_access: You are not granted to access to the invoice<br>"%name%"
+form:
+    select: Select…
+state:
+    preparation: in preparation
+    devis: devis
+    valid: valid
+    archived: archived
+    canceled: canceled
+    test: test
+    TEMP: temporary-basket
+fields:
+    id: id
+    user: user
+    position: position
+    state: state
+    created: created
+    panier: basket
+    frozenuser: frozen user

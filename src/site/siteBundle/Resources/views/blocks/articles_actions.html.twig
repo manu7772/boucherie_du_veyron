@@ -7,6 +7,7 @@
 #}
 
 {% macro baseBoxArticle(item, categorie, params) %}
+	{% import _self as self %}
 	{% import 'sitesiteBundle:blocks:actions.html.twig' as actions %}
 	{% import 'sitesiteBundle:blocks:blocks_actions.html.twig' as blocks_actions %}
 	{% set EDITORMODE = (app.environment in ['DEV', 'TEST']) or (is_granted('ROLE_EDITOR')) %}
@@ -15,21 +16,7 @@
 			<div class="productinfo">
 				<a {{ actions.elementHref(item, categorie|default(null))|raw }}>{{ blocks_actions.imageprint(item, 275, null) }}</a>
 				<div class="product-bottom">
-					<div class="btn-group order-group for-product commande-cmd" role="group" data-article="{{ dataForPanier(item) }}">
-						{% if not item.surdevis %}
-						<h2>{{ articlePrix(item)|raw }}</h2>
-						{% else %}
-						<h2 class="small">Sur devis</h2>
-						{% endif %}
-						{% if marketplace.vente and item.vendable and (not item.surdevis) and params.buy|default('on') == 'on' %}
-						<button type="button" class="btn btn-default btn-commander"><i class="fa fa-shopping-cart fa-flip-horizontal"></i></button>
-						<input class="command_quantity" type="text" name="quantity" value="{{ item.defaultquantity }}{% if item.unit != null %} {{ shortUnit(item.unit) }}{% endif %}" autocomplete="off" size="10">
-						<span class="btn-quantity">
-							<a class="btn quantity-top"><i class="fa fa-angle-up"></i></a>
-							<a class="btn quantity-bottom"><i class="fa fa-angle-down"></i></a>
-						</span>
-						{% endif %}
-					</div>
+				{{ self.blockPrix(item, params) }}
 				</div>
 			</div>
 			<p class="tab-name-product elipsis">
@@ -44,7 +31,7 @@
 
 {% macro boxArticle(item, categorie, params, classes) %}
 {# Affichage d'une box pour articles #}
-{% if item.shortName|default(item.className|default(null)) matches '#^article#' %}
+{% if item.shortName|default(item.className|default(null)) matches '#^article#' and isScreenable(item) %}
 {% import _self as self %}
 	{% if params.col|default('on') != 'off' %}
 	<div class="col-sm-6 col-md-3 {{ classes|default([])|join(' ') }}">
@@ -58,7 +45,7 @@
 
 {% macro boxArticleProducts(item, categorie, params, classes) %}
 {# Affichage d'une box pour articles #}
-{% if item.shortName|default(item.className|default(null)) matches '#^article#' %}
+{% if item.shortName|default(item.className|default(null)) matches '#^article#' and isScreenable(item) %}
 {% import _self as self %}
 	{% if params.col|default('on') != 'off' %}
 	<div class="col-sm-6 col-md-4 col-lg-4 {{ classes|default([])|join(' ') }}">
@@ -69,4 +56,62 @@
 	{% endif %}
 {% endif %}
 {% endmacro %}
+
+{% macro blockPrix(item, params) %}
+	{% set panierable = marketplace.vente and item.isPanierable and params.buy|default('on') == 'on' and app.user|default(null) != null %}
+	{% import _self as self %}
+	<div class="btn-group order-group for-product{% if panierable %} commande-cmd panier-data{% endif %}" role="group" {{ self.paramsLine('add', item, 1) }}>
+		{% if not item.surdevis %}
+		<h2>{{ articlePrix(item)|raw }}</h2>
+		{% else %}
+		<h2 class="small">Sur devis</h2>
+		{% endif %}
+		{% if panierable %}
+		{{ self.blockBlockPrix(item) }}
+		{% endif %}
+	</div>
+{% endmacro %}
+
+{% macro blockPrixSansTitre(item, params) %}
+	{% if marketplace.vente and item.isPanierable and params.buy|default('on') == 'on' and app.user|default(null) != null %}
+	{% import _self as self %}
+	<div class="btn-group order-group commande-cmd panier-data" role="group" {{ self.paramsLine('add', item, 1) }}>
+		{% import _self as self %}
+		{{ self.blockBlockPrix(item) }}
+	</div>
+	{% endif %}
+{% endmacro %}
+
+{% macro blockPrixDiapo(item, params) %}
+	{% if marketplace.vente and item.isPanierable and params.buy|default('on') == 'on' and app.user|default(null) != null %}
+	{% import _self as self %}
+	<div class="btn-group order-group in-slide commande-cmd panier-data" role="group" {{ self.paramsLine('add', item, 1) }}>
+		{% import _self as self %}
+		{{ self.blockBlockPrix(item) }}
+	</div>
+	{% endif %}
+{% endmacro %}
+
+
+{% macro blockBlockPrix(item) %}
+	{% import _self as self %}
+	<button type="button" class="btn btn-default btn-commander panier-action"><i class="fa for-pulse fa-shopping-cart fa-flip-horizontal fa-fw"></i></button>
+	<input class="command_quantity" type="text" name="quantity" value="{{ item.defaultquantity }}{% if item.unit != null %} {{ shortUnit(item.unit) }}{% endif %}" autocomplete="off" size="8">
+	<span class="btn-quantity">
+		<a class="btn quantity-top"><i class="fa fa-angle-up fa-fw"></i></a>
+		<a class="btn quantity-bottom"><i class="fa fa-angle-down fa-fw"></i></a>
+	</span>
+{% endmacro %}
+
+{%- macro paramsLine(action, item, number) -%}
+	data-number="{{ number|default(1) }}" data-action="{{ action|default('add') }}" data-article="{{ item|default(null)|serialize('json', ajax_serialization_context(['ajaxlive'], true)) }}" panier-action-url='{{ path('panier_action') }}' data-user='{{ app.user|serialize('json', ajax_serialization_context(['ajaxlive'], true)) }}'
+{%- endmacro -%}
+
+
+
+
+
+
+
+
 

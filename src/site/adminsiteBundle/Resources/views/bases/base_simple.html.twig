@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="{{ app.request.locale|default(app.request.defaultLocale) }}">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>{% block title %}ADMINISTRATION WEBSITE{% endblock title %}</title>
+		{% block stylesheets %}
+		{% stylesheets filter='cssrewrite, lessphp'
+		'@jquery_ui_css'
+		'bundles/laboadmin/Inspinia_jan2017/Static_Full_Version/css/bootstrap.css'
+		'bundles/laboadmin/Inspinia_jan2017/Static_Full_Version/font-awesome/css/font-awesome.css'
+		'bundles/laboadmin/Inspinia_jan2017/Static_Full_Version/css/animate.css'
+		'bundles/laboadmin/framework_inspinia/css/plugins/toastr/toastr.min.css'
+		'bundles/laboadmin/framework_inspinia/bootstrap-colorpicker-master/dist/css/bootstrap-colorpicker.css'
+		'bundles/laboadmin/framework_inspinia/select2-4.0.2/dist/css/select2.min.css'
+		'bundles/laboadmin/framework_inspinia/css/plugins/summernote/summernote.css'
+		'bundles/laboadmin/framework_inspinia/css/plugins/summernote/summernote-bs3.css'
+		'bundles/laboadmin/framework_inspinia/css/plugins/datapicker/datepicker3.css'
+		'bundles/laboadmin/framework_inspinia/css/plugins/jasny/jasny-bootstrap.min.css'
+		'bundles/laboadmin/framework_inspinia/css/plugins/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css'
+		'bundles/laboadmin/Inspinia_jan2017/Static_Full_Version/css/plugins/iCheck/custom.css'
+		'bundles/laboadmin/fullcalendar-3.1.0/fullcalendar.css'
+		'bundles/laboadmin/css/switchery_mini.css'
+		'bundles/siteadminsite/Inspinia_jan2017/LESS/style.less'
+		output='css/labo/base_simple.css' %}
+		<link rel="stylesheet" href="{{ asset_url }}" type="text/css" />
+		{% endstylesheets %}
+		{% endblock stylesheets %}
+		<!-- Favicone Icon -->
+		{% block favicon %}
+		{{ include('LaboAdminBundle:blocks:favicon.html.twig') }}
+		{% endblock favicon %}
+	</head>
+	{% set bodyclass = (bodyclass|default([]))|merge([app.user.admintheme|default('skin-0')]) %}
+	<body{% block bodyattr %} class="{{ bodyclass|join(' ') }}"{% endblock bodyattr %}>
+		<span class="sqblock-wrapper" style="display:none;">
+			{% block SQBlock %}
+			{% endblock SQBlock %}
+		</span>
+		<div id="wrapper">
+			{% block body %}
+			{% endblock body %}
+		</div>
+		{% block hiddendata %}
+			{{ include('LaboAdminBundle:blocks:hidden-data.html.twig') }}
+		{% endblock hiddendata %}
+		{% block javascripts %}
+		{% javascripts
+		'@allJquery_js'
+		'@bootstrap_js'
+		'bundles/laboadmin/framework_inspinia/js/plugins/metisMenu/jquery.metisMenu.js'
+		'bundles/laboadmin/framework_inspinia/js/plugins/slimscroll/jquery.slimscroll.js'
+		'bundles/laboadmin/framework_inspinia/js/inspinia.js'
+		'bundles/laboadmin/framework_inspinia/js/plugins/pace/pace.min.js'
+		'bundles/laboadmin/framework_inspinia/js/plugins/jquery-ui/jquery-ui.js'
+		'bundles/laboadmin/init/init-tooltips-compatibility.js'
+		'bundles/laboadmin/framework_inspinia/js/plugins/toastr/toastr.min.js'
+		'bundles/laboadmin/framework_inspinia/select2-4.0.2/dist/js/select2.full.js'
+		'bundles/laboadmin/framework_inspinia/select2-sortable/select2.sortable.js'
+		'bundles/laboadmin/framework_inspinia/bootstrap-colorpicker-master/dist/js/bootstrap-colorpicker.js'
+		'bundles/laboadmin/framework_inspinia/js/plugins/summernote/summernote.js'
+		'bundles/laboadmin/framework_inspinia/js/plugins/datapicker/bootstrap-datepicker.js'
+		'bundles/laboadmin/framework_inspinia/js/plugins/jasny/jasny-bootstrap.min.js'
+		'bundles/laboadmin/framework_inspinia/js/plugins/nestable/jquery.nestable.js'
+		'bundles/laboadmin/framework_inspinia/js/plugins/switchery/switchery.js'
+		'bundles/laboadmin/Inspinia_jan2017/Static_Full_Version/js/plugins/iCheck/icheck.min.js'
+		'bundles/laboadmin/moment/moment-with-locales.min.js'
+		'bundles/laboadmin/fullcalendar-3.1.0/fullcalendar.js'
+		'bundles/laboadmin/fullcalendar-3.1.0/locale-all.js'
+		'bundles/laboadmin/js/inspinia-help.js'
+		'bundles/laboadmin/js/inspinia-data-messages.js'
+		'bundles/laboadmin/js/inspinia-languages.js'
+		'bundles/laboadmin/js/inspinia-modales.js'
+		'bundles/laboadmin/js/inspinia-effects.js'
+		'bundles/laboadmin/js/inspinia-icon-wait.js'
+        'bundles/laboadmin/js/templax.js'
+        'bundles/laboadmin/js/ajaxlive.js'
+        'bundles/laboadmin/js/calendar.js'
+		output='js/labo/base_simple.js' %}
+		<script type="text/javascript" src="{{ asset_url }}"></script>
+		{% endjavascripts %}
+		{% endblock javascripts %}
+		<script type="text/javascript">
+		jQuery(document).ready(function($) {
+			{% block end_javascripts %}
+			{% endblock end_javascripts %}
+		});
+		</script>
+	</body>
+</html>
+
+{# select2 sortable : https://github.com/vafour/select2-sortable #}
+
+{# --> compatibilité jquery et color-picker/summernote
+		'bundles/laboadmin/framework_inspinia/css/plugins/iCheck/custom.css'
+
+		'bundles/laboadmin/framework_inspinia/js/plugins/iCheck/icheck.min.js'
+
+#}

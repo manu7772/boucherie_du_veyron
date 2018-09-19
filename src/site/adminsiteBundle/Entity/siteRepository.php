@@ -18,7 +18,7 @@ use Labo\Bundle\AdminBundle\services\aeData;
  */
 class siteRepository extends EntityBaseRepository {
 
-	public function findSiteData($siteDataId = null, $delay = '-15 MINUTES') {
+	public function findSiteData($siteDataId = null, $delay = '-5 MINUTES') {
 		// if(is_object($this->aeDebug)) $this->aeDebug->startChrono();
 		$result = null;
 		if(is_object($this->aeCache) && $siteDataId == null) {

@@ -54,8 +54,9 @@ jQuery(document).ready(function($) {
 		        ["para", ["ul", "ol", "paragraph"]],
 		        // ["height", ["height"]],
 		        // ["table", ["table"]],
-		        ["insert", ["link", "picture"]],
-		        // ["view", ["fullscreen", "codeview"]],
+		        ["insert", ["link", "picture", "video"]],
+                // ["view", ["fullscreen", "codeview"]],
+		        ["view", ["codeview"]],
 		        ["help", ["help"]]
 		    ]
 	});

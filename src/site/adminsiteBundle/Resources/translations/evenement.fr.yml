@@ -1,0 +1,34 @@
+name_s: évènements
+name: évènement
+not_found: 'aucun évènement trouvé'
+x_found: '{0} aucun évènement trouvé|{1} 1 évènement trouvé|[2,+Inf] %count% évènements trouvés'
+create: 'créer un nouvel évènement'
+create_btn: 'nouvel évènement'
+created: '{0} Aucun évènement créé|{1} %count% évènement a été créé : %list%|[2,+Inf] %count% évènements ont été créés : %list%'
+new: '{0,1} nouvel évènement|[2,+Inf] %count% nouveaux évènements'
+backlist: 'retour à la liste des évènements'
+backlist_btn: 'retour liste'
+dontexist: 'cet évènement n''existe pas'
+existe: 'cet évènement existe déjà'
+suppression: 'le évènement %name% a été supprimé'
+moredetails: 'plus de détails sur %name%'
+form:
+    select: Sélectionnez…
+fields:
+    id: id
+    nom: nom
+    created: création
+    updated: mis à jour
+    jamais: aucune modification
+    icon: icône
+    descriptif: descriptif
+    group_nestedsParents: categories
+    group_evenementsChilds: évènements liés
+    image: visuel
+    telfixe: téléphone fixe
+    mobile: téléphone mobile
+    email: email
+    adresse: lieu
+    couleur: couleur
+    debut: date de début
+    fin: date de fin

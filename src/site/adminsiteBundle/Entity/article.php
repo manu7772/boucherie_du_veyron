@@ -6,6 +6,12 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Doctrine\Common\Collections\ArrayCollection;
+// JMS Serializer
+use JMS\Serializer\Annotation\ExclusionPolicy;
+use JMS\Serializer\Annotation\Expose;
+use JMS\Serializer\Annotation\MaxDepth;
+use JMS\Serializer\Annotation\Groups;
+use JMS\Serializer\Annotation\Accessor;
 
 use Labo\Bundle\AdminBundle\Entity\item;
 use site\adminsiteBundle\Entity\marque;
@@ -17,11 +23,23 @@ use Labo\Bundle\AdminBundle\services\aeUnits;
 /**
  * article
  *
+ * @ExclusionPolicy("all")
+ *
  * @ORM\Entity(repositoryClass="site\adminsiteBundle\Entity\articleRepository")
  * @ORM\Table(name="article", options={"comment":"articles du site"})
  * @ORM\HasLifecycleCallbacks
  */
 class article extends item {
+
+	/**
+	 * @var integer
+	 * @ORM\Id
+	 * @ORM\Column(name="id", type="integer")
+	 * @ORM\GeneratedValue(strategy="AUTO")
+	 * @Expose
+	 * @Groups({"complete", "ajaxlive", "facture"})
+	 */
+	protected $id;
 
 	/**
 	 * @var string
@@ -30,6 +48,8 @@ class article extends item {
 	 *      max = "100",
 	 *      maxMessage = "La référence frabricant doit comporter au maximum {{ limit }} lettres."
 	 * )
+	 * @Expose
+	 * @Groups({"complete", "facture"})
 	 */
 	protected $refFabricant;
 
@@ -40,66 +60,96 @@ class article extends item {
 	 *      max = "60",
 	 *      maxMessage = "L'accroche doit comporter au maximum {{ limit }} lettres."
 	 * )
+	 * @Expose
+	 * @Groups({"complete"})
 	 */
 	protected $accroche;
 
 	/**
 	 * @var boolean
 	 * @ORM\Column(name="vendable", type="boolean", nullable=false, unique=false)
+	 * @Expose
+	 * @Groups({"complete"})
 	 */
 	protected $vendable;
 
 	/**
 	 * @var boolean
 	 * @ORM\Column(name="surdevis", type="boolean", nullable=false, unique=false)
+	 * @Expose
+	 * @Groups({"complete"})
 	 */
 	protected $surdevis;
 
 	/**
+	 * @var boolean
+	 * @ORM\Column(name="groupbasket", type="boolean", nullable=false, unique=false)
+	 * @Expose
+	 * @Groups({"complete", "ajaxlive", "facture"})
+	 */
+	protected $groupbasket;
+
+	/**
 	 * @var float
 	 * @ORM\Column(name="prix", type="decimal", scale=2, nullable=true, unique=false)
+	 * @Expose
+	 * @Groups({"complete", "ajaxlive", "facture"})
 	 */
 	protected $prix;
 
 	/**
 	 * @var float
 	 * @ORM\Column(name="prixHT", type="decimal", scale=2, nullable=true, unique=false)
+	 * @Expose
+	 * @Groups({"complete", "ajaxlive", "facture"})
 	 */
 	protected $prixHT;
 
 	/**
 	 * @var string
-	 * @ORM\Column(name="unitprix", type="string", length=8, nullable=true, unique=false)
+	 * @ORM\Column(name="unitprix", type="string", length=8, nullable=false, unique=false)
+	 * @Expose
+	 * @Groups({"complete", "ajaxlive", "facture"})
 	 */
 	protected $unitprix;
 
 	/**
 	 * @var string
-	 * @ORM\Column(name="unit", type="string", length=8, nullable=true, unique=false)
+	 * @ORM\Column(name="unit", type="string", length=8, nullable=false, unique=false)
+	 * @Expose
+	 * @Groups({"complete", "ajaxlive"})
 	 */
 	protected $unit;
 
 	/**
 	 * @var integer
 	 * @ORM\Column(name="defaultquantity", type="integer", nullable=false, unique=false)
+	 * @Expose
+	 * @Groups({"complete", "ajaxlive"})
 	 */
 	protected $defaultquantity;
 
 	/**
 	 * @var integer
 	 * @ORM\Column(name="maxquantity", type="integer", nullable=true, unique=false)
+	 * @Expose
+	 * @Groups({"complete", "ajaxlive"})
 	 */
 	protected $maxquantity;
 
 	/**
 	 * @var integer
 	 * @ORM\Column(name="minquantity", type="integer", nullable=true, unique=false)
+	 * @Expose
+	 * @Groups({"complete", "ajaxlive"})
 	 */
 	protected $minquantity;
 
 	/**
 	 * @var integer
 	 * @ORM\Column(name="increment", type="integer", nullable=false, unique=false)
+	 * @Expose
+	 * @Groups({"complete", "ajaxlive"})
 	 */
 	protected $increment;
 
@@ -107,12 +157,16 @@ class article extends item {
 	 * @var string
 	 * @ORM\ManyToOne(targetEntity="site\adminsiteBundle\Entity\tauxTva", cascade={"persist"})
 	 * @ORM\JoinColumn(nullable=false)
+	 * @Expose
+	 * @Groups({"complete", "facture"})
 	 */
 	protected $tauxTva;
 
 	/**
 	 * @ORM\ManyToOne(targetEntity="site\adminsiteBundle\Entity\marque", inversedBy="articles", cascade={"persist"})
 	 * @ORM\JoinColumn(nullable=true, unique=false, onDelete="SET NULL")
+	 * @Expose
+	 * @Groups({"complete", "facture"})
 	 */
 	protected $marque;
 
@@ -122,14 +176,73 @@ class article extends item {
 	 */
 	protected $pdf;
 
-
+	/**
+	 * @Expose
+	 * @Groups({"complete", "ajaxlive"})
+	 * @Accessor(getter="isPanierable")
+	 */
+	protected $isPanierable;
+	/**
+	 * @Expose
+	 * @Groups({"complete", "ajaxlive", "facture"})
+	 * @Accessor(getter="getPrixUnit")
+	 */
+	protected $prixUnit;
+	/**
+	 * @Expose
+	 * @Groups({"complete", "facture"})
+	 * @Accessor(getter="getPrixUnitText")
+	 */
+	protected $prixUnitText;
+	/**
+	 * @Expose
+	 * @Groups({"complete", "facture"})
+	 * @Accessor(getter="getUnitprixText")
+	 */
+	protected $unitprixText;
+	/**
+	 * @Expose
+	 * @Groups({"complete", "ajaxlive", "facture"})
+	 * @Accessor(getter="getTextTva")
+	 */
+	protected $textTva;
+	/**
+	 * @Expose
+	 * @Groups({"complete", "ajaxlive", "facture"})
+	 * @Accessor(getter="getFloatTva")
+	 */
+	protected $floatTva;
+	/**
+	 * @Expose
+	 * @Groups({"complete", "facture"})
+	 * @Accessor(getter="getTaux_tva")
+	 */
+	protected $taux_tva;
+	/**
+	 * @Expose
+	 * @Groups({"complete", "ajaxlive", "facture"})
+	 * @Accessor(getter="getListOfUnits")
+	 */
 	protected $aeUnits;
+	/**
+	 * @Expose
+	 * @Groups({"complete", "ajaxlive", "facture"})
+	 * @Accessor(getter="getDevise")
+	 */
+	protected $devise;
+	/**
+	 * @Expose
+	 * @Groups({"complete"})
+	 * @Accessor(getter="getDevises")
+	 */
+	protected $devises;
 
 	public function __construct() {
 		parent::__construct();
 		$this->load();
 		$this->vendable = true;
 		$this->surdevis = false;
+		$this->groupbasket = false;
 		$this->refFabricant = null;
 		$this->accroche = null;
 		$this->prix = 0;
@@ -142,7 +255,10 @@ class article extends item {
 		$this->maxquantity = null;
 		$this->minquantity = 1;
 		$this->unitprix = $this->aeUnits->getDefaultUnit();
-		$this->unit = $this->aeUnits->getDefaultUnit();
+		$this->unit = null;
+		$this->devise = null;
+		$this->devises = null;
+		// $this->unit = $this->aeUnits->getDefaultUnit();
 	}
 
 	/**
@@ -195,6 +311,10 @@ class article extends item {
 			// enfin, calcul pour priorité au prix TTC
 			$this->prixHT = $this->prix / (1 + ($this->tauxTva->getTaux() / 100));
 		}
+		if($this->unit == null || $this->unit == $this->unitprix) {
+			$this->unit = $this->getUnitprix();
+			$this->setGroupbasket(true);
+		}
 		// parent
 		parent::check();
 	}
@@ -208,8 +328,21 @@ class article extends item {
 	// }
 
 	/**
+	 * is putable in panier
+	 * @return boolean
+	 */
+	public function isPanierable() {
+		return in_array($this->getStatut()->getNiveau(), array('IS_AUTHENTICATED_ANONYMOUSLY', 'ROLE_USER'))
+			&& $this->isVendable()
+			&& !$this->isSurdevis()
+			&& ((float)$this->getPrix() > 0)
+			&& ((float)$this->getPrixHT() > 0)
+			;
+	}
+
+	/**
 	 * Set vendable
-	 * @param string $vendable
+	 * @param boolean $vendable
 	 * @return article
 	 */
 	public function setVendable($vendable) {
@@ -226,8 +359,16 @@ class article extends item {
 	}
 
 	/**
+	 * Is vendable
+	 * @return boolean 
+	 */
+	public function isVendable() {
+		return $this->vendable;
+	}
+
+	/**
 	 * Set surdevis
-	 * @param string $surdevis
+	 * @param boolean $surdevis
 	 * @return article
 	 */
 	public function setSurdevis($surdevis) {
@@ -241,6 +382,40 @@ class article extends item {
 	 */
 	public function getSurdevis() {
 		return $this->surdevis;
+	}
+
+	/**
+	 * Is surdevis
+	 * @return boolean 
+	 */
+	public function isSurdevis() {
+		return $this->surdevis;
+	}
+
+	/**
+	 * Set groupbasket
+	 * @param boolean $groupbasket
+	 * @return article
+	 */
+	public function setGroupbasket($groupbasket) {
+		$this->groupbasket = $groupbasket;
+		return $this;
+	}
+
+	/**
+	 * Get groupbasket
+	 * @return boolean 
+	 */
+	public function getGroupbasket() {
+		return $this->groupbasket;
+	}
+
+	/**
+	 * Is groupbasket
+	 * @return boolean 
+	 */
+	public function isGroupbasket() {
+		return $this->groupbasket;
 	}
 
 	/**
@@ -294,7 +469,7 @@ class article extends item {
 	 * @return float 
 	 */
 	public function getPrix() {
-		return $this->prix;
+		return $this->prix * $this->getDevise()['ratio'];
 	}
 
 	/**
@@ -312,7 +487,7 @@ class article extends item {
 	 * @return float 
 	 */
 	public function getPrixHT() {
-		return $this->prixHT;
+		return $this->prixHT * $this->getDevise()['ratio'];
 	}
 
 	/**
@@ -334,11 +509,20 @@ class article extends item {
 	}
 
 	/**
+	 * Get unitprix
+	 * @return string 
+	 */
+	public function getPrixUnit() {
+		return number_format($this->getPrix(), 2, ',', '');
+	}
+
+	/**
 	 * Get text of prix and unit (please, use raw filter in twig)
 	 * @return string (of html code)
 	 */
 	public function getPrixUnitText() {
-		return number_format($this->getPrix(), 2, ',', '').'<small><sup>€</sup><span>/'.$this->getUnitprix().'</span></small>';
+		$devise = $this->getDevise()['symb'];
+		return $this->getPrixUnit().'<small><sup>'.$devise.'TTC</sup><span>/'.$this->getUnitprix().'</span></small>';
 	}
 
 	/**
@@ -346,7 +530,42 @@ class article extends item {
 	 * @return string 
 	 */
 	public function getUnitprixText() {
-		return $this->aeUnits->getUnitprixName($this->getUnitprix());
+		return $this->aeUnits->getUnitName($this->getUnitprix());
+	}
+
+	/**
+	 * Set devises info
+	 * @param array $devises
+	 * @return article
+	 */
+	public function setDevises($devises) {
+		$this->devises = $devises;
+		return $this;
+	}
+
+	/**
+	 * Get devises info
+	 * @return array 
+	 */
+	public function getDevises() {
+		return $this->devises;
+	}
+
+	/**
+	 * Get devise info
+	 * @param string $lang = null
+	 * @return array
+	 */
+	public function getDevise($lang = null) {
+		if($lang === null) $lang = $this->getLocale();
+		return $this->devises[$lang];
+	}
+
+	/**
+	 * @Assert\IsTrue(message = "Les unité au prix et unité doivent être compatibles.")
+	 */
+	public function isUnitValid() {
+		return $this->aeUnits->isSameGroup($this->getUnitprix(), $this->getUnit());
 	}
 
 	/**
@@ -354,8 +573,8 @@ class article extends item {
 	 * @param string $unit
 	 * @return article
 	 */
-	public function setUnit($unit) {
-		$this->unit = $this->aeUnits->unitExists($unit) ? $unit : $this->unit;
+	public function setUnit($unit = null) {
+		$this->unit = $this->aeUnits->unitExists($unit) || ($unit == null) ? $unit : $this->unit;
 		return $this;
 	}
 
@@ -399,9 +618,9 @@ class article extends item {
 	 * @param integer $maxquantity
 	 * @return article
 	 */
-	public function setMaxquantity($maxquantity) {
-		$this->maxquantity = (integer)$maxquantity;
-		if($this->maxquantity <= $this->minquantity) $this->maxquantity = $this->minquantity;
+	public function setMaxquantity($maxquantity = null) {
+		$this->maxquantity = $maxquantity;
+		if($this->maxquantity !== null && $this->maxquantity < $this->minquantity) $this->maxquantity = $this->minquantity;
 		return $this;
 	}
 
@@ -421,7 +640,7 @@ class article extends item {
 	public function setMinquantity($minquantity) {
 		$this->minquantity = (integer)$minquantity;
 		if($this->minquantity < 1) $this->minquantity = 1;
-		if($this->maxquantity <= $this->minquantity) $this->maxquantity = $this->minquantity;
+		if($this->maxquantity !== null && $this->maxquantity <= $this->minquantity) $this->maxquantity = $this->minquantity;
 		return $this;
 	}
 
@@ -475,7 +694,8 @@ class article extends item {
 	 * @return string 
 	 */
 	public function getTextTva() {
-		return number_format($this->prixHT * ($this->tauxTva->getTaux() / 100), 2, " ").'%';
+		// return number_format($this->prixHT * ($this->tauxTva->getTaux() / 100), 2, ",", "").'€';
+		return preg_replace('#,?(0)*$#', '', number_format($this->tauxTva->getTaux(), 2, ",", "")).'%';
 	}
 
 	/**
@@ -484,6 +704,14 @@ class article extends item {
 	 */
 	public function getFloatTva() {
 		return $this->prixHT * ($this->tauxTva->getTaux() / 100);
+	}
+
+	/**
+	 * Get TVA taux
+	 * @return float 
+	 */
+	public function getTaux_tva() {
+		return $this->tauxTva->getTaux();
 	}
 
 	/**

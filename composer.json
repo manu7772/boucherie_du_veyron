@@ -1,5 +1,5 @@
 {
-    "name": "emmanuel/imagoguitare",
+    "name": "emmanuel/boucherie-du-veyron",
     "license": "proprietary",
     "type": "project",
     "autoload": {
@@ -8,6 +8,19 @@
             "SymfonyStandard": "app/"
         }
     },
+    "repositories": [
+            {
+                "type": "package",
+                "package": {
+                    "name": "jquery/jquery",
+                    "version": "1.12.0",
+                    "dist": {
+                        "url": "https://code.jquery.com/jquery-1.12.0.js",
+                        "type": "file"
+                    }
+                }
+            }
+        ],
     "require" : {
         "php": ">=5.3.9",
         "symfony/symfony": "2.7.*",
@@ -28,12 +41,16 @@
         "incenteev/composer-parameter-handler": "~2.0",
         "friendsofsymfony/user-bundle": "dev-master",
         "jms/serializer-bundle": "dev-master",
-        "leafo/lessphp": "*",
+        "oyejorge/less.php": "~1.7.0.9",
         "friendsofsymfony/rest-bundle": "~1.5",
         "spipu/html2pdf": "dev-master",
         "tecnickcom/tcpdf": "~6.2.0",
         "nelmio/cors-bundle": "~1.4",
-        "labo/admin-bundle": "dev-master"
+        "labo/admin-bundle": "dev-boucherie",
+        "braincrafted/bootstrap-bundle": "^2.2",
+        "twbs/bootstrap": "^3.3",
+        "jquery/jquery":  "1.12.*",
+        "egulias/email-validator": "1.*"
     },
     "minimum-stability" : "stable",
     "config" : {
@@ -45,14 +62,16 @@
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::clearCache",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installAssets",
-            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile"
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile",
+            "Braincrafted\\Bundle\\BootstrapBundle\\Composer\\ScriptHandler::install"
         ],
         "post-install-cmd" : [
             "Incenteev\\ParameterHandler\\ScriptHandler::buildParameters",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::clearCache",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installAssets",
-            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile"
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile",
+            "Braincrafted\\Bundle\\BootstrapBundle\\Composer\\ScriptHandler::install"
         ]
     },
     "extra" : {

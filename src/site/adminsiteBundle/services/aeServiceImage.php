@@ -137,7 +137,8 @@ class aeServiceImage extends aeServiceMedia {
 							// getData if has rawfile
 							if(isset($info['getData']) && is_object($entity->getRawfile())) {
 								$oldset = $entity->getCroppingInfo();
-								if(!$entity->setCroppingInfo($info['getData'])) {
+								$entity->setCroppingInfo($info['getData']);
+								// if(!$entity->setCroppingInfo($info['getData'])) {
 									// new croppingInfo -> so manage new image (or new crop on same image)
 									if(isset($info['ratioIndex'])) $entity->setRatioIndex($info['ratioIndex']);
 										else $entity->setRatioIndex(0);
@@ -182,15 +183,15 @@ class aeServiceImage extends aeServiceMedia {
 										));
 									if($entity->getNom() == null) $entity->setNom($entity->getOriginalnom());
 									$entity->defineNom();
-								} else {
-									$this->container->get('flash_messages')->send(array(
-										'title'		=> 'Image manager',
-										'type'		=> flashMessage::MESSAGES_WARNING,
-										'text'		=> '(sadmin) No changes in croppingInfo. No action on image. Oldset : '.json_encode($oldset).' / Newset : '.json_encode($info['getData']).'.',
-										'grant'		=> 'ROLE_SUPER_ADMIN',
-									));
-									$this->getEm()->detach($entity);
-								}
+								// } else {
+								// 	$this->container->get('flash_messages')->send(array(
+								// 		'title'		=> 'Image manager',
+								// 		'type'		=> flashMessage::MESSAGES_WARNING,
+								// 		'text'		=> '(sadmin) No changes in croppingInfo. No action on image. Oldset : '.json_encode($oldset).' / Newset : '.json_encode($info['getData']).'.',
+								// 		'grant'		=> 'ROLE_SUPER_ADMIN',
+								// 	));
+								// 	$this->getEm()->detach($entity);
+								// }
 								// confirm stockage
 								$entity->setStockage($entity->getStockageList()[0]);
 							} else {

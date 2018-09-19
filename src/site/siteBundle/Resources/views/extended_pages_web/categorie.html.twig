@@ -28,9 +28,8 @@
 						{% endif %}
 						<div class="row">
 							{% set hasArticles = false %}
-							{% for item in categorie.allNestedChildsByGroup('nesteds') %}
+							{% for item in categorie.allNestedChildsByGroup('nesteds') if isScreenable(item) %}
 								{{ categories_actions.boxCategorie(item, categorie) }}
-								{# {{ dump(item) }} #}
 								{% set hasArticles = true %}
 							{% endfor %}
 							{% if not hasArticles %}
@@ -46,7 +45,7 @@
 		</div>
 	</div>
 </section>
-	{# {{ dump(items) }} #}
-	{# {{ render(controller('sitesiteBundle:Default:miniListeInfo')) }}     #}
+
+{# {{ render(controller('sitesiteBundle:Default:miniListeInfo')) }}     #}
 
 {% endblock mainContainer %}

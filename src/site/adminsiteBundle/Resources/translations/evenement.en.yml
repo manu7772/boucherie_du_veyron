@@ -1,0 +1,34 @@
+name_s: events
+name: event
+not_found: 'no event found'
+x_found: '{0} no event found|{1} 1 event found|[2,+Inf] %count% events found'
+create: 'create new event'
+create_btn: 'new event'
+created: '{0} no event created|{1} %count% event have been created : %list%|[2,+Inf] %count% events have been created : %list%'
+new: '{0,1}new event|[2,+Inf] %count% new events'
+backlist: 'back to list of events'
+backlist_btn: 'back to list'
+dontexist: 'this event does not exist'
+existe: 'this event already exists'
+suppression: 'event %name% have been deleted'
+moredetails: 'more details on %name%'
+form:
+    select: Select…
+fields:
+    id: id
+    nom: name
+    created: created
+    updated: updated
+    jamais: no modification
+    icon: icon
+    descriptif: description
+    group_nestedsParents: catégories
+    group_evenementsChilds: related events
+    image: picture
+    telfixe: phone
+    mobile: mobile
+    email: email
+    adresse: location
+    couleur: color
+    debut: beginning date
+    fin: end date

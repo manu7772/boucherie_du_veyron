@@ -12,6 +12,11 @@
         <requirement key="methods">GET</requirement>
     </route>
 
+    <route id="siteUser_check" path="/users-check">
+        <default key="_controller">siteUserBundle:Default:checkUsers</default>
+        <requirement key="methods">GET</requirement>
+    </route>
+
     <route id="site_user_homepage" path="/user">
         <default key="_controller">siteUserBundle:Default:index</default>
         <requirement key="methods">GET</requirement>
@@ -29,6 +34,17 @@
 
     <route id="siteUser_delete" path="/user/delete/{username}">
         <default key="_controller">siteUserBundle:Default:delete</default>
+        <requirement key="methods">GET</requirement>
+    </route>
+
+    <route id="user_change_role" path="/user/user_change_role/{username}/{role}">
+        <default key="_controller">siteUserBundle:Default:changerole</default>
+        <requirement key="methods">GET</requirement>
+    </route>
+
+    <route id="user_enable" path="/user/user_enable/{username}/{enable}">
+        <default key="_controller">siteUserBundle:Default:enable</default>
+        <default key='enable'>enable</default>
         <requirement key="methods">GET</requirement>
     </route>
 

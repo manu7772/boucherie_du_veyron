@@ -17,7 +17,7 @@
 					<div class="row">
 						<div class="col-sm-4 text-muted text-right hidden-xs">{{ 'profile.show.username'|trans }}</div>
 						<div class="col-sm-4 text-muted teleft visible-xs">{{ 'profile.show.username'|trans }}</div>
-						<div class="col-sm-8"><strong>{{ user.username }}</strong></div>
+						<div class="col-sm-8"><strong>{{ user.username }}</strong>{% if is_granted('ROLE_TESTER') %} <i><small class="label label-{{ roleColor('ROLE_TESTER') }}">Testeur</small></i>{% endif %}</div>
 					</div>
 					<div class="row">
 						<div class="col-sm-4 text-muted text-right hidden-xs">{{ 'profile.show.email'|trans }}</div>
@@ -37,11 +37,47 @@
 						<div class="col-sm-8"><strong>{{ user.prenom }}</strong></div>
 					</div>
 					<div class="row">
-						<div class="col-sm-4 text-muted text-right hidden-xs">{{ 'fields.telephone'|trans|capitalize }}</div>
-						<div class="col-sm-4 text-muted text-left visible-xs">{{ 'fields.telephone'|trans|capitalize }}</div>
+						<div class="col-sm-4 text-muted text-right hidden-xs">{{ 'telephone'|trans|capitalize }}</div>
+						<div class="col-sm-4 text-muted text-left visible-xs">{{ 'telephone'|trans|capitalize }}</div>
 						<div class="col-sm-8"><strong>{{ user.telephone }}</strong></div>
 					</div>
+					{% if user.adresse|default(null) != null %}
+					<h5 class="title">{{ 'Adresse'|trans|capitalize }}</h5>
+					<div class="row">
+						<div class="col-sm-4 text-muted text-right hidden-xs">{{ 'adresse'|trans|capitalize }}</div>
+						<div class="col-sm-4 text-muted text-left visible-xs">{{ 'adresse'|trans|capitalize }}</div>
+						<div class="col-sm-8">{{ user.adresse.adresse }}</div>
+					</div>
+					<div class="row">
+						<div class="col-sm-4 text-muted text-right hidden-xs">{{ 'code postal'|trans|capitalize }}</div>
+						<div class="col-sm-4 text-muted text-left visible-xs">{{ 'c.post.'|trans|capitalize }}</div>
+						<div class="col-sm-8">{{ user.adresse.cp }}</div>
+					</div>
+					<div class="row">
+						<div class="col-sm-4 text-muted text-right hidden-xs">{{ 'ville'|trans|capitalize }}</div>
+						<div class="col-sm-4 text-muted text-left visible-xs">{{ 'ville'|trans|capitalize }}</div>
+						<div class="col-sm-8">{{ user.adresse.ville }}</div>
+					</div>
+					{% endif %}
+					{% if user.adresseLivraison|default(null) != null %}
+					<h5 class="title">{{ 'Adresse de livraison'|trans|capitalize }}</h5>
+					<div class="row">
+						<div class="col-sm-4 text-muted text-right hidden-xs">{{ 'adresse'|trans|capitalize }}</div>
+						<div class="col-sm-4 text-muted text-left visible-xs">{{ 'adresse'|trans|capitalize }}</div>
+						<div class="col-sm-8">{{ user.adresseLivraison.adresse }}</div>
+					</div>
+					<div class="row">
+						<div class="col-sm-4 text-muted text-right hidden-xs">{{ 'code postal'|trans|capitalize }}</div>
+						<div class="col-sm-4 text-muted text-left visible-xs">{{ 'c.post.'|trans|capitalize }}</div>
+						<div class="col-sm-8">{{ user.adresseLivraison.cp }}</div>
+					</div>
+					<div class="row">
+						<div class="col-sm-4 text-muted text-right hidden-xs">{{ 'ville'|trans|capitalize }}</div>
+						<div class="col-sm-4 text-muted text-left visible-xs">{{ 'ville'|trans|capitalize }}</div>
+						<div class="col-sm-8">{{ user.adresseLivraison.ville }}</div>
+					</div>
 					<hr class="dotted">
+					{% endif %}
 					<div class="row">
 						<div class="col-sm-6">
 							<a href="{{ path('fos_user_profile_edit') }}" type="button" class="btn btn-sm btn-primary btn-block">{{ 'profile.action.modify'|trans|capitalize }}</a>

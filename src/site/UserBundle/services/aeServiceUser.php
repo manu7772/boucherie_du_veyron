@@ -10,8 +10,15 @@ use Doctrine\ORM\Event\LifecycleEventArgs;
 use FOS\UserBundle\Doctrine\UserManager;
 use Symfony\Component\Security\Core\Encoder\EncoderFactory;
 
+use Labo\Bundle\AdminBundle\services\aeData;
+
 use Labo\Bundle\AdminBundle\services\aeServiceLaboUser;
+use Labo\Bundle\AdminBundle\Entity\messageuser;
 use site\UserBundle\Entity\user;
+use Labo\Bundle\AdminBundle\Entity\message;
+use Labo\Bundle\AdminBundle\Entity\LaboUser;
+
+use \DateTime;
 
 class aeServiceUser extends aeServiceLaboUser {
 
@@ -38,7 +45,6 @@ class aeServiceUser extends aeServiceLaboUser {
 			);
 		return $users;
 	}
-
 
 	/**
 	 * Check entity integrity in context

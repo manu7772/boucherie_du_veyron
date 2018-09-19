@@ -32,8 +32,7 @@
 							{{ form_widget(form.telephone) }}
 							{{ form_errors(form.telephone) }}
 						</div>
-
-						<h5>{{ 'adresse'|trans|capitalize }}</h5>
+{# 						<h5>{{ 'adresse'|trans|capitalize }}</h5>
 						<div class="form-group col-md-12">
 							{{ form_widget(form.adresse.children.adresse) }}
 							{{ form_errors(form.adresse.children.adresse) }}
@@ -50,8 +49,8 @@
 							{{ form_widget(form.adresse.children.commentaire) }}
 							{{ form_widget(form.adresse.children.url) }}
 						</div>
-
-						<h5>{{ 'adresse de livraison'|trans|capitalize }}</h5>
+ #}
+{# 						<h5>{{ 'adresse de livraison'|trans|capitalize }}</h5>
 						<div class="form-group col-md-12">
 							{{ form_widget(form.adresseLivraison.children.adresse) }}
 							{{ form_errors(form.adresseLivraison.children.adresse) }}
@@ -68,24 +67,27 @@
 							{{ form_widget(form.adresseLivraison.children.commentaire) }}
 							{{ form_widget(form.adresseLivraison.children.url) }}
 						</div>
-
 						<h5>{{ 'fields.avatar'|trans|capitalize }}</h5>
 						<div class="form-group col-md-12">
 							{{ form_widget(form.avatar) }}
 							{{ form_errors(form.avatar) }}
 						</div>
-
+ #}
 						{% if is_granted('ROLE_EDITOR') %}
+						{% if form.adminhelp is defined %}
 						<div class="form-group col-md-12">
 							<label class="text-muted">{{ 'fields.help'|trans|capitalize }} </label>
 							{{ form_widget(form.adminhelp) }}
 							{{ form_errors(form.adminhelp) }}
 						</div>
+						{% endif %}
+						{% if form.mail_sitemessages is defined %}
 						<div class="form-group col-md-12">
 							<label class="text-muted">{{ 'fields.mail_sitemessages'|trans|capitalize }} </label>
 							{{ form_widget(form.mail_sitemessages) }}
 							{{ form_errors(form.mail_sitemessages) }}
 						</div>
+						{% endif %}
 						{% if form.admintheme is defined %}
 						<div class="form-group col-md-12">
 							{{ form_widget(form.admintheme) }}
@@ -105,7 +107,7 @@
 						<div class="form-group col-md-12">
 							<input type="submit" id="_submit" name="_submit" class="btn btn-primary btn-md btn-block" value="{{ 'profile.edit.submit'|trans|capitalize }}">
 						</div>
-						{{ form_rest(form) }}
+						<div style="display:none;">{{ form_rest(form) }}</div>
 					</form>
 				</div>
 			</div>

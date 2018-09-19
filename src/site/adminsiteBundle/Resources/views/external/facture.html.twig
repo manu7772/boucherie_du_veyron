@@ -1,0 +1,36 @@
+{% extends 'LaboAdminBundle:bases:base_simple.html.twig' %}
+
+
+{% block body %}
+
+<div id="page-wrapper" class="gray-bg dashbard-3">
+	<div class="wrapper wrapper-content animated fadeInRight">
+		{% block content %}
+		<div class="row">
+			<div class="col-lg-12 text-center p-t-lg">
+				{% if facture|default(null) != null %}
+					<h3>Facture {{ facture.id }}</h3>
+					{% if action|default(null) == 'changestate' %}
+						<p><strong>La facture a été changée :</strong></p>
+						<p>Nouveau statut : <strong>{{ facture.statename|trans({}, 'facture') }}</strong></p>
+					{% elseif action|default(null) == 'delete' %}
+						<p><strong>La facture a été supprimée.</strong></p>
+					{% else %}
+						<p><strong>Action impossible. Abandon de l'opération.</strong></p>
+						<p>Connectez-vous et consulter la liste de factures pour en savoir plus.</p>
+					{% endif %}
+				{% else %}
+					<h3>Erreur : cette facture n'a pas été trouvée.</h3>
+					<p>Peut-être a-t-elle déjà été supprimée ?</p>
+					<p>Connectez-vous et consulter la liste de factures pour en savoir plus.</p>
+				{% endif %}
+			</div>
+		</div>
+		{% endblock content %}
+	</div>
+	<div class="footer">
+	{{ include('LaboAdminBundle:blocks:footer.html.twig') }}
+	</div>
+</div>
+
+{% endblock body %}

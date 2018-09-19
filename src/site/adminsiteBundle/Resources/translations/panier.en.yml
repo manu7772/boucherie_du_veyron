@@ -18,3 +18,16 @@ fields:
     created: created
     updated: updated
     jamais: no modification
+actions:
+    articleadded: "{0}No article has been added in basket|{1}One article %article% has been added in basket|[2,+Inf] %count% articles %article% have been added in basket"
+    contenudeleted: Basket has been emptied
+    contenuempty: Basket is already empty
+    articlenotexist: Article %article% does not exist in basket
+    articlenotpanierable: Article %article% can not be added in basket
+    articledeleted: Article %article% has been removed from basket
+    articledretired: "{0}No article has been removed from basket|{1}One article %article% has been removed from basket|[2,+Inf] %count% articles %article% have been removed from basket"
+    articleverified: "{0}No unavailable article have been removed from basket|{1}One unavailable article %articles% has been removed from basket|[2,+Inf] %count% unavailable articles : %articles%, have been removed from basket"
+errors:
+    errorpanier: Basket error. No action done
+    usernotfound: User not found
+    articlenotfound: Article not found

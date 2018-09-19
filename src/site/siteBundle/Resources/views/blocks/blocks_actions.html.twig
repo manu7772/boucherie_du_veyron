@@ -9,11 +9,11 @@
 
 {% macro blockmini(item) -%}
 	{% import _self as self %}
-	{% set EDITORMODE = (app.environment in ['DEV', 'TEST']) or (is_granted('ROLE_EDITOR')) %}
-	{% if item.className|default(item.shortName|default(null)) matches '#^article#' %}
+	{# {% set EDITORMODE = (app.environment in ['DEV', 'TEST']) or (is_granted('ROLE_EDITOR')) %} #}
+	{% if item.shortName matches '#^article#' %}
 		{% import 'sitesiteBundle:blocks:articles_actions.html.twig' as actions %}
 		{{ actions.boxArticle(item) }}
-	{% elseif item.className|default(item.shortName|default(null)) matches '#^fiche#' %}
+	{% elseif item.shortName matches '#^fiche#' %}
 		{% import 'sitesiteBundle:blocks:fiches_actions.html.twig' as actions %}
 		{{ actions.boxFiche(item) }}
 	{% endif %}
@@ -31,7 +31,7 @@
 	{% if image|default(null) == null %}
 		{% set image = missingImage(x,y) %}
 	{% endif %}
-	<img src="{{ image }}" alt="{{ 'name'|trans({}, item.className|default(item.shortName|default(null))) }} {{ item.slug }}" class="{{ classes|default([])|join(' ') }}" />
+	<img src="{{ image }}" alt="{{ 'name'|trans({}, item.shortName) }} {{ item.slug }}" class="{{ classes|default([])|join(' ') }}" />
 {%- endmacro imageprint %}
 
 {% macro breadcrumbArray(item, categories) %}

@@ -19,6 +19,6 @@ services:
     #     class: site\UserBundle\services\aeServiceLaboUser
     #     arguments: [@fos_user.user_manager, @security.encoder_factory]
 
-    aetools.aeUser:
+    aetools.aeServiceUser:
         class: site\UserBundle\services\aeServiceUser
         arguments: [@service_container]
